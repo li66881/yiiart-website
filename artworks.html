@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>探索艺术品 | ARTÈLYS</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
+  <style>
+    .artworks-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 0;
+      min-height: calc(100vh - 80px);
+      padding-top: 80px;
+    }
+    
+    .artworks-main {
+      padding: var(--space-2xl);
+      background: var(--color-gallery-white);
+    }
+    
+    .artworks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+      gap: var(--space-md);
+    }
+    
+    .artworks-count {
+      font-size: var(--text-sm);
+      color: var(--color-warm-gray);
+    }
+    
+    .artworks-count strong {
+      color: var(--color-ink-black);
+    }
+    
+    .artworks-sort {
+      display: flex;
+      align-items: center;
+      gap: var(--space-md);
+    }
+    
+    .artworks-sort label {
+      font-size: var(--text-sm);
+      color: var(--color-warm-gray);
+    }
+    
+    .artworks-sort select {
+      padding: var(--space-sm) var(--space-lg);
+      border: 1px solid var(--color-light-gray);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      background: white;
+      cursor: pointer;
+    }
+    
+    .artworks-view-toggle {
+      display: flex;
+      gap: var(--space-xs);
+    }
+    
+    .view-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--color-light-gray);
+      border-radius: var(--radius-md);
+      background: white;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    
+    .view-btn:hover,
+    .view-btn--active {
+      background: var(--color-ink-black);
+      border-color: var(--color-ink-black);
+    }
+    
+    .view-btn:hover svg,
+    .view-btn--active svg {
+      stroke: white;
+    }
+    
+    .view-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+    
+    .artworks-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-xl);
+    }
+    
+    @media (max-width: 1200px) {
+      .artworks-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .artworks-layout {
+        grid-template-columns: 1fr;
+      }
+      
+      .filter-sidebar {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 300;
+        height: 100vh;
+      }
+      
+      .filter-sidebar--open {
+        display: block;
+      }
+      
+      .mobile-filter-toggle {
+        display: flex !important;
+      }
+    }
+    
+    .mobile-filter-toggle {
+      display: none;
+      align-items: center;
+      gap: var(--space-sm);
+      padding: var(--space-sm) var(--space-lg);
+      background: var(--color-ink-black);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm);
+      cursor: pointer;
+    }
+    
+    .filter-close {
+      display: none;
+    }
+    
+    @media (max-width: 768px) {
+      .filter-close {
+        display: block;
+        width: 100%;
+        padding: var(--space-md);
+        margin-top: var(--space-md);
+        background: var(--color-light-gray);
+        border: none;
+        border-radius: var(--radius-md);
+        font-size: var(--text-sm);
+        cursor: pointer;
+      }
+    }
+    
+    .active-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .active-filter {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      padding: var(--space-xs) var(--space-md);
+      background: var(--color-ink-black);
+      color: white;
+      font-size: var(--text-xs);
+      border-radius: var(--radius-full);
+    }
+    
+    .active-filter__remove {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    
+    .active-filter__remove:hover {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Navigation -->
+  <header class="header">
+    <div class="header__inner">
+      <a href="index.html" class="logo">ART<span>È</span>LYS</a>
+      
+      <nav class="nav">
+        <a href="artworks.html" class="nav__link nav__link--active">探索</a>
+        <a href="artworks.html?category=abstract" class="nav__link">抽象艺术</a>
+        <a href="artworks.html?category=texture" class="nav__link">纹理艺术</a>
+        <a href="artists.html" class="nav__link">艺术家</a>
+        <a href="#collections" class="nav__link">策展</a>
+      </nav>
+      
+      <div class="nav__actions">
+        <button class="icon-btn" aria-label="Search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <circle cx="11" cy="11" r="8"/>
+            <path d="m21 21-4.35-4.35"/>
+          </svg>
+        </button>
+        <button class="icon-btn" aria-label="Account">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </button>
+        <button class="icon-btn" aria-label="Cart">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <path d="M16 10a4 4 0 0 1-8 0"/>
+          </svg>
+          <span class="icon-btn__badge">2</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="artworks-layout">
+    <!-- Filter Sidebar -->
+    <aside class="filter-sidebar" id="filterSidebar">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-xl);">
+        <h3 style="font-size: var(--text-lg); font-weight: 600;">筛选</h3>
+        <a href="#" style="font-size: var(--text-sm); color: var(--color-art-gold);">清除全部</a>
+      </div>
+      
+      <!-- Category Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">类别</h4>
+        <div class="filter-options">
+          <button class="filter-option filter-option--selected">全部</button>
+          <button class="filter-option">抽象艺术</button>
+          <button class="filter-option">纹理艺术</button>
+          <button class="filter-option">侘寂美学</button>
+          <button class="filter-option">风景画</button>
+          <button class="filter-option">人物画</button>
+          <button class="filter-option">静物画</button>
+        </div>
+      </div>
+      
+      <!-- Price Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">价格区间</h4>
+        <div class="price-range">
+          <div class="price-range__track">
+            <div class="price-range__fill"></div>
+          </div>
+          <div class="price-range__inputs">
+            <span>¥1,000</span>
+            <span>¥20,000+</span>
+          </div>
+        </div>
+        <div class="filter-options">
+          <button class="filter-option">¥1-5,000</button>
+          <button class="filter-option">¥5,000-10,000</button>
+          <button class="filter-option">¥10,000-20,000</button>
+          <button class="filter-option">¥20,000+</button>
+        </div>
+      </div>
+      
+      <!-- Size Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">尺寸</h4>
+        <div class="filter-options">
+          <button class="filter-option">小 (40cm以下)</button>
+          <button class="filter-option filter-option--selected">中 (40-80cm)</button>
+          <button class="filter-option">大 (80-120cm)</button>
+          <button class="filter-option">超大 (120cm+)</button>
+        </div>
+      </div>
+      
+      <!-- Orientation Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">画幅方向</h4>
+        <div class="filter-options">
+          <button class="filter-option">横向</button>
+          <button class="filter-option">竖向</button>
+          <button class="filter-option">方形</button>
+          <button class="filter-option">圆形</button>
+        </div>
+      </div>
+      
+      <!-- Color Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">色调</h4>
+        <div class="color-swatches">
+          <button class="color-swatch color-swatch--selected" style="background: #FFFFFF; border: 1px solid #E5E5E5;" title="白色"></button>
+          <button class="color-swatch" style="background: #1A1A1A;" title="黑色"></button>
+          <button class="color-swatch" style="background: #8B4513;" title="棕色"></button>
+          <button class="color-swatch" style="background: #C9A962;" title="金色"></button>
+          <button class="color-swatch" style="background: #4A5568;" title="灰色"></button>
+          <button class="color-swatch" style="background: #2D5A4A;" title="绿色"></button>
+          <button class="color-swatch" style="background: #1E3A5F;" title="蓝色"></button>
+          <button class="color-swatch" style="background: #8B2942;" title="红色"></button>
+          <button class="color-swatch" style="background: #F5E6D3;" title="米色"></button>
+          <button class="color-swatch" style="background: linear-gradient(135deg, #ff6b6b, #4ecdc4);" title="渐变"></button>
+        </div>
+      </div>
+      
+      <!-- Material Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">材质</h4>
+        <div class="filter-options">
+          <button class="filter-option">油画</button>
+          <button class="filter-option filter-option--selected">丙烯画</button>
+          <button class="filter-option">水彩</button>
+          <button class="filter-option">混合媒介</button>
+          <button class="filter-option">3D纹理</button>
+        </div>
+      </div>
+      
+      <!-- Artist Status Filter -->
+      <div class="filter-group">
+        <h4 class="filter-group__title">艺术家</h4>
+        <div class="filter-options">
+          <button class="filter-option">新锐艺术家</button>
+          <button class="filter-option">认证艺术家</button>
+          <button class="filter-option"> Featured</button>
+          <button class="filter-option">中国艺术家</button>
+          <button class="filter-option">海外艺术家</button>
+        </div>
+      </div>
+      
+      <button class="filter-close" onclick="closeFilters()">关闭筛选</button>
+    </aside>
+
+    <!-- Main Content -->
+    <section class="artworks-main">
+      <div class="artworks-header">
+        <div style="display: flex; align-items: center; gap: 1rem;">
+          <button class="mobile-filter-toggle" onclick="toggleFilters()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+筛选
+          </button>
+          <p class="artworks-count">共 <strong>248</strong> 件艺术品</p>
+        </div>
+        
+        <div class="artworks-sort">
+          <label>排序：</label>
+          <select>
+            <option>推荐</option>
+            <option>最新上架</option>
+            <option>价格从低到高</option>
+            <option>价格从高到低</option>
+            <option>最受欢迎</option>
+          </select>
+          
+          <div class="artworks-view-toggle">
+            <button class="view-btn view-btn--active">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+              </svg>
+            </button>
+            <button class="view-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="8" y1="6" x2="21" y2="6"/>
+                <line x1="8" y1="12" x2="21" y2="12"/>
+                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="3" y1="6" x2="3.01" y2="6"/>
+                <line x1="3" y1="12" x2="3.01" y2="12"/>
+                <line x1="3" y1="18" x2="3.01" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Active Filters -->
+      <div class="active-filters">
+        <span class="active-filter">
+          中尺寸 <span class="active-filter__remove">×</span>
+        </span>
+        <span class="active-filter">
+          丙烯画 <span class="active-filter__remove">×</span>
+        </span>
+        <span class="active-filter">
+          白色 <span class="active-filter__remove">×</span>
+        </span>
+      </div>
+      
+      <!-- Artworks Grid -->
+      <div class="artworks-grid">
+        <!-- Artwork Card 1 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart" onclick="event.preventDefault(); showToast('Added to collection')">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">抽象艺术 · 丙烯</p>
+            <h4 class="card__title">暮光之境 III</h4>
+            <p class="card__artist">Elena Morozova</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 4,800</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">60×80cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 2 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=600&q=80" alt="Artwork">
+            <span class="card__badge">新品</span>
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">3D纹理 · 油画</p>
+            <h4 class="card__title">金色涟漪</h4>
+            <p class="card__artist">Marcus Webb</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 6,200</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">80×100cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 3 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">侘寂 · 水彩</p>
+            <h4 class="card__title">静谧时光</h4>
+            <p class="card__artist">Yuki Tanaka</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 3,900</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">50×70cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 4 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">抽象 · 丙烯</p>
+            <h4 class="card__title">流动的盛宴</h4>
+            <p class="card__artist">Isabella Franco</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 5,500</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">70×90cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 5 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">抽象表现 · 油画</p>
+            <h4 class="card__title">情绪的风景</h4>
+            <p class="card__artist">Alex Rivera</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 7,800</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">90×120cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 6 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=600&q=80" alt="Artwork">
+            <span class="card__badge" style="background: var(--color-success);">热卖</span>
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">侘寂 · 混合媒介</p>
+            <h4 class="card__title">秋日私语</h4>
+            <p class="card__artist">Li Wei</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 4,200</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">55×75cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 7 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">风景 · 油画</p>
+            <h4 class="card__title">托斯卡纳的午后</h4>
+            <p class="card__artist">Marco Bellini</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 8,500</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">80×60cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 8 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1544967919-44c1ef2f7c3f?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">抽象 · 3D纹理</p>
+            <h4 class="card__title">深海之声</h4>
+            <p class="card__artist">Nina Volkov</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 5,900</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">70×70cm</span>
+            </div>
+          </div>
+        </a>
+        
+        <!-- Artwork Card 9 -->
+        <a href="artwork-detail.html" class="card">
+          <div class="card__image">
+            <img src="https://images.unsplash.com/photo-1582201942988-13e60e4556ee?w=600&q=80" alt="Artwork">
+            <div class="card__overlay">
+              <div class="card__actions">
+                <button class="btn btn--primary btn--icon" aria-label="Add to cart">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <path d="M16 10a4 4 0 0 1-8 0"/>
+                  </svg>
+                </button>
+                <button class="btn btn--outline btn--icon" aria-label="Add to wishlist">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="card__content">
+            <p class="card__category">人物 · 丙烯</p>
+            <h4 class="card__title">都市独白</h4>
+            <p class="card__artist">Sophie Laurent</p>
+            <div class="card__footer">
+              <span class="text-price">¥ 6,800</span>
+              <span style="font-size: var(--text-xs); color: var(--color-warm-gray);">65×85cm</span>
+            </div>
+          </div>
+        </a>
+      </div>
+      
+      <!-- Pagination -->
+      <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 4rem;">
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: white;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="m15 18-6-6 6-6"/>
+          </svg>
+        </button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: var(--color-ink-black); color: white;">1</button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: white;">2</button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: white;">3</button>
+        <span style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--color-warm-gray);">...</span>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: white;">12</button>
+        <button style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--color-light-gray); border-radius: var(--radius-md); background: white;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+            <path d="m9 18 6-6-6-6"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer" style="margin-top: 0;">
+    <div class="container">
+      <div class="footer__bottom">
+        <p class="footer__copyright">© 2024 ARTÈLYS. 保留所有权利。</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    function toggleFilters() {
+      const sidebar = document.getElementById('filterSidebar');
+      sidebar.classList.toggle('filter-sidebar--open');
+    }
+    
+    function closeFilters() {
+      const sidebar = document.getElementById('filterSidebar');
+      sidebar.classList.remove('filter-sidebar--open');
+    }
+  </script>
+</body>
+</html>
