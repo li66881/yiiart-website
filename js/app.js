@@ -1,5 +1,5 @@
 /**
- * ARTÈLYS - World-Class Art E-Commerce Prototype
+ * YiiArt 易艺术 - World-Class Art E-Commerce Prototype
  * Core Application JavaScript
  */
 
