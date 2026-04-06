@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YiiArt 易艺术 | 世界级艺术品收藏入口</title>
+  <title>YiiArt | Art for Your Home</title>
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎨</text></svg>">
 </head>
@@ -14,14 +14,17 @@
       <a href="index.html" class="logo">Yii<span>Art</span></a>
       
       <nav class="nav" aria-label="Primary">
-        <a href="artworks.html" class="nav__link">探索</a>
-        <a href="#scenes" class="nav__link">家庭场景</a>
-        <a href="artworks.html?category=abstract" class="nav__link">抽象艺术</a>
-        <a href="artists.html" class="nav__link">艺术家</a>
-        <a href="#collections" class="nav__link">策展</a>
+        <a href="artworks.html" class="nav__link" data-i18n="nav.explore">Explore</a>
+        <a href="#scenes" class="nav__link" data-i18n="nav.homeScenes">Home Scenes</a>
+        <a href="artworks.html?category=abstract" class="nav__link" data-i18n="nav.abstract">Abstract</a>
+        <a href="artworks.html?category=texture" class="nav__link" data-i18n="nav.texture">Texture</a>
+        <a href="artists.html" class="nav__link" data-i18n="nav.artists">Artists</a>
+        <a href="#collections" class="nav__link" data-i18n="nav.collections">Collections</a>
       </nav>
       
       <div class="nav__actions">
+        <div class="lang-switcher" data-lang-switcher></div>
+
         <button class="icon-btn mobile-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M3 6h18"/>
@@ -54,11 +57,12 @@
 
     <!-- Mobile nav (toggle) -->
     <nav id="mobileNav" class="nav nav--mobile" aria-label="Mobile">
-      <a href="artworks.html" class="nav__link">探索</a>
-      <a href="#scenes" class="nav__link">家庭场景</a>
-      <a href="artworks.html?category=abstract" class="nav__link">抽象艺术</a>
-      <a href="artists.html" class="nav__link">艺术家</a>
-      <a href="#collections" class="nav__link">策展</a>
+      <a href="artworks.html" class="nav__link" data-i18n="nav.explore">Explore</a>
+      <a href="#scenes" class="nav__link" data-i18n="nav.homeScenes">Home Scenes</a>
+      <a href="artworks.html?category=abstract" class="nav__link" data-i18n="nav.abstract">Abstract</a>
+      <a href="artworks.html?category=texture" class="nav__link" data-i18n="nav.texture">Texture</a>
+      <a href="artists.html" class="nav__link" data-i18n="nav.artists">Artists</a>
+      <a href="#collections" class="nav__link" data-i18n="nav.collections">Collections</a>
     </nav>
   </header>
 
@@ -71,14 +75,17 @@
     
     <div class="container">
       <div class="hero__content">
-        <p class="hero__subtitle">Art for Home</p>
-        <h1 class="hero__title">先选场景<br><em>再选艺术</em></h1>
-        <p class="hero__description">
-          用真实家庭空间做参考，快速找到尺寸、色调与氛围都合适的作品。
+        <p class="hero__subtitle" data-i18n="hero.kicker">Art for Home</p>
+        <h1 class="hero__title">
+          <span data-i18n="hero.titleLine1">Choose a scene first,</span><br>
+          <em data-i18n="hero.titleEm">then choose art</em>
+        </h1>
+        <p class="hero__description" data-i18n="hero.desc">
+          Start from real home spaces to quickly find the right size, tone, and mood.
         </p>
         <div class="hero__cta">
-          <a href="#scenes" class="btn btn--primary btn--large">浏览家庭场景</a>
-          <a href="artworks.html" class="btn btn--secondary btn--large">直接看作品</a>
+          <a href="#scenes" class="btn btn--primary btn--large" data-i18n="hero.ctaPrimary">Browse home scenes</a>
+          <a href="artworks.html" class="btn btn--secondary btn--large" data-i18n="hero.ctaSecondary">View all artworks</a>
         </div>
       </div>
     </div>
@@ -91,8 +98,8 @@
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         <path d="m9 12 2 2 4-4"/>
       </svg>
-      <h4 class="trust-badge__title">100% 原创真迹</h4>
-      <p class="trust-badge__desc">每件作品均附有艺术家签名与真品证书</p>
+      <h4 class="trust-badge__title" data-i18n="trust.original.title">100% Original</h4>
+      <p class="trust-badge__desc" data-i18n="trust.original.desc">Each artwork includes a signed certificate of authenticity</p>
     </div>
     <div class="trust-badge">
       <svg class="trust-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -101,8 +108,8 @@
         <circle cx="5.5" cy="18.5" r="2.5"/>
         <circle cx="18.5" cy="18.5" r="2.5"/>
       </svg>
-      <h4 class="trust-badge__title">全球免费配送</h4>
-      <p class="trust-badge__desc">专业包装，安全送达世界任何角落</p>
+      <h4 class="trust-badge__title" data-i18n="trust.shipping.title">Free Global Shipping</h4>
+      <p class="trust-badge__desc" data-i18n="trust.shipping.desc">Professional packaging, delivered worldwide</p>
     </div>
     <div class="trust-badge">
       <svg class="trust-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -110,15 +117,15 @@
         <path d="M3 3v5h5"/>
         <path d="M12 7v5l4 2"/>
       </svg>
-      <h4 class="trust-badge__title">30天鉴赏期</h4>
-      <p class="trust-badge__desc">不满意即可全额退款，无后顾之忧</p>
+      <h4 class="trust-badge__title" data-i18n="trust.return.title">30-Day Trial</h4>
+      <p class="trust-badge__desc" data-i18n="trust.return.desc">Full refund if it does not fit your space</p>
     </div>
     <div class="trust-badge">
       <svg class="trust-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
         <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
       </svg>
-      <h4 class="trust-badge__title">支持艺术家</h4>
-      <p class="trust-badge__desc">80%销售额直接回馈创作者</p>
+      <h4 class="trust-badge__title" data-i18n="trust.support.title">Support Artists</h4>
+      <p class="trust-badge__desc" data-i18n="trust.support.desc">80% of sales go directly to creators</p>
     </div>
   </section>
 
@@ -126,39 +133,39 @@
   <section id="scenes" class="section section--cream">
     <div class="container">
       <div class="section-header">
-        <p class="section-header__label">Shop by Home Scene</p>
-        <h2 class="section-header__title">家庭场景</h2>
-        <p class="section-header__description">选择你的空间，直接进入更贴近真实家居的作品展示</p>
+        <p class="section-header__label" data-i18n="scenes.kicker">Shop by Home Scene</p>
+        <h2 class="section-header__title" data-i18n="scenes.title">Home scenes</h2>
+        <p class="section-header__description" data-i18n="scenes.desc">Pick your space and jump into artwork suggestions that feel right at home.</p>
       </div>
 
       <div class="grid grid--3">
         <a href="artworks.html?space=living" class="collection-card" aria-label="Living room">
-          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80" alt="客厅场景" class="collection-card__image" loading="lazy" decoding="async">
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80" alt="Living room" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">客厅</p>
-            <h3 class="collection-card__title">让客厅更高级</h3>
-            <span class="collection-card__link">进入场景</span>
+            <p class="collection-card__count" data-i18n="scenes.living.tag">Living room</p>
+            <h3 class="collection-card__title" data-i18n="scenes.living.title">Elevate your living room</h3>
+            <span class="collection-card__link" data-i18n="scenes.enter">Enter scene</span>
           </div>
         </a>
 
         <a href="artworks.html?space=bedroom" class="collection-card" aria-label="Bedroom">
-          <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=80" alt="卧室场景" class="collection-card__image" loading="lazy" decoding="async">
+          <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=900&q=80" alt="Bedroom" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">卧室</p>
-            <h3 class="collection-card__title">更温柔的氛围</h3>
-            <span class="collection-card__link">进入场景</span>
+            <p class="collection-card__count" data-i18n="scenes.bedroom.tag">Bedroom</p>
+            <h3 class="collection-card__title" data-i18n="scenes.bedroom.title">A softer bedroom mood</h3>
+            <span class="collection-card__link" data-i18n="scenes.enter">Enter scene</span>
           </div>
         </a>
 
         <a href="artworks.html?space=study" class="collection-card" aria-label="Study">
-          <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=900&q=80" alt="书房场景" class="collection-card__image" loading="lazy" decoding="async">
+          <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=900&q=80" alt="Study" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">书房</p>
-            <h3 class="collection-card__title">更专注的灵感</h3>
-            <span class="collection-card__link">进入场景</span>
+            <p class="collection-card__count" data-i18n="scenes.study.tag">Study</p>
+            <h3 class="collection-card__title" data-i18n="scenes.study.title">Focus-friendly inspiration</h3>
+            <span class="collection-card__link" data-i18n="scenes.enter">Enter scene</span>
           </div>
         </a>
       </div>
@@ -169,9 +176,9 @@
   <section id="collections" class="section">
     <div class="container">
       <div class="section-header">
-        <p class="section-header__label">Curated Collections</p>
-        <h2 class="section-header__title">策展专题</h2>
-        <p class="section-header__description">由专业策展人精心挑选，每一组作品都讲述独特的故事</p>
+        <p class="section-header__label" data-i18n="collections.kicker">Curated Collections</p>
+        <h2 class="section-header__title" data-i18n="collections.title">Collections</h2>
+        <p class="section-header__description" data-i18n="collections.desc">Hand-picked selections that tell a distinct story</p>
       </div>
       
       <div class="grid grid--3" style="grid-template-columns: repeat(3, 1fr);">
@@ -179,9 +186,9 @@
           <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&q=80" alt="Texture Art" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">48 件作品</p>
-            <h3 class="collection-card__title">触感艺术</h3>
-            <span class="collection-card__link">探索系列</span>
+            <p class="collection-card__count">48</p>
+            <h3 class="collection-card__title">Texture Art</h3>
+            <span class="collection-card__link" data-i18n="collections.explore">Explore collection</span>
           </div>
         </a>
         
@@ -189,9 +196,9 @@
           <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80" alt="Abstract Art" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">76 件作品</p>
-            <h3 class="collection-card__title">抽象之境</h3>
-            <span class="collection-card__link">探索系列</span>
+            <p class="collection-card__count">76</p>
+            <h3 class="collection-card__title">Abstract</h3>
+            <span class="collection-card__link" data-i18n="collections.explore">Explore collection</span>
           </div>
         </a>
         
@@ -199,9 +206,9 @@
           <img src="https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&q=80" alt="Wabi Sabi" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
-            <p class="collection-card__count">35 件作品</p>
-            <h3 class="collection-card__title">侘寂之美</h3>
-            <span class="collection-card__link">探索系列</span>
+            <p class="collection-card__count">35</p>
+            <h3 class="collection-card__title">Wabi-sabi</h3>
+            <span class="collection-card__link" data-i18n="collections.explore">Explore collection</span>
           </div>
         </a>
       </div>
@@ -211,13 +218,13 @@
   <!-- Newsletter -->
   <section class="newsletter">
     <div class="container container--narrow">
-      <h2 class="newsletter__title">加入艺术之旅</h2>
-      <p class="newsletter__description">
-        订阅我们的通讯，获取独家艺术品推荐、艺术家访谈和收藏指南
+      <h2 class="newsletter__title" data-i18n="newsletter.title">Join the art journey</h2>
+      <p class="newsletter__description" data-i18n="newsletter.desc">
+        Get curated picks, artist stories, and collecting guides
       </p>
       <form class="newsletter__form">
-        <input type="email" class="newsletter__input" placeholder="输入你的邮箱地址" required>
-        <button type="submit" class="newsletter__submit">订阅</button>
+        <input type="email" class="newsletter__input" data-i18n-placeholder="newsletter.placeholder" placeholder="Enter your email" required>
+        <button type="submit" class="newsletter__submit" data-i18n="newsletter.submit">Subscribe</button>
       </form>
     </div>
   </section>
@@ -229,72 +236,41 @@
         <div class="footer__brand">
           <h3 class="footer__logo">Yii<span>Art</span></h3>
           <p class="footer__desc">
-            我们是连接艺术与生活的桥梁。每一件作品都经过精心挑选，确保为你的空间带来独一无二的美学体验。
+            We connect art with everyday living. Each piece is curated to elevate your space.
           </p>
-          <div class="footer__social">
-            <a href="#" class="footer__social-link" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <rect x="2" y="2" width="20" height="20" rx="5"/>
-                <circle cx="12" cy="12" r="4"/>
-                <circle cx="18" cy="6" r="1"/>
-              </svg>
-            </a>
-            <a href="#" class="footer__social-link" aria-label="Pinterest">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M12 6c-3 0-5 2-5 5 0 2 1 3.5 2.5 4-.3 1-1 3-1 3.5 0 .3.2.5.5.5.2 0 2-1.5 2.5-3 .3.1.7.2 1 .2 3 0 5-2 5-5s-2-5-5-5z"/>
-              </svg>
-            </a>
-            <a href="#" class="footer__social-link" aria-label="WeChat">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                <path d="M8 12h.01M12 12h.01M16 12h.01"/>
-                <circle cx="12" cy="12" r="10"/>
-              </svg>
-            </a>
-          </div>
         </div>
         
         <div class="footer__column">
-          <h4 class="footer__column__title">探索</h4>
+          <h4 class="footer__column__title">Explore</h4>
           <nav class="footer__links">
-            <a href="artworks.html" class="footer__link">全部艺术品</a>
-            <a href="#scenes" class="footer__link">家庭场景</a>
-            <a href="artworks.html?category=abstract" class="footer__link">抽象艺术</a>
-            <a href="artworks.html?category=texture" class="footer__link">纹理艺术</a>
+            <a href="artworks.html" class="footer__link">All artworks</a>
+            <a href="#scenes" class="footer__link" data-i18n="nav.homeScenes">Home Scenes</a>
           </nav>
         </div>
         
         <div class="footer__column">
-          <h4 class="footer__column__title">艺术家</h4>
+          <h4 class="footer__column__title" data-i18n="nav.artists">Artists</h4>
           <nav class="footer__links">
-            <a href="artists.html" class="footer__link">全部艺术家</a>
-            <a href="artists.html?featured=true" class="footer__link">推荐艺术家</a>
+            <a href="artists.html" class="footer__link">All artists</a>
           </nav>
         </div>
         
         <div class="footer__column">
-          <h4 class="footer__column__title">关于</h4>
+          <h4 class="footer__column__title">About</h4>
           <nav class="footer__links">
-            <a href="#" class="footer__link">关于我们</a>
-            <a href="#" class="footer__link">如何购藏</a>
-            <a href="#" class="footer__link">配送与退货</a>
-            <a href="#" class="footer__link">联系我们</a>
+            <a href="#" class="footer__link">About</a>
+            <a href="#" class="footer__link">Shipping & returns</a>
           </nav>
         </div>
       </div>
       
       <div class="footer__bottom">
-        <p class="footer__copyright">© 2024 YiiArt. 保留所有权利。</p>
-        <div class="footer__payment-methods">
-          <span class="footer__payment-icon">VISA</span>
-          <span class="footer__payment-icon">Master</span>
-          <span class="footer__payment-icon">Alipay</span>
-          <span class="footer__payment-icon">WeChat</span>
-        </div>
+        <p class="footer__copyright">© 2024 YiiArt. <span data-i18n="footer.rights">All rights reserved.</span></p>
       </div>
     </div>
   </footer>
 
   <script src="js/app.js"></script>
+  <script src="js/i18n.js"></script>
 </body>
 </html>
