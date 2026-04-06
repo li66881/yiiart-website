@@ -13,7 +13,7 @@
     <div class="header__inner">
       <a href="index.html" class="logo">Yii<span>Art</span></a>
       
-      <nav class="nav">
+      <nav class="nav" aria-label="Primary">
         <a href="artworks.html" class="nav__link">探索</a>
         <a href="artworks.html?category=abstract" class="nav__link">抽象艺术</a>
         <a href="artworks.html?category=texture" class="nav__link">纹理艺术</a>
@@ -22,6 +22,13 @@
       </nav>
       
       <div class="nav__actions">
+        <button class="icon-btn mobile-menu-toggle" aria-label="Menu" aria-expanded="false" aria-controls="mobileNav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M3 6h18"/>
+            <path d="M3 12h18"/>
+            <path d="M3 18h18"/>
+          </svg>
+        </button>
         <button class="icon-btn" aria-label="Search">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="11" cy="11" r="8"/>
@@ -44,6 +51,15 @@
         </button>
       </div>
     </div>
+
+    <!-- Mobile nav (toggle) -->
+    <nav id="mobileNav" class="nav nav--mobile" aria-label="Mobile">
+      <a href="artworks.html" class="nav__link">探索</a>
+      <a href="artworks.html?category=abstract" class="nav__link">抽象艺术</a>
+      <a href="artworks.html?category=texture" class="nav__link">纹理艺术</a>
+      <a href="artists.html" class="nav__link">艺术家</a>
+      <a href="#collections" class="nav__link">策展</a>
+    </nav>
   </header>
 
   <!-- Hero Section -->
@@ -117,7 +133,7 @@
       
       <div class="grid grid--3" style="grid-template-columns: repeat(3, 1fr);">
         <a href="artworks.html?collection=texture" class="collection-card">
-          <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&q=80" alt="Texture Art" class="collection-card__image">
+          <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=800&q=80" alt="Texture Art" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
             <p class="collection-card__count">48 件作品</p>
@@ -132,7 +148,7 @@
         </a>
         
         <a href="artworks.html?collection=abstract" class="collection-card">
-          <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80" alt="Abstract Art" class="collection-card__image">
+          <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&q=80" alt="Abstract Art" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
             <p class="collection-card__count">76 件作品</p>
@@ -147,7 +163,7 @@
         </a>
         
         <a href="artworks.html?collection=wabi-sabi" class="collection-card">
-          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&q=80" alt="Wabi Sabi" class="collection-card__image">
+          <img src="https://images.unsplash.com/photo-1513519245088-0e12902e35ca?w=800&q=80" alt="Wabi Sabi" class="collection-card__image" loading="lazy" decoding="async">
           <div class="collection-card__overlay"></div>
           <div class="collection-card__content">
             <p class="collection-card__count">35 件作品</p>
@@ -187,7 +203,7 @@
       <div class="grid grid--4 mt-2xl">
         <a href="artwork-detail.html" class="card">
           <div class="card__image">
-            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80" alt="Artwork">
+            <img src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&q=80" alt="Artwork" loading="lazy" decoding="async">
             <div class="card__overlay">
               <div class="card__actions">
                 <button class="btn btn--primary btn--icon" aria-label="Add to cart">
@@ -217,7 +233,7 @@
         
         <a href="artwork-detail.html" class="card">
           <div class="card__image">
-            <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=600&q=80" alt="Artwork">
+            <img src="https://images.unsplash.com/photo-1549887534-1541e9326642?w=600&q=80" alt="Artwork" loading="lazy" decoding="async">
             <span class="card__badge">新品</span>
           </div>
           <div class="card__content">
@@ -232,7 +248,7 @@
         
         <a href="artwork-detail.html" class="card">
           <div class="card__image">
-            <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80" alt="Artwork">
+            <img src="https://images.unsplash.com/photo-1578301978693-85fa9c0320b9?w=600&q=80" alt="Artwork" loading="lazy" decoding="async">
           </div>
           <div class="card__content">
             <p class="card__category">侘寂 · 卧室</p>
@@ -246,7 +262,7 @@
         
         <a href="artwork-detail.html" class="card">
           <div class="card__image">
-            <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80" alt="Artwork">
+            <img src="https://images.unsplash.com/photo-1549490349-8643362247b5?w=600&q=80" alt="Artwork" loading="lazy" decoding="async">
           </div>
           <div class="card__content">
             <p class="card__category">抽象 · 餐厅</p>
@@ -279,7 +295,7 @@
           </a>
         </div>
         <div style="position: relative;">
-          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="AR Preview" style="border-radius: 16px; box-shadow: 0 40px 80px rgba(0,0,0,0.4);">
+          <img src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" alt="AR Preview" style="border-radius: 16px; box-shadow: 0 40px 80px rgba(0,0,0,0.4);" loading="lazy" decoding="async">
           <div style="position: absolute; bottom: -20px; right: -20px; background: var(--color-art-gold); color: white; padding: 1rem 1.5rem; border-radius: 8px; font-weight: 500;">
             <svg style="width: 24px; height: 24px; display: inline; vertical-align: middle; margin-right: 8px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 2L2 7l10 5 10-5-10-5z"/>
@@ -304,7 +320,7 @@
       
       <div class="grid grid--3" style="grid-template-columns: repeat(3, 1fr);">
         <a href="artists.html" class="artist-card--large">
-          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar" loading="lazy" decoding="async">
           <h4 class="artist-card--large__name">Elena Morozova</h4>
           <p class="artist-card--large__style">抽象表现主义</p>
           <p class="artist-card--large__location">俄罗斯 · 圣彼得堡</p>
@@ -324,7 +340,7 @@
         </a>
         
         <a href="artists.html" class="artist-card--large">
-          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar">
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar" loading="lazy" decoding="async">
           <h4 class="artist-card--large__name">Sarah Chen</h4>
           <p class="artist-card--large__style">当代极简</p>
           <p class="artist-card--large__location">美国 · 纽约</p>
@@ -344,7 +360,7 @@
         </a>
         
         <a href="artists.html" class="artist-card--large">
-          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop" alt="Artist" class="artist-card--large__avatar" loading="lazy" decoding="async">
           <h4 class="artist-card--large__name">Marcus Webb</h4>
           <p class="artist-card--large__style">纹理艺术</p>
           <p class="artist-card--large__location">英国 · 伦敦</p>
@@ -377,7 +393,7 @@
       
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
         <div style="position: relative; border-radius: 12px; overflow: hidden;">
-          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80" alt="Living Room" style="width: 100%; height: 500px; object-fit: cover;">
+          <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=900&q=80" alt="Living Room" style="width: 100%; height: 500px; object-fit: cover;" loading="lazy" decoding="async">
           <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 2rem; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white;">
             <h4 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 0.5rem;">现代极简客厅</h4>
             <p style="opacity: 0.8;">Elena Morozova《暮光之境》搭配北欧家具</p>
@@ -385,14 +401,14 @@
         </div>
         <div style="display: grid; gap: 2rem;">
           <div style="position: relative; border-radius: 12px; overflow: hidden;">
-            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80" alt="Bedroom" style="width: 100%; height: 240px; object-fit: cover;">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=600&q=80" alt="Bedroom" style="width: 100%; height: 240px; object-fit: cover;" loading="lazy" decoding="async">
             <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white;">
               <h4 style="font-family: var(--font-display); font-size: 1.25rem;">温馨卧室</h4>
               <p style="opacity: 0.8; font-size: 0.875rem;">Yuki Tanaka《静谧时光》营造安宁氛围</p>
             </div>
           </div>
           <div style="position: relative; border-radius: 12px; overflow: hidden;">
-            <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&q=80" alt="Study" style="width: 100%; height: 240px; object-fit: cover;">
+            <img src="https://images.unsplash.com/photo-1600210492493-0946911123ea?w=600&q=80" alt="Study" style="width: 100%; height: 240px; object-fit: cover;" loading="lazy" decoding="async">
             <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 1.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.8)); color: white;">
               <h4 style="font-family: var(--font-display); font-size: 1.25rem;">创意书房</h4>
               <p style="opacity: 0.8; font-size: 0.875rem;">Marcus Webb《金色涟漪》激发灵感</p>
