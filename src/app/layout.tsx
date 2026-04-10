@@ -1,5 +1,10 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import Providers from '@/components/SessionProvider'
+import { CartProvider } from '@/context/CartContext'
+import { WishlistProvider } from '@/context/WishlistContext'
+import { LanguageProvider } from '@/context/LanguageContext'
+import ChatWidget from '@/components/ChatWidget'
 
 export const metadata: Metadata = {
   title: 'YiiArt | Art for Your Home',
@@ -13,7 +18,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <Providers>
+          <LanguageProvider>
+            <WishlistProvider>
+              <CartProvider>
+                {children}
+                <ChatWidget />
+              </CartProvider>
+            </WishlistProvider>
+          </LanguageProvider>
+        </Providers>
+      </body>
     </html>
   )
 }
