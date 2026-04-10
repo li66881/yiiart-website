@@ -1,0 +1,26 @@
+{
+  "name": "yiiart-website",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@sanity/client": "^7.20.0",
+    "@sanity/image-url": "^2.1.1",
+    "@types/node": "^25.6.0",
+    "@types/react": "^19.2.14",
+    "autoprefixer": "^10.4.27",
+    "next": "^15.5.15",
+    "next-sanity": "^12.2.2",
+    "postcss": "^8.5.9",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "sanity": "^5.20.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.9.3"
+  }
+}
