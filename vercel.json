@@ -3,6 +3,19 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
   "installCommand": "npm install",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "destination": "https://www.yiiart.com/$1",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "yiiart.com"
+        }
+      ]
+    }
+  ],
   "env": {
     "NEXTAUTH_SECRET": "yiiart-super-secret-key-change-in-production-12345",
     "NEXTAUTH_URL": "https://www.yiiart.com"
