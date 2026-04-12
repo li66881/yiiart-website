@@ -4,6 +4,8 @@
     "artworks": "Artworks",
     "artists": "Artists",
     "cart": "Cart",
+    "wishlist": "Wishlist",
+    "orders": "Orders",
     "login": "Sign In",
     "register": "Sign Up",
     "logout": "Sign Out",
@@ -61,7 +63,8 @@
     "total": "Total",
     "proceedToCheckout": "Proceed to Checkout",
     "remove": "Remove",
-    "continueShopping": "Continue Shopping"
+    "continueShopping": "Continue Shopping",
+    "orderSummary": "Order Summary"
   },
   "checkout": {
     "title": "Checkout",

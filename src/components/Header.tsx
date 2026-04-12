@@ -16,10 +16,10 @@ export default function Header() {
         <Link href="/" className="text-2xl font-light">Yii<span className="font-medium">Art</span></Link>
         
         <nav className="hidden md:flex items-center gap-8">
-          <Link href="/artworks" className="hover:text-gray-600">Explore</Link>
-          <Link href="/artists" className="hover:text-gray-600">Artists</Link>
-          <Link href="/artworks?category=Abstract" className="hover:text-gray-600">Abstract</Link>
-          <Link href="/artworks?category=Texture" className="hover:text-gray-600">Texture</Link>
+          <Link href="/artworks" className="hover:text-gray-600">{t("nav.explore")}</Link>
+          <Link href="/artists" className="hover:text-gray-600">{t("nav.artists")}</Link>
+          <Link href="/artworks?category=Abstract" className="hover:text-gray-600">{t("nav.abstract")}</Link>
+          <Link href="/artworks?category=Texture" className="hover:text-gray-600">{t("nav.texture")}</Link>
         </nav>
         
         <div className="flex items-center gap-4">
@@ -39,7 +39,7 @@ export default function Header() {
             </button>
           </div>
           
-          <button className="p-2 hover:bg-gray-100 rounded-full">🔍</button>
+          <button className="p-2 hover:bg-gray-100 rounded-full">{t("common.search")}</button>
           
           {/* Wishlist */}
           <Link href="/wishlist" className="p-2 hover:bg-gray-100 rounded-full relative">
@@ -59,7 +59,7 @@ export default function Header() {
           )}
           
           {/* Cart */}
-          <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-full">🛒</Link>
+          <Link href="/cart" className="p-2 hover:bg-gray-100 rounded-full">{t("common.cart")}</Link>
           
           {status === "loading" ? (
             <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
@@ -73,20 +73,20 @@ export default function Header() {
                   <p className="font-medium">{session.user?.name || "User"}</p>
                   <p className="text-gray-500 text-xs">{session.user?.email}</p>
                 </div>
-                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">📦 My Orders</Link>
-                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-gray-50">❤️ Wishlist</Link>
+                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">📦 {t("common.orders")}</Link>
+                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-gray-50">❤️ {t("common.wishlist")}</Link>
                 <button 
                   onClick={() => signOut()}
                   className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-600"
                 >
-                  Logout
+                  {t("auth.signOut")}
                 </button>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
-              <Link href="/login" className="text-sm hover:underline">Login</Link>
-              <Link href="/register" className="px-4 py-1 bg-black text-white text-sm">Register</Link>
+              <Link href="/login" className="text-sm hover:underline">{t("common.login")}</Link>
+              <Link href="/register" className="px-4 py-1 bg-black text-white text-sm">{t("common.register")}</Link>
             </div>
           )}
         </div>

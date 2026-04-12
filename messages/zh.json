@@ -4,6 +4,8 @@
     "artworks": "艺术品",
     "artists": "艺术家",
     "cart": "购物车",
+    "wishlist": "心愿单",
+    "orders": "订单",
     "login": "登录",
     "register": "注册",
     "logout": "退出",
@@ -61,7 +63,8 @@
     "total": "合计",
     "proceedToCheckout": "去结算",
     "remove": "删除",
-    "continueShopping": "继续购物"
+    "continueShopping": "继续购物",
+    "orderSummary": "订单摘要"
   },
   "checkout": {
     "title": "结算",

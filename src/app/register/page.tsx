@@ -4,8 +4,10 @@ import { useState } from "react"
 import { signIn } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { useLanguage } from "@/context/LanguageContext"
 
 export default function RegisterPage() {
+  const { t } = useLanguage()
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -31,8 +33,6 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      // In production, call API to create user in database
-      // For demo, just sign in with the new account
       const result = await signIn("credentials", {
         email,
         password,
@@ -55,7 +55,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="max-w-md w-full px-6 py-8 bg-white shadow-md">
-        <h1 className="text-2xl font-medium text-center mb-8">Create Account</h1>
+        <h1 className="text-2xl font-medium text-center mb-8">{t("auth.signUp")}</h1>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           {error && (
@@ -63,7 +63,7 @@ export default function RegisterPage() {
           )}
           
           <div>
-            <label className="block text-sm font-medium mb-1">Name</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.name")}</label>
             <input
               type="text"
               value={name}
@@ -74,7 +74,7 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Email</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.email")}</label>
             <input
               type="email"
               value={email}
@@ -85,7 +85,7 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Password</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.password")}</label>
             <input
               type="password"
               value={password}
@@ -96,7 +96,7 @@ export default function RegisterPage() {
           </div>
           
           <div>
-            <label className="block text-sm font-medium mb-1">Confirm Password</label>
+            <label className="block text-sm font-medium mb-1">{t("auth.confirmPassword")}</label>
             <input
               type="password"
               value={confirmPassword}
@@ -111,14 +111,14 @@ export default function RegisterPage() {
             disabled={loading}
             className="w-full py-2 bg-black text-white hover:bg-gray-800 disabled:opacity-50"
           >
-            {loading ? "Creating account..." : "Create Account"}
+            {loading ? t("common.loading") : t("auth.signUp")}
           </button>
         </form>
         
         <p className="mt-6 text-center text-sm">
-          Already have an account?{" "}
+          {t("auth.haveAccount")}{" "}
           <Link href="/login" className="underline">
-            Sign in
+            {t("auth.signInLink")}
           </Link>
         </p>
       </div>
