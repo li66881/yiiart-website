@@ -1,19 +1,14 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 
-export default function CheckoutSuccessPage() {
+function CheckoutSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [sessionId, setSessionId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const id = searchParams.get("session_id")
-    setSessionId(id)
-  }, [searchParams])
+  const sessionId = searchParams.get("session_id")
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -55,5 +50,17 @@ export default function CheckoutSuccessPage() {
 
       <Footer />
     </div>
+  )
+}
+
+export default function CheckoutSuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    }>
+      <CheckoutSuccessContent />
+    </Suspense>
   )
 }
