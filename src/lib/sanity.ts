@@ -8,7 +8,10 @@ export const client = createClient({
   useCdn: true,
 })
 
-const builder = createImageUrlBuilder({ projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID, dataset: process.env.NEXT_PUBLIC_SANITY_DATASET })
+const builder = createImageUrlBuilder({ 
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '', 
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || '' 
+})
 
 export function urlFor(source: any) {
   return builder.image(source)
