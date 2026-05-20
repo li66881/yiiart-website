@@ -1,7 +1,16 @@
 import Link from "next/link"
 import Header from "@/components/Header"
+import { getAdminConfigStatus } from "@/lib/admin"
+
+export const dynamic = "force-dynamic"
 
 const tools = [
+  {
+    title: "Create artwork",
+    description: "Upload artwork images and publish a saleable product to Sanity.",
+    href: "/admin/artwork-new",
+    external: false,
+  },
   {
     title: "Create artist",
     description: "Add a protected artist profile to Sanity.",
@@ -35,6 +44,40 @@ const tools = [
 ]
 
 export default function AdminPage() {
+  const status = getAdminConfigStatus()
+  const checks = [
+    {
+      label: "Sanity project",
+      ready: status.sanityProject,
+      detail: "Required to read public artwork and artist content.",
+    },
+    {
+      label: "Admin password",
+      ready: status.adminPassword,
+      detail: "Required before local admin forms can publish.",
+    },
+    {
+      label: "Sanity write token",
+      ready: status.sanityWriteToken,
+      detail: "Required to create artists, upload images, and publish artworks.",
+    },
+    {
+      label: "Stripe",
+      ready: status.stripe,
+      detail: "Required for card checkout.",
+    },
+    {
+      label: "PayPal",
+      ready: status.paypal,
+      detail: "Required for PayPal checkout.",
+    },
+    {
+      label: "Newsletter email",
+      ready: status.newsletter,
+      detail: "Required for Resend or SendGrid subscription notifications.",
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -45,10 +88,27 @@ export default function AdminPage() {
             <p className="text-sm uppercase tracking-widest text-gray-500 mb-2">YiiArt operations</p>
             <h1 className="text-3xl font-light">Admin tools</h1>
             <p className="mt-3 max-w-2xl text-gray-600">
-              Sensitive settings are managed through Vercel environment variables and Sanity permissions.
-              This page is only a launcher for operational tools.
+              Use the local admin forms to publish artists and artworks after ADMIN_PASSWORD and
+              SANITY_WRITE_TOKEN are configured. Payment and marketing tools open their own dashboards.
             </p>
           </div>
+
+          <section className="mb-8 border bg-white p-6">
+            <h2 className="font-medium mb-4">Configuration status</h2>
+            <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+              {checks.map((check) => (
+                <div key={check.label} className="border p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <h3 className="font-medium">{check.label}</h3>
+                    <span className={`text-xs ${check.ready ? "text-green-700" : "text-red-700"}`}>
+                      {check.ready ? "Ready" : "Missing"}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-sm text-gray-600">{check.detail}</p>
+                </div>
+              ))}
+            </div>
+          </section>
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => (
@@ -57,12 +117,12 @@ export default function AdminPage() {
           </div>
 
           <section className="mt-8 border bg-white p-6">
-            <h2 className="font-medium mb-3">Before going live</h2>
+            <h2 className="font-medium mb-3">Before publishing products</h2>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li>Set ADMIN_PASSWORD, SEED_SECRET, SANITY_WRITE_TOKEN, Stripe keys, and PayPal keys in Vercel.</li>
-              <li>Add GA4, Google Search Console, Meta Pixel, Pinterest Tag, and newsletter email keys before launch.</li>
-              <li>Rotate any keys that were previously committed to GitHub history.</li>
-              <li>Use Sanity Studio for product and image editing; Stripe and PayPal dashboards hold payment/order records.</li>
+              <li>Set ADMIN_PASSWORD and SANITY_WRITE_TOKEN in Vercel and in local .env.local.</li>
+              <li>Use Create artist first when a new artist does not exist in the artist dropdown.</li>
+              <li>Use Create artwork to upload images from Desktop / 网站素材 and publish the sale page.</li>
+              <li>Stripe, PayPal, GA4, Meta Pixel, Pinterest Tag, and email tools need their own account keys.</li>
             </ul>
           </section>
         </div>

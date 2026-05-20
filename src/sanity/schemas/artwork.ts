@@ -10,7 +10,7 @@ export default {
     { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title.zh' }},
     { name: 'artist', title: 'Artist', type: 'reference', to: [{ type: 'artist' }]},
     { name: 'price', title: 'Price (CNY)', type: 'number'},
-    { name: 'dimensions', title: 'Dimensions', type: 'string', description: 'e.g. 60×80cm'},
+    { name: 'dimensions', title: 'Dimensions', type: 'string', description: 'e.g. 60 x 80 cm'},
     { name: 'medium', title: 'Medium', type: 'string',
       options: { list: ['Oil on Canvas', 'Acrylic on Canvas', 'Oil on Panel', 'Mixed Media'] }},
     { name: 'category', title: 'Category', type: 'string',

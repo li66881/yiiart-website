@@ -9,11 +9,17 @@ interface Props {
 async function getArtworks(category?: string) {
   if (category) {
     return client.fetch(
-      `*[_type == "artwork" && category == $category] | order(_createdAt desc)`,
+      `*[_type == "artwork" && category == $category] | order(_createdAt desc){
+        ...,
+        artist->{name}
+      }`,
       { category }
     )
   }
-  return client.fetch(`*[_type == "artwork"] | order(_createdAt desc)`)
+  return client.fetch(`*[_type == "artwork"] | order(_createdAt desc){
+    ...,
+    artist->{name}
+  }`)
 }
 
 export default async function ArtworksPage({ searchParams }: Props) {
@@ -67,7 +73,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
                     )}
                   </div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">
-                    {artwork.category} · {artwork.medium}
+                    {[artwork.category, artwork.medium].filter(Boolean).join(" / ")}
                   </p>
                   <h3 className="font-medium mt-1">
                     {artwork.title?.zh || artwork.title?.en}
@@ -76,7 +82,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
                     {artwork.artist?.name?.zh || artwork.artist?.name?.en}
                   </p>
                   <p className="mt-1 font-semibold">
-                    ¥{artwork.price?.toLocaleString()}
+                    CNY {artwork.price?.toLocaleString()}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     {artwork.dimensions}
