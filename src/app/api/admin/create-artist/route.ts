@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
-import { createSlug, validateAdminPublishing } from "@/lib/admin"
+import { adminMutationError, createSlug, validateAdminPublishing } from "@/lib/admin"
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i",
@@ -52,9 +52,7 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error("Create artist error:", error)
-    return NextResponse.json(
-      { success: false, error: error?.message || "Create failed." },
-      { status: 500 }
-    )
+    const adminError = adminMutationError(error, "Create failed.")
+    return NextResponse.json({ success: false, error: adminError.error }, { status: adminError.status })
   }
 }

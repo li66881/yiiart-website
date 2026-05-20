@@ -9,6 +9,26 @@ export function getAdminConfigStatus() {
   }
 }
 
+export function adminMutationError(error: any, fallback: string) {
+  const responseBody = typeof error?.responseBody === "string" ? error.responseBody : ""
+  const message = typeof error?.message === "string" ? error.message : ""
+  const permission = error?.statusCode === 403
+    || responseBody.includes("insufficientPermissionsError")
+    || message.includes("Insufficient permissions")
+
+  if (permission) {
+    return {
+      status: 403,
+      error: "Sanity token permission is too low. Create a new Sanity API token with Editor/create permission, then replace SANITY_WRITE_TOKEN.",
+    }
+  }
+
+  return {
+    status: 500,
+    error: message || fallback,
+  }
+}
+
 export function validateAdminPublishing(password: unknown) {
   const adminPassword = process.env.ADMIN_PASSWORD
 

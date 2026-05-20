@@ -59,7 +59,7 @@ export default function AdminPage() {
     {
       label: "Sanity write token",
       ready: status.sanityWriteToken,
-      detail: "Required to create artists, upload images, and publish artworks.",
+      detail: "Must be an Editor token with create permission, not a Viewer token.",
     },
     {
       label: "Stripe",
@@ -119,7 +119,7 @@ export default function AdminPage() {
           <section className="mt-8 border bg-white p-6">
             <h2 className="font-medium mb-3">Before publishing products</h2>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li>Set ADMIN_PASSWORD and SANITY_WRITE_TOKEN in Vercel and in local .env.local.</li>
+              <li>Set ADMIN_PASSWORD and an Editor-level SANITY_WRITE_TOKEN in Vercel and in local .env.local.</li>
               <li>Use Create artist first when a new artist does not exist in the artist dropdown.</li>
               <li>Use Create artwork to upload images from Desktop / 网站素材 and publish the sale page.</li>
               <li>Stripe, PayPal, GA4, Meta Pixel, Pinterest Tag, and email tools need their own account keys.</li>

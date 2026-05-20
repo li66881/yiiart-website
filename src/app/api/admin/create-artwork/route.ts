@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
-import { createSlug, stringField, validateAdminPublishing } from "@/lib/admin"
+import { adminMutationError, createSlug, stringField, validateAdminPublishing } from "@/lib/admin"
 
 export const runtime = "nodejs"
 
@@ -94,10 +94,8 @@ export async function POST(request: NextRequest) {
     })
   } catch (error: any) {
     console.error("Create artwork error:", error)
-    return NextResponse.json(
-      { success: false, error: error?.message || "Create artwork failed." },
-      { status: 500 }
-    )
+    const adminError = adminMutationError(error, "Create artwork failed.")
+    return NextResponse.json({ success: false, error: adminError.error }, { status: adminError.status })
   }
 }
 
