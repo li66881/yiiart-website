@@ -87,11 +87,9 @@ export default function LoginPage() {
           </Link>
         </p>
         
-        <div className="mt-6 p-4 bg-gray-50 text-sm">
-          <p className="font-medium mb-2">{t("auth.demoAccount")}</p>
-          <p>{t("auth.email")}: demo@yiiart.com</p>
-          <p>{t("auth.password")}: demo123</p>
-        </div>
+        <p className="mt-6 text-center text-xs text-gray-500">
+          Customer accounts are being prepared. Checkout is still available from the cart.
+        </p>
       </div>
     </div>
   )

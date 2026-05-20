@@ -2,17 +2,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@sanity/client';
 import { sampleArtists, sampleArtworks } from '@/lib/sanity-seed-data';
 
-// Seed API - creates sample artists and artworks in Sanity CMS
-// Protected by a simple secret token
-
-const SEED_SECRET = process.env.SEED_SECRET || 'yiiart-seed-secret';
+// Seed API - creates sample artists and artworks in Sanity CMS.
+// Keep this disabled unless SEED_SECRET and SANITY_WRITE_TOKEN are configured.
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    // Simple token auth
-    if (body.token !== SEED_SECRET) {
+    const seedSecret = process.env.SEED_SECRET;
+
+    if (!seedSecret || !process.env.SANITY_WRITE_TOKEN) {
+      return NextResponse.json({ error: 'Seed endpoint is not configured' }, { status: 503 });
+    }
+
+    if (body.token !== seedSecret) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -110,7 +113,6 @@ export async function GET() {
       sanity: 'connected',
       artists,
       artworks,
-      seedSecret: SEED_SECRET,
     });
   } catch (error: any) {
     return NextResponse.json({
