@@ -5,6 +5,9 @@ import { CartProvider } from '@/context/CartContext'
 import { WishlistProvider } from '@/context/WishlistContext'
 import { LanguageProvider } from '@/context/LanguageContext'
 import ChatWidget from '@/components/ChatWidget'
+import CookieConsent from '@/components/CookieConsent'
+import MarketingPixels from '@/components/MarketingPixels'
+import VercelInsights from '@/components/VercelInsights'
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yiiart.com'),
@@ -32,6 +35,9 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
 }
 
 export default function RootLayout({
@@ -52,6 +58,9 @@ export default function RootLayout({
             </WishlistProvider>
           </LanguageProvider>
         </Providers>
+        <MarketingPixels />
+        <VercelInsights />
+        <CookieConsent />
       </body>
     </html>
   )

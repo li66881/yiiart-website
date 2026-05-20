@@ -1,21 +1,20 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { useCart } from "@/context/CartContext"
-import { useLanguage } from "@/context/LanguageContext"
+import { FormEvent, useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { useRouter } from "next/navigation"
+import { useCart } from "@/context/CartContext"
 
 type Step = "shipping" | "payment" | "confirm"
+type PaymentMethod = "card" | "paypal"
 
 export default function CheckoutPage() {
-  const { t } = useLanguage()
-  const { items, subtotal, clearCart } = useCart()
+  const { items, subtotal } = useCart()
   const router = useRouter()
   const [step, setStep] = useState<Step>("shipping")
   const [loading, setLoading] = useState(false)
-  
+  const [error, setError] = useState("")
   const [shippingAddress, setShippingAddress] = useState({
     name: "",
     phone: "",
@@ -24,376 +23,321 @@ export default function CheckoutPage() {
     postalCode: "",
     notes: "",
   })
-
-  const [paymentMethod, setPaymentMethod] = useState("wechat")
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card")
 
   useEffect(() => {
     if (items.length === 0) {
       router.push("/cart")
     }
-  }, [items, router])
+  }, [items.length, router])
 
-  const handleShippingSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleShippingSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError("")
     setStep("payment")
   }
 
-  const handlePaymentSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handlePaymentSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setError("")
     setStep("confirm")
   }
 
   const handlePlaceOrder = async () => {
     setLoading(true)
-    
+    setError("")
+
     try {
-      // Create Stripe checkout session
-      const response = await fetch("/api/checkout/session", {
+      const endpoint = paymentMethod === "paypal"
+        ? "/api/checkout/paypal"
+        : "/api/checkout/session"
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          items: items.map(item => ({
+          items: items.map((item) => ({
             id: item.id,
-            title: item.title,
-            artist: item.artist,
-            price: item.price,
-            image: item.image,
             quantity: item.quantity,
           })),
           shippingAddress,
-          paymentMethod,
         }),
       })
+      const data = await response.json()
 
-      const { url, sessionId, error } = await response.json()
-
-      if (error) {
-        alert("Payment failed: " + error)
-        setLoading(false)
-        return
+      if (!response.ok || !data.url) {
+        throw new Error(data.error || "Checkout could not be started.")
       }
 
-      // For demo: simulate successful payment without actual Stripe
-      // In production, this would redirect to Stripe
-      if (paymentMethod === "demo" || paymentMethod === "wechat" || paymentMethod === "alipay") {
-        // Save order to localStorage
-        const order = {
-          id: Date.now().toString(),
-          orderNumber: "YII" + Date.now().toString().slice(-10),
-          date: new Date().toISOString().split("T")[0],
-          status: "processing",
-          items: items.map(item => ({
-            id: item.id,
-            title: item.title,
-            artist: item.artist,
-            price: item.price,
-            image: item.image,
-            quantity: item.quantity,
-          })),
-          subtotal: subtotal,
-          shipping: 0,
-          total: subtotal,
-          shippingAddress,
-          paymentMethod,
-        }
-
-        const savedOrders = localStorage.getItem("yiiart-orders")
-        const orders = savedOrders ? JSON.parse(savedOrders) : []
-        orders.unshift(order)
-        localStorage.setItem("yiiart-orders", JSON.stringify(orders))
-
-        clearCart()
-        router.push("/orders")
-      } else if (url) {
-        // Real Stripe redirect
-        window.location.href = url
-      }
-    } catch (error) {
-      console.error("Checkout error:", error)
-      alert("Checkout failed. Please try again.")
+      window.location.href = data.url
+    } catch (checkoutError) {
       setLoading(false)
+      setError(checkoutError instanceof Error ? checkoutError.message : "Checkout failed. Please try again.")
     }
   }
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
-      
+
       <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-4xl">
+        <div className="container mx-auto px-4 max-w-5xl">
           <h1 className="text-3xl font-light mb-8">Checkout</h1>
 
-          {/* Progress Steps */}
-          <div className="flex justify-center mb-8">
-            <div className="flex items-center gap-4">
-              <div className={`flex items-center gap-2 ${step === "shipping" || step === "payment" || step === "confirm" ? "text-black" : "text-gray-400"}`}>
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center ${step === "shipping" || step === "payment" || step === "confirm" ? "bg-black text-white" : "bg-gray-200"}`}>1</span>
-                <span>Shipping</span>
-              </div>
-              <div className="w-12 h-px bg-gray-300" />
-              <div className={`flex items-center gap-2 ${step === "payment" || step === "confirm" ? "text-black" : "text-gray-400"}`}>
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center ${step === "payment" || step === "confirm" ? "bg-black text-white" : "bg-gray-200"}`}>2</span>
-                <span>Payment</span>
-              </div>
-              <div className="w-12 h-px bg-gray-300" />
-              <div className={`flex items-center gap-2 ${step === "confirm" ? "text-black" : "text-gray-400"}`}>
-                <span className={`w-8 h-8 rounded-full flex items-center justify-center ${step === "confirm" ? "bg-black text-white" : "bg-gray-200"}`}>3</span>
-                <span>Confirm</span>
-              </div>
-            </div>
+          <div className="mb-8 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <StepIndicator active={step === "shipping"} complete={step !== "shipping"} label="Shipping" number="1" />
+            <span className="h-px w-10 bg-gray-300" />
+            <StepIndicator active={step === "payment"} complete={step === "confirm"} label="Payment" number="2" />
+            <span className="h-px w-10 bg-gray-300" />
+            <StepIndicator active={step === "confirm"} complete={false} label="Confirm" number="3" />
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Content */}
+          <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
-              
-              {/* Step 1: Shipping */}
               {step === "shipping" && (
-                <form onSubmit={handleShippingSubmit} className="bg-white p-6 border">
-                  <h2 className="text-xl font-medium mb-6">Shipping Information</h2>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Full Name *</label>
-                      <input
-                        type="text"
-                        required
-                        value={shippingAddress.name}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, name: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Phone *</label>
-                      <input
-                        type="tel"
-                        required
-                        value={shippingAddress.phone}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, phone: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1"
-                      />
-                    </div>
+                <form onSubmit={handleShippingSubmit} className="border bg-white p-6">
+                  <h2 className="text-xl font-medium mb-6">Shipping information</h2>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    <TextField
+                      label="Full name"
+                      required
+                      value={shippingAddress.name}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, name: value })}
+                    />
+                    <TextField
+                      label="Phone"
+                      type="tel"
+                      required
+                      value={shippingAddress.phone}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, phone: value })}
+                    />
+                    <TextField
+                      label="Address"
+                      required
+                      className="md:col-span-2"
+                      value={shippingAddress.address}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, address: value })}
+                    />
+                    <TextField
+                      label="City"
+                      required
+                      value={shippingAddress.city}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, city: value })}
+                    />
+                    <TextField
+                      label="Postal code"
+                      required
+                      value={shippingAddress.postalCode}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, postalCode: value })}
+                    />
                     <div className="md:col-span-2">
-                      <label className="block text-sm font-medium mb-1">Address *</label>
-                      <input
-                        type="text"
-                        required
-                        value={shippingAddress.address}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, address: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">City *</label>
-                      <input
-                        type="text"
-                        required
-                        value={shippingAddress.city}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, city: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Postal Code *</label>
-                      <input
-                        type="text"
-                        required
-                        value={shippingAddress.postalCode}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, postalCode: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium mb-1">Order Notes (optional)</label>
+                      <label className="block text-sm font-medium mb-1">Order notes</label>
                       <textarea
                         value={shippingAddress.notes}
-                        onChange={(e) => setShippingAddress({ ...shippingAddress, notes: e.target.value })}
-                        className="w-full px-3 py-2 border focus:outline-none focus:ring-1 h-20"
-                        placeholder="Special instructions for delivery or artwork..."
+                        onChange={(event) => setShippingAddress({ ...shippingAddress, notes: event.target.value })}
+                        className="h-24 w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
+                        placeholder="Delivery or framing notes"
                       />
                     </div>
                   </div>
-                  <button type="submit" className="w-full mt-6 py-3 bg-black text-white hover:bg-gray-800">
-                    Continue to Payment →
+                  <button type="submit" className="mt-6 w-full bg-black py-3 text-white hover:bg-gray-800">
+                    Continue to payment
                   </button>
                 </form>
               )}
 
-              {/* Step 2: Payment */}
               {step === "payment" && (
-                <form onSubmit={handlePaymentSubmit} className="bg-white p-6 border">
-                  <h2 className="text-xl font-medium mb-6">Payment Method</h2>
+                <form onSubmit={handlePaymentSubmit} className="border bg-white p-6">
+                  <h2 className="text-xl font-medium mb-6">Payment method</h2>
                   <div className="space-y-3">
-                    <label className={`flex items-center gap-3 p-4 border cursor-pointer hover:bg-gray-50 ${paymentMethod === "wechat" ? "border-black" : ""}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="wechat"
-                        checked={paymentMethod === "wechat"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="text-2xl">💳</span>
-                      <div>
-                        <p className="font-medium">WeChat Pay</p>
-                        <p className="text-sm text-gray-500">Pay with WeChat</p>
-                      </div>
-                    </label>
-                    <label className={`flex items-center gap-3 p-4 border cursor-pointer hover:bg-gray-50 ${paymentMethod === "alipay" ? "border-black" : ""}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="alipay"
-                        checked={paymentMethod === "alipay"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="text-2xl">💰</span>
-                      <div>
-                        <p className="font-medium">Alipay</p>
-                        <p className="text-sm text-gray-500">Pay with Alipay</p>
-                      </div>
-                    </label>
-                    <label className={`flex items-center gap-3 p-4 border cursor-pointer hover:bg-gray-50 ${paymentMethod === "paypal" ? "border-black" : ""}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="paypal"
-                        checked={paymentMethod === "paypal"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="text-2xl">🅿️</span>
-                      <div>
-                        <p className="font-medium">PayPal</p>
-                        <p className="text-sm text-gray-500">Pay with PayPal</p>
-                      </div>
-                    </label>
-                    <label className={`flex items-center gap-3 p-4 border cursor-pointer hover:bg-gray-50 ${paymentMethod === "card" ? "border-black" : ""}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="card"
-                        checked={paymentMethod === "card"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="text-2xl">💳</span>
-                      <div>
-                        <p className="font-medium">Credit/Debit Card</p>
-                        <p className="text-sm text-gray-500">Visa, Mastercard, Amex</p>
-                      </div>
-                    </label>
-                    <label className={`flex items-center gap-3 p-4 border cursor-pointer hover:bg-gray-50 ${paymentMethod === "demo" ? "border-black" : ""}`}>
-                      <input
-                        type="radio"
-                        name="payment"
-                        value="demo"
-                        checked={paymentMethod === "demo"}
-                        onChange={(e) => setPaymentMethod(e.target.value)}
-                      />
-                      <span className="text-2xl">🎭</span>
-                      <div>
-                        <p className="font-medium">Demo (No Real Payment)</p>
-                        <p className="text-sm text-gray-500">For testing purposes only</p>
-                      </div>
-                    </label>
+                    <PaymentOption
+                      checked={paymentMethod === "card"}
+                      label="Credit or debit card"
+                      description="Secure checkout powered by Stripe."
+                      onSelect={() => setPaymentMethod("card")}
+                    />
+                    <PaymentOption
+                      checked={paymentMethod === "paypal"}
+                      label="PayPal"
+                      description="Pay with your PayPal account or PayPal-supported cards."
+                      onSelect={() => setPaymentMethod("paypal")}
+                    />
                   </div>
-                  <div className="flex gap-4 mt-6">
-                    <button type="button" onClick={() => setStep("shipping")} className="flex-1 py-3 border hover:bg-gray-50">
-                      ← Back
+                  <div className="mt-6 flex gap-4">
+                    <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
+                      Back
                     </button>
-                    <button type="submit" className="flex-1 py-3 bg-black text-white hover:bg-gray-800">
-                      Review Order →
+                    <button type="submit" className="flex-1 bg-black py-3 text-white hover:bg-gray-800">
+                      Review order
                     </button>
                   </div>
                 </form>
               )}
 
-              {/* Step 3: Confirm */}
               {step === "confirm" && (
-                <div className="bg-white p-6 border">
-                  <h2 className="text-xl font-medium mb-6">Review Your Order</h2>
-                  
-                  <div className="space-y-4 border-b pb-4">
-                    <h3 className="font-medium">Shipping Address</h3>
+                <div className="border bg-white p-6">
+                  <h2 className="text-xl font-medium mb-6">Review your order</h2>
+
+                  <section className="border-b pb-4">
+                    <h3 className="font-medium mb-2">Shipping address</h3>
                     <p>{shippingAddress.name}</p>
                     <p>{shippingAddress.phone}</p>
                     <p>{shippingAddress.address}</p>
                     <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
-                  </div>
+                    {shippingAddress.notes && <p className="mt-2 text-sm text-gray-500">{shippingAddress.notes}</p>}
+                  </section>
 
-                  <div className="space-y-4 border-b pb-4 mt-4">
-                    <h3 className="font-medium">Payment Method</h3>
-                    <p>{paymentMethod === "wechat" ? "WeChat Pay" : paymentMethod === "alipay" ? "Alipay" : paymentMethod === "paypal" ? "PayPal" : paymentMethod === "card" ? "Credit/Debit Card" : "Demo"}</p>
-                  </div>
+                  <section className="border-b py-4">
+                    <h3 className="font-medium mb-2">Payment method</h3>
+                    <p>{paymentMethod === "paypal" ? "PayPal" : "Credit or debit card"}</p>
+                  </section>
 
-                  <div className="space-y-4 mt-4">
+                  <section className="space-y-4 py-4">
                     <h3 className="font-medium">Items</h3>
                     {items.map((item) => (
-                      <div key={item.id} className="flex gap-4 items-center">
-                        <div className="w-16 h-16 bg-gray-100">
-                          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <div key={item.id} className="flex items-center gap-4">
+                        <div className="h-16 w-16 bg-gray-100">
+                          <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.title}</p>
                           <p className="text-sm text-gray-500">by {item.artist}</p>
                         </div>
-                        <p>¥{item.price.toLocaleString()} × {item.quantity}</p>
+                        <p className="text-sm">CNY {item.price.toLocaleString()} x {item.quantity}</p>
                       </div>
                     ))}
-                  </div>
+                  </section>
 
-                  <div className="flex gap-4 mt-6">
-                    <button onClick={() => setStep("payment")} className="flex-1 py-3 border hover:bg-gray-50">
-                      ← Back
+                  {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+
+                  <div className="flex gap-4">
+                    <button onClick={() => setStep("payment")} className="flex-1 border py-3 hover:bg-gray-50">
+                      Back
                     </button>
-                    <button 
+                    <button
                       onClick={handlePlaceOrder}
                       disabled={loading}
-                      className="flex-1 py-3 bg-black text-white hover:bg-gray-800 disabled:opacity-50"
+                      className="flex-1 bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50"
                     >
-                      {loading ? "Processing..." : "Place Order"}
+                      {loading ? "Redirecting..." : "Place order"}
                     </button>
                   </div>
                 </div>
               )}
             </div>
 
-            {/* Order Summary */}
-            <div className="lg:col-span-1">
-              <div className="bg-white p-6 border sticky top-24">
-                <h2 className="text-xl font-medium mb-6">Order Summary</h2>
+            <aside className="lg:col-span-1">
+              <div className="sticky top-24 border bg-white p-6">
+                <h2 className="text-xl font-medium mb-6">Order summary</h2>
                 <div className="space-y-3 mb-6">
                   {items.map((item) => (
                     <div key={item.id} className="flex gap-3">
-                      <div className="w-16 h-16 bg-gray-100 flex-shrink-0">
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <div className="h-16 w-16 flex-shrink-0 bg-gray-100">
+                        <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">{item.title}</p>
-                        <p className="text-xs text-gray-500">× {item.quantity}</p>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">{item.title}</p>
+                        <p className="text-xs text-gray-500">x {item.quantity}</p>
                       </div>
-                      <p className="text-sm">¥{(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="text-sm">CNY {(item.price * item.quantity).toLocaleString()}</p>
                     </div>
                   ))}
                 </div>
-                <div className="border-t pt-4 space-y-2">
+                <div className="space-y-2 border-t pt-4">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>¥{subtotal.toLocaleString()}</span>
+                    <span>CNY {subtotal.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
                     <span className="text-green-600">Free</span>
                   </div>
-                  <div className="flex justify-between font-medium text-lg pt-2 border-t">
+                  <div className="flex justify-between border-t pt-2 text-lg font-medium">
                     <span>Total</span>
-                    <span>¥{subtotal.toLocaleString()}</span>
+                    <span>CNY {subtotal.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
-            </div>
+            </aside>
           </div>
         </div>
       </main>
 
       <Footer />
     </div>
+  )
+}
+
+function StepIndicator({
+  active,
+  complete,
+  label,
+  number,
+}: {
+  active: boolean
+  complete: boolean
+  label: string
+  number: string
+}) {
+  return (
+    <div className={`flex items-center gap-2 ${active || complete ? "text-black" : "text-gray-400"}`}>
+      <span className={`flex h-8 w-8 items-center justify-center rounded-full ${active || complete ? "bg-black text-white" : "bg-gray-200"}`}>
+        {number}
+      </span>
+      <span>{label}</span>
+    </div>
+  )
+}
+
+function TextField({
+  label,
+  value,
+  onChange,
+  required,
+  type = "text",
+  className = "",
+}: {
+  label: string
+  value: string
+  onChange: (value: string) => void
+  required?: boolean
+  type?: string
+  className?: string
+}) {
+  return (
+    <div className={className}>
+      <label className="block text-sm font-medium mb-1">{label}{required ? " *" : ""}</label>
+      <input
+        type={type}
+        required={required}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
+      />
+    </div>
+  )
+}
+
+function PaymentOption({
+  checked,
+  label,
+  description,
+  onSelect,
+}: {
+  checked: boolean
+  label: string
+  description: string
+  onSelect: () => void
+}) {
+  return (
+    <label className={`flex cursor-pointer items-center gap-3 border p-4 hover:bg-gray-50 ${checked ? "border-black" : ""}`}>
+      <input type="radio" name="payment" checked={checked} onChange={onSelect} />
+      <span className="h-10 w-10 border flex items-center justify-center text-xs font-medium">
+        {label === "PayPal" ? "PP" : "CARD"}
+      </span>
+      <span>
+        <span className="block font-medium">{label}</span>
+        <span className="block text-sm text-gray-500">{description}</span>
+      </span>
+    </label>
   )
 }

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useLanguage } from "@/context/LanguageContext"
+import NewsletterSignup from "@/components/NewsletterSignup"
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -9,7 +10,7 @@ export default function Footer() {
   return (
     <footer className="py-12 border-t">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           <div>
             <h3 className="font-medium mb-4">YiiArt</h3>
             <p className="text-sm text-gray-500">Art for Your Home</p>
@@ -39,6 +40,10 @@ export default function Footer() {
               <li><Link href="/privacy">{t("footer.privacy")}</Link></li>
               <li><Link href="/terms">{t("footer.terms")}</Link></li>
             </ul>
+          </div>
+          <div>
+            <h4 className="font-medium mb-4">Newsletter</h4>
+            <NewsletterSignup />
           </div>
         </div>
         <div className="text-center text-gray-500 text-sm pt-8 border-t">

@@ -42,10 +42,38 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const title = artwork.title?.zh || artwork.title?.en || "Untitled artwork"
   const artistName = artwork.artist?.name?.zh || artwork.artist?.name?.en || "YiiArt artist"
   const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1200).url() : ""
+  const price = Number(artwork.price || 0)
+  const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
+  const currency = (process.env.STRIPE_CURRENCY || "cny").toUpperCase()
+  const description = artwork.description?.zh || artwork.description?.en
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: title,
+    image: imageUrl ? [imageUrl] : undefined,
+    description,
+    brand: {
+      "@type": "Brand",
+      name: "YiiArt",
+    },
+    category: artwork.category || "Artwork",
+    offers: {
+      "@type": "Offer",
+      url: `${baseUrl}/artwork/${slug}`,
+      priceCurrency: currency,
+      price: price.toFixed(2),
+      availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+    },
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 py-12">
@@ -83,7 +111,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <h1 className="text-4xl font-light mb-2">{title}</h1>
               <p className="text-xl text-gray-500 mb-6">{artistName}</p>
               <p className="text-3xl font-semibold mb-6">
-                ¥{Number(artwork.price || 0).toLocaleString()}
+                CNY {price.toLocaleString()}
               </p>
 
               <div className="space-y-3 text-gray-600 mb-8">
@@ -92,10 +120,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 {artwork.category && <p>Category: {artwork.category}</p>}
               </div>
 
-              {artwork.description?.zh && (
+              {description && (
                 <div className="border-t pt-8">
                   <h2 className="text-lg font-medium mb-4">Description</h2>
-                  <p className="text-gray-600 whitespace-pre-line">{artwork.description.zh}</p>
+                  <p className="text-gray-600 whitespace-pre-line">{description}</p>
                 </div>
               )}
 
@@ -107,7 +135,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                     titleZh: artwork.title?.zh,
                     artist: artistName,
                     artistId: artwork.artist?._id,
-                    price: Number(artwork.price || 0),
+                    price,
                     image: imageUrl,
                     size: artwork.dimensions,
                   }}

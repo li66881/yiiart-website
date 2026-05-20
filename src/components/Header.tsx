@@ -43,7 +43,7 @@ export default function Header() {
           
           {/* Wishlist */}
           <Link href="/wishlist" className="p-2 hover:bg-gray-100 rounded-full relative">
-            ❤️
+            Wishlist
             {wishlistItems.length > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 {wishlistItems.length}
@@ -54,7 +54,7 @@ export default function Header() {
           {/* Orders */}
           {session && (
             <Link href="/orders" className="p-2 hover:bg-gray-100 rounded-full" title="My Orders">
-              📦
+              Orders
             </Link>
           )}
           
@@ -73,8 +73,8 @@ export default function Header() {
                   <p className="font-medium">{session.user?.name || "User"}</p>
                   <p className="text-gray-500 text-xs">{session.user?.email}</p>
                 </div>
-                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">📦 {t("common.orders")}</Link>
-                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-gray-50">❤️ {t("common.wishlist")}</Link>
+                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-gray-50">{t("common.orders")}</Link>
+                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-gray-50">{t("common.wishlist")}</Link>
                 <button 
                   onClick={() => signOut()}
                   className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-red-600"

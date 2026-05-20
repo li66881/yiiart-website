@@ -15,8 +15,20 @@ const tools = [
     external: true,
   },
   {
+    title: "Stripe Dashboard",
+    description: "Review Stripe Checkout payments and customer order records.",
+    href: "https://dashboard.stripe.com/payments",
+    external: true,
+  },
+  {
+    title: "PayPal Dashboard",
+    description: "Review PayPal Checkout orders and settlement status.",
+    href: "https://www.paypal.com/mep/dashboard",
+    external: true,
+  },
+  {
     title: "Vercel project",
-    description: "Manage deployments, domains, and environment variables.",
+    description: "Manage deployments, domains, analytics, and environment variables.",
     href: "https://vercel.com/dashboard",
     external: true,
   },
@@ -38,7 +50,7 @@ export default function AdminPage() {
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {tools.map((tool) => (
               <ToolCard key={tool.title} {...tool} />
             ))}
@@ -47,9 +59,10 @@ export default function AdminPage() {
           <section className="mt-8 border bg-white p-6">
             <h2 className="font-medium mb-3">Before going live</h2>
             <ul className="space-y-2 text-sm text-gray-600">
-              <li>Set ADMIN_PASSWORD, SEED_SECRET, SANITY_WRITE_TOKEN, and Stripe keys in Vercel.</li>
+              <li>Set ADMIN_PASSWORD, SEED_SECRET, SANITY_WRITE_TOKEN, Stripe keys, and PayPal keys in Vercel.</li>
+              <li>Add GA4, Google Search Console, Meta Pixel, Pinterest Tag, and newsletter email keys before launch.</li>
               <li>Rotate any keys that were previously committed to GitHub history.</li>
-              <li>Use Sanity Studio for day-to-day product and artist editing.</li>
+              <li>Use Sanity Studio for product and image editing; Stripe and PayPal dashboards hold payment/order records.</li>
             </ul>
           </section>
         </div>

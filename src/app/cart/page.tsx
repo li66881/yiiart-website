@@ -42,7 +42,7 @@ export default function CartPage() {
                             <p className="text-sm text-gray-500">{item.artist}</p>
                             {item.size && <p className="text-sm text-gray-400">{item.size}</p>}
                           </div>
-                          <p className="font-medium">¥{item.price.toLocaleString()}</p>
+                          <p className="font-medium">CNY {item.price.toLocaleString()}</p>
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
@@ -66,7 +66,7 @@ export default function CartPage() {
                               {t("cart.remove")}
                             </button>
                           </div>
-                          <p className="font-medium">¥{(item.price * item.quantity).toLocaleString()}</p>
+                          <p className="font-medium">CNY {(item.price * item.quantity).toLocaleString()}</p>
                         </div>
                       </div>
                     </div>
@@ -81,7 +81,7 @@ export default function CartPage() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">{t("cart.subtotal")} ({itemCount} items)</span>
-                      <span>¥{subtotal.toLocaleString()}</span>
+                      <span>CNY {subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">{t("cart.shipping")}</span>
@@ -89,7 +89,7 @@ export default function CartPage() {
                     </div>
                     <div className="border-t pt-3 flex justify-between font-medium">
                       <span>{t("cart.total")}</span>
-                      <span>¥{subtotal.toLocaleString()}</span>
+                      <span>CNY {subtotal.toLocaleString()}</span>
                     </div>
                   </div>
                   <Link
@@ -99,7 +99,7 @@ export default function CartPage() {
                     {t("cart.proceedToCheckout")}
                   </Link>
                   <p className="text-xs text-gray-500 text-center mt-4">
-                    🔒 Secure checkout powered by Stripe
+                    Secure checkout powered by Stripe and PayPal
                   </p>
                 </div>
               </div>
