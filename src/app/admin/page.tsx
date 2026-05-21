@@ -74,7 +74,17 @@ export default function AdminPage() {
     {
       label: "Newsletter email",
       ready: status.newsletter,
-      detail: "Required for Resend or SendGrid subscription notifications.",
+      detail: "Ready when Resend, SendGrid, or Sanity subscriber storage is configured.",
+    },
+    {
+      label: "GA4 analytics",
+      ready: status.analytics,
+      detail: "Required for Google Analytics traffic reports.",
+    },
+    {
+      label: "Social pixels",
+      ready: status.socialPixels,
+      detail: "Required for Meta Pixel and Pinterest Tag ad tracking.",
     },
   ]
 

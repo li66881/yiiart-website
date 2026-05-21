@@ -1,4 +1,14 @@
 import { NextResponse } from "next/server"
+import { createClient } from "@sanity/client"
+import { createHash } from "crypto"
+
+const sanityWriteClient = createClient({
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i",
+  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+  apiVersion: "2024-01-01",
+  useCdn: false,
+  token: process.env.SANITY_WRITE_TOKEN,
+})
 
 export async function POST(request: Request) {
   try {
@@ -19,10 +29,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true })
     }
 
-    return NextResponse.json(
-      { success: false, error: "Newsletter email provider is not configured." },
-      { status: 503 }
-    )
+    if (process.env.SANITY_WRITE_TOKEN) {
+      await saveSubscriberToSanity(normalizedEmail)
+      return NextResponse.json({ success: true })
+    }
+
+    return NextResponse.json({ success: false, error: "Newsletter storage is not configured." }, { status: 503 })
   } catch (error) {
     console.error("Newsletter subscription error:", error)
     return NextResponse.json(
@@ -30,6 +42,23 @@ export async function POST(request: Request) {
       { status: 500 }
     )
   }
+}
+
+async function saveSubscriberToSanity(email: string) {
+  const now = new Date().toISOString()
+  const id = `newsletterSubscriber-${createHash("sha1").update(email).digest("hex")}`
+
+  await sanityWriteClient
+    .transaction()
+    .createIfNotExists({
+      _id: id,
+      _type: "newsletterSubscriber",
+      email,
+      source: "website-footer",
+      subscribedAt: now,
+    })
+    .patch(id, (patch) => patch.set({ lastSubscribedAt: now }))
+    .commit()
 }
 
 function isValidEmail(email: string) {

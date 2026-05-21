@@ -1,5 +1,6 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { contactEmail } from "@/lib/site"
 
 export default function ContactPage() {
   return (
@@ -16,7 +17,9 @@ export default function ContactPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium mb-1">Email</h3>
-                <p className="text-gray-600">contact@yiiart.com</p>
+                <a href={`mailto:${contactEmail}`} className="text-gray-600 hover:text-black">
+                  {contactEmail}
+                </a>
               </div>
               <div>
                 <h3 className="font-medium mb-1">Hours</h3>

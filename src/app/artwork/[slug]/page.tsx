@@ -2,6 +2,7 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import AddToCartButton from "@/components/AddToCartButton"
+import SocialShare from "@/components/SocialShare"
 import { client, urlFor } from "@/lib/sanity"
 
 export const dynamic = "force-dynamic"
@@ -148,6 +149,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 >
                   Contact artist
                 </Link>
+                <SocialShare title={title} image={imageUrl} />
               </div>
             </div>
           </div>

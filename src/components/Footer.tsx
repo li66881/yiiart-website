@@ -3,6 +3,8 @@
 import Link from "next/link"
 import { useLanguage } from "@/context/LanguageContext"
 import NewsletterSignup from "@/components/NewsletterSignup"
+import SocialLinks from "@/components/SocialLinks"
+import { contactEmail } from "@/lib/site"
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -14,6 +16,9 @@ export default function Footer() {
           <div>
             <h3 className="font-medium mb-4">YiiArt</h3>
             <p className="text-sm text-gray-500">Art for Your Home</p>
+            <a href={`mailto:${contactEmail}`} className="mt-3 block text-sm text-gray-500 hover:text-black">
+              {contactEmail}
+            </a>
           </div>
           <div>
             <h4 className="font-medium mb-4">{t("footer.shop")}</h4>
@@ -44,6 +49,10 @@ export default function Footer() {
           <div>
             <h4 className="font-medium mb-4">Newsletter</h4>
             <NewsletterSignup />
+            <div className="mt-5">
+              <h4 className="font-medium mb-3">Follow</h4>
+              <SocialLinks />
+            </div>
           </div>
         </div>
         <div className="text-center text-gray-500 text-sm pt-8 border-t">

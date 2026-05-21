@@ -5,7 +5,9 @@ export function getAdminConfigStatus() {
     sanityProject: Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID),
     stripe: Boolean(process.env.STRIPE_SECRET_KEY),
     paypal: Boolean(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET),
-    newsletter: Boolean(process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY),
+    newsletter: Boolean(process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY || process.env.SANITY_WRITE_TOKEN),
+    analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID),
+    socialPixels: Boolean(process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID),
   }
 }
 
