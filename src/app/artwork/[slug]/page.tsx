@@ -4,6 +4,8 @@ import Footer from "@/components/Footer"
 import AddToCartButton from "@/components/AddToCartButton"
 import { client, urlFor } from "@/lib/sanity"
 
+export const dynamic = "force-dynamic"
+
 async function getArtwork(slug: string) {
   return client.fetch(
     `*[_type == "artwork" && slug.current == $slug][0]{

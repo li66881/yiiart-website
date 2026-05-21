@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { client, urlFor } from '@/lib/sanity'
 
+export const dynamic = 'force-dynamic'
+
 async function getArtists() {
   return client.fetch(`*[_type == "artist"] | order(name.zh asc)`)
 }

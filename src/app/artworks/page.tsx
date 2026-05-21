@@ -2,6 +2,8 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from '@/lib/sanity'
 
+export const dynamic = "force-dynamic"
+
 interface Props {
   searchParams: Promise<{ category?: string }>
 }

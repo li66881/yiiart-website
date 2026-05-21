@@ -5,6 +5,8 @@ import HeroSection from '@/components/HeroSection'
 import { client, urlFor } from '@/lib/sanity'
 import { getTranslations } from '@/lib/i18n'
 
+export const dynamic = 'force-dynamic'
+
 async function getData() {
   const artworks = await client.fetch(`*[_type == "artwork" && featured == true][0...6]`)
   const artists = await client.fetch(`*[_type == "artist"][0...6]`)

@@ -1,6 +1,8 @@
 import { client, urlFor } from '@/lib/sanity'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 async function getArtist(slug: string) {
   return client.fetch(`*[_type == "artist" && slug.current == $slug][0]`, { slug })
 }
