@@ -1,5 +1,6 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { contactEmail } from "@/lib/site"
 
 export default function PrivacyPage() {
   return (
@@ -28,7 +29,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Contact</h2>
-              <p>For privacy concerns, contact us at contact@yiiart.com</p>
+              <p>For privacy concerns, contact us at {contactEmail}</p>
             </div>
           </div>
         </div>

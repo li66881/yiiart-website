@@ -1,7 +1,10 @@
 export const contactEmail =
   process.env.NEXT_PUBLIC_CONTACT_EMAIL
-  || process.env.CONTACT_EMAIL
   || "lishuxian100721@gmail.com"
+
+export const internalContactEmail =
+  process.env.CONTACT_EMAIL
+  || contactEmail
 
 export function getSocialProfiles() {
   return [

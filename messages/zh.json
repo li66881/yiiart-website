@@ -22,9 +22,9 @@
     "contact": "联系我们"
   },
   "hero": {
-    "title": "先选空间，",
-    "titleEmphasis": "再选艺术",
-    "subtitle": "从真实的家居场景出发，找到合适的尺寸、色调和氛围。",
+    "title": "YiiArt 原创",
+    "titleEmphasis": "艺术作品",
+    "subtitle": "为现代家居甄选独一件原创作品，提供全球配送、精心包装和签名收藏证书。",
     "browseArtworks": "浏览艺术品",
     "meetArtists": "认识艺术家"
   },
@@ -132,12 +132,12 @@
     "aboutUs": "关于我们",
     "privacy": "隐私政策",
     "terms": "服务条款",
-    "copyright": "© 2026 YiiArt. 保留所有权利。"
+    "copyright": "(c) 2026 YiiArt. 保留所有权利。"
   },
   "home": {
     "featuredArtworks": "精选艺术品",
     "ourArtists": "艺术家",
-    "noArtworks": "暂无艺术品，请在 Sanity Studio 添加！",
-    "noArtists": "暂无艺术家，请在 Sanity Studio 添加！"
+    "noArtworks": "新作品正在准备上线。",
+    "noArtists": "艺术家资料正在准备中。"
   }
 }

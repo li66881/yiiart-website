@@ -1,5 +1,6 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { contactEmail } from "@/lib/site"
 
 export default function AboutPage() {
   return (
@@ -21,12 +22,18 @@ export default function AboutPage() {
             <div>
               <h2 className="text-xl font-medium mb-3">The Artists</h2>
               <p className="text-gray-600">
-                We work with over 30 professional artists specializing in oil paintings, from traditional landscapes to contemporary abstract works.
+                We are building a focused roster of artists specializing in original paintings, from expressive landscapes to contemporary abstract works. Each published artist profile is connected to available works on the site.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-xl font-medium mb-3">Collector Confidence</h2>
+              <p className="text-gray-600">
+                YiiArt prepares each order with clear artwork details, careful packaging, international delivery support, and a 30-day return process.
               </p>
             </div>
             <div>
               <h2 className="text-xl font-medium mb-3">Contact</h2>
-              <p className="text-gray-600">Email: contact@yiiart.com</p>
+              <p className="text-gray-600">Email: {contactEmail}</p>
             </div>
           </div>
         </div>

@@ -35,7 +35,7 @@ export default function Header() {
               onClick={() => setLocale("zh")}
               className={`px-2 py-1 text-sm ${locale === "zh" ? "bg-black text-white" : "hover:bg-gray-100"}`}
             >
-              中文
+              ZH
             </button>
           </div>
           

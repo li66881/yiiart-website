@@ -1,91 +1,106 @@
-import { client, urlFor } from '@/lib/sanity'
-import Link from 'next/link'
+import Link from "next/link"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import { client, urlFor } from "@/lib/sanity"
+import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatStorePrice } from "@/lib/pricing"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 async function getArtist(slug: string) {
   return client.fetch(`*[_type == "artist" && slug.current == $slug][0]`, { slug })
 }
 
 async function getArtistArtworks(artistId: string) {
-  return client.fetch(`*[_type == "artwork" && artist._ref == $artistId]`, { artistId })
+  return client.fetch(
+    `*[_type == "artwork" && artist._ref == $artistId] | order(_createdAt desc)`,
+    { artistId }
+  )
 }
 
 export default async function ArtistPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const artist = await getArtist(slug)
-  
-  if (!artist) return (
-    <div className="min-h-screen pt-24 flex items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl mb-4">Artist not found</h1>
-        <Link href="/artists" className="text-gray-500 hover:text-black">← Back to Artists</Link>
+
+  if (!artist) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex flex-1 items-center justify-center pt-24">
+          <div className="text-center">
+            <h1 className="mb-4 text-2xl">Artist not found</h1>
+            <Link href="/artists" className="text-gray-500 hover:text-black">Back to artists</Link>
+          </div>
+        </main>
+        <Footer />
       </div>
-    </div>
-  )
-  
+    )
+  }
+
   const artworks = await getArtistArtworks(artist._id)
+  const artistName = pickEnglish(artist.name, "YiiArt artist")
 
   return (
-    <div className="min-h-screen">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl font-light">Yii<span className="font-medium">Art</span></Link>
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/artworks" className="hover:text-gray-600">Explore</Link>
-            <Link href="/artists" className="hover:text-gray-600">Artists</Link>
-            <Link href="/artworks?category=Abstract" className="hover:text-gray-600">Abstract</Link>
-            <Link href="/artworks?category=Texture" className="hover:text-gray-600">Texture</Link>
-          </nav>
-          <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-gray-100 rounded-full">🔍</button>
-            <button className="p-2 hover:bg-gray-100 rounded-full">🛒 <span className="text-xs">2</span></button>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
-      <div className="min-h-screen pt-24 pb-16">
+      <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 py-12">
-          <Link href="/artists" className="text-gray-500 hover:text-black mb-8 inline-block">← Back to Artists</Link>
-          
-          <div className="flex flex-col md:flex-row gap-12 items-start mt-4">
+          <Link href="/artists" className="mb-8 inline-block text-gray-500 hover:text-black">Back to artists</Link>
+
+          <div className="mt-4 flex flex-col items-start gap-12 md:flex-row">
             <div className="w-64 flex-shrink-0">
               {artist.image ? (
-                <img src={urlFor(artist.image).width(400).url()} alt={artist.name?.zh} className="w-full aspect-square object-cover" />
+                <img
+                  src={urlFor(artist.image).width(500).height(500).url()}
+                  alt={artistName}
+                  className="aspect-square w-full object-cover"
+                />
               ) : (
-                <div className="w-full aspect-square bg-gray-100 flex items-center justify-center text-6xl text-gray-300">👤</div>
-              )}
-            </div>
-            <div className="flex-1">
-              <h1 className="text-4xl font-light mb-2">{artist.name?.zh || artist.name?.en}</h1>
-              <p className="text-xl text-gray-500 mb-4">{artist.location}</p>
-              <div className="flex gap-2 mb-6 flex-wrap">
-                {artist.style?.map((s: string) => <span key={s} className="text-sm px-3 py-1 bg-gray-100">{s}</span>)}
-              </div>
-              {artist.bio?.zh && (
-                <div className="border-t pt-8">
-                  <h2 className="text-lg font-medium mb-4">Biography</h2>
-                  <p className="text-gray-600 whitespace-pre-line">{artist.bio.zh}</p>
+                <div className="flex aspect-square w-full items-center justify-center bg-gray-100 text-gray-300">
+                  Artist portrait
                 </div>
               )}
             </div>
+            <div className="flex-1">
+              <h1 className="mb-2 text-4xl font-light">{artistName}</h1>
+              <p className="mb-4 text-xl text-gray-500">{artist.location}</p>
+              <div className="mb-6 flex flex-wrap gap-2">
+                {artist.style?.map((style: string) => (
+                  <span key={style} className="bg-gray-100 px-3 py-1 text-sm">{style}</span>
+                ))}
+              </div>
+              <div className="border-t pt-8">
+                <h2 className="mb-4 text-lg font-medium">Biography</h2>
+                <p className="whitespace-pre-line text-gray-600">
+                  {pickEnglish(artist.bio, "Biography coming soon.")}
+                </p>
+              </div>
+            </div>
           </div>
 
-          {/* Artist's Artworks */}
           {artworks.length > 0 && (
             <div className="mt-16">
-              <h2 className="text-2xl font-light mb-8">Works by {artist.name?.zh}</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+              <h2 className="mb-8 text-2xl font-light">Works by {artistName}</h2>
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {artworks.map((artwork: any) => (
                   <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`}>
                     <div className="group cursor-pointer">
-                      <div className="aspect-[4/5] overflow-hidden bg-gray-100 mb-4">
-                        {artwork.images?.[0] && <img src={urlFor(artwork.images[0]).width(600).url()} alt={artwork.title?.zh} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
+                      <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+                        {artwork.images?.[0] && (
+                          <img
+                            src={urlFor(artwork.images[0]).width(600).url()}
+                            alt={pickEnglish(artwork.title, "Artwork")}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        )}
                       </div>
-                      <h3 className="font-medium">{artwork.title?.zh || artwork.title?.en}</h3>
-                      <p className="text-sm text-gray-500">{artwork.dimensions}</p>
-                      <p className="mt-1">¥{artwork.price?.toLocaleString()}</p>
+                      <p className="text-xs uppercase tracking-wider text-gray-500">
+                        {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
+                      </p>
+                      <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
+                      <p className="text-sm text-gray-500">{formatDimensions(artwork.dimensions)}</p>
+                      <p className="mt-1 font-semibold">{formatStorePrice(artwork.price)}</p>
                     </div>
                   </Link>
                 ))}
@@ -93,16 +108,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
             </div>
           )}
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="py-12 border-t">
-        <div className="container mx-auto px-4 text-center text-gray-500">
-          <p className="text-lg mb-2">YiiArt</p>
-          <p className="text-sm">Art for Your Home</p>
-          <p className="text-xs mt-4">© 2024 YiiArt. All rights reserved.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

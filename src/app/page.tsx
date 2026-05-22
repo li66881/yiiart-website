@@ -1,14 +1,19 @@
-import Link from 'next/link'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import HeroSection from '@/components/HeroSection'
-import { client, urlFor } from '@/lib/sanity'
-import { getTranslations } from '@/lib/i18n'
+import Link from "next/link"
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import HeroSection from "@/components/HeroSection"
+import { client, urlFor } from "@/lib/sanity"
+import { getTranslations } from "@/lib/i18n"
+import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic"
 
 async function getData() {
-  const artworks = await client.fetch(`*[_type == "artwork" && featured == true][0...6]`)
+  const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...12]{
+    ...,
+    artist->{name}
+  }`)
   const artists = await client.fetch(`*[_type == "artist"][0...6]`)
   return { artworks, artists }
 }
@@ -16,91 +21,116 @@ async function getData() {
 export default async function Home() {
   const { artworks, artists } = await getData()
   const t = await getTranslations("home")
+  const heroArtwork = artworks.find((artwork: any) => artwork.images?.[0])
+  const heroImage = heroArtwork?.images?.[0]
+    ? urlFor(heroArtwork.images[0]).width(1800).height(1200).url()
+    : undefined
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      {/* Hero - client component for i18n */}
-      <HeroSection />
+      <HeroSection
+        imageUrl={heroImage}
+        imageAlt={heroArtwork ? pickEnglish(heroArtwork.title, "Original YiiArt artwork") : undefined}
+      />
 
-      {/* Trust Badges */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-3xl mb-2">🎨</div>
-            <h3 className="font-semibold">100% Original</h3>
-            <p className="text-sm text-gray-500">Signed certificate</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">📦</div>
-            <h3 className="font-semibold">Free Shipping</h3>
-            <p className="text-sm text-gray-500">Worldwide delivery</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">↩️</div>
-            <h3 className="font-semibold">30-Day Trial</h3>
-            <p className="text-sm text-gray-500">Full refund</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">❤️</div>
-            <h3 className="font-semibold">Support Artists</h3>
-            <p className="text-sm text-gray-500">80% to creators</p>
-          </div>
+      <section className="bg-gray-50 py-14">
+        <div className="container mx-auto grid grid-cols-2 gap-8 px-4 text-center md:grid-cols-4">
+          <TrustBadge value="100%" title="100% Original" text="Signed certificate" />
+          <TrustBadge value="Free" title="Free Shipping" text="Worldwide delivery" />
+          <TrustBadge value="30" title="30-Day Trial" text="Full refund" />
+          <TrustBadge value="80%" title="Support Artists" text="Paid to creators" />
         </div>
       </section>
 
-      {/* Featured Artworks */}
       <section className="py-20 flex-1">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-light mb-8">{t["home.featuredArtworks"]}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <h2 className="text-3xl font-light">{t["home.featuredArtworks"]}</h2>
+              <p className="mt-2 max-w-2xl text-sm text-gray-500">
+                Original hand-painted works with clear sizing, international pricing, and collectible documentation.
+              </p>
+            </div>
+            <Link href="/artworks" className="text-sm underline underline-offset-4">
+              {t["artwork.viewAll"]}
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {artworks.length > 0 ? artworks.map((artwork: any) => (
               <Link key={artwork._id} href={`/artwork/${artwork.slug?.current || artwork._id}`}>
                 <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden bg-gray-100 mb-4">
-                    {artwork.images?.[0] && <img src={urlFor(artwork.images[0]).width(600).url()} alt={artwork.title?.zh || 'Artwork'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
+                  <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+                    {artwork.images?.[0] && (
+                      <img
+                        src={urlFor(artwork.images[0]).width(600).url()}
+                        alt={pickEnglish(artwork.title, "Artwork")}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    )}
                   </div>
-                  <h3 className="font-medium">{artwork.title?.zh || artwork.title?.en || 'Untitled'}</h3>
-                  <p className="text-gray-500 text-sm">{artwork.artist?.name?.zh || artwork.artist?.name?.en}</p>
-                  <p className="mt-1">¥{artwork.price?.toLocaleString()}</p>
+                  <p className="text-xs uppercase tracking-wider text-gray-500">
+                    {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
+                  </p>
+                  <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
+                  <p className="text-sm text-gray-500">{pickEnglish(artwork.artist?.name, "YiiArt artist")}</p>
+                  <p className="mt-1 font-semibold">{formatStorePrice(artwork.price)}</p>
+                  <p className="mt-1 text-xs text-gray-400">{formatDimensions(artwork.dimensions)}</p>
                 </div>
               </Link>
             )) : (
-              <p className="col-span-3 text-gray-500 text-center py-20">{t["home.noArtworks"]}</p>
+              <p className="col-span-full py-20 text-center text-gray-500">{t["home.noArtworks"]}</p>
             )}
           </div>
-          <div className="text-center mt-12">
-            <Link href="/artworks" className="px-8 py-3 border border-black hover:bg-black hover:text-white transition">
-              {t["home.viewAll"]}
-            </Link>
-          </div>
+          <p className="mt-6 text-center text-xs text-gray-500">{getPriceDisclosure()}</p>
         </div>
       </section>
 
-      {/* Artists */}
-      <section className="py-20 bg-gray-50">
+      <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-light mb-8">{t["home.ourArtists"]}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+          <h2 className="mb-3 text-3xl font-light">{t["home.ourArtists"]}</h2>
+          <p className="mb-8 max-w-2xl text-sm text-gray-500">
+            Meet the artists behind each work, with biographies and available pieces kept together for collectors.
+          </p>
+          <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
             {artists.length > 0 ? artists.map((artist: any) => (
               <Link key={artist._id} href={`/artist/${artist.slug?.current || artist._id}`}>
-                <div className="text-center group cursor-pointer">
-                  <div className="aspect-square rounded-full overflow-hidden bg-gray-200 mb-3">
-                    {artist.image ? <img src={urlFor(artist.image).width(300).height(300).url()} alt={artist.name?.zh || 'Artist'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="w-full h-full flex items-center justify-center text-gray-400">👤</div>}
+                <div className="group cursor-pointer text-center">
+                  <div className="mb-3 aspect-square overflow-hidden rounded-full bg-gray-200">
+                    {artist.image ? (
+                      <img
+                        src={urlFor(artist.image).width(300).height(300).url()}
+                        alt={pickEnglish(artist.name, "Artist")}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-gray-400">Artist</div>
+                    )}
                   </div>
-                  <h3 className="font-medium">{artist.name?.zh || artist.name?.en || 'Artist'}</h3>
+                  <h3 className="font-medium">{pickEnglish(artist.name, "Artist")}</h3>
                   <p className="text-sm text-gray-500">{artist.location}</p>
                 </div>
               </Link>
             )) : (
-              <p className="col-span-6 text-gray-500 text-center py-20">{t["home.noArtists"]}</p>
+              <p className="col-span-full py-20 text-center text-gray-500">{t["home.noArtists"]}</p>
             )}
           </div>
         </div>
       </section>
 
       <Footer />
+    </div>
+  )
+}
+
+function TrustBadge({ value, title, text }: { value: string; title: string; text: string }) {
+  return (
+    <div>
+      <div className="mb-2 text-3xl font-light">{value}</div>
+      <h3 className="font-semibold">{title}</h3>
+      <p className="text-sm text-gray-500">{text}</p>
     </div>
   )
 }

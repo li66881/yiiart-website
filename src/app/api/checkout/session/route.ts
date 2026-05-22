@@ -6,6 +6,7 @@ import {
   getCheckoutLineItems,
   normalizeCurrency,
 } from "@/lib/checkout"
+import { getStoreCurrency } from "@/lib/pricing"
 
 export async function POST(request: Request) {
   try {
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     const checkoutItems = await getCheckoutLineItems(items)
-    const currency = normalizeCurrency(process.env.STRIPE_CURRENCY, "cny")
+    const currency = normalizeCurrency(process.env.STRIPE_CURRENCY, getStoreCurrency())
     const lineItems = checkoutItems.map((item) => ({
       price_data: {
         currency,

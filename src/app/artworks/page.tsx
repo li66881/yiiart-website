@@ -1,6 +1,8 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from '@/lib/sanity'
+import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 
 export const dynamic = "force-dynamic"
 
@@ -10,12 +12,20 @@ interface Props {
 
 async function getArtworks(category?: string) {
   if (category) {
+    const legacyCategories: Record<string, string[]> = {
+      Abstract: ["Abstract", "抽象"],
+      Landscape: ["Landscape", "景观"],
+      Portrait: ["Portrait", "肖像"],
+      Texture: ["Texture", "肌理"],
+      Minimalist: ["Minimalist", "极简"],
+    }
+
     return client.fetch(
-      `*[_type == "artwork" && category == $category] | order(_createdAt desc){
+      `*[_type == "artwork" && category in $categories] | order(_createdAt desc){
         ...,
         artist->{name}
       }`,
-      { category }
+      { categories: legacyCategories[category] || [category] }
     )
   }
   return client.fetch(`*[_type == "artwork"] | order(_createdAt desc){
@@ -69,25 +79,25 @@ export default async function ArtworksPage({ searchParams }: Props) {
                     {artwork.images?.[0] && (
                       <img 
                         src={urlFor(artwork.images[0]).width(600).url()} 
-                        alt={artwork.title?.zh || artwork.title?.en || "Artwork"} 
+                        alt={pickEnglish(artwork.title, "Artwork")} 
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       />
                     )}
                   </div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">
-                    {[artwork.category, artwork.medium].filter(Boolean).join(" / ")}
+                    {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
                   </p>
                   <h3 className="font-medium mt-1">
-                    {artwork.title?.zh || artwork.title?.en}
+                    {pickEnglish(artwork.title, "Untitled artwork")}
                   </h3>
                   <p className="text-sm text-gray-500">
-                    {artwork.artist?.name?.zh || artwork.artist?.name?.en}
+                    {pickEnglish(artwork.artist?.name, "YiiArt artist")}
                   </p>
                   <p className="mt-1 font-semibold">
-                    CNY {artwork.price?.toLocaleString()}
+                    {formatStorePrice(artwork.price)}
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
-                    {artwork.dimensions}
+                    {formatDimensions(artwork.dimensions)}
                   </p>
                 </div>
               </a>
@@ -95,10 +105,13 @@ export default async function ArtworksPage({ searchParams }: Props) {
               <p className="col-span-4 text-gray-500">
                 {activeCategory 
                   ? `No ${activeCategory} artworks yet.` 
-                  : "No artworks yet."} Add some in Sanity Studio!
+                  : "New artworks are being prepared for release."}
               </p>
             )}
           </div>
+          {artworks.length > 0 && (
+            <p className="mt-8 text-center text-xs text-gray-500">{getPriceDisclosure()}</p>
+          )}
         </div>
       </main>
 

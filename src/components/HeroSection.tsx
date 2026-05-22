@@ -3,23 +3,29 @@
 import Link from "next/link"
 import { useLanguage } from "@/context/LanguageContext"
 
-export default function HeroSection() {
+type HeroSectionProps = {
+  imageUrl?: string
+  imageAlt?: string
+}
+
+export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artwork in a home interior" }: HeroSectionProps) {
   const { t } = useLanguage()
+  const fallbackImage = "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80"
 
   return (
-    <section className="relative h-screen flex items-center justify-center mt-16">
+    <section className="relative mt-16 flex min-h-[78svh] items-center justify-center overflow-hidden">
       <img 
-        src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1920&q=80" 
-        alt="Hero" 
+        src={imageUrl || fallbackImage}
+        alt={imageAlt}
         className="absolute inset-0 w-full h-full object-cover" 
       />
-      <div className="absolute inset-0 bg-black/40" />
-      <div className="relative z-10 text-center text-white">
-        <h1 className="text-5xl md:text-7xl font-light mb-6">
+      <div className="absolute inset-0 bg-black/45" />
+      <div className="relative z-10 mx-auto max-w-4xl px-4 text-center text-white">
+        <h1 className="mb-6 text-5xl font-light md:text-7xl">
           {t("hero.title")}<br /><em>{t("hero.titleEmphasis")}</em>
         </h1>
-        <p className="text-xl mb-8 opacity-90">{t("hero.subtitle")}</p>
-        <div className="flex gap-4 justify-center">
+        <p className="mx-auto mb-8 max-w-2xl text-xl opacity-90">{t("hero.subtitle")}</p>
+        <div className="flex flex-wrap justify-center gap-4">
           <Link href="/artworks" className="px-8 py-3 bg-white text-black hover:bg-gray-100">
             {t("hero.browseArtworks")}
           </Link>

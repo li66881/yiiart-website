@@ -22,9 +22,9 @@
     "contact": "Contact"
   },
   "hero": {
-    "title": "Choose a scene first,",
-    "titleEmphasis": "then choose art",
-    "subtitle": "Start from real home spaces to find the right size, tone, and mood.",
+    "title": "YiiArt Original",
+    "titleEmphasis": "Paintings",
+    "subtitle": "One-of-a-kind artworks selected for modern homes, shipped worldwide with careful packaging and a signed certificate.",
     "browseArtworks": "Browse Artworks",
     "meetArtists": "Meet Artists"
   },
@@ -132,12 +132,12 @@
     "aboutUs": "About Us",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "copyright": "© 2026 YiiArt. All rights reserved."
+    "copyright": "(c) 2026 YiiArt. All rights reserved."
   },
   "home": {
     "featuredArtworks": "Featured Artworks",
     "ourArtists": "Our Artists",
-    "noArtworks": "No artworks yet. Add some in Sanity Studio!",
-    "noArtists": "No artists yet. Add some in Sanity Studio!"
+    "noArtworks": "New artworks are being prepared for release.",
+    "noArtists": "Artist profiles are being prepared."
   }
 }

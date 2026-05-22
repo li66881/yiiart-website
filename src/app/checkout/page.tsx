@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { useCart } from "@/context/CartContext"
+import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 
 type Step = "shipping" | "payment" | "confirm"
 type PaymentMethod = "card" | "paypal"
@@ -202,7 +203,7 @@ export default function CheckoutPage() {
                           <p className="font-medium">{item.title}</p>
                           <p className="text-sm text-gray-500">by {item.artist}</p>
                         </div>
-                        <p className="text-sm">CNY {item.price.toLocaleString()} x {item.quantity}</p>
+                        <p className="text-sm">{formatStorePrice(item.price)} x {item.quantity}</p>
                       </div>
                     ))}
                   </section>
@@ -238,14 +239,14 @@ export default function CheckoutPage() {
                         <p className="truncate text-sm font-medium">{item.title}</p>
                         <p className="text-xs text-gray-500">x {item.quantity}</p>
                       </div>
-                      <p className="text-sm">CNY {(item.price * item.quantity).toLocaleString()}</p>
+                      <p className="text-sm">{formatStorePrice(item.price * item.quantity)}</p>
                     </div>
                   ))}
                 </div>
                 <div className="space-y-2 border-t pt-4">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span>CNY {subtotal.toLocaleString()}</span>
+                    <span>{formatStorePrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
@@ -253,9 +254,10 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between border-t pt-2 text-lg font-medium">
                     <span>Total</span>
-                    <span>CNY {subtotal.toLocaleString()}</span>
+                    <span>{formatStorePrice(subtotal)}</span>
                   </div>
                 </div>
+                <p className="mt-4 text-xs text-gray-500">{getPriceDisclosure()}</p>
               </div>
             </aside>
           </div>

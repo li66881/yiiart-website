@@ -1,4 +1,6 @@
 import { client, urlFor } from "@/lib/sanity"
+import { pickEnglish } from "@/lib/artwork-display"
+import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
 
 export type CheckoutLineItem = {
   id: string
@@ -60,15 +62,18 @@ export async function getCheckoutLineItems(items: unknown): Promise<CheckoutLine
       throw new CheckoutValidationError("One or more artworks are no longer available.")
     }
 
-    const price = Number(artwork.price)
-    if (!Number.isFinite(price) || price <= 0) {
+    const basePriceCny = Number(artwork.price)
+    if (!Number.isFinite(basePriceCny) || basePriceCny <= 0) {
       throw new CheckoutValidationError("One or more artworks do not have a valid price.")
     }
 
+    const currency = getStoreCurrency(process.env.STRIPE_CURRENCY || process.env.NEXT_PUBLIC_STORE_CURRENCY)
+    const price = convertCnyToStoreAmount(basePriceCny, currency)
+
     return {
       id: item.id,
-      title: artwork.title?.zh || artwork.title?.en || "YiiArt artwork",
-      artistName: artwork.artist?.name?.zh || artwork.artist?.name?.en,
+      title: pickEnglish(artwork.title, "YiiArt artwork"),
+      artistName: pickEnglish(artwork.artist?.name, ""),
       image: artwork.images?.[0] ? urlFor(artwork.images[0]).width(1000).url() : undefined,
       price,
       quantity: item.quantity,

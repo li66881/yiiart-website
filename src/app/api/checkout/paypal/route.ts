@@ -7,6 +7,7 @@ import {
   normalizeCurrency,
 } from "@/lib/checkout"
 import { getPayPalAccessToken, getPayPalApiBase, isPayPalConfigured } from "@/lib/paypal"
+import { getStoreCurrency } from "@/lib/pricing"
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +22,7 @@ export async function POST(request: Request) {
     const checkoutItems = await getCheckoutLineItems(items)
     const currency = normalizeCurrency(
       process.env.PAYPAL_CURRENCY || process.env.STRIPE_CURRENCY,
-      "cny"
+      getStoreCurrency()
     ).toUpperCase()
     const baseUrl = getBaseUrl()
     const total = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0)

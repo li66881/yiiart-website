@@ -125,7 +125,7 @@ export default function NewArtworkPage() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-3">
-              <Field label="Price (CNY)">
+              <Field label="Base price (CNY)">
                 <input
                   type="number"
                   min="1"
