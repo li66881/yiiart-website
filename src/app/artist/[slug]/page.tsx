@@ -1,4 +1,5 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from "@/lib/sanity"
@@ -16,6 +17,23 @@ async function getArtistArtworks(artistId: string) {
     `*[_type == "artwork" && artist._ref == $artistId] | order(_createdAt desc)`,
     { artistId }
   )
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const artist = await getArtist(slug)
+  if (!artist) {
+    return { title: "Artist not found" }
+  }
+  const name = pickEnglish(artist.name, "YiiArt artist")
+  return {
+    title: name + " | YiiArt",
+    description: artist.location ? name + " - " + artist.location : name,
+    openGraph: {
+      title: name + " | YiiArt",
+      description: artist.location ? name + " - " + artist.location : name,
+    },
+  }
 }
 
 export default async function ArtistPage({ params }: { params: Promise<{ slug: string }> }) {

@@ -1,4 +1,5 @@
 import Link from "next/link"
+import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import AddToCartButton from "@/components/AddToCartButton"
@@ -36,6 +37,24 @@ async function getArtwork(slug: string) {
     }`,
     { slug }
   )
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params
+  const artwork = await getArtwork(slug)
+  if (!artwork) {
+    return { title: "Artwork not found" }
+  }
+  const title = buildArtworkSeoTitle(artwork)
+  const description = pickEnglish(artwork.description, "Original artwork on YiiArt")
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+    },
+  }
 }
 
 export default async function ArtworkPage({ params }: { params: Promise<{ slug: string }> }) {

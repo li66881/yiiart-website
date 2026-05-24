@@ -1,3 +1,9 @@
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+  title: "All Artworks",
+  description: "Browse our collection of original hand-painted artworks from talented artists.",
+}
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from '@/lib/sanity'

@@ -1,3 +1,9 @@
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+  title: "Artists",
+  description: "Meet the talented artists behind our original hand-painted artworks.",
+}
+
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
