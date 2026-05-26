@@ -15,21 +15,34 @@ export const metadata: Metadata = {
     default: 'YiiArt | Art for Your Home',
     template: '%s | YiiArt',
   },
-  description: 'Discover unique hand-drawn oil paintings from talented artists. Find the perfect artwork for your space.',
+  description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
   alternates: {
     canonical: '/',
+    languages: {
+      en: '/',
+      zh: '/zh',
+    },
   },
   openGraph: {
     title: 'YiiArt | Art for Your Home',
-    description: 'Discover unique hand-drawn oil paintings from talented artists. Find the perfect artwork for your space.',
+    description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
     url: '/',
     siteName: 'YiiArt',
     type: 'website',
+    images: [
+      {
+        url: '/og-image',
+        width: 1200,
+        height: 630,
+        alt: 'YiiArt - Original Art for Your Home',
+      },
+    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'YiiArt | Art for Your Home',
-    description: 'Discover unique hand-drawn oil paintings from talented artists. Find the perfect artwork for your space.',
+    description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
+    images: ['/og-image'],
   },
   robots: {
     index: true,

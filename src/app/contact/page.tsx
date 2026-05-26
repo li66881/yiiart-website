@@ -1,3 +1,16 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with YiiArt. Email us for artwork inquiries, shipping questions, or commission requests.",
+  openGraph: {
+    title: "Contact Us | YiiArt",
+    description: "Get in touch with YiiArt. Email us for artwork inquiries, shipping questions, or commission requests.",
+  },
+  robots: { index: true, follow: true },
+}
+
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"

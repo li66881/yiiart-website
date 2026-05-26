@@ -1,3 +1,16 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "About YiiArt",
+  description: "Learn about YiiArt — our mission to connect independent Chinese artists with collectors worldwide.",
+  openGraph: {
+    title: "About YiiArt | YiiArt",
+    description: "Learn about YiiArt — our mission to connect independent Chinese artists with collectors worldwide.",
+  },
+  robots: { index: true, follow: true },
+}
+
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"

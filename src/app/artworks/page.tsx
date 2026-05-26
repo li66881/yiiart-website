@@ -1,7 +1,12 @@
 import type { Metadata } from "next"
 export const metadata: Metadata = {
-  title: "All Artworks",
-  description: "Browse our collection of original hand-painted artworks from talented artists.",
+  title: "Original Paintings",
+  description: "Browse our full collection of original paintings: abstract, landscape, minimalist, and textured works hand-painted on canvas. Each piece is one of a kind and ships worldwide.",
+  openGraph: {
+    title: "Original Paintings | YiiArt",
+    description: "Browse our full collection of original paintings: abstract, landscape, minimalist, and textured works hand-painted on canvas.",
+  },
+  robots: { index: true, follow: true },
 }
 
 import Header from "@/components/Header"
@@ -43,7 +48,10 @@ async function getArtworks(category?: string) {
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
   const activeCategory = params.category
-  const artworks = await getArtworks(activeCategory)
+  const [artworks, allArtworks] = await Promise.all([
+    getArtworks(activeCategory),
+    client.fetch(`count(*[_type == "artwork"])`),
+  ])
 
   const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi"]
 
@@ -63,17 +71,24 @@ export default async function ArtworksPage({ searchParams }: Props) {
               href="/artworks" 
               className={`px-4 py-2 transition ${!activeCategory ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
             >
-              All
+              All ({allArtworks})
             </a>
-            {categories.map(cat => (
-              <a 
-                key={cat}
-                href={`/artworks?category=${cat}`}
-                className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-              >
-                {cat}
-              </a>
-            ))}
+            {categories.map(cat => {
+              const count = artworks.filter((a: any) => {
+                if (cat === "Texture") return a.category === "Texture" || a.category === "肌理"
+                if (cat === "Wabi-sabi") return a.category === "Wabi-sabi"
+                return a.category === cat
+              }).length
+              return (
+                <a 
+                  key={cat}
+                  href={`/artworks?category=${cat}`}
+                  className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
+                >
+                  {cat} ({count})
+                </a>
+              )
+            })}
           </div>
 
           {/* Artworks Grid */}

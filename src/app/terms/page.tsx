@@ -1,3 +1,16 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Terms of Service",
+  description: "Terms and conditions for using YiiArt and purchasing original artworks.",
+  openGraph: {
+    title: "Terms of Service | YiiArt",
+    description: "Terms and conditions for using YiiArt and purchasing original artworks.",
+  },
+  robots: { index: true, follow: true },
+}
+
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"

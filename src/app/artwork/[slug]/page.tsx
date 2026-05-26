@@ -47,13 +47,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const title = buildArtworkSeoTitle(artwork)
   const description = pickEnglish(artwork.description, "Original artwork on YiiArt")
+  const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1200).url() : ""
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com"
+  const canonical = `${baseUrl.replace(/\/$/, "")}/artwork/${slug}`
   return {
     title,
-    description,
+    description: description?.substring(0, 160),
+    alternates: { canonical },
     openGraph: {
       title,
-      description,
+      description: description?.substring(0, 200),
+      url: canonical,
+      siteName: "YiiArt",
+      type: "website",
+      images: imageUrl
+        ? [{ url: imageUrl, width: 1200, height: 1200, alt: title }]
+        : [],
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: description?.substring(0, 200),
+      images: imageUrl ? [imageUrl] : [],
+    },
+    robots: { index: true, follow: true },
   }
 }
 
@@ -93,7 +110,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "Product",
     name: buildArtworkSeoTitle(artwork),
-    image: imageUrl ? [imageUrl] : undefined,
+    image: (artwork.images || [])
+      .filter((img: any) => img?.asset?._ref || img?._type === "image")
+      .slice(0, 10)
+      .map((img: any) => urlFor(img).width(1400).url()),
     description: description || `${title} is an original hand-painted artwork by ${artistName}.`,
     brand: {
       "@type": "Brand",
@@ -155,8 +175,22 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 py-12">
+          <nav className="mb-4 flex items-center gap-2 text-sm text-gray-500" aria-label="Breadcrumb">
+            <Link href="/" className="hover:text-black">Home</Link>
+            <span>/</span>
+            <Link href="/artworks" className="hover:text-black">Artworks</Link>
+            {category && (
+              <>
+                <span>/</span>
+                <Link href={`/artworks?category=${category}`} className="hover:text-black">{category}</Link>
+              </>
+            )}
+            <span>/</span>
+            <span className="text-black">{title}</span>
+          </nav>
+
           <Link href="/artworks" className="mb-8 inline-block text-gray-500 hover:text-black">
-            Back to artworks
+            &larr; Back to artworks
           </Link>
 
           <div className="mt-4 grid grid-cols-1 gap-16 lg:grid-cols-2">

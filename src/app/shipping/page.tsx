@@ -1,3 +1,16 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Shipping Information",
+  description: "Worldwide shipping details for original artworks — methods, delivery times, packaging, and customs information.",
+  openGraph: {
+    title: "Shipping Information | YiiArt",
+    description: "Worldwide shipping details for original artworks — methods, delivery times, packaging, and customs information.",
+  },
+  robots: { index: true, follow: true },
+}
+
+
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 
