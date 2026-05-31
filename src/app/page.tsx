@@ -2,24 +2,58 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import HeroSection from "@/components/HeroSection"
+import FeaturedReviews from "@/components/FeaturedReviews"
 import { client, urlFor } from "@/lib/sanity"
 import { getTranslations } from "@/lib/i18n"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
+import { buildSeoMetadata } from "@/lib/seo"
+import { getFeaturedReviews } from "@/lib/reviews"
 
 export const dynamic = "force-dynamic"
 
 async function getData() {
-  const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...12]{
-    ...,
-    artist->{name}
-  }`)
-  const artists = await client.fetch(`*[_type == "artist"][0...6]`)
-  return { artworks, artists }
+  try {
+    const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...12]{
+      ...,
+      artist->{name}
+    }`)
+    const artists = await client.fetch(`*[_type == "artist"][0...6]`)
+    const reviews = await getFeaturedReviews(6)
+    return { artworks, artists, reviews }
+  } catch {
+    return { artworks: [], artists: [], reviews: [] }
+  }
+}
+
+export async function generateMetadata() {
+  try {
+    const artwork = await client.fetch(`*[_type == "artwork" && defined(images[0])] | order(featured desc, _createdAt desc)[0]{
+      title,
+      images
+    }`)
+    const image = artwork?.images?.[0] ? urlFor(artwork.images[0]).width(1200).height(630).url() : undefined
+
+    return buildSeoMetadata({
+      title: "Original Chinese Art for Calm Modern Homes",
+      description:
+        "Shop original hand-painted paintings by independent Chinese artists, with worldwide delivery, signed certificates, and a 30-day return window.",
+      path: "/",
+      image,
+      imageAlt: artwork ? pickEnglish(artwork.title, "Original YiiArt painting") : undefined,
+    })
+  } catch {
+    return buildSeoMetadata({
+      title: "Original Chinese Art for Calm Modern Homes",
+      description:
+        "Shop original hand-painted paintings by independent Chinese artists, with worldwide delivery, signed certificates, and a 30-day return window.",
+      path: "/",
+    })
+  }
 }
 
 export default async function Home() {
-  const { artworks, artists } = await getData()
+  const { artworks, artists, reviews } = await getData()
   const t = await getTranslations("home")
   const heroArtwork = artworks.find((artwork: any) => artwork.images?.[0])
   const heroImage = heroArtwork?.images?.[0]
@@ -43,6 +77,8 @@ export default async function Home() {
           <TrustBadge value="80%" title="Support Artists" text="Paid to creators" />
         </div>
       </section>
+
+      <FeaturedReviews reviews={reviews} />
 
       <section className="py-20 flex-1">
         <div className="container mx-auto px-4">

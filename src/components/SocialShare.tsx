@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type SocialShareProps = {
   title: string
@@ -38,6 +39,10 @@ export default function SocialShare({ title, image }: SocialShareProps) {
     if (!pageUrl) return
 
     await navigator.clipboard.writeText(pageUrl)
+    trackMarketingEvent("Share", {
+      method: "copy_link",
+      content_name: title,
+    })
     setCopied(true)
     window.setTimeout(() => setCopied(false), 1500)
   }
@@ -50,6 +55,7 @@ export default function SocialShare({ title, image }: SocialShareProps) {
           <a
             key={link.label}
             href={link.href}
+            onClick={() => trackMarketingEvent("Share", { method: link.label, content_name: title })}
             target={link.label === "Email" ? undefined : "_blank"}
             rel={link.label === "Email" ? undefined : "noopener noreferrer"}
             className="border px-3 py-2 text-sm hover:border-black"

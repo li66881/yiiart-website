@@ -1,6 +1,7 @@
 "use client"
 
 import { FormEvent, useState } from "react"
+import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type Status = "idle" | "loading" | "success" | "error"
 
@@ -29,6 +30,9 @@ export default function NewsletterSignup() {
       setEmail("")
       setStatus("success")
       setMessage("Thank you. You are on the YiiArt list.")
+      trackMarketingEvent("Lead", {
+        lead_type: "newsletter",
+      })
     } catch (error) {
       setStatus("error")
       setMessage(error instanceof Error ? error.message : "Subscription failed.")

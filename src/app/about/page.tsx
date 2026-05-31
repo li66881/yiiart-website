@@ -1,21 +1,24 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "About YiiArt",
-  description: "Learn about YiiArt — our mission to connect independent Chinese artists with collectors worldwide.",
-  openGraph: {
-    title: "About YiiArt | YiiArt",
-    description: "Learn about YiiArt — our mission to connect independent Chinese artists with collectors worldwide.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import ReviewCard from "@/components/ReviewCard"
+import ReviewTrustBadge from "@/components/ReviewTrustBadge"
 import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+import { getFeaturedReviews } from "@/lib/reviews"
 
-export default function AboutPage() {
+export const dynamic = "force-dynamic"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "About YiiArt",
+  description:
+    "Learn how YiiArt connects collectors with independent artists through original hand-painted works, artist-first pricing, and worldwide delivery.",
+  path: "/about",
+})
+
+export default async function AboutPage() {
+  const reviews = await getFeaturedReviews(3)
+
   return (
     <>
       <Header />
@@ -49,6 +52,23 @@ export default function AboutPage() {
               <p className="text-gray-600">Email: {contactEmail}</p>
             </div>
           </div>
+
+          <section className="mt-10">
+            <h2 className="mb-3 text-2xl font-light">Trusted by Collectors</h2>
+            <p className="mb-6 text-sm leading-6 text-gray-600">
+              Every YiiArt review comes from a real collector experience. We welcome honest feedback about artwork
+              quality, color accuracy, texture, packaging, delivery, and how the artwork feels in the space.
+            </p>
+            {reviews.length > 0 ? (
+              <div className="space-y-5">
+                {reviews.slice(0, 3).map((review) => (
+                  <ReviewCard key={review._id} review={review} compact />
+                ))}
+              </div>
+            ) : (
+              <ReviewTrustBadge />
+            )}
+          </section>
         </div>
       </main>
       <Footer />

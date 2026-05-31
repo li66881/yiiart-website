@@ -1,15 +1,20 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { usePathname } from "next/navigation"
 import Script from "next/script"
+import { trackPageView } from "@/lib/marketing-events"
 
 const CONSENT_KEY = "yiiart-cookie-consent"
 
 export default function MarketingPixels() {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
+  const trackedUrlRef = useRef<string | null>(null)
+  const pathname = usePathname()
   const gaId = process.env.NEXT_PUBLIC_GA_ID
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
   const pinterestTagId = process.env.NEXT_PUBLIC_PINTEREST_TAG_ID
+  const tiktokPixelId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID
 
   useEffect(() => {
     const updateConsent = () => {
@@ -21,6 +26,21 @@ export default function MarketingPixels() {
 
     return () => window.removeEventListener("yiiart:cookie-consent", updateConsent)
   }, [])
+
+  useEffect(() => {
+    if (!analyticsAllowed) return
+
+    const currentUrl = window.location.href
+    if (trackedUrlRef.current === null) {
+      trackedUrlRef.current = currentUrl
+      return
+    }
+
+    if (trackedUrlRef.current === currentUrl) return
+
+    trackedUrlRef.current = currentUrl
+    trackPageView(currentUrl)
+  }, [analyticsAllowed, pathname])
 
   if (!analyticsAllowed) {
     return null
@@ -38,8 +58,8 @@ export default function MarketingPixels() {
               __html: `
                 window.dataLayer = window.dataLayer || [];
                 function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', ${JSON.stringify(gaId)}, { anonymize_ip: true });
+              gtag('js', new Date());
+              gtag('config', ${JSON.stringify(gaId)}, { anonymize_ip: true });
               `,
             }}
           />
@@ -81,6 +101,31 @@ export default function MarketingPixels() {
               r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
               pintrk('load', ${JSON.stringify(pinterestTagId)});
               pintrk('page');
+            `,
+          }}
+        />
+      )}
+
+      {tiktokPixelId && (
+        <Script
+          id="yiiart-tiktok-pixel"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              !function (w, d, t) {
+                w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];
+                ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie"];
+                ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
+                for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);
+                ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e};
+                ttq.load=function(e,n){var i="https://analytics.tiktok.com/i18n/pixel/events.js";
+                ttq._i=ttq._i||{};ttq._i[e]=[];ttq._i[e]._u=i;ttq._t=ttq._t||{};ttq._t[e]=+new Date;
+                ttq._o=ttq._o||{};ttq._o[e]=n||{};var o=document.createElement("script");
+                o.type="text/javascript";o.async=!0;o.src=i+"?sdkid="+e+"&lib="+t;
+                var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(o,a)};
+                ttq.load(${JSON.stringify(tiktokPixelId)});
+                ttq.page();
+              }(window, document, 'ttq');
             `,
           }}
         />

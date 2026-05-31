@@ -1,21 +1,43 @@
 "use client"
 
-import { Suspense, useEffect } from "react"
+import { Suspense, useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { useCart } from "@/context/CartContext"
+import { trackMarketingEvent } from "@/lib/marketing-events"
+import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
 
 function CheckoutSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { clearCart } = useCart()
+  const { clearCart, items, subtotal } = useCart()
+  const purchaseTrackedRef = useRef(false)
   const sessionId = searchParams.get("session_id")
   const paypalOrderId = searchParams.get("paypal_order_id")
 
   useEffect(() => {
+    if (purchaseTrackedRef.current) return
+    purchaseTrackedRef.current = true
+
+    const storedItems = items.length > 0 ? items : readStoredCartItems()
+    const trackedSubtotal =
+      items.length > 0
+        ? subtotal
+        : storedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
+
+    if (storedItems.length > 0) {
+      const currency = getStoreCurrency()
+      trackMarketingEvent("Purchase", {
+        transaction_id: sessionId || paypalOrderId || "unknown",
+        currency,
+        value: convertCnyToStoreAmount(trackedSubtotal, currency),
+        num_items: storedItems.reduce((count, item) => count + item.quantity, 0),
+      })
+    }
+
     clearCart()
-  }, [])
+  }, [clearCart, items, paypalOrderId, sessionId, subtotal])
 
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -64,6 +86,15 @@ function CheckoutSuccessContent() {
       <Footer />
     </div>
   )
+}
+
+function readStoredCartItems() {
+  try {
+    const savedCart = localStorage.getItem("yiiart-cart")
+    return savedCart ? JSON.parse(savedCart) as Array<{ price: number; quantity: number }> : []
+  } catch {
+    return []
+  }
 }
 
 export default function CheckoutSuccessPage() {

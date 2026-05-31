@@ -1,39 +1,60 @@
 import Link from "next/link"
-import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { formatStorePrice } from "@/lib/pricing"
+import { buildSeoMetadata } from "@/lib/seo"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 600
 
 async function getArtist(slug: string) {
-  return client.fetch(`*[_type == "artist" && slug.current == $slug][0]`, { slug })
+  try {
+    return await client.fetch(`*[_type == "artist" && slug.current == $slug][0]`, { slug })
+  } catch (error) {
+    console.error("Artist fetch error:", error)
+    return null
+  }
 }
 
 async function getArtistArtworks(artistId: string) {
-  return client.fetch(
-    `*[_type == "artwork" && artist._ref == $artistId] | order(_createdAt desc)`,
-    { artistId }
-  )
+  try {
+    return await client.fetch(
+      `*[_type == "artwork" && artist._ref == $artistId] | order(_createdAt desc)`,
+      { artistId }
+    )
+  } catch (error) {
+    console.error("Artist artworks fetch error:", error)
+    return []
+  }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const artist = await getArtist(slug)
+
   if (!artist) {
-    return { title: "Artist not found" }
+    return buildSeoMetadata({
+      title: "Artist Not Found",
+      description: "This YiiArt artist profile could not be found.",
+      path: `/artist/${slug}`,
+      robots: { index: false, follow: true },
+    })
   }
-  const name = pickEnglish(artist.name, "YiiArt artist")
-  return {
-    title: name + " | YiiArt",
-    description: artist.location ? name + " - " + artist.location : name,
-    openGraph: {
-      title: name + " | YiiArt",
-      description: artist.location ? name + " - " + artist.location : name,
-    },
-  }
+
+  const artistName = pickEnglish(artist.name, "YiiArt artist")
+  const image = artist.image ? urlFor(artist.image).width(1200).height(630).url() : undefined
+
+  return buildSeoMetadata({
+    title: `${artistName} Artist Profile`,
+    description: pickEnglish(
+      artist.bio,
+      `View available original paintings by ${artistName}, with artist details, worldwide delivery, and YiiArt collector support.`
+    ),
+    path: `/artist/${slug}`,
+    image,
+    imageAlt: artistName,
+  })
 }
 
 export default async function ArtistPage({ params }: { params: Promise<{ slug: string }> }) {

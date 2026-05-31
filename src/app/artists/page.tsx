@@ -1,19 +1,25 @@
-import type { Metadata } from "next"
-export const metadata: Metadata = {
-  title: "Artists",
-  description: "Meet the talented artists behind our original hand-painted artworks.",
-}
-
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
+import { buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
+export const metadata = buildSeoMetadata({
+  title: "Independent Chinese Artists",
+  description:
+    "Meet the artists behind YiiArt's original paintings and browse available works by abstract, landscape, textured, and minimalist painters.",
+  path: "/artists",
+})
+
 async function getArtists() {
-  return client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)`)
+  try {
+    return await client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)`)
+  } catch {
+    return []
+  }
 }
 
 export default async function ArtistsPage() {

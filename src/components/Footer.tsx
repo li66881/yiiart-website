@@ -4,6 +4,7 @@ import Link from "next/link"
 import { useLanguage } from "@/context/LanguageContext"
 import NewsletterSignup from "@/components/NewsletterSignup"
 import SocialLinks from "@/components/SocialLinks"
+import TrackableEmailLink from "@/components/TrackableEmailLink"
 import { contactEmail } from "@/lib/site"
 
 export default function Footer() {
@@ -16,9 +17,9 @@ export default function Footer() {
           <div>
             <h3 className="font-medium mb-4">YiiArt</h3>
             <p className="text-sm text-gray-500">Art for Your Home</p>
-            <a href={`mailto:${contactEmail}`} className="mt-3 block text-sm text-gray-500 hover:text-black">
+            <TrackableEmailLink email={contactEmail} className="mt-3 block text-sm text-gray-500 hover:text-black" leadType="footer_email">
               {contactEmail}
-            </a>
+            </TrackableEmailLink>
           </div>
           <div>
             <h4 className="font-medium mb-4">{t("footer.shop")}</h4>
@@ -26,6 +27,8 @@ export default function Footer() {
               <li><Link href="/artworks">{t("footer.allArtworks")}</Link></li>
               <li><Link href="/artworks?category=Abstract">{t("footer.abstract")}</Link></li>
               <li><Link href="/artworks?category=Texture">{t("footer.texture")}</Link></li>
+              <li><Link href="/collections/abstract-art-for-living-room">Living Room Art</Link></li>
+              <li><Link href="/collections/textured-wall-art">Textured Wall Art</Link></li>
               <li><Link href="/artists">{t("common.artists")}</Link></li>
             </ul>
           </div>
@@ -33,6 +36,8 @@ export default function Footer() {
             <h4 className="font-medium mb-4">{t("footer.support")}</h4>
             <ul className="space-y-2 text-sm text-gray-500">
               <li><Link href="/contact">{t("footer.contactUs")}</Link></li>
+              <li><Link href="/reviews">Reviews</Link></li>
+              <li><Link href="/art-in-real-homes">Art in Real Homes</Link></li>
               <li><Link href="/faq">{t("footer.faq")}</Link></li>
               <li><Link href="/shipping">{t("footer.shippingInfo")}</Link></li>
               <li><Link href="/returns">{t("footer.returns")}</Link></li>
@@ -42,6 +47,7 @@ export default function Footer() {
             <h4 className="font-medium mb-4">{t("footer.company")}</h4>
             <ul className="space-y-2 text-sm text-gray-500">
               <li><Link href="/about">{t("footer.aboutUs")}</Link></li>
+              <li><Link href="/links">Social Links</Link></li>
               <li><Link href="/privacy">{t("footer.privacy")}</Link></li>
               <li><Link href="/terms">{t("footer.terms")}</Link></li>
             </ul>

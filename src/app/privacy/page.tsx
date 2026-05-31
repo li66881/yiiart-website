@@ -1,19 +1,14 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "How YiiArt collects, uses, and protects your personal information. Payment processing by Stripe.",
-  openGraph: {
-    title: "Privacy Policy | YiiArt",
-    description: "How YiiArt collects, uses, and protects your personal information. Payment processing by Stripe.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Privacy Policy",
+  description: "YiiArt privacy policy for customer data, checkout information, cookies, and collector communications.",
+  path: "/privacy",
+})
 
 export default function PrivacyPage() {
   return (

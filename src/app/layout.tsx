@@ -8,41 +8,35 @@ import ChatWidget from '@/components/ChatWidget'
 import CookieConsent from '@/components/CookieConsent'
 import MarketingPixels from '@/components/MarketingPixels'
 import VercelInsights from '@/components/VercelInsights'
+import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yiiart.com'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'YiiArt | Art for Your Home',
     template: '%s | YiiArt',
   },
-  description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
-  alternates: {
-    canonical: '/',
-    languages: {
-      en: '/',
-      zh: '/zh',
-    },
-  },
+  description: defaultSeoDescription,
   openGraph: {
     title: 'YiiArt | Art for Your Home',
-    description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
+    description: defaultSeoDescription,
     url: '/',
-    siteName: 'YiiArt',
+    siteName,
     type: 'website',
     images: [
       {
-        url: '/og-image',
+        url: defaultOgImage,
         width: 1200,
         height: 630,
-        alt: 'YiiArt - Original Art for Your Home',
+        alt: 'Original artwork styled in a modern interior',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'YiiArt | Art for Your Home',
-    description: 'Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates.',
-    images: ['/og-image'],
+    description: defaultSeoDescription,
+    images: [defaultOgImage],
   },
   robots: {
     index: true,

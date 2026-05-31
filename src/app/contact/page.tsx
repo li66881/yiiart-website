@@ -1,19 +1,16 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Contact Us",
-  description: "Get in touch with YiiArt. Email us for artwork inquiries, shipping questions, or commission requests.",
-  openGraph: {
-    title: "Contact Us | YiiArt",
-    description: "Get in touch with YiiArt. Email us for artwork inquiries, shipping questions, or commission requests.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import TrackableEmailLink from "@/components/TrackableEmailLink"
 import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Contact YiiArt",
+  description:
+    "Contact YiiArt for artwork questions, collector support, shipping help, commissions, and room-size recommendations.",
+  path: "/contact",
+})
 
 export default function ContactPage() {
   return (
@@ -30,9 +27,9 @@ export default function ContactPage() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium mb-1">Email</h3>
-                <a href={`mailto:${contactEmail}`} className="text-gray-600 hover:text-black">
+                <TrackableEmailLink email={contactEmail} className="text-gray-600 hover:text-black" leadType="contact_email">
                   {contactEmail}
-                </a>
+                </TrackableEmailLink>
               </div>
               <div>
                 <h3 className="font-medium mb-1">Hours</h3>

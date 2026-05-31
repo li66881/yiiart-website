@@ -1,19 +1,15 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Returns & Refunds",
-  description: "30-day return policy for original artworks. Learn about our refund process and buyer protection.",
-  openGraph: {
-    title: "Returns & Refunds | YiiArt",
-    description: "30-day return policy for original artworks. Learn about our refund process and buyer protection.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Returns and Refunds",
+  description:
+    "YiiArt offers a 30-day return window after delivery for eligible original artwork orders, with support for damaged shipments.",
+  path: "/returns",
+})
 
 export default function ReturnsPage() {
   return (

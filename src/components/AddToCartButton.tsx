@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import { useCart } from "@/context/CartContext"
+import { trackMarketingEvent } from "@/lib/marketing-events"
+import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
 
 type AddToCartButtonProps = {
   item: {
@@ -22,6 +24,14 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
 
   const handleClick = () => {
     addItem({ ...item, quantity: 1 })
+    const currency = getStoreCurrency()
+    trackMarketingEvent("AddToCart", {
+      content_ids: item.id,
+      content_name: item.title,
+      content_type: "product",
+      currency,
+      value: convertCnyToStoreAmount(item.price, currency),
+    })
     setAdded(true)
     window.setTimeout(() => setAdded(false), 1800)
   }

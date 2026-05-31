@@ -1,21 +1,11 @@
-import type { Metadata } from "next"
-export const metadata: Metadata = {
-  title: "Original Paintings",
-  description: "Browse our full collection of original paintings: abstract, landscape, minimalist, and textured works hand-painted on canvas. Each piece is one of a kind and ships worldwide.",
-  openGraph: {
-    title: "Original Paintings | YiiArt",
-    description: "Browse our full collection of original paintings: abstract, landscape, minimalist, and textured works hand-painted on canvas.",
-  },
-  robots: { index: true, follow: true },
-}
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { client, urlFor } from '@/lib/sanity'
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
+import { buildSeoMetadata } from "@/lib/seo"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 600
 
 interface Props {
   searchParams: Promise<{ category?: string }>
@@ -45,13 +35,41 @@ async function getArtworks(category?: string) {
   }`)
 }
 
+async function getSeoImage(category?: string) {
+  const artworks = await getArtworks(category).catch(() => [])
+  const artworkWithImage = artworks.find((artwork: any) => artwork.images?.[0])
+
+  if (!artworkWithImage?.images?.[0]) return undefined
+
+  return {
+    image: urlFor(artworkWithImage.images[0]).width(1200).height(630).url(),
+    alt: pickEnglish(artworkWithImage.title, "Original YiiArt painting"),
+  }
+}
+
+export async function generateMetadata({ searchParams }: Props) {
+  const params = await searchParams
+  const activeCategory = params.category
+  const seoImage = await getSeoImage(activeCategory)
+  const title = activeCategory ? `${activeCategory} Original Paintings` : "Original Paintings"
+  const description = activeCategory
+    ? `Browse ${activeCategory.toLowerCase()} original paintings from YiiArt, each hand-painted and shipped worldwide with a signed certificate.`
+    : "Browse original abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
+  const path = activeCategory ? `/artworks?category=${encodeURIComponent(activeCategory)}` : "/artworks"
+
+  return buildSeoMetadata({
+    title,
+    description,
+    path,
+    image: seoImage?.image,
+    imageAlt: seoImage?.alt,
+  })
+}
+
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
   const activeCategory = params.category
-  const [artworks, allArtworks] = await Promise.all([
-    getArtworks(activeCategory),
-    client.fetch(`count(*[_type == "artwork"])`),
-  ])
+  const artworks = await getArtworks(activeCategory).catch(() => [])
 
   const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi"]
 
@@ -67,28 +85,21 @@ export default async function ArtworksPage({ searchParams }: Props) {
           
           {/* Category Filter */}
           <div className="flex gap-4 mb-12 flex-wrap">
-            <a 
-              href="/artworks" 
+            <a
+              href="/artworks"
               className={`px-4 py-2 transition ${!activeCategory ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
             >
-              All ({allArtworks})
+              All
             </a>
-            {categories.map(cat => {
-              const count = artworks.filter((a: any) => {
-                if (cat === "Texture") return a.category === "Texture" || a.category === "肌理"
-                if (cat === "Wabi-sabi") return a.category === "Wabi-sabi"
-                return a.category === cat
-              }).length
-              return (
-                <a 
-                  key={cat}
-                  href={`/artworks?category=${cat}`}
-                  className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-                >
-                  {cat} ({count})
-                </a>
-              )
-            })}
+            {categories.map(cat => (
+              <a
+                key={cat}
+                href={`/artworks?category=${cat}`}
+                className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
+              >
+                {cat}
+              </a>
+            ))}
           </div>
 
           {/* Artworks Grid */}

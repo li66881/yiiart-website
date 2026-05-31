@@ -3,6 +3,7 @@
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import ReviewTrustBadge from "@/components/ReviewTrustBadge"
 import { useCart } from "@/context/CartContext"
 import { useLanguage } from "@/context/LanguageContext"
 import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
@@ -105,6 +106,12 @@ export default function CartPage() {
                   <p className="text-xs text-gray-500 text-center mt-2">
                     {getPriceDisclosure()}
                   </p>
+                  <div className="mt-5">
+                    <ReviewTrustBadge />
+                    <Link href="/reviews" className="mt-3 block text-center text-sm underline underline-offset-4">
+                      Read verified collector reviews
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>

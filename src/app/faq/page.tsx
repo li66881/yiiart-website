@@ -1,18 +1,14 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "FAQ",
-  description: "Frequently asked questions about YiiArt — shipping, returns, authenticity, commissions, and more.",
-  openGraph: {
-    title: "FAQ | YiiArt",
-    description: "Frequently asked questions about YiiArt — shipping, returns, authenticity, commissions, and more.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Artwork Buying FAQ",
+  description:
+    "Answers about YiiArt original paintings, certificates of authenticity, worldwide shipping, returns, packaging, and commissions.",
+  path: "/faq",
+})
 
 export default function FAQPage() {
   return (

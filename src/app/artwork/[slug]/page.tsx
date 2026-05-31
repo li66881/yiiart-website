@@ -1,9 +1,11 @@
 import Link from "next/link"
-import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import AddToCartButton from "@/components/AddToCartButton"
 import SocialShare from "@/components/SocialShare"
+import ArtworkViewTracker from "@/components/ArtworkViewTracker"
+import ArtworkReviewSection from "@/components/ArtworkReviewSection"
+import ReviewStars from "@/components/ReviewStars"
 import { client, urlFor } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
@@ -18,60 +20,61 @@ import {
   getPriceDisclosure,
   getStoreCurrency,
 } from "@/lib/pricing"
+import { buildSeoMetadata } from "@/lib/seo"
+import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 600
 
 async function getArtwork(slug: string) {
-  return client.fetch(
-    `*[_type == "artwork" && slug.current == $slug][0]{
-      _id,
-      title,
-      slug,
-      artist->{_id, name, slug, bio, location},
-      price,
-      dimensions,
-      medium,
-      category,
-      images,
-      description
-    }`,
-    { slug }
-  )
+  try {
+    return await client.fetch(
+      `*[_type == "artwork" && slug.current == $slug][0]{
+        _id,
+        title,
+        slug,
+        artist->{_id, name, slug, bio, location},
+        price,
+        dimensions,
+        medium,
+        category,
+        images,
+        description
+      }`,
+      { slug }
+    )
+  } catch (error) {
+    console.error("Artwork fetch error:", error)
+    return null
+  }
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const artwork = await getArtwork(slug)
+
   if (!artwork) {
-    return { title: "Artwork not found" }
+    return buildSeoMetadata({
+      title: "Artwork Not Found",
+      description: "This YiiArt artwork could not be found.",
+      path: `/artwork/${slug}`,
+      robots: { index: false, follow: true },
+    })
   }
-  const title = buildArtworkSeoTitle(artwork)
-  const description = pickEnglish(artwork.description, "Original artwork on YiiArt")
-  const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1200).url() : ""
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com"
-  const canonical = `${baseUrl.replace(/\/$/, "")}/artwork/${slug}`
-  return {
-    title,
-    description: description?.substring(0, 160),
-    alternates: { canonical },
-    openGraph: {
-      title,
-      description: description?.substring(0, 200),
-      url: canonical,
-      siteName: "YiiArt",
-      type: "website",
-      images: imageUrl
-        ? [{ url: imageUrl, width: 1200, height: 1200, alt: title }]
-        : [],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description: description?.substring(0, 200),
-      images: imageUrl ? [imageUrl] : [],
-    },
-    robots: { index: true, follow: true },
-  }
+
+  const title = pickEnglish(artwork.title, "Original artwork")
+  const artistName = pickEnglish(artwork.artist?.name, "YiiArt artist")
+  const description =
+    pickEnglish(artwork.description) ||
+    `${title} is an original hand-painted artwork by ${artistName}, available from YiiArt with worldwide delivery and a signed certificate.`
+  const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1200).height(630).url() : undefined
+
+  return buildSeoMetadata({
+    title: buildArtworkSeoTitle(artwork),
+    description,
+    path: `/artwork/${slug}`,
+    image: imageUrl,
+    imageAlt: `${title} by ${artistName}`,
+  })
 }
 
 export default async function ArtworkPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -106,7 +109,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
-  const productJsonLd = {
+  const reviews = await getArtworkReviews(artwork._id)
+  const reviewStats = getReviewStats(reviews)
+  const productJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: buildArtworkSeoTitle(artwork),
@@ -165,12 +170,44 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     },
   }
 
+  if (reviewStats.count > 0) {
+    productJsonLd.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: reviewStats.overall.toFixed(1),
+      reviewCount: reviewStats.count,
+    }
+    productJsonLd.review = reviews.map((review) => ({
+      "@type": "Review",
+      name: review.reviewTitle,
+      reviewBody: review.reviewText,
+      datePublished: review.approvedAt || review.submittedAt,
+      author: {
+        "@type": "Person",
+        name: review.customerName || "Verified Collector",
+      },
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: review.overallRating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }))
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <ArtworkViewTracker
+        id={artwork._id}
+        title={title}
+        price={priceCny}
+        currency={currency}
+        value={offerPrice}
+        category={category}
       />
 
       <main className="flex-1 pt-24 pb-16">
@@ -224,6 +261,18 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <p className="mb-6 text-xl text-gray-500">by {artistName}</p>
               <p className="mb-2 text-3xl font-semibold">{formatStorePrice(priceCny)}</p>
               <p className="mb-6 text-xs text-gray-500">{getPriceDisclosure(currency)}</p>
+              <div className="mb-6 text-sm text-gray-600">
+                {reviewStats.count > 0 ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ReviewStars rating={reviewStats.overall} size="sm" />
+                    <span>
+                      {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count} verified {reviewStats.count === 1 ? "review" : "reviews"}
+                    </span>
+                  </div>
+                ) : (
+                  <span>No reviews yet - Be the first collector to review this artwork</span>
+                )}
+              </div>
 
               <div className="mb-8 grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
                 {dimensions && <Detail label="Size" value={dimensions} />}
@@ -275,6 +324,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
           </div>
+
+          <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
 
           <section className="mt-16 grid gap-6 border-t pt-12 md:grid-cols-3">
             <InfoBlock title="Packaging" text="Each artwork is protected with layered packaging. We confirm the safest shipping format before dispatch." />

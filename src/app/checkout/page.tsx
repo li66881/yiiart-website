@@ -1,18 +1,20 @@
 "use client"
 
-import { FormEvent, useEffect, useState } from "react"
+import { FormEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { useCart } from "@/context/CartContext"
-import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
+import { convertCnyToStoreAmount, formatStorePrice, getPriceDisclosure, getStoreCurrency } from "@/lib/pricing"
+import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type Step = "shipping" | "payment" | "confirm"
 type PaymentMethod = "card" | "paypal"
 
 export default function CheckoutPage() {
-  const { items, subtotal } = useCart()
+  const { items, subtotal, ready } = useCart()
   const router = useRouter()
+  const checkoutTrackedRef = useRef(false)
   const [step, setStep] = useState<Step>("shipping")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
@@ -27,10 +29,22 @@ export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card")
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (ready && items.length === 0) {
       router.push("/cart")
     }
-  }, [items.length, router])
+  }, [items.length, ready, router])
+
+  useEffect(() => {
+    if (!ready || checkoutTrackedRef.current || items.length === 0) return
+
+    const currency = getStoreCurrency()
+    checkoutTrackedRef.current = true
+    trackMarketingEvent("InitiateCheckout", {
+      currency,
+      value: convertCnyToStoreAmount(subtotal, currency),
+      num_items: items.reduce((count, item) => count + item.quantity, 0),
+    })
+  }, [items, ready, subtotal])
 
   const handleShippingSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()

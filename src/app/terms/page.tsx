@@ -1,19 +1,14 @@
 import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Terms of Service",
-  description: "Terms and conditions for using YiiArt and purchasing original artworks.",
-  openGraph: {
-    title: "Terms of Service | YiiArt",
-    description: "Terms and conditions for using YiiArt and purchasing original artworks.",
-  },
-  robots: { index: true, follow: true },
-}
-
-
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Terms of Service",
+  description: "YiiArt terms for original artwork purchases, pricing, shipping, returns, and intellectual property.",
+  path: "/terms",
+})
 
 export default function TermsPage() {
   return (
