@@ -7,10 +7,10 @@ import de from "../../messages/de.json"
 import fr from "../../messages/fr.json"
 
 export const languageOptions = [
-  { code: "en", label: "EN", name: "English" },
-  { code: "de", label: "DE", name: "Deutsch" },
-  { code: "fr", label: "FR", name: "Francais" },
-  { code: "zh", label: "ZH", name: "中文" },
+  { code: "en", label: "EN", name: "English", flagCode: "us" },
+  { code: "de", label: "DE", name: "Deutsch", flagCode: "de" },
+  { code: "fr", label: "FR", name: "Français", flagCode: "fr" },
+  { code: "zh", label: "ZH", name: "中文", flagCode: "cn" },
 ] as const
 
 type Messages = typeof en

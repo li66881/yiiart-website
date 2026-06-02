@@ -1,45 +1,137 @@
 "use client"
 
+import { useEffect, useRef, useState } from "react"
+import FlagIcon from "@/components/FlagIcon"
 import { useLanguage } from "@/context/LanguageContext"
 import { useCurrency } from "@/context/CurrencyContext"
+import { getCurrencyOption, StoreMarketCode } from "@/lib/pricing"
+
+type OpenPanel = "language" | "market" | null
 
 export default function StorefrontControls() {
   const { locale, setLocale, languageOptions } = useLanguage()
-  const { currency, setCurrency, options } = useCurrency()
+  const { market, marketOptions, setMarket } = useCurrency()
+  const [openPanel, setOpenPanel] = useState<OpenPanel>(null)
+  const controlsRef = useRef<HTMLDivElement>(null)
+
+  const selectedLanguage = languageOptions.find((option) => option.code === locale) || languageOptions[0]
+  const selectedCurrency = getCurrencyOption(market.currency)
+
+  useEffect(() => {
+    if (!openPanel) return
+
+    const closeOnOutsideClick = (event: MouseEvent) => {
+      if (controlsRef.current && !controlsRef.current.contains(event.target as Node)) {
+        setOpenPanel(null)
+      }
+    }
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpenPanel(null)
+    }
+
+    document.addEventListener("mousedown", closeOnOutsideClick)
+    document.addEventListener("keydown", closeOnEscape)
+    return () => {
+      document.removeEventListener("mousedown", closeOnOutsideClick)
+      document.removeEventListener("keydown", closeOnEscape)
+    }
+  }, [openPanel])
 
   return (
-    <div className="flex items-center border text-xs sm:text-sm">
-      <label className="sr-only" htmlFor="yiiart-language">
-        Language
-      </label>
-      <select
+    <div ref={controlsRef} className="relative flex items-center border bg-white text-xs sm:text-sm">
+      <button
         id="yiiart-language"
-        value={locale}
-        onChange={(event) => setLocale(event.target.value as typeof locale)}
-        className="h-9 border-r bg-white px-1.5 text-xs outline-none hover:bg-gray-50 sm:px-2 sm:text-sm"
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={openPanel === "language"}
+        onClick={() => setOpenPanel(openPanel === "language" ? null : "language")}
+        className="flex h-9 items-center gap-1.5 border-r px-2 outline-none transition hover:bg-gray-50"
       >
-        {languageOptions.map((option) => (
-          <option key={option.code} value={option.code}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <FlagIcon code={selectedLanguage.flagCode} label={selectedLanguage.name} />
+        <span>{selectedLanguage.label}</span>
+        <span aria-hidden="true" className="text-gray-400">⌄</span>
+      </button>
 
-      <label className="sr-only" htmlFor="yiiart-currency">
-        Currency
-      </label>
-      <select
-        id="yiiart-currency"
-        value={currency}
-        onChange={(event) => setCurrency(event.target.value as typeof currency)}
-        className="h-9 bg-white px-1.5 text-xs outline-none hover:bg-gray-50 sm:px-2 sm:text-sm"
+      <button
+        id="yiiart-market"
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={openPanel === "market"}
+        onClick={() => setOpenPanel(openPanel === "market" ? null : "market")}
+        className="flex h-9 min-w-0 items-center gap-1.5 px-2 outline-none transition hover:bg-gray-50"
       >
-        {options.map((option) => (
-          <option key={option.code} value={option.code}>
-            {option.label}
-          </option>
-        ))}
-      </select>
+        <FlagIcon code={market.flagCode} label={market.country} />
+        <span className="hidden max-w-28 truncate sm:inline">{market.country}</span>
+        <span>{market.currency}</span>
+        <span aria-hidden="true" className="text-gray-400">⌄</span>
+      </button>
+
+      {openPanel === "language" && (
+        <div className="absolute right-0 top-11 z-50 w-72 border bg-white p-2 shadow-xl" role="listbox" aria-label="Language">
+          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">Language</p>
+          {languageOptions.map((option) => (
+            <button
+              key={option.code}
+              type="button"
+              role="option"
+              aria-selected={option.code === locale}
+              onClick={() => {
+                setLocale(option.code)
+                setOpenPanel(null)
+              }}
+              className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition hover:bg-gray-50 ${
+                option.code === locale ? "bg-gray-100" : ""
+              }`}
+            >
+              <span className="flex items-center gap-3">
+                <FlagIcon code={option.flagCode} label={option.name} />
+                <span>
+                  <span className="block font-medium">{option.name}</span>
+                  <span className="block text-xs text-gray-500">{option.label}</span>
+                </span>
+              </span>
+              {option.code === locale && <span className="text-xs text-gray-500">Selected</span>}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {openPanel === "market" && (
+        <div className="absolute right-0 top-11 z-50 max-h-[70vh] w-[min(22rem,calc(100vw-2rem))] overflow-auto border bg-white p-2 shadow-xl" role="listbox" aria-label="Country and currency">
+          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">Country / Region and currency</p>
+          {marketOptions.map((option) => {
+            const currency = getCurrencyOption(option.currency)
+
+            return (
+              <button
+                key={option.code}
+                type="button"
+                role="option"
+                aria-selected={option.code === market.code}
+                onClick={() => {
+                  setMarket(option.code as StoreMarketCode)
+                  setOpenPanel(null)
+                }}
+                className={`flex w-full items-center justify-between gap-3 px-3 py-2 text-left transition hover:bg-gray-50 ${
+                  option.code === market.code ? "bg-gray-100" : ""
+                }`}
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <FlagIcon code={option.flagCode} label={option.country} />
+                  <span className="min-w-0">
+                    <span className="block truncate font-medium">{option.country}</span>
+                    <span className="block truncate text-xs text-gray-500">
+                      {currency.name} ({currency.label})
+                    </span>
+                  </span>
+                </span>
+                {option.code === market.code && <span className="text-xs text-gray-500">Selected</span>}
+              </button>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }
