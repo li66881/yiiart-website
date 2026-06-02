@@ -9,7 +9,7 @@
     "login": "登录",
     "register": "注册",
     "logout": "退出",
-    "checkout": "结算",
+    "checkout": "结账",
     "search": "搜索",
     "loading": "加载中..."
   },
@@ -23,24 +23,24 @@
   },
   "hero": {
     "title": "YiiArt 原创",
-    "titleEmphasis": "艺术作品",
-    "subtitle": "为现代家居甄选独一件原创作品，提供全球配送、精心包装和签名收藏证书。",
+    "titleEmphasis": "艺术画作",
+    "subtitle": "为现代家居精选独一无二的原创艺术品，提供全球配送、精心包装和签名收藏证书。",
     "browseArtworks": "浏览艺术品",
     "meetArtists": "认识艺术家"
   },
   "trust": {
-    "original": "100%原创",
+    "original": "100% 原创",
     "originalDesc": "附签名证书",
     "shipping": "免费配送",
     "shippingDesc": "全球送达",
-    "trial": "30天体验",
+    "trial": "30 天体验",
     "trialDesc": "全额退款",
     "support": "支持艺术家",
-    "supportDesc": "80%归创作者"
+    "supportDesc": "80% 归创作者"
   },
   "artwork": {
     "featured": "精选艺术品",
-    "viewAll": "查看全部",
+    "viewAll": "查看全部艺术品",
     "by": "作者",
     "addToCart": "加入购物车",
     "artist": "艺术家",
@@ -50,25 +50,25 @@
     "description": "描述"
   },
   "artist": {
-    "ourArtists": "艺术家",
+    "ourArtists": "我们的艺术家",
     "location": "所在地",
     "style": "风格",
     "viewProfile": "查看主页"
   },
   "cart": {
     "title": "购物车",
-    "empty": "购物车是空的",
+    "empty": "你的购物车是空的",
     "subtotal": "小计",
     "shipping": "运费",
     "free": "免费",
     "total": "合计",
-    "proceedToCheckout": "去结算",
-    "remove": "删除",
+    "proceedToCheckout": "去结账",
+    "remove": "移除",
     "continueShopping": "继续购物",
     "orderSummary": "订单摘要"
   },
   "checkout": {
-    "title": "结算",
+    "title": "结账",
     "step1": "配送",
     "step2": "支付",
     "step3": "确认",
@@ -79,7 +79,7 @@
     "city": "城市",
     "postalCode": "邮政编码",
     "notes": "订单备注",
-    "notesPlaceholder": "配送或艺术品特殊说明...",
+    "notesPlaceholder": "配送或艺术品的特殊说明...",
     "continueToPayment": "继续支付",
     "back": "返回",
     "reviewOrder": "确认订单",
@@ -88,16 +88,16 @@
     "alipay": "支付宝",
     "paypal": "PayPal",
     "card": "信用卡/借记卡",
-    "shippingTo": "收货地址：",
+    "shippingTo": "配送至：",
     "paymentWith": "支付方式：",
     "items": "商品：",
     "placeOrder": "提交订单",
     "orderSuccess": "订单提交成功！",
     "orderNumber": "订单号：",
     "whatNext": "接下来",
-    "artistNotified": "艺术家将收到通知准备您的艺术品",
-    "emailConfirmation": "您将很快收到确认邮件",
-    "estimatedDelivery": "预计送达：7-14个工作日",
+    "artistNotified": "艺术家将收到通知并准备你的作品",
+    "emailConfirmation": "你很快会收到确认邮件",
+    "estimatedDelivery": "预计送达：7-14 个工作日",
     "trackingInfo": "发货后我们会发送物流信息",
     "continueShopping": "继续购物"
   },
@@ -136,7 +136,7 @@
   },
   "home": {
     "featuredArtworks": "精选艺术品",
-    "ourArtists": "艺术家",
+    "ourArtists": "我们的艺术家",
     "noArtworks": "新作品正在准备上线。",
     "noArtists": "艺术家资料正在准备中。"
   }

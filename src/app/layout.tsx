@@ -4,6 +4,7 @@ import Providers from '@/components/SessionProvider'
 import { CartProvider } from '@/context/CartContext'
 import { WishlistProvider } from '@/context/WishlistContext'
 import { LanguageProvider } from '@/context/LanguageContext'
+import { CurrencyProvider } from '@/context/CurrencyContext'
 import ChatWidget from '@/components/ChatWidget'
 import CookieConsent from '@/components/CookieConsent'
 import MarketingPixels from '@/components/MarketingPixels'
@@ -57,12 +58,14 @@ export default function RootLayout({
       <body className="antialiased">
         <Providers>
           <LanguageProvider>
-            <WishlistProvider>
-              <CartProvider>
-                {children}
-                <ChatWidget />
-              </CartProvider>
-            </WishlistProvider>
+            <CurrencyProvider>
+              <WishlistProvider>
+                <CartProvider>
+                  {children}
+                  <ChatWidget />
+                </CartProvider>
+              </WishlistProvider>
+            </CurrencyProvider>
           </LanguageProvider>
         </Providers>
         <MarketingPixels />

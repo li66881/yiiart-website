@@ -1,8 +1,8 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client, urlFor } from '@/lib/sanity'
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
-import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const revalidate = 600
@@ -126,7 +126,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
                     {pickEnglish(artwork.artist?.name, "YiiArt artist")}
                   </p>
                   <p className="mt-1 font-semibold">
-                    {formatStorePrice(artwork.price)}
+                    <PriceText amountCny={artwork.price} />
                   </p>
                   <p className="text-xs text-gray-400 mt-1">
                     {formatDimensions(artwork.dimensions)}
@@ -142,7 +142,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
             )}
           </div>
           {artworks.length > 0 && (
-            <p className="mt-8 text-center text-xs text-gray-500">{getPriceDisclosure()}</p>
+            <p className="mt-8 text-center text-xs text-gray-500"><PriceDisclosure /></p>
           )}
         </div>
       </main>

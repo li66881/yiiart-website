@@ -2,9 +2,9 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import SocialLinks from "@/components/SocialLinks"
+import { PriceText } from "@/components/PriceText"
 import { client, urlFor } from "@/lib/sanity"
 import { formatDimensions, pickEnglish } from "@/lib/artwork-display"
-import { formatStorePrice } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
@@ -103,7 +103,7 @@ export default async function LinksPage() {
                     </div>
                     <h3 className="font-medium">{title}</h3>
                     <p className="mt-1 text-sm text-gray-500">{formatDimensions(artwork.dimensions)}</p>
-                    <p className="mt-1 font-semibold">{formatStorePrice(artwork.price)}</p>
+                    <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                   </Link>
                 )
               }) : (

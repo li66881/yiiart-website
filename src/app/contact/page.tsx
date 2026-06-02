@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
-import { contactEmail } from "@/lib/site"
+import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -30,6 +30,17 @@ export default function ContactPage() {
                 <TrackableEmailLink email={contactEmail} className="text-gray-600 hover:text-black" leadType="contact_email">
                   {contactEmail}
                 </TrackableEmailLink>
+              </div>
+              <div>
+                <h3 className="font-medium mb-1">WhatsApp</h3>
+                <a
+                  href={getWhatsAppUrl("Hello YiiArt, I have a question from the contact page.")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-600 hover:text-black"
+                >
+                  +{whatsappNumber}
+                </a>
               </div>
               <div>
                 <h3 className="font-medium mb-1">Hours</h3>

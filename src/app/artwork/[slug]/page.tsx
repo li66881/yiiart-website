@@ -6,6 +6,7 @@ import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
+import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client, urlFor } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
@@ -16,8 +17,6 @@ import {
 } from "@/lib/artwork-display"
 import {
   convertCnyToStoreAmount,
-  formatStorePrice,
-  getPriceDisclosure,
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
@@ -259,8 +258,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </p>
               <h1 className="mb-2 text-4xl font-light">{title}</h1>
               <p className="mb-6 text-xl text-gray-500">by {artistName}</p>
-              <p className="mb-2 text-3xl font-semibold">{formatStorePrice(priceCny)}</p>
-              <p className="mb-6 text-xs text-gray-500">{getPriceDisclosure(currency)}</p>
+              <p className="mb-2 text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
+              <p className="mb-6 text-xs text-gray-500"><PriceDisclosure /></p>
               <div className="mb-6 text-sm text-gray-600">
                 {reviewStats.count > 0 ? (
                   <div className="flex flex-wrap items-center gap-2">

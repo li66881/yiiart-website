@@ -3,10 +3,11 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import HeroSection from "@/components/HeroSection"
 import FeaturedReviews from "@/components/FeaturedReviews"
+import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import TrustSection from "@/components/TrustSection"
 import { client, urlFor } from "@/lib/sanity"
 import { getTranslations } from "@/lib/i18n"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
-import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getFeaturedReviews } from "@/lib/reviews"
 
@@ -69,14 +70,7 @@ export default async function Home() {
         imageAlt={heroArtwork ? pickEnglish(heroArtwork.title, "Original YiiArt artwork") : undefined}
       />
 
-      <section className="bg-gray-50 py-14">
-        <div className="container mx-auto grid grid-cols-2 gap-8 px-4 text-center md:grid-cols-4">
-          <TrustBadge value="100%" title="100% Original" text="Signed certificate" />
-          <TrustBadge value="Free" title="Free Shipping" text="Worldwide delivery" />
-          <TrustBadge value="30" title="30-Day Trial" text="Full refund" />
-          <TrustBadge value="80%" title="Support Artists" text="Paid to creators" />
-        </div>
-      </section>
+      <TrustSection />
 
       <FeaturedReviews reviews={reviews} />
 
@@ -112,7 +106,7 @@ export default async function Home() {
                   </p>
                   <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
                   <p className="text-sm text-gray-500">{pickEnglish(artwork.artist?.name, "YiiArt artist")}</p>
-                  <p className="mt-1 font-semibold">{formatStorePrice(artwork.price)}</p>
+                  <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                   <p className="mt-1 text-xs text-gray-400">{formatDimensions(artwork.dimensions)}</p>
                 </div>
               </Link>
@@ -120,7 +114,7 @@ export default async function Home() {
               <p className="col-span-full py-20 text-center text-gray-500">{t["home.noArtworks"]}</p>
             )}
           </div>
-          <p className="mt-6 text-center text-xs text-gray-500">{getPriceDisclosure()}</p>
+          <p className="mt-6 text-center text-xs text-gray-500"><PriceDisclosure /></p>
         </div>
       </section>
 
@@ -157,16 +151,6 @@ export default async function Home() {
       </section>
 
       <Footer />
-    </div>
-  )
-}
-
-function TrustBadge({ value, title, text }: { value: string; title: string; text: string }) {
-  return (
-    <div>
-      <div className="mb-2 text-3xl font-light">{value}</div>
-      <h3 className="font-semibold">{title}</h3>
-      <p className="text-sm text-gray-500">{text}</p>
     </div>
   )
 }

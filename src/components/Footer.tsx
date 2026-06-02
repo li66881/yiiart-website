@@ -5,7 +5,7 @@ import { useLanguage } from "@/context/LanguageContext"
 import NewsletterSignup from "@/components/NewsletterSignup"
 import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
-import { contactEmail } from "@/lib/site"
+import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -20,6 +20,14 @@ export default function Footer() {
             <TrackableEmailLink email={contactEmail} className="mt-3 block text-sm text-gray-500 hover:text-black" leadType="footer_email">
               {contactEmail}
             </TrackableEmailLink>
+            <a
+              href={getWhatsAppUrl("Hello YiiArt, I found you from the website footer.")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 block text-sm text-gray-500 hover:text-black"
+            >
+              WhatsApp +{whatsappNumber}
+            </a>
           </div>
           <div>
             <h4 className="font-medium mb-4">{t("footer.shop")}</h4>

@@ -4,9 +4,9 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ReviewTrustBadge from "@/components/ReviewTrustBadge"
+import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useLanguage } from "@/context/LanguageContext"
-import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 
 export default function CartPage() {
   const { items, subtotal, updateQuantity, removeItem, itemCount } = useCart()
@@ -44,7 +44,7 @@ export default function CartPage() {
                             <p className="text-sm text-gray-500">{item.artist}</p>
                             {item.size && <p className="text-sm text-gray-400">{item.size}</p>}
                           </div>
-                          <p className="font-medium">{formatStorePrice(item.price)}</p>
+                          <p className="font-medium"><PriceText amountCny={item.price} /></p>
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export default function CartPage() {
                               {t("cart.remove")}
                             </button>
                           </div>
-                          <p className="font-medium">{formatStorePrice(item.price * item.quantity)}</p>
+                          <p className="font-medium"><PriceText amountCny={item.price * item.quantity} /></p>
                         </div>
                       </div>
                     </div>
@@ -83,7 +83,7 @@ export default function CartPage() {
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-500">{t("cart.subtotal")} ({itemCount} items)</span>
-                      <span>{formatStorePrice(subtotal)}</span>
+                      <span><PriceText amountCny={subtotal} /></span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">{t("cart.shipping")}</span>
@@ -91,7 +91,7 @@ export default function CartPage() {
                     </div>
                     <div className="border-t pt-3 flex justify-between font-medium">
                       <span>{t("cart.total")}</span>
-                      <span>{formatStorePrice(subtotal)}</span>
+                      <span><PriceText amountCny={subtotal} /></span>
                     </div>
                   </div>
                   <Link
@@ -104,7 +104,7 @@ export default function CartPage() {
                     Secure checkout powered by Stripe and PayPal
                   </p>
                   <p className="text-xs text-gray-500 text-center mt-2">
-                    {getPriceDisclosure()}
+                    <PriceDisclosure />
                   </p>
                   <div className="mt-5">
                     <ReviewTrustBadge />

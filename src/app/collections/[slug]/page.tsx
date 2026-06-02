@@ -2,10 +2,10 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client, urlFor } from "@/lib/sanity"
 import { getMarketingCollection } from "@/lib/collections"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
-import { formatStorePrice, getPriceDisclosure } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const revalidate = 600
@@ -146,7 +146,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
                     </p>
                     <h3 className="mt-1 font-medium">{title}</h3>
                     <p className="text-sm text-gray-500">{artistName}</p>
-                    <p className="mt-1 font-semibold">{formatStorePrice(artwork.price)}</p>
+                    <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                     <p className="mt-1 text-xs text-gray-400">{formatDimensions(artwork.dimensions)}</p>
                   </Link>
                 )
@@ -157,7 +157,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
               )}
             </div>
             {artworks.length > 0 && (
-              <p className="mt-8 text-center text-xs text-gray-500">{getPriceDisclosure()}</p>
+              <p className="mt-8 text-center text-xs text-gray-500"><PriceDisclosure /></p>
             )}
           </div>
         </section>
