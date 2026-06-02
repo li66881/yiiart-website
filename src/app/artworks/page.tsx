@@ -4,6 +4,7 @@ import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client, urlFor } from '@/lib/sanity'
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
+import { storefrontCollectionTiles } from "@/lib/storefront-content"
 
 export const revalidate = 600
 
@@ -82,6 +83,10 @@ export default async function ArtworksPage({ searchParams }: Props) {
           <h1 className="text-4xl font-light mb-8">
             {activeCategory ? `${activeCategory} Artworks` : "All Artworks"}
           </h1>
+          <p className="mb-8 max-w-2xl text-sm leading-6 text-gray-600">
+            Browse all original YiiArt paintings, or use curated paths by room, surface, color, and scale when you are
+            choosing for a specific wall.
+          </p>
           
           {/* Category Filter */}
           <div className="flex gap-4 mb-12 flex-wrap">
@@ -101,6 +106,27 @@ export default async function ArtworksPage({ searchParams }: Props) {
               </a>
             ))}
           </div>
+
+          <section className="mb-14 border-y py-8">
+            <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+              <div>
+                <p className="text-sm uppercase tracking-wider text-gray-500">Curated paths</p>
+                <h2 className="mt-2 text-2xl font-light">Shop by room, style, color, or scale</h2>
+              </div>
+              <a href="/collections/abstract-art-for-living-room" className="text-sm underline underline-offset-4">
+                Start with living rooms
+              </a>
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
+              {storefrontCollectionTiles.map((collection) => (
+                <a key={collection.href} href={collection.href} className="border p-4 transition hover:bg-gray-50">
+                  <p className="text-xs uppercase tracking-wider text-gray-500">{collection.eyebrow}</p>
+                  <h3 className="mt-2 font-medium">{collection.title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-gray-600">{collection.meta}</p>
+                </a>
+              ))}
+            </div>
+          </section>
 
           {/* Artworks Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">

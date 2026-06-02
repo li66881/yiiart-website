@@ -21,6 +21,8 @@ import {
 } from "@/lib/pricing"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
+import { getWhatsAppUrl } from "@/lib/site"
+import { productAdviceItems, productConfidenceItems } from "@/lib/storefront-content"
 
 export const revalidate = 600
 
@@ -36,6 +38,14 @@ async function getArtwork(slug: string) {
         dimensions,
         medium,
         category,
+        roomTypes,
+        colorFamilies,
+        orientation,
+        surfaceFinish,
+        framingNotes,
+        shippingProfile,
+        seoKeywords,
+        socialCaption,
         images,
         description
       }`,
@@ -103,6 +113,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const medium = normalizeMedium(artwork.medium)
   const dimensions = formatDimensions(artwork.dimensions)
   const description = pickEnglish(artwork.description)
+  const roomTypes = normalizeList(artwork.roomTypes)
+  const colorFamilies = normalizeList(artwork.colorFamilies)
+  const orientation = artwork.orientation || inferOrientation(artwork.dimensions)
+  const surfaceFinish = artwork.surfaceFinish || ""
+  const framingNotes = artwork.framingNotes || ""
+  const shippingProfile = artwork.shippingProfile || "Confirm safest format before dispatch"
   const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1400).url() : ""
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
@@ -110,6 +126,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const reviews = await getArtworkReviews(artwork._id)
   const reviewStats = getReviewStats(reviews)
+  const whatsappUrl = getWhatsAppUrl(
+    `Hello YiiArt, I am interested in ${title}. Can you advise on size, framing, and shipping?`
+  )
   const productJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -277,9 +296,13 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 {dimensions && <Detail label="Size" value={dimensions} />}
                 {medium && <Detail label="Medium" value={medium} />}
                 {category && <Detail label="Style" value={category} />}
+                {orientation && <Detail label="Orientation" value={orientation} />}
+                {roomTypes.length > 0 && <Detail label="Best rooms" value={roomTypes.join(", ")} />}
+                {colorFamilies.length > 0 && <Detail label="Palette" value={colorFamilies.join(", ")} />}
+                {surfaceFinish && <Detail label="Surface" value={surfaceFinish} />}
                 <Detail label="Authenticity" value="Original, one-of-a-kind" />
                 <Detail label="Certificate" value="Signed certificate included" />
-                <Detail label="Dispatch" value="Ships in 5-7 business days" />
+                <Detail label="Dispatch" value={shippingProfile} />
               </div>
 
               <div className="space-y-6 border-t pt-8">
@@ -291,11 +314,17 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 </section>
 
                 <section>
-                  <h2 className="mb-3 text-lg font-medium">Collector notes</h2>
+                  <h2 className="mb-3 text-lg font-medium">Sizing and placement</h2>
                   <ul className="space-y-2 text-gray-600">
-                    <li>Best for living rooms, bedrooms, hallways, offices, and quiet statement walls.</li>
-                    <li>Protective packaging is used for international shipping; larger works may ship rolled when safer.</li>
-                    <li>Contact us before purchase if you need framing advice or a room-size recommendation.</li>
+                    <li>{dimensions ? `Artwork size: ${dimensions}.` : "Confirm exact artwork size before purchase."}</li>
+                    <li>
+                      {roomTypes.length > 0
+                        ? `Recommended spaces: ${roomTypes.join(", ")}.`
+                        : "Best for living rooms, bedrooms, hallways, offices, and quiet statement walls."}
+                    </li>
+                    <li>
+                      {framingNotes || "Send a wall photo on WhatsApp if you need frame, scale, or placement advice before checkout."}
+                    </li>
                   </ul>
                 </section>
               </div>
@@ -313,23 +342,41 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                     size: dimensions,
                   }}
                 />
-                <Link
-                  href="/contact"
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="block w-full border border-black py-4 text-center transition hover:bg-black hover:text-white"
                 >
-                  Ask a question
-                </Link>
+                  Ask on WhatsApp before purchase
+                </a>
                 <SocialShare title={title} image={imageUrl} />
               </div>
             </div>
           </div>
 
+          <section className="mt-16 grid gap-6 border-t pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Collector support</p>
+              <h2 className="text-3xl font-light">What to confirm before checkout</h2>
+              <p className="mt-4 text-sm leading-6 text-gray-600">
+                Original art is a physical object, so the buying decision should include scale, surface, room light,
+                framing, and shipping format. These details can be confirmed before payment.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {productAdviceItems.map((item) => (
+                <InfoBlock key={item.title} title={item.title} text={item.text} />
+              ))}
+            </div>
+          </section>
+
           <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
 
           <section className="mt-16 grid gap-6 border-t pt-12 md:grid-cols-3">
-            <InfoBlock title="Packaging" text="Each artwork is protected with layered packaging. We confirm the safest shipping format before dispatch." />
-            <InfoBlock title="Returns" text="You have 30 days after delivery to request a return. Damaged shipments are handled as priority support cases." />
-            <InfoBlock title="Authenticity" text="Original works include YiiArt documentation and the artist details available on the artwork page." />
+            {productConfidenceItems.map((item) => (
+              <InfoBlock key={item.title} title={item.title} text={item.text} />
+            ))}
           </section>
         </div>
       </main>
@@ -337,6 +384,20 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       <Footer />
     </div>
   )
+}
+
+function normalizeList(value?: string[] | null) {
+  return Array.isArray(value) ? value.filter(Boolean) : []
+}
+
+function inferOrientation(dimensions?: string | null) {
+  if (!dimensions) return ""
+  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
+  if (!numbers || numbers.length < 2) return ""
+
+  const [width, height] = numbers
+  if (Math.abs(width - height) < 1) return "Square"
+  return width > height ? "Landscape" : "Portrait"
 }
 
 function Detail({ label, value }: { label: string; value: string }) {

@@ -10,12 +10,13 @@ import { getTranslations } from "@/lib/i18n"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getFeaturedReviews } from "@/lib/reviews"
+import { collectorJourney, storefrontCollectionTiles, type StorefrontCollectionTile } from "@/lib/storefront-content"
 
 export const dynamic = "force-dynamic"
 
 async function getData() {
   try {
-    const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...12]{
+    const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...18]{
       ...,
       artist->{name}
     }`)
@@ -72,7 +73,51 @@ export default async function Home() {
 
       <TrustSection />
 
-      <FeaturedReviews reviews={reviews} />
+      <section className="border-b py-16">
+        <div className="container mx-auto px-4">
+          <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div className="max-w-2xl">
+              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Shop with context</p>
+              <h2 className="text-3xl font-light md:text-4xl">Find the right artwork by room, style, and scale</h2>
+              <p className="mt-4 text-sm leading-6 text-gray-600">
+                YiiArt collections are organized around the way collectors actually choose artwork: the wall, the room,
+                the surface, the color mood, and the size of the piece.
+              </p>
+            </div>
+            <Link href="/artworks" className="text-sm underline underline-offset-4">
+              Browse all works
+            </Link>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {storefrontCollectionTiles.map((collection) => (
+              <CollectionTile
+                key={collection.href}
+                collection={collection}
+                image={collectionPreviewImage(collection, artworks)}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-16">
+        <div className="container mx-auto px-4">
+          <div className="mb-8 max-w-2xl">
+            <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Collector workflow</p>
+            <h2 className="text-3xl font-light">A practical path from wall to checkout</h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-4">
+            {collectorJourney.map((item, index) => (
+              <div key={item.title} className="border p-5">
+                <p className="mb-8 text-sm text-gray-400">0{index + 1}</p>
+                <h3 className="font-medium">{item.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">{item.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section className="py-20 flex-1">
         <div className="container mx-auto px-4">
@@ -118,6 +163,29 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="border-y bg-black py-16 text-white">
+        <div className="container mx-auto grid gap-8 px-4 md:grid-cols-[1fr_0.8fr] md:items-center">
+          <div>
+            <p className="mb-3 text-sm uppercase tracking-wider text-white/60">Before you buy</p>
+            <h2 className="max-w-2xl text-3xl font-light md:text-4xl">Need scale, color, or framing advice?</h2>
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70">
+              Send the wall size, a room photo, or the artwork link. YiiArt can help confirm whether the piece fits the
+              room before you complete checkout.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
+            <Link href="/contact" className="bg-white px-5 py-4 text-center text-sm text-black">
+              Request room advice
+            </Link>
+            <Link href="/collections/large-canvas-art" className="border border-white/40 px-5 py-4 text-center text-sm">
+              Compare large works
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <FeaturedReviews reviews={reviews} />
+
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
           <h2 className="mb-3 text-3xl font-light">{t["home.ourArtists"]}</h2>
@@ -153,4 +221,40 @@ export default async function Home() {
       <Footer />
     </div>
   )
+}
+
+function CollectionTile({ collection, image }: { collection: StorefrontCollectionTile; image?: string }) {
+  return (
+    <Link href={collection.href} className="group block border bg-white">
+      <div className="aspect-[5/3] overflow-hidden bg-gray-100">
+        {image ? (
+          <img
+            src={image}
+            alt={collection.title}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">YiiArt collection</div>
+        )}
+      </div>
+      <div className="p-5">
+        <p className="text-xs uppercase tracking-wider text-gray-500">{collection.eyebrow}</p>
+        <h3 className="mt-2 text-xl font-light">{collection.title}</h3>
+        <p className="mt-3 text-sm leading-6 text-gray-600">{collection.description}</p>
+        <p className="mt-5 text-xs uppercase tracking-wider text-gray-400">{collection.meta}</p>
+      </div>
+    </Link>
+  )
+}
+
+function collectionPreviewImage(collection: StorefrontCollectionTile, artworks: any[]) {
+  const matched = artworks.find((artwork) => {
+    if (!artwork.images?.[0]) return false
+    if (!collection.categories?.length) return true
+    return collection.categories.includes(normalizeCategory(artwork.category))
+  })
+
+  const fallback = artworks.find((artwork) => artwork.images?.[0])
+  const image = matched?.images?.[0] || fallback?.images?.[0]
+  return image ? urlFor(image).width(900).height(540).url() : undefined
 }
