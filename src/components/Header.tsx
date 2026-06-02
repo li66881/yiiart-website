@@ -6,14 +6,20 @@ import { useSession, signOut } from "next-auth/react"
 import { useLanguage } from "@/context/LanguageContext"
 import { useWishlist } from "@/context/WishlistContext"
 import StorefrontControls from "@/components/StorefrontControls"
+import SearchDialog from "@/components/SearchDialog"
 
 export default function Header() {
   const { data: session, status } = useSession()
   const { t } = useLanguage()
   const { items: wishlistItems } = useWishlist()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
+  const openSearch = () => {
+    closeMobileMenu()
+    setSearchOpen(true)
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b">
@@ -30,7 +36,13 @@ export default function Header() {
         <div className="flex items-center gap-2 md:gap-4">
           <StorefrontControls />
           
-          <button className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full">{t("common.search")}</button>
+          <button
+            type="button"
+            onClick={openSearch}
+            className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full"
+          >
+            {t("common.search")}
+          </button>
           
           {/* Wishlist */}
           <Link href="/wishlist" className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full relative">
@@ -105,7 +117,7 @@ export default function Header() {
           </nav>
 
           <div className="mt-3 grid gap-1 border-t pt-3 text-sm">
-            <button type="button" className="px-3 py-2 text-left hover:bg-gray-50">{t("common.search")}</button>
+            <button type="button" onClick={openSearch} className="px-3 py-2 text-left hover:bg-gray-50">{t("common.search")}</button>
             <Link href="/wishlist" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-gray-50">
               {t("common.wishlist")}{wishlistItems.length > 0 ? ` (${wishlistItems.length})` : ""}
             </Link>
@@ -133,6 +145,7 @@ export default function Header() {
           </div>
         </div>
       )}
+      <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   )
 }
