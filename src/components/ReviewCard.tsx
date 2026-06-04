@@ -1,5 +1,6 @@
 import Link from "next/link"
 import ReviewStars from "@/components/ReviewStars"
+import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { formatDimensions, pickEnglish } from "@/lib/artwork-display"
 import { formatReviewDate, hasPermittedPhotos, isVerifiedCollector, reviewLocation, type PublicReview } from "@/lib/reviews"
 
@@ -10,7 +11,7 @@ type ReviewCardProps = {
 
 export default function ReviewCard({ review, compact = false }: ReviewCardProps) {
   const artworkTitle = pickEnglish(review.artwork?.title, "YiiArt artwork")
-  const artistName = pickEnglish(review.artist?.name, "YiiArt artist")
+  const artistName = pickEnglish(review.artist?.name, "YiiArt")
   const location = reviewLocation(review)
   const artworkHref = review.artwork?.slug?.current ? `/artwork/${review.artwork.slug.current}` : "/artworks"
   const photo = hasPermittedPhotos(review) ? review.photos?.find((item) => item.asset?.url) : undefined
@@ -33,7 +34,7 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
                 className="bg-gray-100 px-2 py-1 text-xs text-gray-600"
                 title="This review is connected to a real YiiArt purchase or a manually verified collector experience."
               >
-                Verified Collector
+                <TranslatedText k="reviews.verifiedCollector" />
               </span>
             )}
           </div>
@@ -44,25 +45,25 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
 
       <div className="mt-4 space-y-1 text-sm text-gray-500">
         <p>
-          {review.customerName || "Collector"}
+          {review.customerName || <TranslatedText k="reviews.collector" />}
           {location ? ` · ${location}` : ""}
           {formatReviewDate(review) ? ` · ${formatReviewDate(review)}` : ""}
         </p>
         {!compact && (
           <>
             <p>
-              Purchased: <Link href={artworkHref} className="text-black underline underline-offset-4">{artworkTitle}</Link>
-              {artistName ? ` by ${artistName}` : ""}
+              <TranslatedText k="reviews.purchased" />: <Link href={artworkHref} className="text-black underline underline-offset-4">{artworkTitle}</Link>
+              {artistName ? <> <TranslatedText k="reviews.by" /> {artistName}</> : ""}
             </p>
-            {review.artwork?.dimensions && <p>Size: {formatDimensions(review.artwork.dimensions)}</p>}
-            {review.roomType && <p>Room: {review.roomType}</p>}
+            {review.artwork?.dimensions && <p><TranslatedText k="reviews.size" />: {formatDimensions(review.artwork.dimensions)}</p>}
+            {review.roomType && <p><TranslatedText k="reviews.room" />: <TranslatedOption value={review.roomType} /></p>}
           </>
         )}
       </div>
 
       {review.storeReply && (
         <div className="mt-4 border-l-2 border-black pl-4 text-sm text-gray-600">
-          <p className="font-medium text-black">YiiArt reply</p>
+          <p className="font-medium text-black"><TranslatedText k="reviews.reply" /></p>
           <p className="mt-1 leading-6">{review.storeReply}</p>
         </div>
       )}

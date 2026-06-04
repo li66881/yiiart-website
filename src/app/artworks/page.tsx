@@ -2,6 +2,7 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { ArtworksPageHeroCopy, CuratedPathsCopy, LivingRoomsLinkCopy } from "@/components/ArtworksPageCopy"
+import { StorefrontCollectionSummary } from "@/components/StorefrontCollectionCopy"
 import { client, urlFor } from "@/lib/sanity"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
@@ -99,9 +100,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
             <div className="grid gap-3 md:grid-cols-3">
               {storefrontCollectionTiles.map((collection) => (
                 <a key={collection.href} href={collection.href} className="border p-4 transition hover:bg-gray-50">
-                  <p className="text-xs uppercase tracking-wider text-gray-500">{collection.eyebrow}</p>
-                  <h3 className="mt-2 font-medium">{collection.title}</h3>
-                  <p className="mt-2 text-sm leading-6 text-gray-600">{collection.meta}</p>
+                  <StorefrontCollectionSummary collection={collection} />
                 </a>
               ))}
             </div>

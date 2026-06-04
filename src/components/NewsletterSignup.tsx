@@ -1,11 +1,13 @@
 "use client"
 
 import { FormEvent, useState } from "react"
+import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type Status = "idle" | "loading" | "success" | "error"
 
 export default function NewsletterSignup() {
+  const { t } = useLanguage()
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState<Status>("idle")
   const [message, setMessage] = useState("")
@@ -24,25 +26,25 @@ export default function NewsletterSignup() {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || "Subscription failed.")
+        throw new Error(data.error || t("newsletter.error"))
       }
 
       setEmail("")
       setStatus("success")
-      setMessage("Thank you. You are on the YiiArt list.")
+      setMessage(t("newsletter.success"))
       trackMarketingEvent("Lead", {
         lead_type: "newsletter",
       })
     } catch (error) {
       setStatus("error")
-      setMessage(error instanceof Error ? error.message : "Subscription failed.")
+      setMessage(error instanceof Error ? error.message : t("newsletter.error"))
     }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
       <label htmlFor="newsletter-email" className="block text-sm text-gray-500">
-        New artwork arrivals and collector notes
+        {t("newsletter.label")}
       </label>
       <div className="flex">
         <input
@@ -59,7 +61,7 @@ export default function NewsletterSignup() {
           disabled={status === "loading"}
           className="border border-l-0 bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
         >
-          {status === "loading" ? "..." : "Join"}
+          {status === "loading" ? "..." : t("newsletter.join")}
         </button>
       </div>
       {message && (

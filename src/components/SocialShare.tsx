@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type SocialShareProps = {
@@ -9,6 +10,7 @@ type SocialShareProps = {
 }
 
 export default function SocialShare({ title, image }: SocialShareProps) {
+  const { t } = useLanguage()
   const [copied, setCopied] = useState(false)
 
   const pageUrl = typeof window === "undefined" ? "" : window.location.href
@@ -49,7 +51,7 @@ export default function SocialShare({ title, image }: SocialShareProps) {
 
   return (
     <div className="border-t pt-6">
-      <p className="text-sm font-medium mb-3">Share this artwork</p>
+      <p className="text-sm font-medium mb-3">{t("share.title")}</p>
       <div className="flex flex-wrap gap-2">
         {shareLinks.map((link) => (
           <a
@@ -64,7 +66,7 @@ export default function SocialShare({ title, image }: SocialShareProps) {
           </a>
         ))}
         <button type="button" onClick={copyLink} className="border px-3 py-2 text-sm hover:border-black">
-          {copied ? "Copied" : "Copy link"}
+          {copied ? t("share.copied") : t("share.copyLink")}
         </button>
       </div>
     </div>

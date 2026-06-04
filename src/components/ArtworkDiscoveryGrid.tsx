@@ -180,7 +180,7 @@ function ArtworkTile({
         )}
       </div>
       <p className="text-xs uppercase tracking-wider text-gray-500">
-        {[translateOption(artwork.category), artwork.medium].filter(Boolean).join(" / ")}
+        {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
       </p>
       <h3 className="mt-1 font-medium">{artwork.title}</h3>
       <p className="text-sm text-gray-500">{artwork.artistName}</p>

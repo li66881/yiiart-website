@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
+import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 
@@ -22,6 +23,7 @@ type AddToCartButtonProps = {
 export default function AddToCartButton({ item }: AddToCartButtonProps) {
   const { addItem } = useCart()
   const { currency } = useCurrency()
+  const { t } = useLanguage()
   const [added, setAdded] = useState(false)
 
   const handleClick = () => {
@@ -43,7 +45,7 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
       onClick={handleClick}
       className="w-full py-4 bg-black text-white hover:bg-gray-800 transition"
     >
-      {added ? "Added to cart" : "Add to cart"}
+      {added ? t("cart.addedToCart") : t("artwork.addToCart")}
     </button>
   )
 }

@@ -26,7 +26,7 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
     <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
       {items.map(({ review, photo }) => {
         const artworkTitle = pickEnglish(review.artwork?.title, "YiiArt artwork")
-        const artistName = pickEnglish(review.artist?.name, "YiiArt artist")
+        const artistName = pickEnglish(review.artist?.name, "YiiArt")
         const artworkHref = review.artwork?.slug?.current ? `/artwork/${review.artwork.slug.current}` : "/artworks"
 
         return (

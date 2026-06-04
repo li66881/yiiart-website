@@ -1,5 +1,6 @@
 import ReviewList from "@/components/ReviewList"
 import ReviewSummary from "@/components/ReviewSummary"
+import TranslatedText from "@/components/TranslatedText"
 import type { PublicReview, ReviewStats } from "@/lib/reviews"
 
 type ArtworkReviewSectionProps = {
@@ -11,9 +12,9 @@ export default function ArtworkReviewSection({ reviews, stats }: ArtworkReviewSe
   return (
     <section className="mt-16 border-t pt-12">
       <div className="mb-8">
-        <h2 className="text-2xl font-light">Collector Reviews</h2>
+        <h2 className="text-2xl font-light"><TranslatedText k="reviews.sectionTitle" /></h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600">
-          See honest feedback from collectors who purchased this artwork or similar original pieces from YiiArt.
+          <TranslatedText k="reviews.sectionDesc" />
         </p>
       </div>
 
@@ -21,7 +22,7 @@ export default function ArtworkReviewSection({ reviews, stats }: ArtworkReviewSe
         <ReviewSummary stats={stats} />
         <ReviewList
           reviews={reviews}
-          emptyText="This artwork has not received a collector review yet. After purchase, verified collectors can share feedback about the artwork, texture, color, packaging, and room fit."
+          emptyText={<TranslatedText k="reviews.emptyArtwork" />}
         />
       </div>
     </section>

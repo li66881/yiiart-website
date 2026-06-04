@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { PriceText } from "@/components/PriceText"
+import { useLanguage } from "@/context/LanguageContext"
 
 type SearchResult = {
   id: string
@@ -20,13 +21,14 @@ type SearchDialogProps = {
 }
 
 const quickLinks = [
-  { label: "Textured wall art", href: "/collections/textured-wall-art" },
-  { label: "Living room abstracts", href: "/collections/abstract-art-for-living-room" },
-  { label: "Large canvas art", href: "/collections/large-canvas-art" },
-  { label: "Wabi-sabi art", href: "/collections/wabi-sabi-wall-art" },
+  { slug: "textured-wall-art", href: "/collections/textured-wall-art" },
+  { slug: "abstract-art-for-living-room", href: "/collections/abstract-art-for-living-room" },
+  { slug: "large-canvas-art", href: "/collections/large-canvas-art" },
+  { slug: "wabi-sabi-wall-art", href: "/collections/wabi-sabi-wall-art" },
 ]
 
 export default function SearchDialog({ open, onClose }: SearchDialogProps) {
+  const { t } = useLanguage()
   const [query, setQuery] = useState("")
   const [results, setResults] = useState<SearchResult[]>([])
   const [loading, setLoading] = useState(false)
@@ -86,7 +88,7 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[80] bg-black/40" role="dialog" aria-modal="true" aria-label="Search YiiArt">
+    <div className="fixed inset-0 z-[80] bg-black/40" role="dialog" aria-modal="true" aria-label={t("search.ariaLabel")}>
       <div className="mx-auto mt-20 w-[min(46rem,calc(100vw-1.5rem))] border bg-white shadow-2xl">
         <div className="flex items-center border-b">
           <input
@@ -94,18 +96,18 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
             type="search"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search artworks, artists, styles, rooms..."
+            placeholder={t("search.placeholder")}
             className="h-14 flex-1 px-4 text-base outline-none"
           />
           <button type="button" onClick={onClose} className="h-14 px-4 text-sm text-gray-500 hover:text-black">
-            Close
+            {t("search.close")}
           </button>
         </div>
 
         <div className="max-h-[70vh] overflow-auto p-4">
           {query.trim().length < 2 ? (
             <div>
-              <p className="mb-3 text-xs uppercase tracking-wider text-gray-500">Popular searches</p>
+              <p className="mb-3 text-xs uppercase tracking-wider text-gray-500">{t("search.popular")}</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 {quickLinks.map((link) => (
                   <Link
@@ -114,13 +116,13 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
                     onClick={onClose}
                     className="border px-4 py-3 text-sm transition hover:bg-gray-50"
                   >
-                    {link.label}
+                    {t(`search.quickLinks.${link.slug}`)}
                   </Link>
                 ))}
               </div>
             </div>
           ) : loading ? (
-            <p className="py-8 text-center text-sm text-gray-500">Searching...</p>
+            <p className="py-8 text-center text-sm text-gray-500">{t("search.searching")}</p>
           ) : results.length > 0 ? (
             <div className="grid gap-3">
               {results.map((result) => (
@@ -148,9 +150,9 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
             </div>
           ) : (
             <div className="py-8 text-center">
-              <p className="text-sm text-gray-500">No matching artworks found.</p>
+              <p className="text-sm text-gray-500">{t("search.noResults")}</p>
               <Link href="/artworks" onClick={onClose} className="mt-3 inline-block text-sm underline underline-offset-4">
-                Browse all artworks
+                {t("search.browseAll")}
               </Link>
             </div>
           )}

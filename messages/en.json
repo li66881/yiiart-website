@@ -14,7 +14,9 @@
     "loading": "Loading...",
     "language": "Language",
     "countryCurrency": "Country / Region and currency",
-    "selected": "Selected"
+    "selected": "Selected",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
   },
   "nav": {
     "explore": "Explore",
@@ -56,7 +58,14 @@
     "ourArtists": "Our Artists",
     "location": "Location",
     "style": "Style",
-    "viewProfile": "View Profile"
+    "viewProfile": "View Profile",
+    "pageDesc": "Meet the artists behind YiiArt and explore the works currently available for collectors.",
+    "portrait": "Artist portrait",
+    "biography": "Biography",
+    "biographyComingSoon": "Biography coming soon.",
+    "notFound": "Artist not found",
+    "backToArtists": "Back to artists",
+    "worksBy": "Works by {artistName}"
   },
   "cart": {
     "title": "Shopping Cart",
@@ -68,7 +77,8 @@
     "proceedToCheckout": "Proceed to Checkout",
     "remove": "Remove",
     "continueShopping": "Continue Shopping",
-    "orderSummary": "Order Summary"
+    "orderSummary": "Order Summary",
+    "addedToCart": "Added to cart"
   },
   "checkout": {
     "title": "Checkout",
@@ -122,13 +132,21 @@
     "demoPassword": "demo123"
   },
   "footer": {
+    "tagline": "Art for Your Home",
     "shop": "Shop",
     "support": "Support",
     "company": "Company",
+    "newsletter": "Newsletter",
+    "follow": "Follow",
     "allArtworks": "All Artworks",
     "abstract": "Abstract",
     "texture": "Texture",
+    "livingRoomArt": "Living Room Art",
+    "texturedWallArt": "Textured Wall Art",
     "contactUs": "Contact Us",
+    "reviews": "Reviews",
+    "artInRealHomes": "Art in Real Homes",
+    "socialLinks": "Social Links",
     "faq": "FAQ",
     "shippingInfo": "Shipping Info",
     "returns": "Returns",
@@ -139,9 +157,40 @@
   },
   "home": {
     "featuredArtworks": "Featured Artworks",
+    "featuredArtworksDesc": "Original hand-painted works with clear sizing, international pricing, and collectible documentation.",
     "ourArtists": "Our Artists",
+    "ourArtistsDesc": "Meet the artists behind each work, with biographies and available pieces kept together for collectors.",
     "noArtworks": "New artworks are being prepared for release.",
-    "noArtists": "Artist profiles are being prepared."
+    "noArtists": "Artist profiles are being prepared.",
+    "shopContext": "Shop with context",
+    "findRightArtwork": "Find the right artwork by room, style, and scale",
+    "collectionIntro": "YiiArt collections are organized around the way collectors actually choose artwork: the wall, the room, the surface, the color mood, and the size of the piece.",
+    "browseAllWorks": "Browse all works",
+    "collectorWorkflow": "Collector workflow",
+    "practicalPath": "A practical path from wall to checkout",
+    "beforeBuy": "Before you buy",
+    "needAdvice": "Need scale, color, or framing advice?",
+    "adviceDesc": "Send the wall size, a room photo, or the artwork link. YiiArt can help confirm whether the piece fits the room before you complete checkout.",
+    "requestRoomAdvice": "Request room advice",
+    "compareLargeWorks": "Compare large works",
+    "journey": {
+      "0": {
+        "title": "Choose by room",
+        "text": "Start from the wall, furniture scale, and mood of the space before choosing a work."
+      },
+      "1": {
+        "title": "Confirm the size",
+        "text": "Each artwork page gives dimensions in centimeters and inches, with advice available before purchase."
+      },
+      "2": {
+        "title": "Ask on WhatsApp",
+        "text": "Send a room photo or sizing question and receive direct guidance before checkout."
+      },
+      "3": {
+        "title": "Receive documented art",
+        "text": "Original works ship with careful packaging and collector documentation."
+      }
+    }
   },
   "artworksPage": {
     "allTitle": "All Artworks",
@@ -149,6 +198,243 @@
     "curatedPaths": "Curated paths",
     "shopBy": "Shop by room, style, color, or scale",
     "livingRooms": "Start with living rooms"
+  },
+  "newsletter": {
+    "label": "New artwork arrivals and collector notes",
+    "join": "Join",
+    "success": "Thank you. You are on the YiiArt list.",
+    "error": "Subscription failed."
+  },
+  "search": {
+    "ariaLabel": "Search YiiArt",
+    "placeholder": "Search artworks, artists, styles, rooms...",
+    "close": "Close",
+    "popular": "Popular searches",
+    "searching": "Searching...",
+    "noResults": "No matching artworks found.",
+    "browseAll": "Browse all artworks",
+    "quickLinks": {
+      "textured-wall-art": "Textured wall art",
+      "abstract-art-for-living-room": "Living room abstracts",
+      "large-canvas-art": "Large canvas art",
+      "wabi-sabi-wall-art": "Wabi-sabi art"
+    }
+  },
+  "chat": {
+    "openSupport": "Open WhatsApp support",
+    "closeSupport": "Close WhatsApp support",
+    "title": "YiiArt WhatsApp",
+    "subtitle": "Artwork advice, shipping, sizing, and custom requests.",
+    "chatWith": "Chat with YiiArt",
+    "openWhatsApp": "Open WhatsApp",
+    "quick": {
+      "0": {
+        "label": "I would like help choosing an artwork.",
+        "message": "Hello YiiArt, I would like help choosing an artwork."
+      },
+      "1": {
+        "label": "I have a question about shipping.",
+        "message": "Hello YiiArt, I have a question about shipping."
+      },
+      "2": {
+        "label": "Can you help me with size and room advice?",
+        "message": "Hello YiiArt, can you help me with size and room advice?"
+      }
+    }
+  },
+  "share": {
+    "title": "Share this artwork",
+    "copyLink": "Copy link",
+    "copied": "Copied"
+  },
+  "reviews": {
+    "featuredTitle": "What Collectors Say",
+    "featuredDesc1": "Real feedback from collectors who brought YiiArt original paintings into their homes.",
+    "featuredDesc2": "Every review comes from a real collector experience. We welcome honest feedback about artwork quality, texture, color accuracy, packaging, delivery, and how the artwork feels in the space.",
+    "readAll": "Read All Reviews",
+    "viewRealHomes": "View Art in Real Homes",
+    "sectionTitle": "Collector Reviews",
+    "sectionDesc": "See honest feedback from collectors who purchased this artwork or similar original pieces from YiiArt.",
+    "emptyArtwork": "This artwork has not received a collector review yet. After purchase, verified collectors can share feedback about the artwork, texture, color, packaging, and room fit.",
+    "emptyPublic": "No verified reviews are public yet.",
+    "trustTitle": "Verified Collector Reviews",
+    "trustText": "We only publish reviews connected to real YiiArt purchases or manually verified collector experiences. Reviews are moderated for privacy, spam, and abuse, not to remove honest criticism.",
+    "noReviewsYet": "No reviews yet",
+    "noReviewsDesc": "Verified collector reviews will appear here after customers share their real experience.",
+    "outOf5": "out of 5",
+    "basedOn": "Based on {count} verified {reviewWord}",
+    "verifiedReview": "review",
+    "verifiedReviews": "reviews",
+    "notRated": "Not rated",
+    "verifiedCollector": "Verified Collector",
+    "verifiedCollectorTitle": "This review is connected to a real YiiArt purchase or a manually verified collector experience.",
+    "collector": "Collector",
+    "purchased": "Purchased",
+    "by": "by",
+    "size": "Size",
+    "room": "Room",
+    "reply": "YiiArt reply",
+    "metric": {
+      "artworkQuality": "Artwork quality",
+      "textureColorAccuracy": "Texture & color accuracy",
+      "packagingDelivery": "Packaging & delivery",
+      "customerSupport": "Customer support",
+      "roomFit": "Room fit"
+    }
+  },
+  "cookie": {
+    "message": "YiiArt uses essential cookies for checkout and optional analytics cookies to improve the store. You can accept analytics or keep only essential cookies.",
+    "essential": "Essential only",
+    "accept": "Accept analytics"
+  },
+  "market": {
+    "country": {
+      "AE": "United Arab Emirates",
+      "AU": "Australia",
+      "CA": "Canada",
+      "CN": "China",
+      "DE": "Germany",
+      "ES": "Spain",
+      "FR": "France",
+      "GB": "United Kingdom",
+      "HK": "Hong Kong SAR",
+      "IT": "Italy",
+      "JP": "Japan",
+      "KR": "South Korea",
+      "NL": "Netherlands",
+      "NZ": "New Zealand",
+      "SG": "Singapore",
+      "TW": "Taiwan",
+      "US": "United States"
+    }
+  },
+  "currency": {
+    "name": {
+      "AED": "UAE Dirham",
+      "AUD": "Australian Dollar",
+      "CAD": "Canadian Dollar",
+      "CNY": "Chinese Yuan",
+      "EUR": "Euro",
+      "GBP": "British Pound",
+      "HKD": "Hong Kong Dollar",
+      "JPY": "Japanese Yen",
+      "KRW": "South Korean Won",
+      "NZD": "New Zealand Dollar",
+      "SGD": "Singapore Dollar",
+      "TWD": "New Taiwan Dollar",
+      "USD": "US Dollar"
+    }
+  },
+  "price": {
+    "request": "Price on request",
+    "estimate": "Prices are displayed in {displayName} ({displayCurrency}) as an estimate. Secure checkout is processed in {checkoutName} ({checkoutCurrency}).",
+    "cny": "Prices are listed in Chinese Yuan (CNY).",
+    "international": "Prices are shown in {displayName} ({displayCurrency}) for international checkout. Duties and local taxes may be charged by the destination country."
+  },
+  "product": {
+    "notFound": "Artwork not found",
+    "backToArtworks": "Back to artworks",
+    "imageComingSoon": "Image coming soon",
+    "noReviews": "No reviews yet - Be the first collector to review this artwork",
+    "verifiedReview": "verified review",
+    "verifiedReviews": "verified reviews",
+    "detail": {
+      "style": "Style",
+      "orientation": "Orientation",
+      "bestRooms": "Best rooms",
+      "palette": "Palette",
+      "surface": "Surface",
+      "authenticity": "Authenticity",
+      "authenticityValue": "Original, one-of-a-kind",
+      "certificate": "Certificate",
+      "certificateValue": "Signed certificate included",
+      "dispatch": "Dispatch",
+      "dispatchFallback": "Confirm safest format before dispatch"
+    },
+    "aboutTitle": "About this artwork",
+    "aboutFallback": "{title} is selected for modern interiors and private collections. It is hand-painted, carefully documented, and prepared for secure international delivery.",
+    "sizingTitle": "Sizing and placement",
+    "sizeLine": "Artwork size: {dimensions}.",
+    "confirmSize": "Confirm exact artwork size before purchase.",
+    "recommendedSpaces": "Recommended spaces: {rooms}.",
+    "defaultRooms": "Best for living rooms, bedrooms, hallways, offices, and quiet statement walls.",
+    "defaultFramingAdvice": "Send a wall photo on WhatsApp if you need frame, scale, or placement advice before checkout.",
+    "askWhatsApp": "Ask on WhatsApp before purchase",
+    "supportEyebrow": "Collector support",
+    "confirmTitle": "What to confirm before checkout",
+    "confirmText": "Original art is a physical object, so the buying decision should include scale, surface, room light, framing, and shipping format. These details can be confirmed before payment.",
+    "advice": {
+      "0": {
+        "title": "Room fit",
+        "text": "Best considered for living rooms, bedrooms, offices, hallways, and quiet statement walls."
+      },
+      "1": {
+        "title": "Framing",
+        "text": "Ask before purchase if you need advice on frame color, float framing, or keeping the canvas unframed."
+      },
+      "2": {
+        "title": "Color confidence",
+        "text": "Screens vary. Request extra daylight photos on WhatsApp if the palette must match a room."
+      }
+    },
+    "confidence": {
+      "0": {
+        "title": "Original artwork",
+        "text": "One physical work, not a print edition."
+      },
+      "1": {
+        "title": "Signed certificate",
+        "text": "Collector documentation is included when available for the artwork."
+      },
+      "2": {
+        "title": "Tracked delivery",
+        "text": "Packaging format is selected according to artwork size and shipping safety."
+      },
+      "3": {
+        "title": "30-day return window",
+        "text": "Return requests can be opened after delivery according to YiiArt policy."
+      }
+    }
+  },
+  "collections": {
+    "tiles": {
+      "textured-wall-art": {
+        "eyebrow": "Style",
+        "title": "Textured Wall Art",
+        "description": "Layered surfaces, visible brushwork, and tactile paintings for quiet modern rooms.",
+        "meta": "Texture / Mixed media"
+      },
+      "abstract-art-for-living-room": {
+        "eyebrow": "Room",
+        "title": "Living Room Abstracts",
+        "description": "Balanced abstract works selected for sofas, open-plan spaces, and statement walls.",
+        "meta": "Living room / Abstract"
+      },
+      "large-canvas-art": {
+        "eyebrow": "Scale",
+        "title": "Large Canvas Art",
+        "description": "Large originals for feature walls, offices, hospitality spaces, and collector homes.",
+        "meta": "Oversized / Feature wall"
+      },
+      "wabi-sabi-wall-art": {
+        "eyebrow": "Style",
+        "title": "Wabi-sabi Wall Art",
+        "description": "Quiet texture, imperfect surfaces, and grounded palettes for calm interiors.",
+        "meta": "Wabi-sabi / Neutral"
+      },
+      "bedroom-wall-art": {
+        "eyebrow": "Room",
+        "title": "Bedroom Wall Art",
+        "description": "Softer compositions and measured color for bedrooms, reading corners, and private spaces.",
+        "meta": "Bedroom / Calm color"
+      },
+      "neutral-canvas-art": {
+        "eyebrow": "Color",
+        "title": "Neutral Canvas Art",
+        "description": "Minimal, textured, and earthy works for collectors building a restrained palette.",
+        "meta": "Neutral / Minimal"
+      }
+    }
   },
   "discovery": {
     "filters": "Filters",
@@ -171,7 +457,14 @@
     },
     "option": {
       "Abstract": "Abstract",
+      "Acrylic on Canvas": "Acrylic on Canvas",
+      "Acrylic on canvas": "Acrylic on canvas",
       "Landscape": "Landscape",
+      "Mixed Media": "Mixed Media",
+      "Mixed media": "Mixed media",
+      "Oil on Canvas": "Oil on Canvas",
+      "Oil on canvas": "Oil on canvas",
+      "Oil on Panel": "Oil on Panel",
       "Portrait": "Portrait",
       "Texture": "Texture",
       "Wabi-sabi": "Wabi-sabi",

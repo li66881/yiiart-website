@@ -15,6 +15,7 @@ export default function StorefrontControls() {
   const controlsRef = useRef<HTMLDivElement>(null)
 
   const selectedLanguage = languageOptions.find((option) => option.code === locale) || languageOptions[0]
+  const selectedMarketName = translateWithFallback(t, `market.country.${market.code}`, market.country)
 
   useEffect(() => {
     if (!openPanel) return
@@ -60,8 +61,8 @@ export default function StorefrontControls() {
         onClick={() => setOpenPanel(openPanel === "market" ? null : "market")}
         className="flex h-9 min-w-0 items-center gap-1.5 px-2 outline-none transition hover:bg-gray-50"
       >
-        <FlagIcon code={market.flagCode} label={market.country} />
-        <span className="hidden max-w-28 truncate sm:inline">{market.country}</span>
+        <FlagIcon code={market.flagCode} label={selectedMarketName} />
+        <span className="hidden max-w-28 truncate sm:inline">{selectedMarketName}</span>
         <span>{market.currency}</span>
         <span aria-hidden="true" className="text-gray-400">v</span>
       </button>
@@ -109,6 +110,8 @@ export default function StorefrontControls() {
           <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">{t("common.countryCurrency")}</p>
           {marketOptions.map((option) => {
             const currency = getCurrencyOption(option.currency)
+            const countryName = translateWithFallback(t, `market.country.${option.code}`, option.country)
+            const currencyName = translateWithFallback(t, `currency.name.${currency.code}`, currency.name)
 
             return (
               <button
@@ -125,11 +128,11 @@ export default function StorefrontControls() {
                 }`}
               >
                 <span className="flex min-w-0 items-center gap-3">
-                  <FlagIcon code={option.flagCode} label={option.country} />
+                  <FlagIcon code={option.flagCode} label={countryName} />
                   <span className="min-w-0">
-                    <span className="block truncate font-medium">{option.country}</span>
+                    <span className="block truncate font-medium">{countryName}</span>
                     <span className="block truncate text-xs text-gray-500">
-                      {currency.name} ({currency.label})
+                      {currencyName} ({currency.label})
                     </span>
                   </span>
                 </span>
@@ -141,4 +144,9 @@ export default function StorefrontControls() {
       )}
     </div>
   )
+}
+
+function translateWithFallback(t: (key: string) => string, key: string, fallback: string) {
+  const value = t(key)
+  return value === key ? fallback : value
 }

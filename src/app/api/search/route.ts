@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     const results = artworks.map((artwork: any) => ({
       id: artwork._id,
       title: pickEnglish(artwork.title, "Untitled artwork"),
-      artist: pickEnglish(artwork.artist?.name, "YiiArt artist"),
+      artist: pickEnglish(artwork.artist?.name, "YiiArt"),
       href: `/artwork/${artwork.slug?.current || artwork._id}`,
       price: Number(artwork.price || 0),
       image: artwork.images?.[0] ? urlFor(artwork.images[0]).width(240).height(300).url() : "",

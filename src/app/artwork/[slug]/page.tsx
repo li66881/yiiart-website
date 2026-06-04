@@ -1,4 +1,5 @@
 import Link from "next/link"
+import type { ReactNode } from "react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import AddToCartButton from "@/components/AddToCartButton"
@@ -7,6 +8,7 @@ import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
@@ -71,7 +73,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const title = pickEnglish(artwork.title, "Original artwork")
-  const artistName = pickEnglish(artwork.artist?.name, "YiiArt artist")
+  const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const description =
     pickEnglish(artwork.description) ||
     `${title} is an original hand-painted artwork by ${artistName}, available from YiiArt with worldwide delivery and a signed certificate.`
@@ -96,9 +98,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         <Header />
         <main className="flex flex-1 items-center justify-center pt-24">
           <div className="text-center">
-            <h1 className="mb-4 text-2xl">Artwork not found</h1>
+            <h1 className="mb-4 text-2xl"><TranslatedText k="product.notFound" /></h1>
             <Link href="/artworks" className="text-gray-500 hover:text-black">
-              Back to artworks
+              <TranslatedText k="product.backToArtworks" />
             </Link>
           </div>
         </main>
@@ -108,7 +110,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   }
 
   const title = pickEnglish(artwork.title, "Untitled artwork")
-  const artistName = pickEnglish(artwork.artist?.name, "YiiArt artist")
+  const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
   const dimensions = formatDimensions(artwork.dimensions)
@@ -118,7 +120,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const orientation = artwork.orientation || inferOrientation(artwork.dimensions)
   const surfaceFinish = artwork.surfaceFinish || ""
   const framingNotes = artwork.framingNotes || ""
-  const shippingProfile = artwork.shippingProfile || "Confirm safest format before dispatch"
+  const shippingProfile = artwork.shippingProfile || ""
   const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1400).url() : ""
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
@@ -231,13 +233,15 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 py-12">
           <nav className="mb-4 flex items-center gap-2 text-sm text-gray-500" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-black">Home</Link>
+            <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
             <span>/</span>
-            <Link href="/artworks" className="hover:text-black">Artworks</Link>
+            <Link href="/artworks" className="hover:text-black"><TranslatedText k="common.artworks" /></Link>
             {category && (
               <>
                 <span>/</span>
-                <Link href={`/artworks?category=${category}`} className="hover:text-black">{category}</Link>
+                <Link href={`/artworks?category=${category}`} className="hover:text-black">
+                  <TranslatedOption value={category} />
+                </Link>
               </>
             )}
             <span>/</span>
@@ -245,7 +249,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           </nav>
 
           <Link href="/artworks" className="mb-8 inline-block text-gray-500 hover:text-black">
-            &larr; Back to artworks
+            &larr; <TranslatedText k="product.backToArtworks" />
           </Link>
 
           <div className="mt-4 grid grid-cols-1 gap-16 lg:grid-cols-2">
@@ -256,7 +260,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 </div>
               ) : (
                 <div className="aspect-[4/5] bg-gray-100 flex items-center justify-center text-gray-400">
-                  Image coming soon
+                  <TranslatedText k="product.imageComingSoon" />
                 </div>
               )}
 
@@ -273,10 +277,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
             <div>
               <p className="mb-2 text-sm uppercase tracking-wider text-gray-500">
-                {[category, medium].filter(Boolean).join(" / ")}
+                <TranslatedOptionList values={[category, medium]} separator=" / " />
               </p>
               <h1 className="mb-2 text-4xl font-light">{title}</h1>
-              <p className="mb-6 text-xl text-gray-500">by {artistName}</p>
+              <p className="mb-6 text-xl text-gray-500"><TranslatedText k="artwork.by" /> {artistName}</p>
               <p className="mb-2 text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
               <p className="mb-6 text-xs text-gray-500"><PriceDisclosure /></p>
               <div className="mb-6 text-sm text-gray-600">
@@ -284,46 +288,54 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   <div className="flex flex-wrap items-center gap-2">
                     <ReviewStars rating={reviewStats.overall} size="sm" />
                     <span>
-                      {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count} verified {reviewStats.count === 1 ? "review" : "reviews"}
+                      {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count}{" "}
+                      <TranslatedText k={reviewStats.count === 1 ? "product.verifiedReview" : "product.verifiedReviews"} />
                     </span>
                   </div>
                 ) : (
-                  <span>No reviews yet - Be the first collector to review this artwork</span>
+                  <span><TranslatedText k="product.noReviews" /></span>
                 )}
               </div>
 
               <div className="mb-8 grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
-                {dimensions && <Detail label="Size" value={dimensions} />}
-                {medium && <Detail label="Medium" value={medium} />}
-                {category && <Detail label="Style" value={category} />}
-                {orientation && <Detail label="Orientation" value={orientation} />}
-                {roomTypes.length > 0 && <Detail label="Best rooms" value={roomTypes.join(", ")} />}
-                {colorFamilies.length > 0 && <Detail label="Palette" value={colorFamilies.join(", ")} />}
-                {surfaceFinish && <Detail label="Surface" value={surfaceFinish} />}
-                <Detail label="Authenticity" value="Original, one-of-a-kind" />
-                <Detail label="Certificate" value="Signed certificate included" />
-                <Detail label="Dispatch" value={shippingProfile} />
+                {dimensions && <Detail label={<TranslatedText k="artwork.size" />} value={dimensions} />}
+                {medium && <Detail label={<TranslatedText k="artwork.medium" />} value={<TranslatedOption value={medium} />} />}
+                {category && <Detail label={<TranslatedText k="product.detail.style" />} value={<TranslatedOption value={category} />} />}
+                {orientation && <Detail label={<TranslatedText k="product.detail.orientation" />} value={<TranslatedOption value={orientation} />} />}
+                {roomTypes.length > 0 && <Detail label={<TranslatedText k="product.detail.bestRooms" />} value={<TranslatedOptionList values={roomTypes} />} />}
+                {colorFamilies.length > 0 && <Detail label={<TranslatedText k="product.detail.palette" />} value={<TranslatedOptionList values={colorFamilies} />} />}
+                {surfaceFinish && <Detail label={<TranslatedText k="product.detail.surface" />} value={surfaceFinish} />}
+                <Detail label={<TranslatedText k="product.detail.authenticity" />} value={<TranslatedText k="product.detail.authenticityValue" />} />
+                <Detail label={<TranslatedText k="product.detail.certificate" />} value={<TranslatedText k="product.detail.certificateValue" />} />
+                <Detail
+                  label={<TranslatedText k="product.detail.dispatch" />}
+                  value={shippingProfile || <TranslatedText k="product.detail.dispatchFallback" />}
+                />
               </div>
 
               <div className="space-y-6 border-t pt-8">
                 <section>
-                  <h2 className="mb-3 text-lg font-medium">About this artwork</h2>
+                  <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.aboutTitle" /></h2>
                   <p className="text-gray-600 whitespace-pre-line">
-                    {description || `${title} is selected for modern interiors and private collections. It is hand-painted, carefully documented, and prepared for secure international delivery.`}
+                    {description || <TranslatedTemplate k="product.aboutFallback" values={{ title }} />}
                   </p>
                 </section>
 
                 <section>
-                  <h2 className="mb-3 text-lg font-medium">Sizing and placement</h2>
+                  <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.sizingTitle" /></h2>
                   <ul className="space-y-2 text-gray-600">
-                    <li>{dimensions ? `Artwork size: ${dimensions}.` : "Confirm exact artwork size before purchase."}</li>
                     <li>
-                      {roomTypes.length > 0
-                        ? `Recommended spaces: ${roomTypes.join(", ")}.`
-                        : "Best for living rooms, bedrooms, hallways, offices, and quiet statement walls."}
+                      {dimensions
+                        ? <TranslatedTemplate k="product.sizeLine" values={{ dimensions }} />
+                        : <TranslatedText k="product.confirmSize" />}
                     </li>
                     <li>
-                      {framingNotes || "Send a wall photo on WhatsApp if you need frame, scale, or placement advice before checkout."}
+                      {roomTypes.length > 0
+                        ? <TranslatedTemplate k="product.recommendedSpaces" values={{ rooms: roomTypes.join(", ") }} />
+                        : <TranslatedText k="product.defaultRooms" />}
+                    </li>
+                    <li>
+                      {framingNotes || <TranslatedText k="product.defaultFramingAdvice" />}
                     </li>
                   </ul>
                 </section>
@@ -348,7 +360,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   rel="noopener noreferrer"
                   className="block w-full border border-black py-4 text-center transition hover:bg-black hover:text-white"
                 >
-                  Ask on WhatsApp before purchase
+                  <TranslatedText k="product.askWhatsApp" />
                 </a>
                 <SocialShare title={title} image={imageUrl} />
               </div>
@@ -357,16 +369,21 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 grid gap-6 border-t pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Collector support</p>
-              <h2 className="text-3xl font-light">What to confirm before checkout</h2>
+              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">
+                <TranslatedText k="product.supportEyebrow" />
+              </p>
+              <h2 className="text-3xl font-light"><TranslatedText k="product.confirmTitle" /></h2>
               <p className="mt-4 text-sm leading-6 text-gray-600">
-                Original art is a physical object, so the buying decision should include scale, surface, room light,
-                framing, and shipping format. These details can be confirmed before payment.
+                <TranslatedText k="product.confirmText" />
               </p>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              {productAdviceItems.map((item) => (
-                <InfoBlock key={item.title} title={item.title} text={item.text} />
+              {productAdviceItems.map((item, index) => (
+                <InfoBlock
+                  key={item.title}
+                  title={<TranslatedText k={`product.advice.${index}.title`} fallback={item.title} />}
+                  text={<TranslatedText k={`product.advice.${index}.text`} fallback={item.text} />}
+                />
               ))}
             </div>
           </section>
@@ -374,8 +391,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
 
           <section className="mt-16 grid gap-6 border-t pt-12 md:grid-cols-3">
-            {productConfidenceItems.map((item) => (
-              <InfoBlock key={item.title} title={item.title} text={item.text} />
+            {productConfidenceItems.map((item, index) => (
+              <InfoBlock
+                key={item.title}
+                title={<TranslatedText k={`product.confidence.${index}.title`} fallback={item.title} />}
+                text={<TranslatedText k={`product.confidence.${index}.text`} fallback={item.text} />}
+              />
             ))}
           </section>
         </div>
@@ -400,7 +421,7 @@ function inferOrientation(dimensions?: string | null) {
   return width > height ? "Landscape" : "Portrait"
 }
 
-function Detail({ label, value }: { label: string; value: string }) {
+function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
     <div className="border p-4">
       <p className="text-xs uppercase tracking-wider text-gray-500">{label}</p>
@@ -409,7 +430,7 @@ function Detail({ label, value }: { label: string; value: string }) {
   )
 }
 
-function InfoBlock({ title, text }: { title: string; text: string }) {
+function InfoBlock({ title, text }: { title: ReactNode; text: ReactNode }) {
   return (
     <div>
       <h2 className="mb-2 text-lg font-medium">{title}</h2>

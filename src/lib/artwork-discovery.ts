@@ -84,7 +84,7 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
   const rooms = normalizeList(artwork.roomTypes).map(normalizeRoom)
   const colors = normalizeList(artwork.colorFamilies).map(normalizeColor)
   const title = pickEnglish(artwork.title, "Untitled artwork")
-  const artistName = pickEnglish(artwork.artist?.name, "YiiArt artist")
+  const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
 
   return {
     id: artwork._id || artwork.slug?.current || title,

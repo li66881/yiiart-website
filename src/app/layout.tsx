@@ -63,6 +63,7 @@ export default function RootLayout({
                 <CartProvider>
                   {children}
                   <ChatWidget />
+                  <CookieConsent />
                 </CartProvider>
               </WishlistProvider>
             </CurrencyProvider>
@@ -70,7 +71,6 @@ export default function RootLayout({
         </Providers>
         <MarketingPixels />
         <VercelInsights />
-        <CookieConsent />
       </body>
     </html>
   )

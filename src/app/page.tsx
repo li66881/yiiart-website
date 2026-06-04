@@ -4,9 +4,10 @@ import Footer from "@/components/Footer"
 import HeroSection from "@/components/HeroSection"
 import FeaturedReviews from "@/components/FeaturedReviews"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import { StorefrontCollectionCard } from "@/components/StorefrontCollectionCopy"
+import TranslatedText, { TranslatedOptionList } from "@/components/TranslatedText"
 import TrustSection from "@/components/TrustSection"
 import { client, urlFor } from "@/lib/sanity"
-import { getTranslations } from "@/lib/i18n"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getFeaturedReviews } from "@/lib/reviews"
@@ -56,7 +57,6 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const { artworks, artists, reviews } = await getData()
-  const t = await getTranslations("home")
   const heroArtwork = artworks.find((artwork: any) => artwork.images?.[0])
   const heroImage = heroArtwork?.images?.[0]
     ? urlFor(heroArtwork.images[0]).width(1800).height(1200).url()
@@ -77,21 +77,24 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="mb-8 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div className="max-w-2xl">
-              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Shop with context</p>
-              <h2 className="text-3xl font-light md:text-4xl">Find the right artwork by room, style, and scale</h2>
+              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">
+                <TranslatedText k="home.shopContext" />
+              </p>
+              <h2 className="text-3xl font-light md:text-4xl">
+                <TranslatedText k="home.findRightArtwork" />
+              </h2>
               <p className="mt-4 text-sm leading-6 text-gray-600">
-                YiiArt collections are organized around the way collectors actually choose artwork: the wall, the room,
-                the surface, the color mood, and the size of the piece.
+                <TranslatedText k="home.collectionIntro" />
               </p>
             </div>
             <Link href="/artworks" className="text-sm underline underline-offset-4">
-              Browse all works
+              <TranslatedText k="home.browseAllWorks" />
             </Link>
           </div>
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {storefrontCollectionTiles.map((collection) => (
-              <CollectionTile
+              <StorefrontCollectionCard
                 key={collection.href}
                 collection={collection}
                 image={collectionPreviewImage(collection, artworks)}
@@ -104,15 +107,23 @@ export default async function Home() {
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
           <div className="mb-8 max-w-2xl">
-            <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Collector workflow</p>
-            <h2 className="text-3xl font-light">A practical path from wall to checkout</h2>
+            <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">
+              <TranslatedText k="home.collectorWorkflow" />
+            </p>
+            <h2 className="text-3xl font-light">
+              <TranslatedText k="home.practicalPath" />
+            </h2>
           </div>
           <div className="grid gap-5 md:grid-cols-4">
             {collectorJourney.map((item, index) => (
               <div key={item.title} className="border p-5">
                 <p className="mb-8 text-sm text-gray-400">0{index + 1}</p>
-                <h3 className="font-medium">{item.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-gray-600">{item.text}</p>
+                <h3 className="font-medium">
+                  <TranslatedText k={`home.journey.${index}.title`} fallback={item.title} />
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  <TranslatedText k={`home.journey.${index}.text`} fallback={item.text} />
+                </p>
               </div>
             ))}
           </div>
@@ -123,13 +134,13 @@ export default async function Home() {
         <div className="container mx-auto px-4">
           <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
-              <h2 className="text-3xl font-light">{t["home.featuredArtworks"]}</h2>
+              <h2 className="text-3xl font-light"><TranslatedText k="home.featuredArtworks" /></h2>
               <p className="mt-2 max-w-2xl text-sm text-gray-500">
-                Original hand-painted works with clear sizing, international pricing, and collectible documentation.
+                <TranslatedText k="home.featuredArtworksDesc" />
               </p>
             </div>
             <Link href="/artworks" className="text-sm underline underline-offset-4">
-              {t["artwork.viewAll"]}
+              <TranslatedText k="artwork.viewAll" />
             </Link>
           </div>
 
@@ -147,16 +158,21 @@ export default async function Home() {
                     )}
                   </div>
                   <p className="text-xs uppercase tracking-wider text-gray-500">
-                    {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
+                    <TranslatedOptionList
+                      values={[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)]}
+                      separator=" / "
+                    />
                   </p>
                   <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
-                  <p className="text-sm text-gray-500">{pickEnglish(artwork.artist?.name, "YiiArt artist")}</p>
+                  <p className="text-sm text-gray-500">{pickEnglish(artwork.artist?.name, "YiiArt")}</p>
                   <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                   <p className="mt-1 text-xs text-gray-400">{formatDimensions(artwork.dimensions)}</p>
                 </div>
               </Link>
             )) : (
-              <p className="col-span-full py-20 text-center text-gray-500">{t["home.noArtworks"]}</p>
+              <p className="col-span-full py-20 text-center text-gray-500">
+                <TranslatedText k="home.noArtworks" />
+              </p>
             )}
           </div>
           <p className="mt-6 text-center text-xs text-gray-500"><PriceDisclosure /></p>
@@ -166,19 +182,22 @@ export default async function Home() {
       <section className="border-y bg-black py-16 text-white">
         <div className="container mx-auto grid gap-8 px-4 md:grid-cols-[1fr_0.8fr] md:items-center">
           <div>
-            <p className="mb-3 text-sm uppercase tracking-wider text-white/60">Before you buy</p>
-            <h2 className="max-w-2xl text-3xl font-light md:text-4xl">Need scale, color, or framing advice?</h2>
+            <p className="mb-3 text-sm uppercase tracking-wider text-white/60">
+              <TranslatedText k="home.beforeBuy" />
+            </p>
+            <h2 className="max-w-2xl text-3xl font-light md:text-4xl">
+              <TranslatedText k="home.needAdvice" />
+            </h2>
             <p className="mt-4 max-w-2xl text-sm leading-6 text-white/70">
-              Send the wall size, a room photo, or the artwork link. YiiArt can help confirm whether the piece fits the
-              room before you complete checkout.
+              <TranslatedText k="home.adviceDesc" />
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 md:grid-cols-1">
             <Link href="/contact" className="bg-white px-5 py-4 text-center text-sm text-black">
-              Request room advice
+              <TranslatedText k="home.requestRoomAdvice" />
             </Link>
             <Link href="/collections/large-canvas-art" className="border border-white/40 px-5 py-4 text-center text-sm">
-              Compare large works
+              <TranslatedText k="home.compareLargeWorks" />
             </Link>
           </div>
         </div>
@@ -188,9 +207,9 @@ export default async function Home() {
 
       <section className="bg-gray-50 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="mb-3 text-3xl font-light">{t["home.ourArtists"]}</h2>
+          <h2 className="mb-3 text-3xl font-light"><TranslatedText k="home.ourArtists" /></h2>
           <p className="mb-8 max-w-2xl text-sm text-gray-500">
-            Meet the artists behind each work, with biographies and available pieces kept together for collectors.
+            <TranslatedText k="home.ourArtistsDesc" />
           </p>
           <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
             {artists.length > 0 ? artists.map((artist: any) => (
@@ -204,7 +223,9 @@ export default async function Home() {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-gray-400">Artist</div>
+                      <div className="flex h-full w-full items-center justify-center text-gray-400">
+                        <TranslatedText k="artwork.artist" />
+                      </div>
                     )}
                   </div>
                   <h3 className="font-medium">{pickEnglish(artist.name, "Artist")}</h3>
@@ -212,7 +233,9 @@ export default async function Home() {
                 </div>
               </Link>
             )) : (
-              <p className="col-span-full py-20 text-center text-gray-500">{t["home.noArtists"]}</p>
+              <p className="col-span-full py-20 text-center text-gray-500">
+                <TranslatedText k="home.noArtists" />
+              </p>
             )}
           </div>
         </div>
@@ -220,30 +243,6 @@ export default async function Home() {
 
       <Footer />
     </div>
-  )
-}
-
-function CollectionTile({ collection, image }: { collection: StorefrontCollectionTile; image?: string }) {
-  return (
-    <Link href={collection.href} className="group block border bg-white">
-      <div className="aspect-[5/3] overflow-hidden bg-gray-100">
-        {image ? (
-          <img
-            src={image}
-            alt={collection.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">YiiArt collection</div>
-        )}
-      </div>
-      <div className="p-5">
-        <p className="text-xs uppercase tracking-wider text-gray-500">{collection.eyebrow}</p>
-        <h3 className="mt-2 text-xl font-light">{collection.title}</h3>
-        <p className="mt-3 text-sm leading-6 text-gray-600">{collection.description}</p>
-        <p className="mt-5 text-xs uppercase tracking-wider text-gray-400">{collection.meta}</p>
-      </div>
-    </Link>
   )
 }
 

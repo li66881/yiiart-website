@@ -1,6 +1,7 @@
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
@@ -32,9 +33,9 @@ export default async function ArtistsPage() {
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
           <div className="mb-12 max-w-2xl">
-            <h1 className="text-4xl font-light mb-4">Our Artists</h1>
+            <h1 className="text-4xl font-light mb-4"><TranslatedText k="artist.ourArtists" /></h1>
             <p className="text-gray-500">
-              Meet the artists behind YiiArt and explore the works currently available for collectors.
+              <TranslatedText k="artist.pageDesc" />
             </p>
           </div>
 
@@ -50,21 +51,25 @@ export default async function ArtistsPage() {
                         className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="flex h-full w-full items-center justify-center text-gray-300">Artist portrait</div>
+                      <div className="flex h-full w-full items-center justify-center text-gray-300">
+                        <TranslatedText k="artist.portrait" />
+                      </div>
                     )}
                   </div>
-                  <h3 className="text-xl font-medium">{pickEnglish(artist.name, "YiiArt artist")}</h3>
+                  <h3 className="text-xl font-medium">{pickEnglish(artist.name, "YiiArt")}</h3>
                   <p className="text-gray-500">{artist.location}</p>
-                  <p className="mt-3 line-clamp-3 text-sm text-gray-600">{pickEnglish(artist.bio, "Biography coming soon.")}</p>
+                  <p className="mt-3 line-clamp-3 text-sm text-gray-600">
+                    {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
+                  </p>
                   <div className="mt-4 flex flex-wrap gap-2">
                     {artist.style?.map((style: string) => (
-                      <span key={style} className="bg-gray-100 px-2 py-1 text-xs">{style}</span>
+                      <span key={style} className="bg-gray-100 px-2 py-1 text-xs"><TranslatedOption value={style} /></span>
                     ))}
                   </div>
                 </div>
               </Link>
             )) : (
-              <p className="col-span-full text-gray-500">Artist profiles are being prepared.</p>
+              <p className="col-span-full text-gray-500"><TranslatedText k="home.noArtists" /></p>
             )}
           </div>
         </div>

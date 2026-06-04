@@ -56,7 +56,7 @@ export default function Header() {
           
           {/* Orders */}
           {session && (
-            <Link href="/orders" className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full" title="My Orders">
+            <Link href="/orders" className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full" title={t("common.orders")}>
               {t("common.orders")}
             </Link>
           )}
@@ -96,7 +96,7 @@ export default function Header() {
           <button
             type="button"
             className="md:hidden flex h-9 w-9 shrink-0 flex-col items-center justify-center gap-1 border bg-white"
-            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label={mobileMenuOpen ? t("common.closeMenu") : t("common.openMenu")}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((open) => !open)}
           >

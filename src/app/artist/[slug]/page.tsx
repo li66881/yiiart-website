@@ -2,6 +2,7 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { PriceText } from "@/components/PriceText"
+import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     })
   }
 
-  const artistName = pickEnglish(artist.name, "YiiArt artist")
+  const artistName = pickEnglish(artist.name, "YiiArt")
   const image = artist.image ? urlFor(artist.image).width(1200).height(630).url() : undefined
 
   return buildSeoMetadata({
@@ -67,8 +68,8 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
         <Header />
         <main className="flex flex-1 items-center justify-center pt-24">
           <div className="text-center">
-            <h1 className="mb-4 text-2xl">Artist not found</h1>
-            <Link href="/artists" className="text-gray-500 hover:text-black">Back to artists</Link>
+            <h1 className="mb-4 text-2xl"><TranslatedText k="artist.notFound" /></h1>
+            <Link href="/artists" className="text-gray-500 hover:text-black"><TranslatedText k="artist.backToArtists" /></Link>
           </div>
         </main>
         <Footer />
@@ -77,7 +78,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
   }
 
   const artworks = await getArtistArtworks(artist._id)
-  const artistName = pickEnglish(artist.name, "YiiArt artist")
+  const artistName = pickEnglish(artist.name, "YiiArt")
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -85,7 +86,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4 py-12">
-          <Link href="/artists" className="mb-8 inline-block text-gray-500 hover:text-black">Back to artists</Link>
+          <Link href="/artists" className="mb-8 inline-block text-gray-500 hover:text-black">
+            <TranslatedText k="artist.backToArtists" />
+          </Link>
 
           <div className="mt-4 flex flex-col items-start gap-12 md:flex-row">
             <div className="w-64 flex-shrink-0">
@@ -97,7 +100,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
                 />
               ) : (
                 <div className="flex aspect-square w-full items-center justify-center bg-gray-100 text-gray-300">
-                  Artist portrait
+                  <TranslatedText k="artist.portrait" />
                 </div>
               )}
             </div>
@@ -106,13 +109,13 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
               <p className="mb-4 text-xl text-gray-500">{artist.location}</p>
               <div className="mb-6 flex flex-wrap gap-2">
                 {artist.style?.map((style: string) => (
-                  <span key={style} className="bg-gray-100 px-3 py-1 text-sm">{style}</span>
+                  <span key={style} className="bg-gray-100 px-3 py-1 text-sm"><TranslatedOption value={style} /></span>
                 ))}
               </div>
               <div className="border-t pt-8">
-                <h2 className="mb-4 text-lg font-medium">Biography</h2>
+                <h2 className="mb-4 text-lg font-medium"><TranslatedText k="artist.biography" /></h2>
                 <p className="whitespace-pre-line text-gray-600">
-                  {pickEnglish(artist.bio, "Biography coming soon.")}
+                  {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
                 </p>
               </div>
             </div>
@@ -120,7 +123,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
 
           {artworks.length > 0 && (
             <div className="mt-16">
-              <h2 className="mb-8 text-2xl font-light">Works by {artistName}</h2>
+              <h2 className="mb-8 text-2xl font-light">
+                <TranslatedTemplate k="artist.worksBy" values={{ artistName }} />
+              </h2>
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {artworks.map((artwork: any) => (
                   <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`}>
@@ -135,7 +140,10 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
                         )}
                       </div>
                       <p className="text-xs uppercase tracking-wider text-gray-500">
-                        {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
+                        <TranslatedOptionList
+                          values={[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)]}
+                          separator=" / "
+                        />
                       </p>
                       <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
                       <p className="text-sm text-gray-500">{formatDimensions(artwork.dimensions)}</p>
