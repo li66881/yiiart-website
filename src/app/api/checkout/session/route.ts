@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       payment_method_types: ["card"],
       line_items: lineItems,
       shipping_address_collection: {
-        allowed_countries: ["US", "CA", "GB", "DE", "FR", "NL", "ES", "IT", "AU", "NZ", "SG", "JP", "KR", "CN", "HK", "TW"],
+        allowed_countries: ["AE", "US", "CA", "GB", "DE", "FR", "NL", "ES", "IT", "AU", "NZ", "SG", "JP", "KR", "CN", "HK", "TW"],
       },
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/cart`,

@@ -9,13 +9,12 @@ import { getCurrencyOption, StoreMarketCode } from "@/lib/pricing"
 type OpenPanel = "language" | "market" | null
 
 export default function StorefrontControls() {
-  const { locale, setLocale, languageOptions } = useLanguage()
+  const { locale, setLocale, languageOptions, t } = useLanguage()
   const { market, marketOptions, setMarket } = useCurrency()
   const [openPanel, setOpenPanel] = useState<OpenPanel>(null)
   const controlsRef = useRef<HTMLDivElement>(null)
 
   const selectedLanguage = languageOptions.find((option) => option.code === locale) || languageOptions[0]
-  const selectedCurrency = getCurrencyOption(market.currency)
 
   useEffect(() => {
     if (!openPanel) return
@@ -50,7 +49,7 @@ export default function StorefrontControls() {
       >
         <FlagIcon code={selectedLanguage.flagCode} label={selectedLanguage.name} />
         <span>{selectedLanguage.label}</span>
-        <span aria-hidden="true" className="text-gray-400">⌄</span>
+        <span aria-hidden="true" className="text-gray-400">v</span>
       </button>
 
       <button
@@ -64,12 +63,16 @@ export default function StorefrontControls() {
         <FlagIcon code={market.flagCode} label={market.country} />
         <span className="hidden max-w-28 truncate sm:inline">{market.country}</span>
         <span>{market.currency}</span>
-        <span aria-hidden="true" className="text-gray-400">⌄</span>
+        <span aria-hidden="true" className="text-gray-400">v</span>
       </button>
 
       {openPanel === "language" && (
-        <div className="absolute right-0 top-11 z-50 w-72 border bg-white p-2 shadow-xl" role="listbox" aria-label="Language">
-          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">Language</p>
+        <div
+          className="absolute right-0 top-11 z-50 w-72 border bg-white p-2 shadow-xl"
+          role="listbox"
+          aria-label={t("common.language")}
+        >
+          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">{t("common.language")}</p>
           {languageOptions.map((option) => (
             <button
               key={option.code}
@@ -91,15 +94,19 @@ export default function StorefrontControls() {
                   <span className="block text-xs text-gray-500">{option.label}</span>
                 </span>
               </span>
-              {option.code === locale && <span className="text-xs text-gray-500">Selected</span>}
+              {option.code === locale && <span className="text-xs text-gray-500">{t("common.selected")}</span>}
             </button>
           ))}
         </div>
       )}
 
       {openPanel === "market" && (
-        <div className="absolute right-0 top-11 z-50 max-h-[70vh] w-[min(22rem,calc(100vw-2rem))] overflow-auto border bg-white p-2 shadow-xl" role="listbox" aria-label="Country and currency">
-          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">Country / Region and currency</p>
+        <div
+          className="absolute right-0 top-11 z-50 max-h-[70vh] w-[min(22rem,calc(100vw-2rem))] overflow-auto border bg-white p-2 shadow-xl"
+          role="listbox"
+          aria-label={t("common.countryCurrency")}
+        >
+          <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-500">{t("common.countryCurrency")}</p>
           {marketOptions.map((option) => {
             const currency = getCurrencyOption(option.currency)
 
@@ -126,7 +133,7 @@ export default function StorefrontControls() {
                     </span>
                   </span>
                 </span>
-                {option.code === market.code && <span className="text-xs text-gray-500">Selected</span>}
+                {option.code === market.code && <span className="text-xs text-gray-500">{t("common.selected")}</span>}
               </button>
             )
           })}

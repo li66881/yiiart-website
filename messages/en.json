@@ -11,7 +11,10 @@
     "logout": "Sign Out",
     "checkout": "Checkout",
     "search": "Search",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "language": "Language",
+    "countryCurrency": "Country / Region and currency",
+    "selected": "Selected"
   },
   "nav": {
     "explore": "Explore",
@@ -139,5 +142,63 @@
     "ourArtists": "Our Artists",
     "noArtworks": "New artworks are being prepared for release.",
     "noArtists": "Artist profiles are being prepared."
+  },
+  "artworksPage": {
+    "allTitle": "All Artworks",
+    "description": "Browse original YiiArt paintings by room, style, color, scale, and orientation.",
+    "curatedPaths": "Curated paths",
+    "shopBy": "Shop by room, style, color, or scale",
+    "livingRooms": "Start with living rooms"
+  },
+  "discovery": {
+    "filters": "Filters",
+    "resultCount": "{shown} of {total} works",
+    "clear": "Clear",
+    "allAvailable": "All available works",
+    "sort": "Sort",
+    "reset": "Reset filters",
+    "empty": "No artworks match these filters.",
+    "sortFeatured": "Featured first",
+    "sortPriceAsc": "Price low to high",
+    "sortPriceDesc": "Price high to low",
+    "sortLargeFirst": "Largest first",
+    "group": {
+      "styles": "Style",
+      "rooms": "Room",
+      "colors": "Color",
+      "sizes": "Size",
+      "orientations": "Orientation"
+    },
+    "option": {
+      "Abstract": "Abstract",
+      "Landscape": "Landscape",
+      "Portrait": "Portrait",
+      "Texture": "Texture",
+      "Wabi-sabi": "Wabi-sabi",
+      "Minimalist": "Minimalist",
+      "Living Room": "Living Room",
+      "Bedroom": "Bedroom",
+      "Dining Room": "Dining Room",
+      "Entryway": "Entryway",
+      "Office": "Office",
+      "Hospitality Space": "Hospitality Space",
+      "Neutral": "Neutral",
+      "White": "White",
+      "Black": "Black",
+      "Gray": "Gray",
+      "Blue": "Blue",
+      "Green": "Green",
+      "Red": "Red",
+      "Pink": "Pink",
+      "Yellow": "Yellow",
+      "Orange": "Orange",
+      "Earth Tone": "Earth Tone",
+      "Multicolor": "Multicolor",
+      "Small": "Small",
+      "Medium": "Medium",
+      "Large": "Large",
+      "Oversized": "Oversized",
+      "Square": "Square"
+    }
   }
 }

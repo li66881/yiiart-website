@@ -1,6 +1,7 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
+import { ArtworksPageHeroCopy, CuratedPathsCopy, LivingRoomsLinkCopy } from "@/components/ArtworksPageCopy"
 import { client, urlFor } from "@/lib/sanity"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
@@ -86,21 +87,13 @@ export default async function ArtworksPage({ searchParams }: Props) {
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <h1 className="mb-8 text-4xl font-light">
-            {activeCategory ? `${activeCategory} Artworks` : "All Artworks"}
-          </h1>
-          <p className="mb-8 max-w-2xl text-sm leading-6 text-gray-600">
-            Browse original YiiArt paintings by room, style, color, scale, and orientation.
-          </p>
+          <ArtworksPageHeroCopy activeCategory={activeCategory} />
 
           <section className="mb-14 border-y py-8">
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-              <div>
-                <p className="text-sm uppercase tracking-wider text-gray-500">Curated paths</p>
-                <h2 className="mt-2 text-2xl font-light">Shop by room, style, color, or scale</h2>
-              </div>
+              <CuratedPathsCopy />
               <a href="/collections/abstract-art-for-living-room" className="text-sm underline underline-offset-4">
-                Start with living rooms
+                <LivingRoomsLinkCopy />
               </a>
             </div>
             <div className="grid gap-3 md:grid-cols-3">
@@ -116,7 +109,6 @@ export default async function ArtworksPage({ searchParams }: Props) {
 
           <ArtworkDiscoveryGrid
             items={artworkItems}
-            emptyText={activeCategory ? `No ${activeCategory} artworks match these filters.` : undefined}
           />
         </div>
       </main>

@@ -46,7 +46,7 @@ export default function Header() {
           
           {/* Wishlist */}
           <Link href="/wishlist" className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full relative">
-            Wishlist
+            {t("common.wishlist")}
             {wishlistItems.length > 0 && (
               <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
                 {wishlistItems.length}
@@ -57,7 +57,7 @@ export default function Header() {
           {/* Orders */}
           {session && (
             <Link href="/orders" className="hidden md:inline-flex p-2 hover:bg-gray-100 rounded-full" title="My Orders">
-              Orders
+              {t("common.orders")}
             </Link>
           )}
           

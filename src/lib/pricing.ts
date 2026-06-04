@@ -1,4 +1,5 @@
 export type StoreCurrency =
+  | "AED"
   | "AUD"
   | "CAD"
   | "CNY"
@@ -13,6 +14,7 @@ export type StoreCurrency =
   | "USD"
 
 export type StoreMarketCode =
+  | "AE"
   | "AU"
   | "CA"
   | "CN"
@@ -36,6 +38,7 @@ export const supportedCurrencies: ReadonlyArray<{
   name: string
   symbol: string
 }> = [
+  { code: "AED", label: "AED د.إ", name: "UAE Dirham", symbol: "د.إ " },
   { code: "USD", label: "USD $", name: "US Dollar", symbol: "$" },
   { code: "CAD", label: "CAD $", name: "Canadian Dollar", symbol: "CA$" },
   { code: "GBP", label: "GBP £", name: "British Pound", symbol: "£" },
@@ -56,6 +59,7 @@ export const supportedMarkets: ReadonlyArray<{
   currency: StoreCurrency
   flagCode: string
 }> = [
+  { code: "AE", country: "United Arab Emirates", currency: "AED", flagCode: "ae" },
   { code: "US", country: "United States", currency: "USD", flagCode: "us" },
   { code: "CA", country: "Canada", currency: "CAD", flagCode: "ca" },
   { code: "GB", country: "United Kingdom", currency: "GBP", flagCode: "gb" },
@@ -151,6 +155,7 @@ export function getPriceDisclosure(currency = getStoreCurrency(), checkoutCurren
 
 function getCnyExchangeRate(currency: StoreCurrency) {
   const cnyPerCurrency: Record<StoreCurrency, number> = {
+    AED: Number(process.env.NEXT_PUBLIC_CNY_PER_AED || "1.96"),
     AUD: Number(process.env.NEXT_PUBLIC_CNY_PER_AUD || "4.7"),
     CAD: Number(process.env.NEXT_PUBLIC_CNY_PER_CAD || "5.3"),
     CNY: 1,

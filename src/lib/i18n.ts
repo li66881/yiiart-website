@@ -2,9 +2,10 @@ import en from "../../messages/en.json"
 import zh from "../../messages/zh.json"
 import de from "../../messages/de.json"
 import fr from "../../messages/fr.json"
+import ar from "../../messages/ar.json"
 
-type Messages = typeof en
-const messages: Record<string, Messages> = { en, zh, de, fr }
+type Messages = Record<string, any>
+const messages: Record<string, Messages> = { en, zh, de, fr, ar }
 
 export async function getTranslations(locale: string = "en"): Promise<Record<string, string>> {
   const msgs = messages[locale] || messages["en"]

@@ -1,19 +1,21 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react"
+import { createContext, ReactNode, useContext, useEffect, useState } from "react"
 import en from "../../messages/en.json"
 import zh from "../../messages/zh.json"
 import de from "../../messages/de.json"
 import fr from "../../messages/fr.json"
+import ar from "../../messages/ar.json"
 
 export const languageOptions = [
-  { code: "en", label: "EN", name: "English", flagCode: "us" },
-  { code: "de", label: "DE", name: "Deutsch", flagCode: "de" },
-  { code: "fr", label: "FR", name: "Français", flagCode: "fr" },
-  { code: "zh", label: "ZH", name: "中文", flagCode: "cn" },
+  { code: "en", label: "EN", name: "English", flagCode: "us", dir: "ltr" },
+  { code: "de", label: "DE", name: "Deutsch", flagCode: "de", dir: "ltr" },
+  { code: "fr", label: "FR", name: "Français", flagCode: "fr", dir: "ltr" },
+  { code: "zh", label: "ZH", name: "中文", flagCode: "cn", dir: "ltr" },
+  { code: "ar", label: "AR", name: "العربية", flagCode: "ae", dir: "rtl" },
 ] as const
 
-type Messages = typeof en
+type Messages = Record<string, any>
 export type Language = (typeof languageOptions)[number]["code"]
 
 interface LanguageContextType {
@@ -25,7 +27,7 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
-const messages: Record<Language, Messages> = { en, zh, de, fr }
+const messages: Record<Language, Messages> = { en, zh, de, fr, ar }
 
 function isLanguage(value: string | null): value is Language {
   return languageOptions.some((option) => option.code === value)
@@ -38,26 +40,20 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem("yiiart-locale")
     const nextLocale = isLanguage(saved) ? saved : "en"
     setLocale(nextLocale)
-    document.documentElement.lang = nextLocale
+    applyDocumentLanguage(nextLocale)
   }, [])
 
   const t = (key: string): string => {
-    const keys = key.split(".")
-    let value: any = messages[locale]
-    for (const k of keys) {
-      if (value && typeof value === "object" && k in value) {
-        value = value[k]
-      } else {
-        return key
-      }
-    }
-    return typeof value === "string" ? value : key
+    const translated = getMessageValue(messages[locale], key)
+    if (translated) return translated
+
+    return getMessageValue(messages.en, key) || key
   }
 
   const handleSetLocale = (newLocale: Language) => {
     setLocale(newLocale)
     localStorage.setItem("yiiart-locale", newLocale)
-    document.documentElement.lang = newLocale
+    applyDocumentLanguage(newLocale)
   }
 
   return (
@@ -73,4 +69,25 @@ export function useLanguage() {
     throw new Error("useLanguage must be used within LanguageProvider")
   }
   return context
+}
+
+function applyDocumentLanguage(nextLocale: Language) {
+  const option = languageOptions.find((item) => item.code === nextLocale) || languageOptions[0]
+  document.documentElement.lang = nextLocale
+  document.documentElement.dir = option.dir
+}
+
+function getMessageValue(dictionary: Messages, key: string) {
+  const keys = key.split(".")
+  let value: any = dictionary
+
+  for (const item of keys) {
+    if (value && typeof value === "object" && item in value) {
+      value = value[item]
+    } else {
+      return ""
+    }
+  }
+
+  return typeof value === "string" ? value : ""
 }

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { Dispatch, SetStateAction, useMemo, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import { useLanguage } from "@/context/LanguageContext"
 import {
   ArtworkDiscoveryItem,
   ArtworkFilterKey,
@@ -25,8 +26,9 @@ type ArtworkDiscoveryGridProps = {
 export default function ArtworkDiscoveryGrid({
   items,
   initialFilters,
-  emptyText = "No artworks match these filters.",
+  emptyText,
 }: ArtworkDiscoveryGridProps) {
+  const { t } = useLanguage()
   const [filters, setFilters] = useState<ArtworkFilterState>(() => normalizeArtworkFilters(initialFilters))
   const [sortMode, setSortMode] = useState<SortMode>("featured")
   const activeCount = countActiveArtworkFilters(filters)
@@ -39,15 +41,19 @@ export default function ArtworkDiscoveryGrid({
   }, [filters, items, sortMode])
 
   const optionCounts = useMemo(() => buildOptionCounts(items), [items])
+  const translateOption = (option: string) => {
+    const translated = t(`discovery.option.${option}`)
+    return translated === `discovery.option.${option}` ? option : translated
+  }
 
   return (
     <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
       <aside className="border-y py-5 lg:border-y-0 lg:border-r lg:pr-6">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-wider text-gray-500">Filters</p>
+            <p className="text-xs uppercase tracking-wider text-gray-500">{t("discovery.filters")}</p>
             <p className="mt-1 text-sm text-gray-600">
-              {filteredItems.length} of {items.length} works
+              {formatResultCount(t("discovery.resultCount"), filteredItems.length, items.length)}
             </p>
           </div>
           <button
@@ -56,14 +62,14 @@ export default function ArtworkDiscoveryGrid({
             disabled={activeCount === 0}
             className="text-sm underline underline-offset-4 disabled:text-gray-300"
           >
-            Clear
+            {t("discovery.clear")}
           </button>
         </div>
 
         <div className="space-y-6">
           {artworkFilterGroups.map((group) => (
             <fieldset key={group.key}>
-              <legend className="mb-3 text-sm font-medium">{group.label}</legend>
+              <legend className="mb-3 text-sm font-medium">{t(`discovery.group.${group.key}`)}</legend>
               <div className="space-y-2">
                 {group.options.map((option) => {
                   const checked = filters[group.key].includes(option)
@@ -83,7 +89,7 @@ export default function ArtworkDiscoveryGrid({
                           onChange={() => toggleFilter(group.key, option, setFilters)}
                           className="h-4 w-4"
                         />
-                        <span>{option}</span>
+                        <span>{translateOption(option)}</span>
                       </span>
                       <span className={checked ? "text-white/70" : "text-gray-400"}>{count}</span>
                     </label>
@@ -99,43 +105,45 @@ export default function ArtworkDiscoveryGrid({
         <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
           <div className="flex flex-wrap gap-2">
             {activeCount > 0 ? (
-              activeFilterLabels(filters).map((label) => (
+              activeFilterLabels(filters, t, translateOption).map((label) => (
                 <span key={label} className="border bg-gray-50 px-3 py-1 text-xs text-gray-600">
                   {label}
                 </span>
               ))
             ) : (
-              <span className="text-sm text-gray-500">All available works</span>
+              <span className="text-sm text-gray-500">{t("discovery.allAvailable")}</span>
             )}
           </div>
 
           <label className="flex items-center gap-2 text-sm">
-            <span className="text-gray-500">Sort</span>
+            <span className="text-gray-500">{t("discovery.sort")}</span>
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               className="border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
             >
-              <option value="featured">Featured first</option>
-              <option value="price-asc">Price low to high</option>
-              <option value="price-desc">Price high to low</option>
-              <option value="large-first">Largest first</option>
+              <option value="featured">{t("discovery.sortFeatured")}</option>
+              <option value="price-asc">{t("discovery.sortPriceAsc")}</option>
+              <option value="price-desc">{t("discovery.sortPriceDesc")}</option>
+              <option value="large-first">{t("discovery.sortLargeFirst")}</option>
             </select>
           </label>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filteredItems.length > 0 ? (
-            filteredItems.map((artwork) => <ArtworkTile key={artwork.id} artwork={artwork} />)
+            filteredItems.map((artwork) => (
+              <ArtworkTile key={artwork.id} artwork={artwork} translateOption={translateOption} />
+            ))
           ) : (
             <div className="col-span-full border-y py-12 text-center text-gray-500">
-              <p>{emptyText}</p>
+              <p>{emptyText || t("discovery.empty")}</p>
               <button
                 type="button"
                 onClick={() => setFilters(emptyArtworkFilters)}
                 className="mt-4 text-sm underline underline-offset-4"
               >
-                Reset filters
+                {t("discovery.reset")}
               </button>
             </div>
           )}
@@ -151,7 +159,13 @@ export default function ArtworkDiscoveryGrid({
   )
 }
 
-function ArtworkTile({ artwork }: { artwork: ArtworkDiscoveryItem }) {
+function ArtworkTile({
+  artwork,
+  translateOption,
+}: {
+  artwork: ArtworkDiscoveryItem
+  translateOption: (option: string) => string
+}) {
   return (
     <Link href={artwork.href} className="group block">
       <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
@@ -166,7 +180,7 @@ function ArtworkTile({ artwork }: { artwork: ArtworkDiscoveryItem }) {
         )}
       </div>
       <p className="text-xs uppercase tracking-wider text-gray-500">
-        {[artwork.category, artwork.medium].filter(Boolean).join(" / ")}
+        {[translateOption(artwork.category), artwork.medium].filter(Boolean).join(" / ")}
       </p>
       <h3 className="mt-1 font-medium">{artwork.title}</h3>
       <p className="text-sm text-gray-500">{artwork.artistName}</p>
@@ -177,7 +191,7 @@ function ArtworkTile({ artwork }: { artwork: ArtworkDiscoveryItem }) {
       <div className="mt-3 flex flex-wrap gap-1">
         {[artwork.size, artwork.orientation, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
           <span key={tag} className="bg-gray-100 px-2 py-1 text-xs text-gray-500">
-            {tag}
+            {translateOption(tag)}
           </span>
         ))}
       </div>
@@ -226,8 +240,14 @@ function increment(map: Map<string, number>, values: string[]) {
   }
 }
 
-function activeFilterLabels(filters: ArtworkFilterState) {
-  return artworkFilterGroups.flatMap((group) => filters[group.key].map((value) => `${group.label}: ${value}`))
+function activeFilterLabels(
+  filters: ArtworkFilterState,
+  t: (key: string) => string,
+  translateOption: (option: string) => string
+) {
+  return artworkFilterGroups.flatMap((group) =>
+    filters[group.key].map((value) => `${t(`discovery.group.${group.key}`)}: ${translateOption(value)}`)
+  )
 }
 
 function sortArtworkItems(a: ArtworkDiscoveryItem, b: ArtworkDiscoveryItem, sortMode: SortMode) {
@@ -253,4 +273,10 @@ function sizeRank(size: string) {
     Oversized: 4,
   }
   return ranks[size] || 0
+}
+
+function formatResultCount(template: string, shown: number, total: number) {
+  return template
+    .replace("{shown}", String(shown))
+    .replace("{total}", String(total))
 }
