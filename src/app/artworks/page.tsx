@@ -1,10 +1,11 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { PriceDisclosure, PriceText } from "@/components/PriceText"
-import { client, urlFor } from '@/lib/sanity'
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
+import { client, urlFor } from "@/lib/sanity"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
+import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 
 export const revalidate = 600
 
@@ -12,32 +13,35 @@ interface Props {
   searchParams: Promise<{ category?: string }>
 }
 
-async function getArtworks(category?: string) {
-  if (category) {
-    const legacyCategories: Record<string, string[]> = {
-      Abstract: ["Abstract", "抽象"],
-      Landscape: ["Landscape", "景观"],
-      Portrait: ["Portrait", "肖像"],
-      Texture: ["Texture", "肌理"],
-      Minimalist: ["Minimalist", "极简"],
-    }
-
-    return client.fetch(
-      `*[_type == "artwork" && category in $categories] | order(_createdAt desc){
-        ...,
-        artist->{name}
-      }`,
-      { categories: legacyCategories[category] || [category] }
-    )
-  }
-  return client.fetch(`*[_type == "artwork"] | order(_createdAt desc){
+async function getArtworks() {
+  return client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc){
     ...,
     artist->{name}
   }`)
 }
 
+async function getCategoryArtworks(category?: string) {
+  if (!category) return getArtworks()
+
+  const legacyCategories: Record<string, string[]> = {
+    Abstract: ["Abstract", "抽象"],
+    Landscape: ["Landscape", "景观"],
+    Portrait: ["Portrait", "肖像"],
+    Texture: ["Texture", "肌理"],
+    Minimalist: ["Minimalist", "极简"],
+  }
+
+  return client.fetch(
+    `*[_type == "artwork" && category in $categories] | order(featured desc, _createdAt desc)[0...12]{
+      ...,
+      artist->{name}
+    }`,
+    { categories: legacyCategories[category] || [category] }
+  )
+}
+
 async function getSeoImage(category?: string) {
-  const artworks = await getArtworks(category).catch(() => [])
+  const artworks = await getCategoryArtworks(category).catch(() => [])
   const artworkWithImage = artworks.find((artwork: any) => artwork.images?.[0])
 
   if (!artworkWithImage?.images?.[0]) return undefined
@@ -50,7 +54,7 @@ async function getSeoImage(category?: string) {
 
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = params.category
+  const activeCategory = normalizeCategory(params.category)
   const seoImage = await getSeoImage(activeCategory)
   const title = activeCategory ? `${activeCategory} Original Paintings` : "Original Paintings"
   const description = activeCategory
@@ -69,43 +73,25 @@ export async function generateMetadata({ searchParams }: Props) {
 
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = params.category
-  const artworks = await getArtworks(activeCategory).catch(() => [])
-
-  const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi"]
+  const activeCategory = normalizeCategory(params.category)
+  const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
+  const artworkItems = artworks.map((artwork: any) => {
+    const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
+    return buildArtworkDiscoveryItem(artwork, imageUrl)
+  })
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col">
       <Header />
 
       <main className="flex-1 pt-24 pb-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-light mb-8">
+          <h1 className="mb-8 text-4xl font-light">
             {activeCategory ? `${activeCategory} Artworks` : "All Artworks"}
           </h1>
           <p className="mb-8 max-w-2xl text-sm leading-6 text-gray-600">
-            Browse all original YiiArt paintings, or use curated paths by room, surface, color, and scale when you are
-            choosing for a specific wall.
+            Browse original YiiArt paintings by room, style, color, scale, and orientation.
           </p>
-          
-          {/* Category Filter */}
-          <div className="flex gap-4 mb-12 flex-wrap">
-            <a
-              href="/artworks"
-              className={`px-4 py-2 transition ${!activeCategory ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-            >
-              All
-            </a>
-            {categories.map(cat => (
-              <a
-                key={cat}
-                href={`/artworks?category=${cat}`}
-                className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-              >
-                {cat}
-              </a>
-            ))}
-          </div>
 
           <section className="mb-14 border-y py-8">
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
@@ -128,48 +114,10 @@ export default async function ArtworksPage({ searchParams }: Props) {
             </div>
           </section>
 
-          {/* Artworks Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {artworks.length > 0 ? artworks.map((artwork: any) => (
-              <a key={artwork._id} href={`/artwork/${artwork.slug.current}`}>
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden bg-gray-100 mb-4">
-                    {artwork.images?.[0] && (
-                      <img 
-                        src={urlFor(artwork.images[0]).width(600).url()} 
-                        alt={pickEnglish(artwork.title, "Artwork")} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      />
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider">
-                    {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
-                  </p>
-                  <h3 className="font-medium mt-1">
-                    {pickEnglish(artwork.title, "Untitled artwork")}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {pickEnglish(artwork.artist?.name, "YiiArt artist")}
-                  </p>
-                  <p className="mt-1 font-semibold">
-                    <PriceText amountCny={artwork.price} />
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {formatDimensions(artwork.dimensions)}
-                  </p>
-                </div>
-              </a>
-            )) : (
-              <p className="col-span-4 text-gray-500">
-                {activeCategory 
-                  ? `No ${activeCategory} artworks yet.` 
-                  : "New artworks are being prepared for release."}
-              </p>
-            )}
-          </div>
-          {artworks.length > 0 && (
-            <p className="mt-8 text-center text-xs text-gray-500"><PriceDisclosure /></p>
-          )}
+          <ArtworkDiscoveryGrid
+            items={artworkItems}
+            emptyText={activeCategory ? `No ${activeCategory} artworks match these filters.` : undefined}
+          />
         </div>
       </main>
 

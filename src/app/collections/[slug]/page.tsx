@@ -2,11 +2,12 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { client, urlFor } from "@/lib/sanity"
 import { getMarketingCollection } from "@/lib/collections"
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { pickEnglish } from "@/lib/artwork-display"
 import { buildSeoMetadata } from "@/lib/seo"
+import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-discovery"
 
 export const revalidate = 600
 
@@ -35,7 +36,7 @@ async function getCollectionArtworks(slug: string) {
 
   if (slug !== "large-canvas-art") return artworks
 
-  const largeArtworks = artworks.filter((artwork: any) => isLargeArtwork(artwork.dimensions))
+  const largeArtworks = artworks.filter((artwork: any) => inferArtworkSize(artwork.dimensions) === "Large" || inferArtworkSize(artwork.dimensions) === "Oversized")
   return largeArtworks.length > 0 ? largeArtworks : artworks.slice(0, 12)
 }
 
@@ -73,6 +74,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   if (!collection) notFound()
 
   const artworks = await getCollectionArtworks(slug)
+  const artworkItems = artworks.map((artwork: any) => {
+    const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
+    return buildArtworkDiscoveryItem(artwork, imageUrl)
+  })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -120,45 +125,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {artworks.length > 0 ? artworks.map((artwork: any) => {
-                const title = pickEnglish(artwork.title, "Original artwork")
-                const artistName = pickEnglish(artwork.artist?.name, "YiiArt artist")
-                const image = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
-
-                return (
-                  <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`} className="group">
-                    <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
-                      {image ? (
-                        <img
-                          src={image}
-                          alt={title}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <div className="flex h-full w-full items-center justify-center text-gray-400">
-                          Artwork
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-xs uppercase tracking-wider text-gray-500">
-                      {[normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")}
-                    </p>
-                    <h3 className="mt-1 font-medium">{title}</h3>
-                    <p className="text-sm text-gray-500">{artistName}</p>
-                    <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
-                    <p className="mt-1 text-xs text-gray-400">{formatDimensions(artwork.dimensions)}</p>
-                  </Link>
-                )
-              }) : (
-                <p className="col-span-full text-gray-500">
-                  New works for this collection are being prepared.
-                </p>
-              )}
-            </div>
-            {artworks.length > 0 && (
-              <p className="mt-8 text-center text-xs text-gray-500"><PriceDisclosure /></p>
-            )}
+            <ArtworkDiscoveryGrid
+              items={artworkItems}
+              emptyText="New works for this collection are being prepared."
+            />
           </div>
         </section>
 
@@ -183,19 +153,4 @@ function Info({ title, text }: { title: string; text: string }) {
       <p className="mt-2 text-sm leading-6 text-gray-600">{text}</p>
     </div>
   )
-}
-
-function isLargeArtwork(dimensions?: string | null) {
-  if (!dimensions) return false
-
-  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
-  if (!numbers || numbers.length < 2) return false
-
-  let [width, height] = numbers
-  if (/mm/i.test(dimensions) || Math.max(width, height) > 300) {
-    width = width / 10
-    height = height / 10
-  }
-
-  return Math.max(width, height) >= 100 || width * height >= 8000
 }

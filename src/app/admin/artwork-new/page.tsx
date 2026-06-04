@@ -20,6 +20,10 @@ type Result = {
 
 const mediums = ["Oil on Canvas", "Acrylic on Canvas", "Oil on Panel", "Mixed Media"]
 const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi", "Minimalist"]
+const roomTypeOptions = ["Living room", "Bedroom", "Dining room", "Entryway", "Office", "Hospitality space"]
+const colorFamilyOptions = ["Neutral", "White", "Black", "Gray", "Blue", "Green", "Red", "Pink", "Yellow", "Orange", "Earth tone", "Multicolor"]
+const orientationOptions = ["Portrait", "Landscape", "Square"]
+const shippingProfileOptions = ["Ships stretched", "Ships rolled", "Confirm before dispatch", "Oversized freight"]
 
 export default function NewArtworkPage() {
   const [artists, setArtists] = useState<Artist[]>([])
@@ -30,6 +34,14 @@ export default function NewArtworkPage() {
   const [dimensions, setDimensions] = useState("")
   const [medium, setMedium] = useState(mediums[0])
   const [category, setCategory] = useState(categories[0])
+  const [roomTypes, setRoomTypes] = useState<string[]>([])
+  const [colorFamilies, setColorFamilies] = useState<string[]>([])
+  const [orientation, setOrientation] = useState("")
+  const [surfaceFinish, setSurfaceFinish] = useState("")
+  const [framingNotes, setFramingNotes] = useState("")
+  const [shippingProfile, setShippingProfile] = useState("")
+  const [seoKeywords, setSeoKeywords] = useState("")
+  const [socialCaption, setSocialCaption] = useState("")
   const [descriptionZh, setDescriptionZh] = useState("")
   const [descriptionEn, setDescriptionEn] = useState("")
   const [featured, setFeatured] = useState(false)
@@ -63,6 +75,14 @@ export default function NewArtworkPage() {
     formData.append("dimensions", dimensions)
     formData.append("medium", medium)
     formData.append("category", category)
+    roomTypes.forEach((value) => formData.append("roomTypes", value))
+    colorFamilies.forEach((value) => formData.append("colorFamilies", value))
+    formData.append("orientation", orientation)
+    formData.append("surfaceFinish", surfaceFinish)
+    formData.append("framingNotes", framingNotes)
+    formData.append("shippingProfile", shippingProfile)
+    formData.append("seoKeywords", seoKeywords)
+    formData.append("socialCaption", socialCaption)
     formData.append("descriptionZh", descriptionZh)
     formData.append("descriptionEn", descriptionEn)
     formData.append("featured", String(featured))
@@ -169,6 +189,71 @@ export default function NewArtworkPage() {
               </Field>
             </div>
 
+            <div className="grid gap-4 md:grid-cols-2">
+              <OptionGroup
+                label="Recommended rooms"
+                options={roomTypeOptions}
+                selected={roomTypes}
+                onToggle={(value) => setRoomTypes((current) => toggleOption(current, value))}
+              />
+              <OptionGroup
+                label="Color families"
+                options={colorFamilyOptions}
+                selected={colorFamilies}
+                onToggle={(value) => setColorFamilies((current) => toggleOption(current, value))}
+              />
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-3">
+              <Field label="Orientation">
+                <select value={orientation} onChange={(event) => setOrientation(event.target.value)} className={inputClass}>
+                  <option value="">Infer from dimensions</option>
+                  {orientationOptions.map((value) => <option key={value}>{value}</option>)}
+                </select>
+              </Field>
+              <Field label="Surface / texture note">
+                <input
+                  value={surfaceFinish}
+                  onChange={(event) => setSurfaceFinish(event.target.value)}
+                  placeholder="Layered texture, matte surface"
+                  className={inputClass}
+                />
+              </Field>
+              <Field label="Shipping profile">
+                <select value={shippingProfile} onChange={(event) => setShippingProfile(event.target.value)} className={inputClass}>
+                  <option value="">No profile</option>
+                  {shippingProfileOptions.map((value) => <option key={value}>{value}</option>)}
+                </select>
+              </Field>
+            </div>
+
+            <Field label="Framing notes">
+              <textarea
+                value={framingNotes}
+                onChange={(event) => setFramingNotes(event.target.value)}
+                rows={3}
+                className={textareaClass}
+              />
+            </Field>
+
+            <Field label="SEO keywords, separated by commas">
+              <input
+                value={seoKeywords}
+                onChange={(event) => setSeoKeywords(event.target.value)}
+                placeholder="living room art, neutral canvas art"
+                className={inputClass}
+              />
+            </Field>
+
+            <Field label="Social caption">
+              <textarea
+                value={socialCaption}
+                onChange={(event) => setSocialCaption(event.target.value)}
+                rows={3}
+                className={textareaClass}
+              />
+            </Field>
+
             <Field label="Images">
               <input
                 type="file"
@@ -238,6 +323,42 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       {children}
     </label>
   )
+}
+
+function OptionGroup({
+  label,
+  options,
+  selected,
+  onToggle,
+}: {
+  label: string
+  options: string[]
+  selected: string[]
+  onToggle: (value: string) => void
+}) {
+  return (
+    <fieldset className="border p-4">
+      <legend className="px-1 text-sm font-medium">{label}</legend>
+      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+        {options.map((option) => (
+          <label key={option} className="flex items-center gap-2 text-sm">
+            <input
+              type="checkbox"
+              checked={selected.includes(option)}
+              onChange={() => onToggle(option)}
+            />
+            {option}
+          </label>
+        ))}
+      </div>
+    </fieldset>
+  )
+}
+
+function toggleOption(current: string[], value: string) {
+  return current.includes(value)
+    ? current.filter((item) => item !== value)
+    : [...current, value]
 }
 
 const inputClass = "w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"

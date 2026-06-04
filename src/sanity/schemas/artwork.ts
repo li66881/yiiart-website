@@ -18,7 +18,7 @@ export default {
     { name: 'roomTypes', title: 'Recommended rooms', type: 'array', of: [{ type: 'string' }],
       options: { list: ['Living room', 'Bedroom', 'Dining room', 'Entryway', 'Office', 'Hospitality space'] }},
     { name: 'colorFamilies', title: 'Color families', type: 'array', of: [{ type: 'string' }],
-      options: { list: ['Neutral', 'White', 'Black', 'Blue', 'Green', 'Red', 'Yellow', 'Earth tone', 'Multicolor'] }},
+      options: { list: ['Neutral', 'White', 'Black', 'Gray', 'Blue', 'Green', 'Red', 'Pink', 'Yellow', 'Orange', 'Earth tone', 'Multicolor'] }},
     { name: 'orientation', title: 'Orientation', type: 'string',
       options: { list: ['Portrait', 'Landscape', 'Square'] }},
     { name: 'surfaceFinish', title: 'Surface / texture notes', type: 'string',

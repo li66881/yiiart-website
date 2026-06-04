@@ -28,7 +28,7 @@ The rebuild can use APIs, plugins, and third-party services when they create mea
 | Area | NukeArt-style capability | YiiArt implementation path |
 | --- | --- | --- |
 | Storefront localization | Language, country, currency, flags, market labels | Implemented with YiiArt market selector; later add geolocation defaulting if needed |
-| Product discovery | Predictive search, collection navigation, filters | Add internal search API first; later add faceted filters by room, color, size, orientation |
+| Product discovery | Predictive search, collection navigation, filters | Search API and search dialog implemented; faceted filters added for style, room, color, size, and orientation |
 | Product page | Variants, size/framing choices, trust accordions, custom request | Strengthen existing Sanity product pages; add optional product option fields before real variant checkout |
 | Checkout | Shopify checkout, market rules, taxes/shipping | Current Stripe/PayPal stays active; evaluate Shopify Storefront API only if product/variant operations become too complex |
 | Reviews | Review app, verified reviews, customer photos | Existing YiiArt review system is the base; later add Trustpilot/Loox-style widgets if needed |
@@ -38,7 +38,7 @@ The rebuild can use APIs, plugins, and third-party services when they create mea
 | Affiliate/referral | GoAffPro-style referral tracking | Add after checkout attribution is stable; possible custom affiliate codes or third-party tool |
 | SEO content | Room/style buying guides and collection pages | Continue building collection pages; add editorial guides for social and Google traffic |
 | Analytics | Pixels, conversion tracking, attribution | Existing marketing pixels stay; refine events after search/filter/checkout changes |
-| Backend | Product metadata, room/color/size fields, social copy | Continue expanding Sanity schema and admin forms |
+| Backend | Product metadata, room/color/size fields, social copy | Sanity schema and local admin publishing form now include room, color, orientation, texture, framing, shipping, SEO, and social fields |
 
 ## Phase 1 Scope
 
@@ -50,10 +50,17 @@ The rebuild can use APIs, plugins, and third-party services when they create mea
 
 ## Phase 2 Scope
 
-1. Add predictive search backed by a YiiArt API route.
-2. Build real filters for room, color, size, orientation, and availability.
+1. Add predictive search backed by a YiiArt API route. Implemented.
+2. Build real filters for room, color, size, orientation, and availability. Implemented for style, room, color, size, and orientation.
 3. Add multilingual content fields for German and French product copy.
 4. Add campaign landing pages for Instagram, TikTok, Pinterest, and Google traffic.
 5. Add configurable newsletter popup and campaign announcement bar.
 6. Improve the admin workflow for uploading product photos, room mockups, social captions, and SEO metadata.
 7. Evaluate Shopify Storefront API only after product variants and cart requirements are fully specified.
+
+## Current Implementation Notes
+
+- `/artworks` now uses a faceted discovery grid with style, room, color, size, and orientation filters plus basic sorting.
+- `/collections/[slug]` uses the same discovery grid so collection pages still support filtering inside a curated edit.
+- Legacy artwork data without room or color metadata is mapped into sensible fallback tags so filters remain usable before every artwork is manually updated.
+- New admin artwork publishing fields write the Sanity metadata needed for future search, campaign, and product-page improvements.

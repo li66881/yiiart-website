@@ -28,6 +28,14 @@ export async function POST(request: NextRequest) {
     const dimensions = stringField(form, "dimensions")
     const medium = stringField(form, "medium") || "Oil on Canvas"
     const category = stringField(form, "category") || "Abstract"
+    const roomTypes = listField(form, "roomTypes")
+    const colorFamilies = listField(form, "colorFamilies")
+    const orientation = stringField(form, "orientation")
+    const surfaceFinish = stringField(form, "surfaceFinish")
+    const framingNotes = stringField(form, "framingNotes")
+    const shippingProfile = stringField(form, "shippingProfile")
+    const seoKeywords = commaListField(form, "seoKeywords")
+    const socialCaption = stringField(form, "socialCaption")
     const descriptionZh = stringField(form, "descriptionZh")
     const descriptionEn = stringField(form, "descriptionEn")
     const artistId = stringField(form, "artistId")
@@ -79,6 +87,14 @@ export async function POST(request: NextRequest) {
       dimensions,
       medium,
       category,
+      roomTypes: roomTypes.length > 0 ? roomTypes : undefined,
+      colorFamilies: colorFamilies.length > 0 ? colorFamilies : undefined,
+      orientation: orientation || undefined,
+      surfaceFinish: surfaceFinish || undefined,
+      framingNotes: framingNotes || undefined,
+      shippingProfile: shippingProfile || undefined,
+      seoKeywords: seoKeywords.length > 0 ? seoKeywords : undefined,
+      socialCaption: socialCaption || undefined,
       images,
       description: { zh: descriptionZh, en: descriptionEn },
       featured,
@@ -112,4 +128,26 @@ function isUploadFile(value: FormDataEntryValue): value is File {
 
 function cleanFilename(filename: string) {
   return filename.replace(/[^\w.\-\u4e00-\u9fff]/g, "_")
+}
+
+function listField(form: FormData, name: string) {
+  return unique(
+    form
+      .getAll(name)
+      .map((value) => String(value || "").trim())
+      .filter(Boolean)
+  )
+}
+
+function commaListField(form: FormData, name: string) {
+  return unique(
+    String(form.get(name) || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean)
+  )
+}
+
+function unique(values: string[]) {
+  return Array.from(new Set(values))
 }
