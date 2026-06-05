@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-labelledby="title desc">
+  <title id="title">YiiArt brand board</title>
+  <desc id="desc">YiiArt refined international gallery identity with symmetric arched mark and natural gold earth arc.</desc>
+  <defs>
+    <linearGradient id="board-gold-arc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0" stop-color="#9a722f"/>
+      <stop offset="0.5" stop-color="#c39a43"/>
+      <stop offset="1" stop-color="#9a722f"/>
+    </linearGradient>
+    <linearGradient id="board-ink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset="0.55" stop-color="#171717"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+    <symbol id="yiiart-board-mark" viewBox="0 0 112 112">
+      <g fill="currentColor">
+        <path d="M22 19H90V23C84 27 82 36 82 48V91H72V48C72 39 75 34 79 30C67 24 45 24 33 30C37 34 40 39 40 48V91H30V48C30 36 28 27 22 23Z"/>
+        <path d="M31 44H38L56 63L52 68L31 55Z"/>
+        <path d="M81 44H74L56 63L60 68L81 55Z"/>
+        <path d="M51.5 64H60.5V91H51.5Z"/>
+      </g>
+      <path d="M3 101C24 94 40 92 56 92C75 92 92 96 109 103C88 100 73 97 56 97C38 97 22 99 3 101Z" fill="url(#board-gold-arc)"/>
+    </symbol>
+  </defs>
+
+  <rect width="1440" height="900" fill="#f7f4ed"/>
+  <rect x="80" y="74" width="1280" height="752" fill="#ffffff" stroke="#e8e2d7"/>
+  <text x="140" y="145" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="5">YIIART IDENTITY DIRECTION</text>
+  <text x="140" y="205" fill="#111111" font-family="Bodoni 72, Didot, Times New Roman, serif" font-size="64" font-weight="400">International art gallery mark</text>
+  <text x="140" y="250" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="20">Symmetric black architecture, complete Y detail, natural gold earth arc, refined artistic serif wordmark.</text>
+
+  <g transform="translate(138 318)">
+    <rect width="552" height="188" fill="#ffffff" stroke="#e8e2d7"/>
+    <use href="#yiiart-board-mark" x="40" y="31" width="112" height="112" color="#111111"/>
+    <text x="165" y="101" fill="#111111" font-family="Bodoni 72, Didot, Cormorant Garamond, Playfair Display, Times New Roman, serif" font-size="58" font-weight="400" letter-spacing="1.6">YiiArt</text>
+    <text x="40" y="160" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="2">PRIMARY LOCKUP</text>
+  </g>
+
+  <g transform="translate(748 318)">
+    <rect width="232" height="232" fill="#ffffff" stroke="#e8e2d7"/>
+    <use href="#yiiart-board-mark" x="36" y="32" width="160" height="160" color="#111111"/>
+    <text x="41" y="207" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="2">STANDALONE ICON</text>
+  </g>
+
+  <g transform="translate(1040 318)">
+    <rect width="240" height="232" fill="#111111"/>
+    <use href="#yiiart-board-mark" x="56" y="42" width="128" height="128" color="#f7f4ed"/>
+    <text x="42" y="190" fill="#c8c0b4" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="2">DARK USE</text>
+  </g>
+
+  <g transform="translate(140 642)">
+    <text x="0" y="0" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="16" letter-spacing="3">PALETTE</text>
+    <rect x="0" y="30" width="92" height="72" fill="#111111"/>
+    <rect x="116" y="30" width="92" height="72" fill="#b08a42"/>
+    <rect x="232" y="30" width="92" height="72" fill="#f7f4ed" stroke="#e8e2d7"/>
+    <text x="0" y="130" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="14">Graphite black</text>
+    <text x="116" y="130" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="14">Gallery gold</text>
+    <text x="232" y="130" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="14">Warm ivory</text>
+  </g>
+
+  <g transform="translate(560 642)">
+    <text x="0" y="0" fill="#111111" font-family="Arial, Helvetica, sans-serif" font-size="16" letter-spacing="3">REFINEMENT</text>
+    <text x="0" y="42" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="18">Reference-style arched black architecture with a complete Y detail.</text>
+    <text x="0" y="76" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="18">Top opening returns to a clean white arch without fragmented cuts.</text>
+    <text x="0" y="110" fill="#6d6860" font-family="Arial, Helvetica, sans-serif" font-size="18">Gold arc is simplified into a single smooth horizon line.</text>
+  </g>
+</svg>

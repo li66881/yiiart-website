@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="460" height="112" viewBox="0 0 460 112" role="img" aria-labelledby="title desc">
+  <title id="title">YiiArt logo light</title>
+  <desc id="desc">YiiArt international original art gallery logo for dark backgrounds.</desc>
+  <rect width="460" height="112" fill="none"/>
+  <defs>
+    <linearGradient id="yiiart-logo-light-gold-arc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0" stop-color="#a8823a"/>
+      <stop offset="0.5" stop-color="#d0aa5e"/>
+      <stop offset="1" stop-color="#a8823a"/>
+    </linearGradient>
+    <linearGradient id="yiiart-logo-light-ink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="0.55" stop-color="#f7f4ed"/>
+      <stop offset="1" stop-color="#e6dfd2"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(8 6)" fill="url(#yiiart-logo-light-ink)">
+    <path d="M22 19H90V23C84 27 82 36 82 48V91H72V48C72 39 75 34 79 30C67 24 45 24 33 30C37 34 40 39 40 48V91H30V48C30 36 28 27 22 23Z"/>
+    <path d="M31 44H38L56 63L52 68L31 55Z"/>
+    <path d="M81 44H74L56 63L60 68L81 55Z"/>
+    <path d="M51.5 64H60.5V91H51.5Z"/>
+  </g>
+  <g transform="translate(8 6)">
+    <path d="M3 101C24 94 40 92 56 92C75 92 92 96 109 103C88 100 73 97 56 97C38 97 22 99 3 101Z" fill="url(#yiiart-logo-light-gold-arc)"/>
+  </g>
+  <text x="124" y="73"
+    fill="#f7f4ed"
+    font-family="Bodoni 72, Didot, Cormorant Garamond, Playfair Display, Times New Roman, serif"
+    font-size="58"
+    font-weight="400"
+    letter-spacing="1.6">YiiArt</text>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="YiiArt">
+  <rect width="64" height="64" fill="#f7f4ed"/>
+  <defs>
+    <linearGradient id="yiiart-favicon-gold-arc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0" stop-color="#9a722f"/>
+      <stop offset="0.5" stop-color="#c39a43"/>
+      <stop offset="1" stop-color="#9a722f"/>
+    </linearGradient>
+    <linearGradient id="yiiart-favicon-ink" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset="0.55" stop-color="#171717"/>
+      <stop offset="1" stop-color="#050505"/>
+    </linearGradient>
+  </defs>
+  <g transform="scale(.5714286)">
+    <g fill="url(#yiiart-favicon-ink)">
+      <path d="M22 19H90V23C84 27 82 36 82 48V91H72V48C72 39 75 34 79 30C67 24 45 24 33 30C37 34 40 39 40 48V91H30V48C30 36 28 27 22 23Z"/>
+      <path d="M31 44H38L56 63L52 68L31 55Z"/>
+      <path d="M81 44H74L56 63L60 68L81 55Z"/>
+      <path d="M51.5 64H60.5V91H51.5Z"/>
+    </g>
+    <path d="M3 101C24 94 40 92 56 92C75 92 92 96 109 103C88 100 73 97 56 97C38 97 22 99 3 101Z" fill="url(#yiiart-favicon-gold-arc)"/>
+  </g>
+</svg>

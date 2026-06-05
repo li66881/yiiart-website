@@ -24,7 +24,9 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b">
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between gap-3">
-        <Link href="/" className="shrink-0 text-2xl font-light" onClick={closeMobileMenu}>Yii<span className="font-medium">Art</span></Link>
+        <Link href="/" className="shrink-0" onClick={closeMobileMenu} aria-label="YiiArt home">
+          <img src="/brand/yiiart-logo.svg" alt="YiiArt" className="h-9 w-auto" />
+        </Link>
         
         <nav className="hidden md:flex items-center gap-8">
           <Link href="/artworks" className="hover:text-gray-600">{t("nav.explore")}</Link>
