@@ -89,7 +89,7 @@ export default function CartPage() {
                     {t("cart.proceedToCheckout")}
                   </Link>
                   <p className="text-xs text-gray-500 text-center mt-4">
-                    Secure checkout powered by Stripe and PayPal
+                    Secure checkout powered by PayPal and YiiArt invoice support
                   </p>
                   <p className="text-xs text-gray-500 text-center mt-2">
                     <PriceDisclosure />

@@ -170,7 +170,7 @@ export default function OrdersPage() {
                           <p>{order.shippingAddress.country}</p>
 
                           <h3 className="font-medium mt-4 mb-2">Payment</h3>
-                          <p>{order.paymentProvider === "paypal" ? "PayPal" : "Card"}</p>
+                          <p>{formatPaymentProvider(order.paymentProvider)}</p>
                           <p className="text-sm text-gray-500">{formatStatus(order.paymentStatus)}</p>
                         </div>
                       </div>
@@ -217,6 +217,13 @@ function getStatusColor(status: string) {
 
 function formatStatus(status: string) {
   return status.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase())
+}
+
+function formatPaymentProvider(provider?: string | null) {
+  if (provider === "paypal") return "PayPal"
+  if (provider === "stripe") return "Card"
+  if (provider === "manual") return "Invoice request"
+  return "Payment method pending"
 }
 
 function formatMoney(amount: number, currency: string) {

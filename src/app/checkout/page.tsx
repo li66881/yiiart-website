@@ -7,11 +7,30 @@ import Footer from "@/components/Footer"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
-import { convertCnyToStoreAmount } from "@/lib/pricing"
+import { convertCnyToStoreAmount, type StoreCurrency } from "@/lib/pricing"
 import { trackMarketingEvent } from "@/lib/marketing-events"
+import { getWhatsAppUrl } from "@/lib/site"
 
 type Step = "shipping" | "payment" | "confirm"
-type PaymentMethod = "card" | "paypal"
+type PaymentMethod = "paypal" | "card" | "invoice"
+
+type CheckoutConfig = {
+  manualInvoice: {
+    enabled: boolean
+    canCreateOrder: boolean
+  }
+  paypal: {
+    enabled: boolean
+    configured: boolean
+    webhookConfigured: boolean
+    environment: "sandbox" | "live"
+  }
+  stripe: {
+    enabled: boolean
+    configured: boolean
+    webhookConfigured: boolean
+  }
+}
 
 export default function CheckoutPage() {
   const { items, subtotal, ready } = useCart()
@@ -21,6 +40,8 @@ export default function CheckoutPage() {
   const [step, setStep] = useState<Step>("shipping")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
+  const [configLoading, setConfigLoading] = useState(true)
+  const [checkoutConfig, setCheckoutConfig] = useState<CheckoutConfig>(defaultCheckoutConfig)
   const [shippingAddress, setShippingAddress] = useState({
     email: "",
     name: "",
@@ -31,13 +52,38 @@ export default function CheckoutPage() {
     country: "US",
     notes: "",
   })
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card")
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("invoice")
 
   useEffect(() => {
     if (ready && items.length === 0) {
       router.push("/cart")
     }
   }, [items.length, ready, router])
+
+  useEffect(() => {
+    let cancelled = false
+
+    fetch("/api/checkout/config")
+      .then((response) => response.ok ? response.json() : defaultCheckoutConfig)
+      .then((config) => {
+        if (cancelled) return
+        setCheckoutConfig(config)
+        setPaymentMethod(pickDefaultPaymentMethod(config))
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setCheckoutConfig(defaultCheckoutConfig)
+          setPaymentMethod("invoice")
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setConfigLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     if (!ready || checkoutTrackedRef.current || items.length === 0) return
@@ -53,6 +99,7 @@ export default function CheckoutPage() {
   const handleShippingSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     setError("")
+    setPaymentMethod((current) => isPaymentMethodAvailable(current, checkoutConfig) ? current : pickDefaultPaymentMethod(checkoutConfig))
     setStep("payment")
   }
 
@@ -69,7 +116,9 @@ export default function CheckoutPage() {
     try {
       const endpoint = paymentMethod === "paypal"
         ? "/api/checkout/paypal"
-        : "/api/checkout/session"
+        : paymentMethod === "card"
+          ? "/api/checkout/session"
+          : "/api/checkout/invoice-request"
       const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,6 +139,16 @@ export default function CheckoutPage() {
 
       window.location.href = data.url
     } catch (checkoutError) {
+      if (paymentMethod === "invoice") {
+        window.location.href = getWhatsAppUrl(buildClientInvoiceMessage({
+          items,
+          subtotal,
+          currency,
+          shippingAddress,
+        }))
+        return
+      }
+
       setLoading(false)
       setError(checkoutError instanceof Error ? checkoutError.message : "Checkout failed. Please try again.")
     }
@@ -189,20 +248,45 @@ export default function CheckoutPage() {
               {step === "payment" && (
                 <form onSubmit={handlePaymentSubmit} className="border bg-white p-6">
                   <h2 className="text-xl font-medium mb-6">Payment method</h2>
+                  {configLoading && (
+                    <div className="mb-4 border bg-gray-50 p-4 text-sm text-gray-600">
+                      Checking available payment methods...
+                    </div>
+                  )}
                   <div className="space-y-3">
-                    <PaymentOption
-                      checked={paymentMethod === "card"}
-                      label="Credit or debit card"
-                      description="Secure checkout powered by Stripe."
-                      onSelect={() => setPaymentMethod("card")}
-                    />
-                    <PaymentOption
-                      checked={paymentMethod === "paypal"}
-                      label="PayPal"
-                      description="Pay with your PayPal account or PayPal-supported cards."
-                      onSelect={() => setPaymentMethod("paypal")}
-                    />
+                    {checkoutConfig.paypal.enabled && (
+                      <PaymentOption
+                        checked={paymentMethod === "paypal"}
+                        label="PayPal"
+                        badge={checkoutConfig.paypal.environment === "live" ? "LIVE" : "TEST"}
+                        description="Pay securely with your PayPal account or PayPal-supported cards."
+                        onSelect={() => setPaymentMethod("paypal")}
+                      />
+                    )}
+                    {checkoutConfig.stripe.enabled && (
+                      <PaymentOption
+                        checked={paymentMethod === "card"}
+                        label="Credit or debit card"
+                        badge="CARD"
+                        description="Secure card checkout powered by Stripe."
+                        onSelect={() => setPaymentMethod("card")}
+                      />
+                    )}
+                    {checkoutConfig.manualInvoice.enabled && (
+                      <PaymentOption
+                        checked={paymentMethod === "invoice"}
+                        label="Request invoice"
+                        badge="INVOICE"
+                        description="Confirm artwork availability, shipping, and payment details with YiiArt before paying."
+                        onSelect={() => setPaymentMethod("invoice")}
+                      />
+                    )}
                   </div>
+                  {!checkoutConfig.paypal.enabled && (
+                    <div className="mt-4 border bg-gray-50 p-4 text-sm leading-6 text-gray-600">
+                      PayPal direct checkout is being prepared. You can still request an invoice on WhatsApp, and YiiArt will confirm availability, packing, shipping, and the safest payment method before collection.
+                    </div>
+                  )}
                   <div className="mt-6 flex gap-4">
                     <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
                       Back
@@ -230,7 +314,7 @@ export default function CheckoutPage() {
 
                   <section className="border-b py-4">
                     <h3 className="font-medium mb-2">Payment method</h3>
-                    <p>{paymentMethod === "paypal" ? "PayPal" : "Credit or debit card"}</p>
+                    <p>{paymentMethodLabel(paymentMethod)}</p>
                   </section>
 
                   <section className="space-y-4 py-4">
@@ -260,7 +344,7 @@ export default function CheckoutPage() {
                       disabled={loading}
                       className="flex-1 bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50"
                     >
-                      {loading ? "Redirecting..." : "Place order"}
+                      {loading ? "Redirecting..." : paymentMethod === "invoice" ? "Request invoice" : "Place order"}
                     </button>
                   </div>
                 </div>
@@ -363,11 +447,13 @@ function TextField({
 function PaymentOption({
   checked,
   label,
+  badge,
   description,
   onSelect,
 }: {
   checked: boolean
   label: string
+  badge: string
   description: string
   onSelect: () => void
 }) {
@@ -375,7 +461,7 @@ function PaymentOption({
     <label className={`flex cursor-pointer items-center gap-3 border p-4 hover:bg-gray-50 ${checked ? "border-black" : ""}`}>
       <input type="radio" name="payment" checked={checked} onChange={onSelect} />
       <span className="h-10 w-10 border flex items-center justify-center text-xs font-medium">
-        {label === "PayPal" ? "PP" : "CARD"}
+        {badge}
       </span>
       <span>
         <span className="block font-medium">{label}</span>
@@ -383,6 +469,70 @@ function PaymentOption({
       </span>
     </label>
   )
+}
+
+function pickDefaultPaymentMethod(config: CheckoutConfig): PaymentMethod {
+  if (config.paypal.enabled) return "paypal"
+  if (config.stripe.enabled) return "card"
+  return "invoice"
+}
+
+function isPaymentMethodAvailable(method: PaymentMethod, config: CheckoutConfig) {
+  if (method === "paypal") return config.paypal.enabled
+  if (method === "card") return config.stripe.enabled
+  return config.manualInvoice.enabled
+}
+
+function paymentMethodLabel(method: PaymentMethod) {
+  if (method === "paypal") return "PayPal"
+  if (method === "card") return "Credit or debit card"
+  return "Request invoice on WhatsApp"
+}
+
+function buildClientInvoiceMessage({
+  items,
+  subtotal,
+  currency,
+  shippingAddress,
+}: {
+  items: Array<{ title: string; artist?: string; price: number; quantity: number }>
+  subtotal: number
+  currency: StoreCurrency
+  shippingAddress: Record<string, string>
+}) {
+  return [
+    "Hello YiiArt, I would like to request an invoice for this order.",
+    "",
+    "Items:",
+    ...items.map((item) => `- ${item.title}${item.artist ? ` by ${item.artist}` : ""} x ${item.quantity}`),
+    `Cart total before final confirmation: ${currency} ${convertCnyToStoreAmount(subtotal, currency).toFixed(2)}`,
+    "",
+    `Name: ${shippingAddress.name}`,
+    `Email: ${shippingAddress.email}`,
+    `Country: ${shippingAddress.country}`,
+    `City: ${shippingAddress.city}`,
+    `Postal code: ${shippingAddress.postalCode}`,
+    `Address: ${shippingAddress.address}`,
+    shippingAddress.notes ? `Notes: ${shippingAddress.notes}` : "",
+  ].filter(Boolean).join("\n")
+}
+
+const defaultCheckoutConfig: CheckoutConfig = {
+  manualInvoice: {
+    enabled: true,
+    canCreateOrder: false,
+  },
+  paypal: {
+    enabled: false,
+    configured: false,
+    webhookConfigured: false,
+    environment: "sandbox",
+  },
+  stripe: {
+    enabled: false,
+    configured: false,
+    webhookConfigured: false,
+  },
 }
 
 const checkoutCountries = [

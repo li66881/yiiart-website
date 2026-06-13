@@ -29,7 +29,7 @@ export default function PrivacyPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Payment Information</h2>
-              <p>Payment processing is handled by Stripe. We do not store your credit card details on our servers.</p>
+              <p>Payment processing is handled by PayPal, optional Stripe card checkout, or YiiArt invoice support. We do not store credit card details on our servers.</p>
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Cookies</h2>

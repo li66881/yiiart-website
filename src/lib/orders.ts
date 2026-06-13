@@ -4,7 +4,7 @@ import { getSupabaseAdmin } from "@/lib/supabase-admin"
 import type { CheckoutLineItem } from "@/lib/checkout"
 import { markArtworksSold } from "@/lib/inventory"
 
-export type PaymentProvider = "stripe" | "paypal"
+export type PaymentProvider = "stripe" | "paypal" | "manual"
 export type OrderStatus =
   | "pending_payment"
   | "payment_processing"

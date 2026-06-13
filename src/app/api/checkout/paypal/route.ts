@@ -6,29 +6,30 @@ import {
   getCheckoutLineItems,
   normalizeCurrency,
 } from "@/lib/checkout"
-import { getPayPalAccessToken, getPayPalApiBase, isPayPalConfigured } from "@/lib/paypal"
+import { getPayPalAccessToken, getPayPalApiBase } from "@/lib/paypal"
 import { getStoreCurrency } from "@/lib/pricing"
 import {
   attachPayPalOrderToOrder,
   createPendingOrder,
   markOrderCancelled,
 } from "@/lib/orders"
+import { isPayPalCheckoutEnabled } from "@/lib/payment-config"
 
 export async function POST(request: Request) {
   try {
-    if (!isPayPalConfigured()) {
+    if (!isPayPalCheckoutEnabled()) {
       return NextResponse.json(
-        { success: false, error: "PayPal credentials are not configured" },
-        { status: 500 }
+        { success: false, error: "PayPal checkout is not ready yet. Please request an invoice or contact YiiArt on WhatsApp." },
+        { status: 503 }
       )
     }
 
     const { items, shippingAddress, displayCurrency } = await request.json()
-    const checkoutItems = await getCheckoutLineItems(items)
     const currency = normalizeCurrency(
       process.env.PAYPAL_CURRENCY || process.env.STRIPE_CURRENCY,
       getStoreCurrency()
     ).toUpperCase()
+    const checkoutItems = await getCheckoutLineItems(items, currency)
     const order = await createPendingOrder({
       provider: "paypal",
       items: checkoutItems,

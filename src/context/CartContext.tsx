@@ -37,7 +37,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem("yiiart-cart")
     if (saved) {
       try {
-        setItems(JSON.parse(saved))
+        const parsed = JSON.parse(saved)
+        setItems(Array.isArray(parsed) ? parsed.filter(isValidCartItem) : [])
       } catch (e) {
         console.error("Failed to load cart", e)
       }
@@ -54,7 +55,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(prev => {
       const existing = prev.find(i => i.id === item.id)
       if (existing) {
-        return prev
+        return prev.map(i => i.id === item.id ? { ...item, quantity: 1 } : i)
       }
       return [...prev, { ...item, quantity: 1 }]
     })
@@ -90,4 +91,16 @@ export function useCart() {
     throw new Error("useCart must be used within CartProvider")
   }
   return context
+}
+
+function isValidCartItem(item: unknown): item is CartItem {
+  if (!item || typeof item !== "object") return false
+
+  const value = item as Partial<CartItem>
+  return typeof value.id === "string"
+    && value.id.length > 0
+    && typeof value.title === "string"
+    && value.title.length > 0
+    && Number.isFinite(Number(value.price))
+    && Number(value.price) > 0
 }

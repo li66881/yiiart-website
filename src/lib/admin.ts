@@ -1,13 +1,21 @@
+import { getPaymentConfigStatus } from "@/lib/payment-config"
+
 export function getAdminConfigStatus() {
+  const payment = getPaymentConfigStatus()
+
   return {
     adminPassword: Boolean(process.env.ADMIN_PASSWORD),
     sanityWriteToken: Boolean(process.env.SANITY_WRITE_TOKEN),
     sanityProject: Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i"),
-    supabaseOrders: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
-    stripe: Boolean(process.env.STRIPE_SECRET_KEY),
-    stripeWebhook: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
-    paypal: Boolean(process.env.PAYPAL_CLIENT_ID && process.env.PAYPAL_CLIENT_SECRET),
-    paypalWebhook: Boolean(process.env.PAYPAL_WEBHOOK_ID),
+    supabaseOrders: payment.orderStorage,
+    manualInvoice: payment.manualInvoice.enabled,
+    manualInvoiceStorage: payment.manualInvoice.canCreateOrder,
+    stripe: payment.stripe.enabled,
+    stripeConfigured: payment.stripe.configured,
+    stripeWebhook: payment.stripe.webhookConfigured,
+    paypal: payment.paypal.enabled,
+    paypalConfigured: payment.paypal.configured,
+    paypalWebhook: payment.paypal.webhookConfigured,
     newsletter: Boolean(process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY || process.env.SANITY_WRITE_TOKEN),
     analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID),
     socialPixels: Boolean(process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID),

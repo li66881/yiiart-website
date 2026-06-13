@@ -41,7 +41,7 @@ export function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000").replace(/\/$/, "")
 }
 
-export async function getCheckoutLineItems(items: unknown): Promise<CheckoutLineItem[]> {
+export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: string): Promise<CheckoutLineItem[]> {
   const requestedItems = normalizeCheckoutItems(items)
   const ids = [...new Set(requestedItems.map((item) => item.id))]
 
@@ -77,7 +77,7 @@ export async function getCheckoutLineItems(items: unknown): Promise<CheckoutLine
       throw new CheckoutValidationError("One or more artworks do not have a valid price.")
     }
 
-    const currency = getStoreCurrency(process.env.STRIPE_CURRENCY || process.env.NEXT_PUBLIC_STORE_CURRENCY)
+    const currency = getStoreCurrency(checkoutCurrency || process.env.STRIPE_CURRENCY || process.env.NEXT_PUBLIC_STORE_CURRENCY)
     const price = convertCnyToStoreAmount(basePriceCny, currency)
 
     return {

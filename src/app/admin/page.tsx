@@ -25,7 +25,7 @@ const tools = [
   },
   {
     title: "Stripe Dashboard",
-    description: "Review Stripe Checkout payments and customer order records.",
+    description: "Review optional card payments when Stripe checkout is enabled.",
     href: "https://dashboard.stripe.com/payments",
     external: true,
   },
@@ -43,9 +43,17 @@ const tools = [
   },
 ]
 
+type ConfigCheck = {
+  label: string
+  ready: boolean
+  detail: string
+  statusText?: string
+  statusClass?: string
+}
+
 export default function AdminPage() {
   const status = getAdminConfigStatus()
-  const checks = [
+  const checks: ConfigCheck[] = [
     {
       label: "Sanity project",
       ready: status.sanityProject,
@@ -62,29 +70,44 @@ export default function AdminPage() {
       detail: "Must be an Editor token with create permission, not a Viewer token.",
     },
     {
-      label: "Stripe",
-      ready: status.stripe,
-      detail: "Required for card checkout.",
-    },
-    {
       label: "Supabase orders",
       ready: status.supabaseOrders,
-      detail: "Required before Stripe or PayPal can create real checkout orders.",
+      detail: "Required before PayPal or Stripe can create tracked checkout orders.",
     },
     {
-      label: "Stripe webhook",
-      ready: status.stripeWebhook,
-      detail: "Required to confirm card payments and refunds automatically.",
+      label: "Manual invoice fallback",
+      ready: status.manualInvoice,
+      detail: status.manualInvoiceStorage
+        ? "Enabled. Invoice requests can create Supabase orders before opening WhatsApp."
+        : "Enabled. WhatsApp fallback works now; add Supabase to store invoice requests.",
     },
     {
-      label: "PayPal",
+      label: "PayPal checkout",
       ready: status.paypal,
-      detail: "Required for PayPal checkout.",
+      detail: status.paypalConfigured
+        ? "Configured. It becomes ready when Supabase orders and PayPal credentials are both available."
+        : "Add PayPal client ID and secret after the business account is approved.",
     },
     {
       label: "PayPal webhook",
       ready: status.paypalWebhook,
       detail: "Required to verify PayPal payment, denied, and refund events.",
+    },
+    {
+      label: "Stripe card checkout",
+      ready: status.stripe,
+      statusText: status.stripe ? "Ready" : status.stripeConfigured ? "Disabled" : "Missing",
+      statusClass: status.stripe ? "text-green-700" : status.stripeConfigured ? "text-gray-600" : "text-red-700",
+      detail: status.stripeConfigured
+        ? "Card checkout stays hidden until ENABLE_STRIPE_CHECKOUT=true."
+        : "Optional for YiiArt now. Use only when your Stripe entity and risk settings are ready.",
+    },
+    {
+      label: "Stripe webhook",
+      ready: status.stripeWebhook,
+      statusText: status.stripe ? (status.stripeWebhook ? "Ready" : "Missing") : "Optional",
+      statusClass: status.stripe ? (status.stripeWebhook ? "text-green-700" : "text-red-700") : "text-gray-600",
+      detail: "Required only when Stripe card checkout is enabled.",
     },
     {
       label: "Newsletter email",
@@ -125,8 +148,8 @@ export default function AdminPage() {
                 <div key={check.label} className="border p-4">
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="font-medium">{check.label}</h3>
-                    <span className={`text-xs ${check.ready ? "text-green-700" : "text-red-700"}`}>
-                      {check.ready ? "Ready" : "Missing"}
+                    <span className={`text-xs ${check.statusClass || (check.ready ? "text-green-700" : "text-red-700")}`}>
+                      {check.statusText || (check.ready ? "Ready" : "Missing")}
                     </span>
                   </div>
                   <p className="mt-2 text-sm text-gray-600">{check.detail}</p>
@@ -146,8 +169,8 @@ export default function AdminPage() {
             <ul className="space-y-2 text-sm text-gray-600">
               <li>Set ADMIN_PASSWORD and an Editor-level SANITY_WRITE_TOKEN in Vercel and in local .env.local.</li>
               <li>Use Create artist first when a new artist does not exist in the artist dropdown.</li>
-              <li>Use Create artwork to upload images from Desktop / 网站素材 and publish the sale page.</li>
-              <li>Stripe, PayPal, GA4, Meta Pixel, Pinterest Tag, and email tools need their own account keys.</li>
+              <li>Use Create artwork to upload images, set price, and publish the sale page.</li>
+              <li>PayPal, optional Stripe, GA4, Meta Pixel, Pinterest Tag, and email tools need their own account keys.</li>
             </ul>
           </section>
         </div>

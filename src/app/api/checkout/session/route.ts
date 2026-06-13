@@ -8,20 +8,21 @@ import {
 } from "@/lib/checkout"
 import { getStoreCurrency } from "@/lib/pricing"
 import { createPendingOrder, attachStripeCheckoutToOrder } from "@/lib/orders"
+import { isStripeCheckoutEnabled } from "@/lib/payment-config"
 
 export async function POST(request: Request) {
   try {
     const { items, shippingAddress, displayCurrency } = await request.json()
 
-    if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes("your_stripe")) {
+    if (!isStripeCheckoutEnabled() || process.env.STRIPE_SECRET_KEY?.includes("your_stripe")) {
       return NextResponse.json(
-        { success: false, error: "Stripe key not configured" },
-        { status: 500 }
+        { success: false, error: "Card checkout is currently unavailable. Please request a PayPal invoice or contact YiiArt on WhatsApp." },
+        { status: 503 }
       )
     }
 
-    const checkoutItems = await getCheckoutLineItems(items)
     const currency = normalizeCurrency(process.env.STRIPE_CURRENCY, getStoreCurrency())
+    const checkoutItems = await getCheckoutLineItems(items, currency)
     const order = await createPendingOrder({
       provider: "stripe",
       items: checkoutItems,

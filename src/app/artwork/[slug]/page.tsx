@@ -48,6 +48,9 @@ async function getArtwork(slug: string) {
         shippingProfile,
         seoKeywords,
         socialCaption,
+        availability,
+        allowCheckout,
+        reservedUntil,
         images,
         description
       }`,
@@ -125,12 +128,63 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
+  const directCheckoutAvailable = priceCny > 0 && isArtworkDirectCheckoutAvailable(artwork)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const reviews = await getArtworkReviews(artwork._id)
   const reviewStats = getReviewStats(reviews)
   const whatsappUrl = getWhatsAppUrl(
     `Hello YiiArt, I am interested in ${title}. Can you advise on size, framing, and shipping?`
   )
+  const invoiceUrl = getWhatsAppUrl(
+    `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
+  )
+  const offer: Record<string, any> = {
+    "@type": "Offer",
+    url: `${baseUrl}/artwork/${slug}`,
+    priceCurrency: currency,
+    availability: getSchemaAvailability(artwork, directCheckoutAvailable),
+    itemCondition: "https://schema.org/NewCondition",
+    shippingDetails: {
+      "@type": "OfferShippingDetails",
+      shippingRate: {
+        "@type": "MonetaryAmount",
+        value: "0",
+        currency,
+      },
+      shippingDestination: {
+        "@type": "DefinedRegion",
+        addressCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
+      },
+      deliveryTime: {
+        "@type": "ShippingDeliveryTime",
+        handlingTime: {
+          "@type": "QuantitativeValue",
+          minValue: 5,
+          maxValue: 7,
+          unitCode: "DAY",
+        },
+        transitTime: {
+          "@type": "QuantitativeValue",
+          minValue: 7,
+          maxValue: 14,
+          unitCode: "DAY",
+        },
+      },
+    },
+    hasMerchantReturnPolicy: {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
+      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+      merchantReturnDays: 30,
+      returnMethod: "https://schema.org/ReturnByMail",
+      returnFees: "https://schema.org/ReturnShippingFees",
+    },
+  }
+
+  if (priceCny > 0) {
+    offer.price = offerPrice.toFixed(2)
+  }
+
   const productJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -145,49 +199,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       name: "YiiArt",
     },
     category: category || "Original artwork",
-    offers: {
-      "@type": "Offer",
-      url: `${baseUrl}/artwork/${slug}`,
-      priceCurrency: currency,
-      price: offerPrice.toFixed(2),
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
-      shippingDetails: {
-        "@type": "OfferShippingDetails",
-        shippingRate: {
-          "@type": "MonetaryAmount",
-          value: "0",
-          currency,
-        },
-        shippingDestination: {
-          "@type": "DefinedRegion",
-          addressCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
-        },
-        deliveryTime: {
-          "@type": "ShippingDeliveryTime",
-          handlingTime: {
-            "@type": "QuantitativeValue",
-            minValue: 5,
-            maxValue: 7,
-            unitCode: "DAY",
-          },
-          transitTime: {
-            "@type": "QuantitativeValue",
-            minValue: 7,
-            maxValue: 14,
-            unitCode: "DAY",
-          },
-        },
-      },
-      hasMerchantReturnPolicy: {
-        "@type": "MerchantReturnPolicy",
-        applicableCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
-        returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-        merchantReturnDays: 30,
-        returnMethod: "https://schema.org/ReturnByMail",
-        returnFees: "https://schema.org/ReturnShippingFees",
-      },
-    },
+    offers: offer,
   }
 
   if (reviewStats.count > 0) {
@@ -342,18 +354,37 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <div className="mt-8 space-y-4">
-                <AddToCartButton
-                  item={{
-                    id: artwork._id,
-                    title,
-                    titleZh: artwork.title?.zh,
-                    artist: artistName,
-                    artistId: artwork.artist?._id,
-                    price: priceCny,
-                    image: imageUrl,
-                    size: dimensions,
-                  }}
-                />
+                {directCheckoutAvailable ? (
+                  <AddToCartButton
+                    item={{
+                      id: artwork._id,
+                      title,
+                      titleZh: artwork.title?.zh,
+                      artist: artistName,
+                      artistId: artwork.artist?._id,
+                      price: priceCny,
+                      image: imageUrl,
+                      size: dimensions,
+                    }}
+                  />
+                ) : (
+                  <div className="border bg-gray-50 p-5">
+                    <p className="font-medium">Confirm availability before checkout</p>
+                    <p className="mt-2 text-sm leading-6 text-gray-600">
+                      {priceCny > 0
+                        ? "This artwork needs final availability confirmation before direct checkout."
+                        : "This artwork is available by request. YiiArt will confirm price, shipping, and payment details before issuing an invoice."}
+                    </p>
+                    <a
+                      href={invoiceUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-4 block w-full bg-black py-4 text-center text-white transition hover:bg-gray-800"
+                    >
+                      Request invoice
+                    </a>
+                  </div>
+                )}
                 <a
                   href={whatsappUrl}
                   target="_blank"
@@ -419,6 +450,34 @@ function inferOrientation(dimensions?: string | null) {
   const [width, height] = numbers
   if (Math.abs(width - height) < 1) return "Square"
   return width > height ? "Landscape" : "Portrait"
+}
+
+function isArtworkDirectCheckoutAvailable(artwork: {
+  availability?: "available" | "reserved" | "sold" | string
+  allowCheckout?: boolean
+  reservedUntil?: string | null
+}) {
+  if (artwork.allowCheckout === false) return false
+  if (artwork.availability === "sold") return false
+  if (artwork.availability === "reserved") {
+    if (!artwork.reservedUntil) return false
+    return new Date(artwork.reservedUntil).getTime() < Date.now()
+  }
+  return true
+}
+
+function getSchemaAvailability(
+  artwork: {
+    availability?: "available" | "reserved" | "sold" | string
+    allowCheckout?: boolean
+    reservedUntil?: string | null
+  },
+  directCheckoutAvailable: boolean
+) {
+  if (artwork.availability === "sold") return "https://schema.org/SoldOut"
+  if (directCheckoutAvailable) return "https://schema.org/InStock"
+  if (artwork.availability === "reserved") return "https://schema.org/LimitedAvailability"
+  return "https://schema.org/OutOfStock"
 }
 
 function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
