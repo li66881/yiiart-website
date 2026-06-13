@@ -8,6 +8,11 @@ import {
 } from "@/lib/checkout"
 import { getPayPalAccessToken, getPayPalApiBase, isPayPalConfigured } from "@/lib/paypal"
 import { getStoreCurrency } from "@/lib/pricing"
+import {
+  attachPayPalOrderToOrder,
+  createPendingOrder,
+  markOrderCancelled,
+} from "@/lib/orders"
 
 export async function POST(request: Request) {
   try {
@@ -18,12 +23,19 @@ export async function POST(request: Request) {
       )
     }
 
-    const { items } = await request.json()
+    const { items, shippingAddress, displayCurrency } = await request.json()
     const checkoutItems = await getCheckoutLineItems(items)
     const currency = normalizeCurrency(
       process.env.PAYPAL_CURRENCY || process.env.STRIPE_CURRENCY,
       getStoreCurrency()
     ).toUpperCase()
+    const order = await createPendingOrder({
+      provider: "paypal",
+      items: checkoutItems,
+      shippingAddress,
+      currency,
+      displayCurrency,
+    })
     const baseUrl = getBaseUrl()
     const total = checkoutItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
     const accessToken = await getPayPalAccessToken()
@@ -40,7 +52,20 @@ export async function POST(request: Request) {
         purchase_units: [
           {
             description: "YiiArt artwork order",
-            custom_id: checkoutItems.map((item) => item.id).join(",").slice(0, 127),
+            custom_id: order.id,
+            invoice_id: order.orderNumber,
+            soft_descriptor: "YIIART",
+            shipping: {
+              name: {
+                full_name: order.address.name.slice(0, 300),
+              },
+              address: {
+                address_line_1: order.address.address.slice(0, 300),
+                admin_area_2: order.address.city.slice(0, 120),
+                postal_code: order.address.postalCode.slice(0, 60),
+                country_code: order.address.country,
+              },
+            },
             amount: {
               currency_code: currency,
               value: formatProviderAmount(total),
@@ -68,9 +93,9 @@ export async function POST(request: Request) {
             experience_context: {
               brand_name: "YiiArt",
               landing_page: "LOGIN",
-              shipping_preference: "GET_FROM_FILE",
+              shipping_preference: "SET_PROVIDED_ADDRESS",
               user_action: "PAY_NOW",
-              return_url: `${baseUrl}/api/checkout/paypal/capture`,
+              return_url: `${baseUrl}/api/checkout/paypal/capture?internal_order_id=${encodeURIComponent(order.id)}`,
               cancel_url: `${baseUrl}/cart`,
             },
           },
@@ -82,6 +107,7 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       console.error("PayPal order error:", data)
+      await markOrderCancelled(order.id)
       return NextResponse.json(
         { success: false, error: "Failed to create PayPal order" },
         { status: 500 }
@@ -92,11 +118,14 @@ export async function POST(request: Request) {
       || data.links?.find((link: { rel?: string }) => link.rel === "approve")
 
     if (!approveLink?.href) {
+      await markOrderCancelled(order.id)
       return NextResponse.json(
         { success: false, error: "PayPal did not return an approval link" },
         { status: 500 }
       )
     }
+
+    await attachPayPalOrderToOrder(order.id, data.id)
 
     return NextResponse.json({ success: true, id: data.id, url: approveLink.href })
   } catch (error) {
@@ -106,7 +135,7 @@ export async function POST(request: Request) {
 
     console.error("PayPal checkout error:", error)
     return NextResponse.json(
-      { success: false, error: "Failed to start PayPal checkout" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to start PayPal checkout" },
       { status: 500 }
     )
   }

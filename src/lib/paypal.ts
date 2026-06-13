@@ -49,3 +49,45 @@ export async function capturePayPalOrder(orderId: string) {
 
   return response.json()
 }
+
+export async function verifyPayPalWebhookSignature(headers: Headers, webhookEvent: unknown) {
+  const webhookId = process.env.PAYPAL_WEBHOOK_ID
+  if (!webhookId) {
+    throw new Error("PAYPAL_WEBHOOK_ID is not configured.")
+  }
+
+  const payload = {
+    auth_algo: requiredHeader(headers, "paypal-auth-algo"),
+    cert_url: requiredHeader(headers, "paypal-cert-url"),
+    transmission_id: requiredHeader(headers, "paypal-transmission-id"),
+    transmission_sig: requiredHeader(headers, "paypal-transmission-sig"),
+    transmission_time: requiredHeader(headers, "paypal-transmission-time"),
+    webhook_id: webhookId,
+    webhook_event: webhookEvent,
+  }
+
+  const accessToken = await getPayPalAccessToken()
+  const response = await fetch(`${getPayPalApiBase()}/v1/notifications/verify-webhook-signature`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  })
+
+  if (!response.ok) {
+    throw new Error("PayPal webhook signature verification failed.")
+  }
+
+  const data = await response.json()
+  return data.verification_status === "SUCCESS"
+}
+
+function requiredHeader(headers: Headers, name: string) {
+  const value = headers.get(name)
+  if (!value) {
+    throw new Error(`Missing PayPal webhook header: ${name}`)
+  }
+  return value
+}

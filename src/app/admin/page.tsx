@@ -67,9 +67,24 @@ export default function AdminPage() {
       detail: "Required for card checkout.",
     },
     {
+      label: "Supabase orders",
+      ready: status.supabaseOrders,
+      detail: "Required before Stripe or PayPal can create real checkout orders.",
+    },
+    {
+      label: "Stripe webhook",
+      ready: status.stripeWebhook,
+      detail: "Required to confirm card payments and refunds automatically.",
+    },
+    {
       label: "PayPal",
       ready: status.paypal,
       detail: "Required for PayPal checkout.",
+    },
+    {
+      label: "PayPal webhook",
+      ready: status.paypalWebhook,
+      detail: "Required to verify PayPal payment, denied, and refund events.",
     },
     {
       label: "Newsletter email",

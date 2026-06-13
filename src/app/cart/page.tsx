@@ -9,7 +9,7 @@ import { useCart } from "@/context/CartContext"
 import { useLanguage } from "@/context/LanguageContext"
 
 export default function CartPage() {
-  const { items, subtotal, updateQuantity, removeItem, itemCount } = useCart()
+  const { items, subtotal, removeItem, itemCount } = useCart()
   const { t } = useLanguage()
 
   return (
@@ -48,19 +48,7 @@ export default function CartPage() {
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
-                            <button 
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              className="w-8 h-8 border hover:bg-gray-50"
-                            >
-                              -
-                            </button>
-                            <span className="w-12 text-center">{item.quantity}</span>
-                            <button 
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="w-8 h-8 border hover:bg-gray-50"
-                            >
-                              +
-                            </button>
+                            <span className="border px-3 py-1 text-sm">One original artwork</span>
                             <button 
                               onClick={() => removeItem(item.id)}
                               className="ml-4 text-sm text-red-500 hover:underline"

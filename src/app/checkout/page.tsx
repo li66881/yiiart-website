@@ -22,11 +22,13 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
   const [shippingAddress, setShippingAddress] = useState({
+    email: "",
     name: "",
     phone: "",
     address: "",
     city: "",
     postalCode: "",
+    country: "US",
     notes: "",
   })
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card")
@@ -116,6 +118,14 @@ export default function CheckoutPage() {
                   <h2 className="text-xl font-medium mb-6">Shipping information</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     <TextField
+                      label="Email"
+                      type="email"
+                      required
+                      className="md:col-span-2"
+                      value={shippingAddress.email}
+                      onChange={(value) => setShippingAddress({ ...shippingAddress, email: value })}
+                    />
+                    <TextField
                       label="Full name"
                       required
                       value={shippingAddress.name}
@@ -147,6 +157,19 @@ export default function CheckoutPage() {
                       value={shippingAddress.postalCode}
                       onChange={(value) => setShippingAddress({ ...shippingAddress, postalCode: value })}
                     />
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Country *</label>
+                      <select
+                        required
+                        value={shippingAddress.country}
+                        onChange={(event) => setShippingAddress({ ...shippingAddress, country: event.target.value })}
+                        className="w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
+                      >
+                        {checkoutCountries.map((country) => (
+                          <option key={country.code} value={country.code}>{country.name}</option>
+                        ))}
+                      </select>
+                    </div>
                     <div className="md:col-span-2">
                       <label className="block text-sm font-medium mb-1">Order notes</label>
                       <textarea
@@ -201,6 +224,7 @@ export default function CheckoutPage() {
                     <p>{shippingAddress.phone}</p>
                     <p>{shippingAddress.address}</p>
                     <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
+                    <p>{shippingAddress.country}</p>
                     {shippingAddress.notes && <p className="mt-2 text-sm text-gray-500">{shippingAddress.notes}</p>}
                   </section>
 
@@ -360,3 +384,23 @@ function PaymentOption({
     </label>
   )
 }
+
+const checkoutCountries = [
+  { code: "US", name: "United States" },
+  { code: "CA", name: "Canada" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "DE", name: "Germany" },
+  { code: "FR", name: "France" },
+  { code: "NL", name: "Netherlands" },
+  { code: "ES", name: "Spain" },
+  { code: "IT", name: "Italy" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "AU", name: "Australia" },
+  { code: "NZ", name: "New Zealand" },
+  { code: "SG", name: "Singapore" },
+  { code: "JP", name: "Japan" },
+  { code: "KR", name: "South Korea" },
+  { code: "CN", name: "China" },
+  { code: "HK", name: "Hong Kong" },
+  { code: "TW", name: "Taiwan" },
+]

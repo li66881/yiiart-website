@@ -54,7 +54,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems(prev => {
       const existing = prev.find(i => i.id === item.id)
       if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)
+        return prev
       }
       return [...prev, { ...item, quantity: 1 }]
     })
@@ -69,7 +69,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeItem(id)
       return
     }
-    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i))
+    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity: 1 } : i))
   }
 
   const clearCart = () => setItems([])

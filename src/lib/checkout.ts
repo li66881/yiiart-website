@@ -29,6 +29,9 @@ type ArtworkForCheckout = {
     }
   }
   price?: number
+  availability?: "available" | "reserved" | "sold"
+  allowCheckout?: boolean
+  reservedUntil?: string
   images?: unknown[]
 }
 
@@ -48,6 +51,9 @@ export async function getCheckoutLineItems(items: unknown): Promise<CheckoutLine
       title,
       artist->{name},
       price,
+      availability,
+      allowCheckout,
+      reservedUntil,
       images
     }`,
     { ids }
@@ -60,6 +66,10 @@ export async function getCheckoutLineItems(items: unknown): Promise<CheckoutLine
 
     if (!artwork) {
       throw new CheckoutValidationError("One or more artworks are no longer available.")
+    }
+
+    if (!isArtworkAvailableForCheckout(artwork)) {
+      throw new CheckoutValidationError(`${pickEnglish(artwork.title, "This artwork")} is not available for checkout.`)
     }
 
     const basePriceCny = Number(artwork.price)
@@ -103,10 +113,20 @@ function normalizeCheckoutItems(items: unknown): CheckoutItemInput[] {
     const id = typeof input.id === "string" ? input.id : ""
     const quantity = Number(input.quantity)
 
-    if (!id || !Number.isInteger(quantity) || quantity < 1 || quantity > 10) {
+    if (!id || !Number.isInteger(quantity) || quantity !== 1) {
       throw new CheckoutValidationError("Invalid cart item.")
     }
 
     return { id, quantity }
   })
+}
+
+function isArtworkAvailableForCheckout(artwork: ArtworkForCheckout) {
+  if (artwork.allowCheckout === false) return false
+  if (artwork.availability === "sold") return false
+  if (artwork.availability === "reserved") {
+    if (!artwork.reservedUntil) return false
+    return new Date(artwork.reservedUntil).getTime() < Date.now()
+  }
+  return true
 }

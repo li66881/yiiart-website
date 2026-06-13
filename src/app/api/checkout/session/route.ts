@@ -7,10 +7,11 @@ import {
   normalizeCurrency,
 } from "@/lib/checkout"
 import { getStoreCurrency } from "@/lib/pricing"
+import { createPendingOrder, attachStripeCheckoutToOrder } from "@/lib/orders"
 
 export async function POST(request: Request) {
   try {
-    const { items, shippingAddress } = await request.json()
+    const { items, shippingAddress, displayCurrency } = await request.json()
 
     if (!process.env.STRIPE_SECRET_KEY || process.env.STRIPE_SECRET_KEY.includes("your_stripe")) {
       return NextResponse.json(
@@ -21,6 +22,13 @@ export async function POST(request: Request) {
 
     const checkoutItems = await getCheckoutLineItems(items)
     const currency = normalizeCurrency(process.env.STRIPE_CURRENCY, getStoreCurrency())
+    const order = await createPendingOrder({
+      provider: "stripe",
+      items: checkoutItems,
+      shippingAddress,
+      currency,
+      displayCurrency,
+    })
     const lineItems = checkoutItems.map((item) => ({
       price_data: {
         currency,
@@ -39,16 +47,25 @@ export async function POST(request: Request) {
       mode: "payment",
       payment_method_types: ["card"],
       line_items: lineItems,
-      shipping_address_collection: {
-        allowed_countries: ["AE", "US", "CA", "GB", "DE", "FR", "NL", "ES", "IT", "AU", "NZ", "SG", "JP", "KR", "CN", "HK", "TW"],
-      },
+      customer_email: order.address.email,
+      client_reference_id: order.id,
       success_url: `${baseUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/cart`,
+      payment_intent_data: {
+        metadata: {
+          orderId: order.id,
+          orderNumber: order.orderNumber,
+          provider: "stripe",
+        },
+      },
       metadata: {
+        orderId: order.id,
+        orderNumber: order.orderNumber,
         artworkIds: checkoutItems.map((item) => item.id).join(",").slice(0, 500),
-        shippingAddress: JSON.stringify(shippingAddress || {}).slice(0, 500),
       },
     })
+
+    await attachStripeCheckoutToOrder(order.id, session)
 
     return NextResponse.json({ success: true, url: session.url })
   } catch (error) {
@@ -58,7 +75,7 @@ export async function POST(request: Request) {
 
     console.error("Checkout error:", error)
     return NextResponse.json(
-      { success: false, error: "Failed to create checkout session" },
+      { success: false, error: error instanceof Error ? error.message : "Failed to create checkout session" },
       { status: 500 }
     )
   }
