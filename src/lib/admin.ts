@@ -2,7 +2,7 @@ export function getAdminConfigStatus() {
   return {
     adminPassword: Boolean(process.env.ADMIN_PASSWORD),
     sanityWriteToken: Boolean(process.env.SANITY_WRITE_TOKEN),
-    sanityProject: Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID),
+    sanityProject: Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i"),
     supabaseOrders: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
     stripe: Boolean(process.env.STRIPE_SECRET_KEY),
     stripeWebhook: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
