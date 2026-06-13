@@ -7,7 +7,7 @@ export const internalContactEmail =
   || contactEmail
 
 export const whatsappNumber =
-  (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8618103832173").replace(/\D/g, "")
+  (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "8617538137711").replace(/\D/g, "")
 
 export function getWhatsAppUrl(message = "Hello YiiArt, I would like to ask about an artwork.") {
   return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
