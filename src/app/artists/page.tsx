@@ -40,35 +40,40 @@ export default async function ArtistsPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-12 md:grid-cols-2 lg:grid-cols-3">
-            {artists.length > 0 ? artists.map((artist: any) => (
-              <Link key={artist._id} href={`/artist/${artist.slug.current}`}>
-                <div className="group cursor-pointer">
-                  <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
-                    {artist.image ? (
-                      <img
-                        src={urlFor(artist.image).width(600).url()}
-                        alt={pickEnglish(artist.name, "Artist")}
-                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex h-full w-full items-center justify-center text-gray-300">
-                        <TranslatedText k="artist.portrait" />
-                      </div>
-                    )}
+            {artists.length > 0 ? artists.map((artist: any) => {
+              const artistHref = `/artist/${artist.slug?.current || artist._id}`
+              const styles = Array.isArray(artist.style) ? artist.style : []
+
+              return (
+                <Link key={artist._id} href={artistHref}>
+                  <div className="group cursor-pointer">
+                    <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+                      {artist.image ? (
+                        <img
+                          src={urlFor(artist.image).width(600).url()}
+                          alt={pickEnglish(artist.name, "Artist")}
+                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center text-gray-300">
+                          <TranslatedText k="artist.portrait" />
+                        </div>
+                      )}
+                    </div>
+                    <h3 className="text-xl font-medium">{pickEnglish(artist.name, "YiiArt")}</h3>
+                    <p className="text-gray-500">{artist.location}</p>
+                    <p className="mt-3 line-clamp-3 text-sm text-gray-600">
+                      {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {styles.map((style: string) => (
+                        <span key={style} className="bg-gray-100 px-2 py-1 text-xs"><TranslatedOption value={style} /></span>
+                      ))}
+                    </div>
                   </div>
-                  <h3 className="text-xl font-medium">{pickEnglish(artist.name, "YiiArt")}</h3>
-                  <p className="text-gray-500">{artist.location}</p>
-                  <p className="mt-3 line-clamp-3 text-sm text-gray-600">
-                    {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
-                  </p>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {artist.style?.map((style: string) => (
-                      <span key={style} className="bg-gray-100 px-2 py-1 text-xs"><TranslatedOption value={style} /></span>
-                    ))}
-                  </div>
-                </div>
-              </Link>
-            )) : (
+                </Link>
+              )
+            }) : (
               <p className="col-span-full text-gray-500"><TranslatedText k="home.noArtists" /></p>
             )}
           </div>

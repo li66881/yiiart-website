@@ -11,7 +11,7 @@ export const revalidate = 600
 
 async function getArtist(slug: string) {
   try {
-    return await client.fetch(`*[_type == "artist" && slug.current == $slug][0]`, { slug })
+    return await client.fetch(`*[_type == "artist" && (slug.current == $slug || _id == $slug)][0]`, { slug })
   } catch (error) {
     console.error("Artist fetch error:", error)
     return null
@@ -79,6 +79,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
 
   const artworks = await getArtistArtworks(artist._id)
   const artistName = pickEnglish(artist.name, "YiiArt")
+  const styles = Array.isArray(artist.style) ? artist.style : []
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -108,7 +109,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
               <h1 className="mb-2 text-4xl font-light">{artistName}</h1>
               <p className="mb-4 text-xl text-gray-500">{artist.location}</p>
               <div className="mb-6 flex flex-wrap gap-2">
-                {artist.style?.map((style: string) => (
+                {styles.map((style: string) => (
                   <span key={style} className="bg-gray-100 px-3 py-1 text-sm"><TranslatedOption value={style} /></span>
                 ))}
               </div>
@@ -128,7 +129,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
               </h2>
               <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {artworks.map((artwork: any) => (
-                  <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`}>
+                  <Link key={artwork._id} href={`/artwork/${artwork.slug?.current || artwork._id}`}>
                     <div className="group cursor-pointer">
                       <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
                         {artwork.images?.[0] && (
