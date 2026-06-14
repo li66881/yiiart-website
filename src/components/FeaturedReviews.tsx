@@ -11,16 +11,18 @@ type FeaturedReviewsProps = {
 
 export default function FeaturedReviews({ reviews, compact = false }: FeaturedReviewsProps) {
   return (
-    <section className="py-16">
-      <div className="container mx-auto px-4">
-        <div className="mb-8 max-w-3xl">
-          <h2 className="text-3xl font-light"><TranslatedText k="reviews.featuredTitle" /></h2>
-          <p className="mt-3 text-sm leading-6 text-gray-600">
+    <section className="bg-white py-20">
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+        <div className="mb-10 grid gap-6 lg:grid-cols-[0.75fr_1fr]">
+          <h2 className="text-4xl font-light leading-tight"><TranslatedText k="reviews.featuredTitle" /></h2>
+          <div className="max-w-3xl">
+          <p className="text-sm leading-6 text-stone-600">
             <TranslatedText k="reviews.featuredDesc1" />
           </p>
-          <p className="mt-2 text-sm leading-6 text-gray-600">
+          <p className="mt-2 text-sm leading-6 text-stone-600">
             <TranslatedText k="reviews.featuredDesc2" />
           </p>
+          </div>
         </div>
 
         {reviews.length > 0 ? (
@@ -34,10 +36,10 @@ export default function FeaturedReviews({ reviews, compact = false }: FeaturedRe
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/reviews" className="bg-black px-5 py-3 text-sm text-white">
+          <Link href="/reviews" className="bg-black px-5 py-3 text-sm text-white transition hover:bg-stone-800">
             <TranslatedText k="reviews.readAll" />
           </Link>
-          <Link href="/art-in-real-homes" className="border px-5 py-3 text-sm">
+          <Link href="/art-in-real-homes" className="border border-stone-300 px-5 py-3 text-sm transition hover:border-black">
             <TranslatedText k="reviews.viewRealHomes" />
           </Link>
         </div>

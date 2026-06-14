@@ -43,7 +43,7 @@ export default function NewsletterSignup() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-3">
-      <label htmlFor="newsletter-email" className="block text-sm text-gray-500">
+      <label htmlFor="newsletter-email" className="block text-sm text-white/64">
         {t("newsletter.label")}
       </label>
       <div className="flex">
@@ -54,18 +54,18 @@ export default function NewsletterSignup() {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="email@example.com"
-          className="min-w-0 flex-1 border px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+          className="min-w-0 flex-1 border border-white/20 bg-white px-3 py-2 text-sm text-black focus:outline-none focus:ring-1 focus:ring-white"
         />
         <button
           type="submit"
           disabled={status === "loading"}
-          className="border border-l-0 bg-black px-4 py-2 text-sm text-white disabled:opacity-50"
+          className="border border-l-0 border-white bg-white px-4 py-2 text-sm text-black transition hover:bg-stone-200 disabled:opacity-50"
         >
           {status === "loading" ? "..." : t("newsletter.join")}
         </button>
       </div>
       {message && (
-        <p className={`text-xs ${status === "error" ? "text-red-600" : "text-gray-500"}`} aria-live="polite">
+        <p className={`text-xs ${status === "error" ? "text-red-300" : "text-white/60"}`} aria-live="polite">
           {message}
         </p>
       )}

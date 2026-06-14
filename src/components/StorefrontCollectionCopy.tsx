@@ -14,9 +14,9 @@ export function StorefrontCollectionSummary({ collection }: { collection: Storef
 
   return (
     <>
-      <p className="text-xs uppercase tracking-wider text-gray-500">{translated.eyebrow}</p>
-      <h3 className="mt-2 font-medium">{translated.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-gray-600">{translated.meta}</p>
+      <p className="text-xs uppercase text-stone-500">{translated.eyebrow}</p>
+      <h3 className="mt-2 font-medium text-stone-950">{translated.title}</h3>
+      <p className="mt-2 text-sm leading-6 text-stone-600">{translated.meta}</p>
     </>
   )
 }
@@ -25,8 +25,8 @@ export function StorefrontCollectionCard({ collection, image }: StorefrontCollec
   const translated = useTranslatedCollection(collection)
 
   return (
-    <Link href={collection.href} className="group block border bg-white">
-      <div className="aspect-[5/3] overflow-hidden bg-gray-100">
+    <Link href={collection.href} className="group block border border-stone-200 bg-white transition hover:border-stone-950">
+      <div className="relative aspect-[5/3] overflow-hidden bg-stone-100">
         {image ? (
           <img
             src={image}
@@ -34,14 +34,19 @@ export function StorefrontCollectionCard({ collection, image }: StorefrontCollec
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm text-gray-400">YiiArt collection</div>
+          <div className="flex h-full w-full items-center justify-center text-sm text-stone-400">YiiArt collection</div>
         )}
+        <div className="absolute left-4 top-4 bg-white/90 px-3 py-1 text-xs uppercase text-stone-700 backdrop-blur">
+          {translated.eyebrow}
+        </div>
       </div>
       <div className="p-5">
-        <p className="text-xs uppercase tracking-wider text-gray-500">{translated.eyebrow}</p>
-        <h3 className="mt-2 text-xl font-light">{translated.title}</h3>
-        <p className="mt-3 text-sm leading-6 text-gray-600">{translated.description}</p>
-        <p className="mt-5 text-xs uppercase tracking-wider text-gray-400">{translated.meta}</p>
+        <h3 className="text-xl font-light text-stone-950">{translated.title}</h3>
+        <p className="mt-3 text-sm leading-6 text-stone-600">{translated.description}</p>
+        <div className="mt-6 flex items-center justify-between gap-4 border-t border-stone-200 pt-4">
+          <p className="text-xs uppercase text-stone-500">{translated.meta}</p>
+          <span className="text-sm text-stone-950 opacity-0 transition group-hover:opacity-100">View</span>
+        </div>
       </div>
     </Link>
   )

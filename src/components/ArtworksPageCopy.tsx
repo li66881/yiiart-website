@@ -14,8 +14,8 @@ export function ArtworksPageHeroCopy({ activeCategory }: ArtworksPageCopyProps) 
 
   return (
     <>
-      <h1 className="mb-8 text-4xl font-light">{title}</h1>
-      <p className="mb-8 max-w-2xl text-sm leading-6 text-gray-600">
+      <h1 className="mb-6 text-5xl font-light leading-tight">{title}</h1>
+      <p className="mb-10 max-w-2xl text-base leading-8 text-stone-600">
         {t("artworksPage.description")}
       </p>
     </>
@@ -27,7 +27,7 @@ export function CuratedPathsCopy() {
 
   return (
     <div>
-      <p className="text-sm uppercase tracking-wider text-gray-500">{t("artworksPage.curatedPaths")}</p>
+      <p className="text-sm uppercase text-stone-500">{t("artworksPage.curatedPaths")}</p>
       <h2 className="mt-2 text-2xl font-light">{t("artworksPage.shopBy")}</h2>
     </div>
   )

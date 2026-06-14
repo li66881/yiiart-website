@@ -227,7 +227,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
       <script
         type="application/ld+json"
@@ -242,9 +242,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         category={category}
       />
 
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4 py-12">
-          <nav className="mb-4 flex items-center gap-2 text-sm text-gray-500" aria-label="Breadcrumb">
+      <main className="flex-1 pb-16 pt-24">
+        <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-10">
+          <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-stone-500" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
             <span>/</span>
             <Link href="/artworks" className="hover:text-black"><TranslatedText k="common.artworks" /></Link>
@@ -260,26 +260,26 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             <span className="text-black">{title}</span>
           </nav>
 
-          <Link href="/artworks" className="mb-8 inline-block text-gray-500 hover:text-black">
+          <Link href="/artworks" className="mb-8 inline-block text-stone-500 hover:text-black">
             &larr; <TranslatedText k="product.backToArtworks" />
           </Link>
 
-          <div className="mt-4 grid grid-cols-1 gap-16 lg:grid-cols-2">
-            <div>
+          <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)]">
+            <div className="lg:sticky lg:top-28 lg:self-start">
               {imageUrl ? (
-                <div className="aspect-[4/5] overflow-hidden bg-gray-100">
+                <div className="aspect-[4/5] overflow-hidden border border-stone-200 bg-white">
                   <img src={imageUrl} alt={title} className="h-full w-full object-contain" />
                 </div>
               ) : (
-                <div className="aspect-[4/5] bg-gray-100 flex items-center justify-center text-gray-400">
+                <div className="flex aspect-[4/5] items-center justify-center border border-stone-200 bg-white text-stone-400">
                   <TranslatedText k="product.imageComingSoon" />
                 </div>
               )}
 
               {artwork.images?.length > 1 && (
-                <div className="mt-4 grid grid-cols-4 gap-4">
+                <div className="mt-4 grid grid-cols-4 gap-3">
                   {artwork.images.slice(1).map((img: any, i: number) => (
-                    <div key={i} className="aspect-square bg-gray-100">
+                    <div key={i} className="aspect-square overflow-hidden border border-stone-200 bg-white">
                       <img src={urlFor(img).width(240).height(240).url()} alt={`${title} detail ${i + 2}`} className="h-full w-full object-cover" />
                     </div>
                   ))}
@@ -287,15 +287,17 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               )}
             </div>
 
-            <div>
-              <p className="mb-2 text-sm uppercase tracking-wider text-gray-500">
+            <div className="border border-stone-200 bg-white p-6 md:p-8">
+              <p className="mb-2 text-sm uppercase text-stone-500">
                 <TranslatedOptionList values={[category, medium]} separator=" / " />
               </p>
-              <h1 className="mb-2 text-4xl font-light">{title}</h1>
-              <p className="mb-6 text-xl text-gray-500"><TranslatedText k="artwork.by" /> {artistName}</p>
-              <p className="mb-2 text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
-              <p className="mb-6 text-xs text-gray-500"><PriceDisclosure /></p>
-              <div className="mb-6 text-sm text-gray-600">
+              <h1 className="mb-3 text-4xl font-light leading-tight md:text-5xl">{title}</h1>
+              <p className="mb-6 text-lg text-stone-500"><TranslatedText k="artwork.by" /> {artistName}</p>
+              <div className="mb-6 border-y border-stone-200 py-5">
+                <p className="text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
+                <p className="mt-2 text-xs leading-5 text-stone-500"><PriceDisclosure /></p>
+              </div>
+              <div className="mb-6 text-sm text-stone-600">
                 {reviewStats.count > 0 ? (
                   <div className="flex flex-wrap items-center gap-2">
                     <ReviewStars rating={reviewStats.overall} size="sm" />
@@ -309,7 +311,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 )}
               </div>
 
-              <div className="mb-8 grid gap-3 text-sm text-gray-700 sm:grid-cols-2">
+              <div className="mb-8 grid gap-3 text-sm text-stone-700 sm:grid-cols-2">
                 {dimensions && <Detail label={<TranslatedText k="artwork.size" />} value={dimensions} />}
                 {medium && <Detail label={<TranslatedText k="artwork.medium" />} value={<TranslatedOption value={medium} />} />}
                 {category && <Detail label={<TranslatedText k="product.detail.style" />} value={<TranslatedOption value={category} />} />}
@@ -325,17 +327,17 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 />
               </div>
 
-              <div className="space-y-6 border-t pt-8">
+              <div className="space-y-6 border-t border-stone-200 pt-8">
                 <section>
                   <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.aboutTitle" /></h2>
-                  <p className="text-gray-600 whitespace-pre-line">
+                  <p className="whitespace-pre-line leading-7 text-stone-600">
                     {description || <TranslatedTemplate k="product.aboutFallback" values={{ title }} />}
                   </p>
                 </section>
 
                 <section>
                   <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.sizingTitle" /></h2>
-                  <ul className="space-y-2 text-gray-600">
+                  <ul className="space-y-2 text-stone-600">
                     <li>
                       {dimensions
                         ? <TranslatedTemplate k="product.sizeLine" values={{ dimensions }} />
@@ -368,9 +370,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                     }}
                   />
                 ) : (
-                  <div className="border bg-gray-50 p-5">
+                  <div className="border border-stone-200 bg-[#fbfaf6] p-5">
                     <p className="font-medium">Confirm availability before checkout</p>
-                    <p className="mt-2 text-sm leading-6 text-gray-600">
+                    <p className="mt-2 text-sm leading-6 text-stone-600">
                       {priceCny > 0
                         ? "This artwork needs final availability confirmation before direct checkout."
                         : "This artwork is available by request. YiiArt will confirm price, shipping, and payment details before issuing an invoice."}
@@ -379,7 +381,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                       href={invoiceUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-4 block w-full bg-black py-4 text-center text-white transition hover:bg-gray-800"
+                      className="mt-4 block w-full bg-black py-4 text-center text-white transition hover:bg-stone-800"
                     >
                       Request invoice
                     </a>
@@ -398,13 +400,13 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             </div>
           </div>
 
-          <section className="mt-16 grid gap-6 border-t pt-12 lg:grid-cols-[0.8fr_1fr]">
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">
+              <p className="mb-3 text-sm uppercase text-stone-500">
                 <TranslatedText k="product.supportEyebrow" />
               </p>
               <h2 className="text-3xl font-light"><TranslatedText k="product.confirmTitle" /></h2>
-              <p className="mt-4 text-sm leading-6 text-gray-600">
+              <p className="mt-4 text-sm leading-6 text-stone-600">
                 <TranslatedText k="product.confirmText" />
               </p>
             </div>
@@ -421,7 +423,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
 
-          <section className="mt-16 grid gap-6 border-t pt-12 md:grid-cols-3">
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 md:grid-cols-4">
             {productConfidenceItems.map((item, index) => (
               <InfoBlock
                 key={item.title}
@@ -477,13 +479,13 @@ function getSchemaAvailability(
   if (artwork.availability === "sold") return "https://schema.org/SoldOut"
   if (directCheckoutAvailable) return "https://schema.org/InStock"
   if (artwork.availability === "reserved") return "https://schema.org/LimitedAvailability"
-  return "https://schema.org/OutOfStock"
+  return "https://schema.org/LimitedAvailability"
 }
 
 function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
   return (
-    <div className="border p-4">
-      <p className="text-xs uppercase tracking-wider text-gray-500">{label}</p>
+    <div className="border border-stone-200 bg-[#fbfaf6] p-4">
+      <p className="text-xs uppercase text-stone-500">{label}</p>
       <p className="mt-1 font-medium">{value}</p>
     </div>
   )
@@ -491,9 +493,9 @@ function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
 
 function InfoBlock({ title, text }: { title: ReactNode; text: ReactNode }) {
   return (
-    <div>
+    <div className="border-t border-stone-300 pt-5">
       <h2 className="mb-2 text-lg font-medium">{title}</h2>
-      <p className="text-sm leading-6 text-gray-600">{text}</p>
+      <p className="text-sm leading-6 text-stone-600">{text}</p>
     </div>
   )
 }

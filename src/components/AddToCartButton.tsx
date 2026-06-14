@@ -43,7 +43,7 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="w-full py-4 bg-black text-white hover:bg-gray-800 transition"
+      className="w-full bg-black py-4 font-medium text-white transition hover:bg-stone-800"
     >
       {added ? t("cart.addedToCart") : t("artwork.addToCart")}
     </button>

@@ -47,12 +47,12 @@ export default function ArtworkDiscoveryGrid({
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">
-      <aside className="border-y py-5 lg:border-y-0 lg:border-r lg:pr-6">
+    <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <aside className="border-y border-stone-200 bg-[#fbfaf6] py-5 lg:sticky lg:top-24 lg:self-start lg:border lg:px-5">
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-wider text-gray-500">{t("discovery.filters")}</p>
-            <p className="mt-1 text-sm text-gray-600">
+            <p className="text-xs uppercase text-stone-500">{t("discovery.filters")}</p>
+            <p className="mt-1 text-sm text-stone-600">
               {formatResultCount(t("discovery.resultCount"), filteredItems.length, items.length)}
             </p>
           </div>
@@ -60,7 +60,7 @@ export default function ArtworkDiscoveryGrid({
             type="button"
             onClick={() => setFilters(emptyArtworkFilters)}
             disabled={activeCount === 0}
-            className="text-sm underline underline-offset-4 disabled:text-gray-300"
+            className="text-sm underline underline-offset-4 disabled:text-stone-300"
           >
             {t("discovery.clear")}
           </button>
@@ -78,8 +78,8 @@ export default function ArtworkDiscoveryGrid({
                   return (
                     <label
                       key={option}
-                      className={`flex min-h-9 items-center justify-between gap-3 border px-3 py-2 text-sm transition ${
-                        checked ? "border-black bg-black text-white" : "border-gray-200 hover:border-black"
+                      className={`flex min-h-10 items-center justify-between gap-3 border px-3 py-2 text-sm transition ${
+                        checked ? "border-black bg-black text-white" : "border-stone-200 bg-white hover:border-black"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export default function ArtworkDiscoveryGrid({
                         />
                         <span>{translateOption(option)}</span>
                       </span>
-                      <span className={checked ? "text-white/70" : "text-gray-400"}>{count}</span>
+                      <span className={checked ? "text-white/70" : "text-stone-400"}>{count}</span>
                     </label>
                   )
                 })}
@@ -106,21 +106,21 @@ export default function ArtworkDiscoveryGrid({
           <div className="flex flex-wrap gap-2">
             {activeCount > 0 ? (
               activeFilterLabels(filters, t, translateOption).map((label) => (
-                <span key={label} className="border bg-gray-50 px-3 py-1 text-xs text-gray-600">
+                <span key={label} className="border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600">
                   {label}
                 </span>
               ))
             ) : (
-              <span className="text-sm text-gray-500">{t("discovery.allAvailable")}</span>
+              <span className="text-sm text-stone-500">{t("discovery.allAvailable")}</span>
             )}
           </div>
 
           <label className="flex items-center gap-2 text-sm">
-            <span className="text-gray-500">{t("discovery.sort")}</span>
+            <span className="text-stone-500">{t("discovery.sort")}</span>
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
+              className="border border-stone-300 bg-white px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
             >
               <option value="featured">{t("discovery.sortFeatured")}</option>
               <option value="price-asc">{t("discovery.sortPriceAsc")}</option>
@@ -130,13 +130,13 @@ export default function ArtworkDiscoveryGrid({
           </label>
         </div>
 
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filteredItems.length > 0 ? (
             filteredItems.map((artwork) => (
               <ArtworkTile key={artwork.id} artwork={artwork} translateOption={translateOption} />
             ))
           ) : (
-            <div className="col-span-full border-y py-12 text-center text-gray-500">
+            <div className="col-span-full border-y border-stone-200 py-12 text-center text-stone-500">
               <p>{emptyText || t("discovery.empty")}</p>
               <button
                 type="button"
@@ -150,7 +150,7 @@ export default function ArtworkDiscoveryGrid({
         </div>
 
         {items.length > 0 && (
-          <p className="mt-8 text-center text-xs text-gray-500">
+          <p className="mt-8 text-center text-xs text-stone-500">
             <PriceDisclosure />
           </p>
         )}
@@ -167,8 +167,8 @@ function ArtworkTile({
   translateOption: (option: string) => string
 }) {
   return (
-    <Link href={artwork.href} className="group block">
-      <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+    <Link href={artwork.href} className="group block border border-transparent transition hover:border-stone-300">
+      <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
         {artwork.imageUrl ? (
           <img
             src={artwork.imageUrl}
@@ -176,24 +176,34 @@ function ArtworkTile({
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-gray-400">Artwork</div>
+          <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/70 px-4 py-3 text-sm text-white opacity-0 transition group-hover:opacity-100">
+          <span>{artwork.orientation}</span>
+          <span>View details</span>
+        </div>
       </div>
-      <p className="text-xs uppercase tracking-wider text-gray-500">
-        {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
-      </p>
-      <h3 className="mt-1 font-medium">{artwork.title}</h3>
-      <p className="text-sm text-gray-500">{artwork.artistName}</p>
-      <p className="mt-1 font-semibold">
-        <PriceText amountCny={artwork.price} />
-      </p>
-      <p className="mt-1 text-xs text-gray-400">{artwork.dimensions}</p>
-      <div className="mt-3 flex flex-wrap gap-1">
-        {[artwork.size, artwork.orientation, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
-          <span key={tag} className="bg-gray-100 px-2 py-1 text-xs text-gray-500">
-            {translateOption(tag)}
-          </span>
-        ))}
+      <div className="bg-white px-1 py-4">
+        <p className="text-xs uppercase text-stone-500">
+          {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
+        </p>
+        <div className="mt-2 flex items-start justify-between gap-4">
+          <div>
+            <h3 className="font-medium leading-snug text-stone-950">{artwork.title}</h3>
+            <p className="mt-1 text-sm text-stone-500">{artwork.artistName}</p>
+          </div>
+          <p className="shrink-0 text-right text-sm font-semibold text-stone-950">
+            <PriceText amountCny={artwork.price} />
+          </p>
+        </div>
+        <p className="mt-3 text-xs text-stone-500">{artwork.dimensions}</p>
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {[artwork.size, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
+            <span key={tag} className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+              {translateOption(tag)}
+            </span>
+          ))}
+        </div>
       </div>
     </Link>
   )

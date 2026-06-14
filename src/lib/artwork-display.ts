@@ -4,19 +4,25 @@ type LocalizedText = {
 }
 
 const categoryMap: Record<string, string> = {
-  "景观": "Landscape",
-  "抽象": "Abstract",
-  "肖像": "Portrait",
+  "鏅": "Landscape",
+  "鎶借薄": "Abstract",
+  "鑲栧儚": "Portrait",
+  "鑲岀悊": "Texture",
   "肌理": "Texture",
+  "鏋佺畝": "Minimalist",
   "极简": "Minimalist",
-  "丙烯": "Acrylic",
+  "抽象": "Abstract",
+  "景观": "Landscape",
+  "肖像": "Portrait",
 }
 
 const mediumMap: Record<string, string> = {
+  "涓欑儻棰滄枡鐢诲竷": "Acrylic on canvas",
   "丙烯颜料画布": "Acrylic on canvas",
-  "丙烯颜料画布 ": "Acrylic on canvas",
-  "油画布": "Oil on canvas",
+  "甯冮潰娌圭敾": "Oil on canvas",
   "布面油画": "Oil on canvas",
+  "娌圭敾甯": "Oil on canvas",
+  "油画布": "Oil on canvas",
 }
 
 export function pickEnglish(value?: LocalizedText | string | null, fallback = "") {
@@ -27,12 +33,14 @@ export function pickEnglish(value?: LocalizedText | string | null, fallback = ""
 
 export function normalizeCategory(value?: string | null) {
   if (!value) return ""
-  return categoryMap[value] || value
+  const clean = normalizeDisplayText(value)
+  return categoryMap[clean] || clean
 }
 
 export function normalizeMedium(value?: string | null) {
   if (!value) return ""
-  return mediumMap[value] || value
+  const clean = normalizeDisplayText(value)
+  return mediumMap[clean] || clean
 }
 
 export function formatDimensions(value?: string | null) {
@@ -46,7 +54,7 @@ export function formatDimensions(value?: string | null) {
   if (!numbers || numbers.length < 2) return clean
 
   let [width, height] = numbers
-  const isMillimeters = /mm/i.test(clean) || Math.max(width, height) > 300
+  const isMillimeters = /mm/i.test(clean) || (!/cm/i.test(clean) && Math.max(width, height) > 300)
 
   if (isMillimeters) {
     width = width / 10
@@ -82,6 +90,7 @@ export function normalizeDisplayText(value: string) {
     .replace(/\bCanvas\b/g, "canvas")
     .replace(/\bOil on canvas\b/i, "Oil on canvas")
     .replace(/\bAcrylic on canvas\b/i, "Acrylic on canvas")
+    .replace(/\bMixed media\b/i, "Mixed media")
     .trim()
 }
 

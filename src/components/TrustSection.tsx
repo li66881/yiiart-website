@@ -20,13 +20,13 @@ export default function TrustSection() {
   const { t } = useLanguage()
 
   return (
-    <section className="bg-gray-50 py-14">
-      <div className="container mx-auto grid grid-cols-2 gap-8 px-4 text-center md:grid-cols-4">
+    <section className="border-b border-stone-200 bg-[#fbfaf6]">
+      <div className="mx-auto grid max-w-[1440px] gap-0 px-4 py-6 sm:px-6 md:grid-cols-4 lg:px-10">
         {badges.map((badge) => (
-          <div key={badge.titleKey}>
-            <div className="mb-2 text-3xl font-light">{badge.valueKey ? t(badge.valueKey) : badge.value}</div>
-            <h3 className="font-semibold">{t(badge.titleKey)}</h3>
-            <p className="text-sm text-gray-500">{t(badge.textKey)}</p>
+          <div key={badge.titleKey} className="border-stone-200 py-5 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0">
+            <p className="text-3xl font-light text-black">{badge.valueKey ? t(badge.valueKey) : badge.value}</p>
+            <h3 className="mt-2 font-medium text-stone-950">{t(badge.titleKey)}</h3>
+            <p className="mt-1 text-sm leading-6 text-stone-600">{t(badge.textKey)}</p>
           </div>
         ))}
       </div>

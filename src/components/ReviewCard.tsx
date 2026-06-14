@@ -17,7 +17,7 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
   const photo = hasPermittedPhotos(review) ? review.photos?.find((item) => item.asset?.url) : undefined
 
   return (
-    <article className="border p-5">
+    <article className="border border-stone-200 bg-white p-5">
       <div className="flex items-start gap-4">
         {photo?.asset?.url ? (
           <img
@@ -31,7 +31,7 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
             <ReviewStars rating={review.overallRating} size="sm" />
             {isVerifiedCollector(review) && (
               <span
-                className="bg-gray-100 px-2 py-1 text-xs text-gray-600"
+                className="bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600"
                 title="This review is connected to a real YiiArt purchase or a manually verified collector experience."
               >
                 <TranslatedText k="reviews.verifiedCollector" />
@@ -39,11 +39,11 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
             )}
           </div>
           <h3 className="mt-3 font-medium">{review.reviewTitle}</h3>
-          <p className="mt-2 text-sm leading-6 text-gray-600">{review.reviewText}</p>
+          <p className="mt-2 text-sm leading-6 text-stone-600">{review.reviewText}</p>
         </div>
       </div>
 
-      <div className="mt-4 space-y-1 text-sm text-gray-500">
+      <div className="mt-4 space-y-1 text-sm text-stone-500">
         <p>
           {review.customerName || <TranslatedText k="reviews.collector" />}
           {location ? ` · ${location}` : ""}
@@ -52,7 +52,10 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
         {!compact && (
           <>
             <p>
-              <TranslatedText k="reviews.purchased" />: <Link href={artworkHref} className="text-black underline underline-offset-4">{artworkTitle}</Link>
+              <TranslatedText k="reviews.purchased" />:{" "}
+              <Link href={artworkHref} className="text-black underline underline-offset-4">
+                {artworkTitle}
+              </Link>
               {artistName ? <> <TranslatedText k="reviews.by" /> {artistName}</> : ""}
             </p>
             {review.artwork?.dimensions && <p><TranslatedText k="reviews.size" />: {formatDimensions(review.artwork.dimensions)}</p>}
@@ -62,7 +65,7 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
       </div>
 
       {review.storeReply && (
-        <div className="mt-4 border-l-2 border-black pl-4 text-sm text-gray-600">
+        <div className="mt-4 border-l-2 border-black pl-4 text-sm text-stone-600">
           <p className="font-medium text-black"><TranslatedText k="reviews.reply" /></p>
           <p className="mt-1 leading-6">{review.storeReply}</p>
         </div>

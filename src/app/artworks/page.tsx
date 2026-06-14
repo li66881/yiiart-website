@@ -26,11 +26,11 @@ async function getCategoryArtworks(category?: string) {
   if (!category) return getArtworks()
 
   const legacyCategories: Record<string, string[]> = {
-    Abstract: ["Abstract", "抽象"],
-    Landscape: ["Landscape", "景观"],
-    Portrait: ["Portrait", "肖像"],
-    Texture: ["Texture", "肌理"],
-    Minimalist: ["Minimalist", "极简"],
+    Abstract: ["Abstract", "鎶借薄", "抽象"],
+    Landscape: ["Landscape", "鏅", "景观"],
+    Portrait: ["Portrait", "鑲栧儚", "肖像"],
+    Texture: ["Texture", "Textured Art", "鑲岀悊", "肌理"],
+    Minimalist: ["Minimalist", "鏋佺畝", "极简"],
   }
 
   return client.fetch(
@@ -83,14 +83,14 @@ export default async function ArtworksPage({ searchParams }: Props) {
   })
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
 
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4">
+      <main className="flex-1 pb-16 pt-28">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
           <ArtworksPageHeroCopy activeCategory={activeCategory} />
 
-          <section className="mb-14 border-y py-8">
+          <section className="mb-14 border-y border-stone-200 py-8">
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <CuratedPathsCopy />
               <a href="/collections/abstract-art-for-living-room" className="text-sm underline underline-offset-4">
@@ -99,16 +99,14 @@ export default async function ArtworksPage({ searchParams }: Props) {
             </div>
             <div className="grid gap-3 md:grid-cols-3">
               {storefrontCollectionTiles.map((collection) => (
-                <a key={collection.href} href={collection.href} className="border p-4 transition hover:bg-gray-50">
+                <a key={collection.href} href={collection.href} className="border border-stone-200 bg-white p-4 transition hover:border-black">
                   <StorefrontCollectionSummary collection={collection} />
                 </a>
               ))}
             </div>
           </section>
 
-          <ArtworkDiscoveryGrid
-            items={artworkItems}
-          />
+          <ArtworkDiscoveryGrid items={artworkItems} />
         </div>
       </main>
 

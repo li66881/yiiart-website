@@ -3,17 +3,44 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
+  --foreground-rgb: 24, 22, 19;
+  --background-start-rgb: 250, 248, 243;
   --background-end-rgb: 255, 255, 255;
+  --yiiart-ink: #181613;
+  --yiiart-muted: #6f675d;
+  --yiiart-line: #ded8ce;
+  --yiiart-paper: #fbfaf6;
+  --yiiart-warm: #efe8dc;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      transparent,
+      rgb(var(--background-start-rgb)),
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--yiiart-ink);
+  color: white;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  outline-color: var(--yiiart-ink);
+}
+
+img {
+  max-width: 100%;
 }
