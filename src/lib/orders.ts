@@ -1,6 +1,6 @@
 import { createHash, randomBytes } from "crypto"
 import type Stripe from "stripe"
-import { getSupabaseAdmin } from "@/lib/supabase-admin"
+import { getOrderSql } from "@/lib/order-storage"
 import type { CheckoutLineItem } from "@/lib/checkout"
 import { markArtworksSold } from "@/lib/inventory"
 
@@ -94,9 +94,8 @@ type OrderRow = {
   shipping_postal_code: string
   shipping_country: string
   customer_notes: string | null
-  created_at: string
-  paid_at: string | null
-  order_items?: OrderItemRow[]
+  created_at: string | Date
+  paid_at: string | Date | null
 }
 
 type OrderItemRow = {
@@ -111,7 +110,7 @@ type OrderItemRow = {
 }
 
 export async function createPendingOrder(input: CreatePendingOrderInput) {
-  const supabase = getSupabaseAdmin()
+  const sql = getOrderSql()
   const address = normalizeCheckoutAddress(input.shippingAddress)
   const currency = input.currency.toUpperCase()
   const displayCurrency = input.displayCurrency?.trim().toUpperCase() || currency
@@ -119,62 +118,99 @@ export async function createPendingOrder(input: CreatePendingOrderInput) {
   const shipping = 0
   const total = roundAmount(subtotal + shipping)
   const now = new Date().toISOString()
+  const metadata = JSON.stringify({
+    address_hash: createHash("sha256").update(JSON.stringify(address)).digest("hex"),
+    created_by: "yiiart-checkout",
+  })
 
-  const { data: order, error: orderError } = await supabase
-    .from("orders")
-    .insert({
-      order_number: createOrderNumber(),
-      status: "pending_payment",
-      payment_status: "pending",
-      fulfillment_status: "unfulfilled",
-      payment_provider: input.provider,
+  const orderRows = (await sql`
+    insert into orders (
+      order_number,
+      status,
+      payment_status,
+      fulfillment_status,
+      payment_provider,
       currency,
-      display_currency: displayCurrency,
-      subtotal_amount: subtotal,
-      shipping_amount: shipping,
-      total_amount: total,
-      customer_email: address.email,
-      customer_name: address.name,
-      customer_phone: address.phone,
-      shipping_address_line1: address.address,
-      shipping_city: address.city,
-      shipping_postal_code: address.postalCode,
-      shipping_country: address.country,
-      customer_notes: address.notes || null,
-      metadata: {
-        address_hash: createHash("sha256").update(JSON.stringify(address)).digest("hex"),
-        created_by: "yiiart-checkout",
-      },
-      created_at: now,
-    })
-    .select("*")
-    .single()
+      display_currency,
+      subtotal_amount,
+      shipping_amount,
+      total_amount,
+      customer_email,
+      customer_name,
+      customer_phone,
+      shipping_address_line1,
+      shipping_city,
+      shipping_postal_code,
+      shipping_country,
+      customer_notes,
+      metadata,
+      created_at
+    )
+    values (
+      ${createOrderNumber()},
+      ${"pending_payment"},
+      ${"pending"},
+      ${"unfulfilled"},
+      ${input.provider},
+      ${currency},
+      ${displayCurrency},
+      ${subtotal},
+      ${shipping},
+      ${total},
+      ${address.email},
+      ${address.name},
+      ${address.phone},
+      ${address.address},
+      ${address.city},
+      ${address.postalCode},
+      ${address.country},
+      ${address.notes || null},
+      ${metadata}::jsonb,
+      ${now}::timestamptz
+    )
+    returning *
+  `) as OrderRow[]
+  const order = orderRows[0]
 
-  if (orderError || !order) {
-    throw new Error(orderError?.message || "Could not create order.")
+  if (!order) {
+    throw new Error("Could not create order.")
   }
 
-  const itemRows = input.items.map((item) => ({
-    order_id: order.id,
-    artwork_id: item.id,
-    title: item.title,
-    artist_name: item.artistName || null,
-    image_url: item.image || null,
-    quantity: item.quantity,
-    unit_amount: roundAmount(item.price),
-    total_amount: roundAmount(item.price * item.quantity),
-    currency,
-  }))
-
-  const { error: itemsError } = await supabase.from("order_items").insert(itemRows)
-  if (itemsError) {
-    await supabase.from("orders").delete().eq("id", order.id)
-    throw new Error(itemsError.message || "Could not create order items.")
+  try {
+    for (const item of input.items) {
+      await sql`
+        insert into order_items (
+          order_id,
+          artwork_id,
+          title,
+          artist_name,
+          image_url,
+          quantity,
+          unit_amount,
+          total_amount,
+          currency
+        )
+        values (
+          ${order.id},
+          ${item.id},
+          ${item.title},
+          ${item.artistName || null},
+          ${item.image || null},
+          ${item.quantity},
+          ${roundAmount(item.price)},
+          ${roundAmount(item.price * item.quantity)},
+          ${currency}
+        )
+      `
+    }
+  } catch (error) {
+    await sql`delete from orders where id = ${order.id}`
+    throw error
   }
 
   return {
-    id: order.id as string,
-    orderNumber: order.order_number as string,
+    id: order.id,
+    orderNumber: order.order_number,
     total,
     currency,
     address,
@@ -182,34 +218,31 @@ export async function createPendingOrder(input: CreatePendingOrderInput) {
 }
 
 export async function attachStripeCheckoutToOrder(orderId: string, session: Stripe.Checkout.Session) {
-  const supabase = getSupabaseAdmin()
+  const sql = getOrderSql()
   const paymentIntent = typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id
 
-  const { error } = await supabase
-    .from("orders")
-    .update({
-      provider_checkout_id: session.id,
-      provider_payment_id: paymentIntent || null,
-      payment_status: "payment_processing",
-      status: "payment_processing",
-    })
-    .eq("id", orderId)
-
-  if (error) throw new Error(error.message)
+  await sql`
+    update orders
+    set
+      provider_checkout_id = ${session.id},
+      provider_payment_id = ${paymentIntent || null},
+      payment_status = ${"payment_processing"},
+      status = ${"payment_processing"}
+    where id = ${orderId}
+  `
 }
 
 export async function attachPayPalOrderToOrder(orderId: string, paypalOrderId: string) {
-  const supabase = getSupabaseAdmin()
-  const { error } = await supabase
-    .from("orders")
-    .update({
-      provider_checkout_id: paypalOrderId,
-      payment_status: "payment_processing",
-      status: "payment_processing",
-    })
-    .eq("id", orderId)
+  const sql = getOrderSql()
 
-  if (error) throw new Error(error.message)
+  await sql`
+    update orders
+    set
+      provider_checkout_id = ${paypalOrderId},
+      payment_status = ${"payment_processing"},
+      status = ${"payment_processing"}
+    where id = ${orderId}
+  `
 }
 
 export async function recordPaymentEvent(input: {
@@ -219,18 +252,30 @@ export async function recordPaymentEvent(input: {
   orderId?: string | null
   payload: unknown
 }) {
-  const supabase = getSupabaseAdmin()
-  const { error } = await supabase.from("payment_events").insert({
-    provider: input.provider,
-    event_id: input.eventId,
-    event_type: input.eventType,
-    order_id: input.orderId || null,
-    payload: input.payload,
-  })
+  const sql = getOrderSql()
 
-  if (!error) return true
-  if (error.code === "23505") return false
-  throw new Error(error.message)
+  try {
+    await sql`
+      insert into payment_events (
+        provider,
+        event_id,
+        event_type,
+        order_id,
+        payload
+      )
+      values (
+        ${input.provider},
+        ${input.eventId},
+        ${input.eventType},
+        ${input.orderId || null},
+        ${JSON.stringify(input.payload)}::jsonb
+      )
+    `
+    return true
+  } catch (error) {
+    if (isUniqueViolation(error)) return false
+    throw error
+  }
 }
 
 export async function markOrderPaid(input: {
@@ -239,35 +284,34 @@ export async function markOrderPaid(input: {
   providerCheckoutId?: string | null
   providerPaymentId?: string | null
 }) {
-  const supabase = getSupabaseAdmin()
+  const sql = getOrderSql()
   const now = new Date().toISOString()
-  const { error } = await supabase
-    .from("orders")
-    .update({
-      status: "paid",
-      payment_status: "paid",
-      payment_provider: input.provider,
-      provider_checkout_id: input.providerCheckoutId || undefined,
-      provider_payment_id: input.providerPaymentId || undefined,
-      paid_at: now,
-    })
-    .eq("id", input.orderId)
 
-  if (error) throw new Error(error.message)
+  await sql`
+    update orders
+    set
+      status = ${"paid"},
+      payment_status = ${"paid"},
+      payment_provider = ${input.provider},
+      provider_checkout_id = coalesce(${input.providerCheckoutId || null}, provider_checkout_id),
+      provider_payment_id = coalesce(${input.providerPaymentId || null}, provider_payment_id),
+      paid_at = ${now}::timestamptz
+    where id = ${input.orderId}
+  `
 
-  const { data: order, error: readError } = await supabase
-    .from("orders")
-    .select("order_number, order_items(artwork_id)")
-    .eq("id", input.orderId)
-    .maybeSingle()
-
-  if (readError) throw new Error(readError.message)
+  const orderRows = (await sql`
+    select order_number
+    from orders
+    where id = ${input.orderId}
+    limit 1
+  `) as Array<{ order_number?: string }>
+  const orderItems = await getOrderItems(input.orderId)
 
   try {
-    const artworkIds = ((order as { order_items?: Array<{ artwork_id?: string }> } | null)?.order_items || [])
+    const artworkIds = orderItems
       .map((item) => item.artwork_id)
       .filter((id): id is string => Boolean(id))
-    const orderNumber = (order as { order_number?: string } | null)?.order_number || input.orderId
+    const orderNumber = orderRows[0]?.order_number || input.orderId
     await markArtworksSold(artworkIds, orderNumber)
   } catch (inventoryError) {
     console.error("Failed to mark artworks sold:", inventoryError)
@@ -279,72 +323,82 @@ export async function markOrderPaymentFailed(orderId: string) {
 }
 
 export async function markOrderCancelled(orderId: string) {
-  await updateOrderStatus(orderId, "cancelled", "cancelled", { cancelled_at: new Date().toISOString() })
+  await updateOrderStatus(orderId, "cancelled", "cancelled", "cancelled_at")
 }
 
 export async function markOrderRefunded(orderId: string) {
-  await updateOrderStatus(orderId, "refunded", "refunded", { refunded_at: new Date().toISOString() })
+  await updateOrderStatus(orderId, "refunded", "refunded", "refunded_at")
 }
 
 export async function markOrderDisputed(orderId: string) {
-  await updateOrderStatus(orderId, "disputed", "disputed", { disputed_at: new Date().toISOString() })
+  await updateOrderStatus(orderId, "disputed", "disputed", "disputed_at")
 }
 
 export async function findOrderByProviderCheckout(provider: PaymentProvider, providerCheckoutId: string) {
-  const supabase = getSupabaseAdmin()
-  const { data, error } = await supabase
-    .from("orders")
-    .select(orderSelection)
-    .eq("payment_provider", provider)
-    .eq("provider_checkout_id", providerCheckoutId)
-    .maybeSingle()
+  const sql = getOrderSql()
+  const rows = (await sql`
+    select *
+    from orders
+    where payment_provider = ${provider}
+      and provider_checkout_id = ${providerCheckoutId}
+    limit 1
+  `) as OrderRow[]
 
-  if (error) throw new Error(error.message)
-  return data ? serializeOrder(data as OrderRow) : null
+  return rows[0] ? serializeOrder(rows[0], await getOrderItems(rows[0].id)) : null
 }
 
 export async function findOrderByProviderPayment(provider: PaymentProvider, providerPaymentId: string) {
-  const supabase = getSupabaseAdmin()
-  const { data, error } = await supabase
-    .from("orders")
-    .select(orderSelection)
-    .eq("payment_provider", provider)
-    .eq("provider_payment_id", providerPaymentId)
-    .maybeSingle()
+  const sql = getOrderSql()
+  const rows = (await sql`
+    select *
+    from orders
+    where payment_provider = ${provider}
+      and provider_payment_id = ${providerPaymentId}
+    limit 1
+  `) as OrderRow[]
 
-  if (error) throw new Error(error.message)
-  return data ? serializeOrder(data as OrderRow) : null
+  return rows[0] ? serializeOrder(rows[0], await getOrderItems(rows[0].id)) : null
 }
 
 export async function listOrdersByEmail(email: string) {
   const normalizedEmail = normalizeEmail(email)
   if (!normalizedEmail) return []
 
-  const supabase = getSupabaseAdmin()
-  const { data, error } = await supabase
-    .from("orders")
-    .select(orderSelection)
-    .eq("customer_email", normalizedEmail)
-    .order("created_at", { ascending: false })
-    .limit(25)
+  const sql = getOrderSql()
+  const rows = (await sql`
+    select *
+    from orders
+    where customer_email = ${normalizedEmail}
+    order by created_at desc
+    limit 25
+  `) as OrderRow[]
 
-  if (error) throw new Error(error.message)
-  return (data || []).map((order) => serializeOrder(order as OrderRow))
+  const orders = await Promise.all(rows.map(async (order) => (
+    serializeOrder(order, await getOrderItems(order.id))
+  )))
+
+  return orders
 }
 
 export async function findOrderByNumber(orderNumber: string, email?: string) {
-  const supabase = getSupabaseAdmin()
-  let query = supabase
-    .from("orders")
-    .select(orderSelection)
-    .eq("order_number", orderNumber.trim())
-
+  const sql = getOrderSql()
   const normalizedEmail = normalizeEmail(email || "")
-  if (normalizedEmail) query = query.eq("customer_email", normalizedEmail)
+  const rows = normalizedEmail
+    ? (await sql`
+        select *
+        from orders
+        where order_number = ${orderNumber.trim()}
+          and customer_email = ${normalizedEmail}
+        limit 1
+      `) as OrderRow[]
+    : (await sql`
+        select *
+        from orders
+        where order_number = ${orderNumber.trim()}
+        limit 1
+      `) as OrderRow[]
 
-  const { data, error } = await query.maybeSingle()
-  if (error) throw new Error(error.message)
-  return data ? serializeOrder(data as OrderRow) : null
+  return rows[0] ? serializeOrder(rows[0], await getOrderItems(rows[0].id)) : null
 }
 
 export function normalizeCheckoutAddress(value: unknown): CheckoutAddress {
@@ -376,7 +430,25 @@ export function normalizeCheckoutAddress(value: unknown): CheckoutAddress {
   return address
 }
 
-function serializeOrder(order: OrderRow): PublicOrder {
+async function getOrderItems(orderId: string) {
+  const sql = getOrderSql()
+  return (await sql`
+    select
+      artwork_id,
+      title,
+      artist_name,
+      image_url,
+      quantity,
+      unit_amount,
+      total_amount,
+      currency
+    from order_items
+    where order_id = ${orderId}
+    order by created_at asc
+  `) as OrderItemRow[]
+}
+
+function serializeOrder(order: OrderRow, items: OrderItemRow[]): PublicOrder {
   return {
     id: order.id,
     orderNumber: order.order_number,
@@ -401,7 +473,7 @@ function serializeOrder(order: OrderRow): PublicOrder {
       country: order.shipping_country,
       notes: order.customer_notes,
     },
-    items: (order.order_items || []).map((item) => ({
+    items: items.map((item) => ({
       artworkId: item.artwork_id,
       title: item.title,
       artistName: item.artist_name,
@@ -411,8 +483,8 @@ function serializeOrder(order: OrderRow): PublicOrder {
       totalAmount: Number(item.total_amount),
       currency: item.currency,
     })),
-    createdAt: order.created_at,
-    paidAt: order.paid_at,
+    createdAt: dateValue(order.created_at),
+    paidAt: order.paid_at ? dateValue(order.paid_at) : null,
   }
 }
 
@@ -420,19 +492,43 @@ async function updateOrderStatus(
   orderId: string,
   status: OrderStatus,
   paymentStatus: string,
-  extra: Record<string, unknown> = {}
+  timestampColumn?: "cancelled_at" | "refunded_at" | "disputed_at"
 ) {
-  const supabase = getSupabaseAdmin()
-  const { error } = await supabase
-    .from("orders")
-    .update({
-      status,
-      payment_status: paymentStatus,
-      ...extra,
-    })
-    .eq("id", orderId)
+  const sql = getOrderSql()
+  const now = new Date().toISOString()
 
-  if (error) throw new Error(error.message)
+  if (timestampColumn === "cancelled_at") {
+    await sql`
+      update orders
+      set status = ${status}, payment_status = ${paymentStatus}, cancelled_at = ${now}::timestamptz
+      where id = ${orderId}
+    `
+    return
+  }
+
+  if (timestampColumn === "refunded_at") {
+    await sql`
+      update orders
+      set status = ${status}, payment_status = ${paymentStatus}, refunded_at = ${now}::timestamptz
+      where id = ${orderId}
+    `
+    return
+  }
+
+  if (timestampColumn === "disputed_at") {
+    await sql`
+      update orders
+      set status = ${status}, payment_status = ${paymentStatus}, disputed_at = ${now}::timestamptz
+      where id = ${orderId}
+    `
+    return
+  }
+
+  await sql`
+    update orders
+    set status = ${status}, payment_status = ${paymentStatus}
+    where id = ${orderId}
+  `
 }
 
 function createOrderNumber() {
@@ -465,16 +561,10 @@ function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }
 
-const orderSelection = `
-  *,
-  order_items(
-    artwork_id,
-    title,
-    artist_name,
-    image_url,
-    quantity,
-    unit_amount,
-    total_amount,
-    currency
-  )
-`
+function isUniqueViolation(error: unknown) {
+  return Boolean(error && typeof error === "object" && (error as { code?: string }).code === "23505")
+}
+
+function dateValue(value: string | Date) {
+  return value instanceof Date ? value.toISOString() : new Date(value).toISOString()
+}

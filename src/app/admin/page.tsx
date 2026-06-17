@@ -70,22 +70,22 @@ export default function AdminPage() {
       detail: "Must be an Editor token with create permission, not a Viewer token.",
     },
     {
-      label: "Supabase orders",
-      ready: status.supabaseOrders,
+      label: "Postgres orders",
+      ready: status.orderStorage,
       detail: "Required before PayPal or Stripe can create tracked checkout orders.",
     },
     {
       label: "Manual invoice fallback",
       ready: status.manualInvoice,
       detail: status.manualInvoiceStorage
-        ? "Enabled. Invoice requests can create Supabase orders before opening WhatsApp."
-        : "Enabled. WhatsApp fallback works now; add Supabase to store invoice requests.",
+        ? "Enabled. Invoice requests can create Postgres orders before opening WhatsApp."
+        : "Enabled. WhatsApp fallback works now; add Neon/Postgres to store invoice requests.",
     },
     {
       label: "PayPal checkout",
       ready: status.paypal,
       detail: status.paypalConfigured
-        ? "Configured. It becomes ready when Supabase orders and PayPal credentials are both available."
+        ? "Configured. It becomes ready when Postgres order storage and PayPal credentials are both available."
         : "Add PayPal client ID and secret after the business account is approved.",
     },
     {

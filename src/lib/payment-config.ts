@@ -1,5 +1,5 @@
 import { isPayPalConfigured } from "@/lib/paypal"
-import { isOrderStorageConfigured } from "@/lib/supabase-admin"
+import { getOrderStorageProvider, isOrderStorageConfigured } from "@/lib/order-storage"
 
 export function isManualInvoiceEnabled() {
   return process.env.ENABLE_MANUAL_INVOICE_REQUESTS !== "false"
@@ -32,6 +32,7 @@ export function getPaymentConfigStatus() {
 
   return {
     orderStorage,
+    orderStorageProvider: getOrderStorageProvider(),
     manualInvoice: {
       enabled: isManualInvoiceEnabled(),
       canCreateOrder: orderStorage,

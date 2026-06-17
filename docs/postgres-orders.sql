@@ -1,5 +1,5 @@
--- YiiArt order storage for Stripe and PayPal checkout.
--- Run this in the Supabase SQL editor before enabling live payments.
+-- YiiArt order storage for PayPal and optional Stripe checkout.
+-- Run this in Neon SQL Editor, Vercel Marketplace Neon SQL console, or any Postgres database.
 
 create extension if not exists "pgcrypto";
 
@@ -79,10 +79,3 @@ create trigger set_orders_updated_at
 before update on public.orders
 for each row
 execute function public.set_order_updated_at();
-
-alter table public.orders enable row level security;
-alter table public.order_items enable row level security;
-alter table public.payment_events enable row level security;
-
--- The website reads and writes orders only with SUPABASE_SERVICE_ROLE_KEY.
--- Do not expose service role keys in client-side NEXT_PUBLIC variables.

@@ -8,7 +8,7 @@ import { createPendingOrder } from "@/lib/orders"
 import { getStoreCurrency } from "@/lib/pricing"
 import { getWhatsAppUrl } from "@/lib/site"
 import { isManualInvoiceEnabled } from "@/lib/payment-config"
-import { isOrderStorageConfigured } from "@/lib/supabase-admin"
+import { isOrderStorageConfigured } from "@/lib/order-storage"
 
 export const runtime = "nodejs"
 

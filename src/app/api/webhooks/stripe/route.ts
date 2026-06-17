@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import { getStripe } from "@/lib/stripe"
+import { getOrderStorageProvider, isOrderStorageConfigured } from "@/lib/order-storage"
 import {
   findOrderByProviderPayment,
   markOrderDisputed,
@@ -21,7 +22,8 @@ export async function GET() {
     configured: {
       secretKey: Boolean(process.env.STRIPE_SECRET_KEY),
       webhookSecret: Boolean(process.env.STRIPE_WEBHOOK_SECRET),
-      orderStorage: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+      orderStorage: isOrderStorageConfigured(),
+      orderStorageProvider: getOrderStorageProvider(),
     },
   })
 }

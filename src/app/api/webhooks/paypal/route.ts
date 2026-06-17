@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server"
 import {
+  getOrderStorageProvider,
+  isOrderStorageConfigured,
+} from "@/lib/order-storage"
+import {
   findOrderByProviderCheckout,
   markOrderPaid,
   markOrderPaymentFailed,
@@ -20,7 +24,8 @@ export async function GET() {
       clientId: Boolean(process.env.PAYPAL_CLIENT_ID),
       clientSecret: Boolean(process.env.PAYPAL_CLIENT_SECRET),
       webhookId: Boolean(process.env.PAYPAL_WEBHOOK_ID),
-      orderStorage: Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY),
+      orderStorage: isOrderStorageConfigured(),
+      orderStorageProvider: getOrderStorageProvider(),
     },
   })
 }

@@ -4,7 +4,7 @@ import {
   findOrderByProviderCheckout,
   listOrdersByEmail,
 } from "@/lib/orders"
-import { isOrderStorageConfigured } from "@/lib/supabase-admin"
+import { isOrderStorageConfigured } from "@/lib/order-storage"
 
 export const runtime = "nodejs"
 

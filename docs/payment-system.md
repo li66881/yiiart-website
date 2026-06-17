@@ -9,15 +9,15 @@ For the current China-registered company setup, production checkout is PayPal-fi
 1. Customer fills shipping and contact details on `/checkout`.
 2. The checkout page reads `/api/checkout/config` to decide which payment methods are available.
 3. The API re-reads artwork price, checkout permission, and availability from Sanity.
-4. If Supabase orders are configured, the API creates a pending order.
+4. If Postgres order storage is configured, the API creates a pending order.
 5. PayPal redirects the customer to hosted checkout, or manual invoice opens WhatsApp with order details.
-6. PayPal webhooks confirm payment status and update the Supabase order.
+6. PayPal webhooks confirm payment status and update the Postgres order.
 7. Paid orders mark Sanity artworks as sold when `SANITY_WRITE_TOKEN` is configured.
 
 ## Recommended Production Order
 
-1. Run `docs/supabase-orders.sql` in Supabase SQL editor.
-2. Add Supabase and base URL variables in Vercel.
+1. Create a Neon/Postgres database and run `docs/postgres-orders.sql`.
+2. Add `DATABASE_URL` and base URL variables in Vercel.
 3. Keep manual invoice enabled so customers can still contact YiiArt if PayPal is pending review.
 4. Add PayPal live credentials after the PayPal business account is approved.
 5. Add the PayPal webhook URL and webhook ID.
@@ -29,8 +29,7 @@ For the current China-registered company setup, production checkout is PayPal-fi
 ```env
 NEXT_PUBLIC_BASE_URL=https://www.yiiart.com
 
-NEXT_PUBLIC_SUPABASE_URL=
-SUPABASE_SERVICE_ROLE_KEY=
+DATABASE_URL=
 
 PAYPAL_CLIENT_ID=
 PAYPAL_CLIENT_SECRET=
@@ -49,13 +48,13 @@ ENABLE_STRIPE_CHECKOUT=false
 SANITY_WRITE_TOKEN=
 ```
 
-`SUPABASE_SERVICE_ROLE_KEY` must never use a `NEXT_PUBLIC_` prefix.
+`DATABASE_URL` must never use a `NEXT_PUBLIC_` prefix. Keep it server-side only.
 
 ## Payment Method Rules
 
-- PayPal is shown only when PayPal credentials and Supabase order storage are both configured, and `ENABLE_PAYPAL_CHECKOUT` is not `false`.
-- Manual invoice is shown by default when `ENABLE_MANUAL_INVOICE_REQUESTS` is not `false`. It opens WhatsApp and creates a Supabase order when order storage is ready.
-- Stripe card checkout is hidden by default. It appears only when `ENABLE_STRIPE_CHECKOUT=true`, `STRIPE_SECRET_KEY` is set, and Supabase order storage is configured.
+- PayPal is shown only when PayPal credentials and Postgres order storage are both configured, and `ENABLE_PAYPAL_CHECKOUT` is not `false`.
+- Manual invoice is shown by default when `ENABLE_MANUAL_INVOICE_REQUESTS` is not `false`. It opens WhatsApp and creates a Postgres order when order storage is ready.
+- Stripe card checkout is hidden by default. It appears only when `ENABLE_STRIPE_CHECKOUT=true`, `STRIPE_SECRET_KEY` is set, and Postgres order storage is configured.
 - Product pages show direct checkout only when the artwork has a valid price, `allowCheckout` is not false, and availability is not sold or actively reserved.
 
 ## Health Checks
@@ -109,7 +108,7 @@ Listen for:
 ## Test Order
 
 1. Keep `PAYPAL_ENV=sandbox` locally until PayPal sandbox checkout passes.
-2. Add Supabase service role key to `.env.local`.
+2. Add a local `DATABASE_URL` to `.env.local`.
 3. Start the site with `npm run dev`.
 4. Add one available, priced artwork to cart and check out.
 5. Confirm an `orders` row is created with `pending_payment`.
