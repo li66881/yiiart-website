@@ -9,6 +9,7 @@ import ChatWidget from '@/components/ChatWidget'
 import CookieConsent from '@/components/CookieConsent'
 import MarketingPixels from '@/components/MarketingPixels'
 import VercelInsights from '@/components/VercelInsights'
+import { mediaUrl } from '@/lib/media'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
 
 export const metadata: Metadata = {
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
     ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
     : undefined,
   icons: {
-    icon: "/favicon.svg",
+    icon: mediaUrl("favicon.svg"),
   },
 }
 

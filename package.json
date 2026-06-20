@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "media:upload-r2": "node scripts/upload-r2-media.mjs"
   },
   "dependencies": {
     "@auth/core": "^0.41.0",

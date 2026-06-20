@@ -7,6 +7,7 @@ import { useLanguage } from "@/context/LanguageContext"
 import { useWishlist } from "@/context/WishlistContext"
 import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
+import { mediaUrl } from "@/lib/media"
 
 const primaryNav = [
   { href: "/artworks", key: "nav.explore" },
@@ -33,7 +34,7 @@ export default function Header() {
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" className="shrink-0" onClick={closeMobileMenu} aria-label="YiiArt home">
-            <img src="/brand/yiiart-logo.svg" alt="YiiArt" className="h-8 w-auto" />
+            <img src={mediaUrl("brand/yiiart-logo.svg")} alt="YiiArt" className="h-8 w-auto" />
           </Link>
 
           <nav className="hidden items-center gap-6 text-sm text-stone-700 lg:flex" aria-label="Primary navigation">
