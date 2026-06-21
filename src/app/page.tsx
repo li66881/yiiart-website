@@ -22,11 +22,15 @@ async function getData() {
       ...,
       artist->{name}
     }`)
+    const newArtworks = await client.fetch(`*[_type == "artwork"] | order(_createdAt desc)[0...8]{
+      ...,
+      artist->{name}
+    }`)
     const artists = await client.fetch(`*[_type == "artist"][0...6]`)
     const reviews = await getFeaturedReviews(6)
-    return { artworks, artists, reviews }
+    return { artworks, newArtworks, artists, reviews }
   } catch {
-    return { artworks: [], artists: [], reviews: [] }
+    return { artworks: [], newArtworks: [], artists: [], reviews: [] }
   }
 }
 
@@ -58,7 +62,7 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const { artworks, artists, reviews } = await getData()
+  const { artworks, newArtworks, artists, reviews } = await getData()
   const heroArtwork = artworks.find(hasArtworkImage)
   const heroImage = getArtworkImageUrl(heroArtwork, { width: 1800, height: 1200 })
   const featuredArtworks = artworks.slice(0, 8)
@@ -169,13 +173,39 @@ export default async function Home() {
         </div>
       </section>
 
+      <section className="border-y border-stone-200 bg-[#fbfaf6] py-20">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+          <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">New arrivals</p>
+              <h2 className="text-4xl font-light">Recently added handmade paintings</h2>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
+                Fresh original canvas art for modern homes, large walls, bedrooms, entries, and quiet interior spaces.
+              </p>
+            </div>
+            <Link href="/artworks" className="text-sm underline underline-offset-4">
+              Browse all new works
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 lg:grid-cols-4">
+            {newArtworks.length > 0 ? newArtworks.map((artwork: any) => (
+              <ArtworkCard key={artwork._id} artwork={artwork} />
+            )) : (
+              <p className="col-span-full border-y border-stone-200 py-20 text-center text-stone-500">
+                New arrivals are being prepared.
+              </p>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="border-y border-stone-200 py-20">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
           <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
             <div>
-              <h2 className="text-4xl font-light">
-                <TranslatedText k="home.featuredArtworks" />
-              </h2>
+              <p className="mb-3 text-sm uppercase text-stone-500">Curator favorites</p>
+              <h2 className="text-4xl font-light">Featured by YiiArt</h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
                 <TranslatedText k="home.featuredArtworksDesc" />
               </p>
