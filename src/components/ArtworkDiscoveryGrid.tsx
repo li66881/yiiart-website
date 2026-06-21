@@ -184,6 +184,18 @@ function ArtworkTile({
         </div>
       </div>
       <div className="bg-white px-1 py-4">
+        <div className="mb-3 flex flex-wrap gap-1.5">
+          {artwork.handmade && (
+            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+              Handmade
+            </span>
+          )}
+          {artwork.customRequestAvailable && (
+            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+              Custom request
+            </span>
+          )}
+        </div>
         <p className="text-xs uppercase text-stone-500">
           {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
         </p>
@@ -196,7 +208,9 @@ function ArtworkTile({
             <PriceText amountCny={artwork.price} />
           </p>
         </div>
-        <p className="mt-3 text-xs text-stone-500">{artwork.dimensions}</p>
+        <p className="mt-3 border-y border-stone-200 py-2 text-sm font-medium text-stone-700">
+          {artwork.dimensions || "Size on request"}
+        </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {[artwork.size, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
             <span key={tag} className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">

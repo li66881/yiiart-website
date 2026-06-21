@@ -12,6 +12,15 @@ import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-disco
 
 export const revalidate = 600
 
+const internalCollectionLinks = [
+  { title: "Abstract Paintings", href: "/artworks?category=Abstract" },
+  { title: "Large Wall Art", href: "/collections/large-canvas-art" },
+  { title: "Textured Wall Art", href: "/collections/textured-wall-art" },
+  { title: "Neutral Wall Art", href: "/collections/neutral-canvas-art" },
+  { title: "Living Room Art", href: "/collections/abstract-art-for-living-room" },
+  { title: "Custom Paintings", href: "/custom-painting" },
+]
+
 async function getCollectionArtworks(slug: string) {
   const collection = getMarketingCollection(slug)
   if (!collection) return []
@@ -73,6 +82,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   if (!collection) notFound()
 
   const artworks = await getCollectionArtworks(slug)
+  const heroCopy = buildCollectionHeroCopy(collection)
   const artworkItems = artworks.map((artwork: any) => {
     const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
     return buildArtworkDiscoveryItem(artwork, imageUrl)
@@ -93,7 +103,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
                 <h1 className="text-5xl font-light leading-tight md:text-6xl">{collection.title}</h1>
               </div>
               <div>
-                <p className="max-w-2xl text-base leading-8 text-stone-600">{collection.intro}</p>
+                <p className="max-w-2xl text-base leading-8 text-stone-600">{heroCopy}</p>
                 <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                   <Link href="#available-works" className="bg-black px-6 py-4 text-center text-sm text-white transition hover:bg-stone-800">
                     Shop available works
@@ -119,21 +129,6 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
             {collection.rooms.map((room) => (
               <p key={room} className="border-l border-stone-300 pl-4">{room}</p>
             ))}
-          </div>
-        </section>
-
-        <section className="border-b border-stone-200 py-16">
-          <div className="mx-auto grid max-w-[1440px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.75fr_1fr] lg:px-10">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">How to choose</p>
-              <h2 className="text-4xl font-light leading-tight">Choose by wall size, room mood, and surface presence.</h2>
-              <p className="mt-5 text-sm leading-6 text-stone-600">{collection.sizeAdvice}</p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {collection.buyerGuide.map((item, index) => (
-                <Info key={item} title={`0${index + 1}`} text={item} />
-              ))}
-            </div>
           </div>
         </section>
 
@@ -176,6 +171,41 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           </div>
         </section>
 
+        <section className="border-b border-stone-200 bg-white py-16">
+          <div className="mx-auto grid max-w-[1440px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.75fr_1fr] lg:px-10">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Buying Guide</p>
+              <h2 className="text-4xl font-light leading-tight">How to choose {collection.shortTitle}</h2>
+              <p className="mt-5 text-sm leading-6 text-stone-600">{collection.sizeAdvice}</p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {collection.buyerGuide.map((item, index) => (
+                <Info key={item} title={`0${index + 1}`} text={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 py-14">
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+            <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+              <div>
+                <p className="mb-3 text-sm uppercase text-stone-500">Internal Links</p>
+                <h2 className="text-3xl font-light">Continue browsing by room, style, and custom needs</h2>
+              </div>
+              <Link href="/artworks" className="text-sm underline underline-offset-4">All artworks</Link>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {internalCollectionLinks.map((item) => (
+                <Link key={item.href} href={item.href} className="flex min-h-20 items-center justify-between border border-stone-200 bg-white px-5 py-4 transition hover:border-black">
+                  <span className="font-medium">{item.title}</span>
+                  <span className="text-sm text-stone-400">View</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="border-y border-stone-200 bg-white py-12">
           <div className="mx-auto grid max-w-[1440px] gap-6 px-4 sm:px-6 md:grid-cols-4 lg:px-10">
             <Info title="Original" text="No prints or editions in the main collection." />
@@ -211,6 +241,33 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
       <Footer />
     </div>
   )
+}
+
+function buildCollectionHeroCopy(collection: {
+  title: string
+  intro?: string
+  description?: string
+  sizeAdvice?: string
+  customPrompt?: string
+  rooms?: string[]
+}) {
+  const rooms = collection.rooms?.length ? collection.rooms.join(", ") : "living rooms, bedrooms, offices, and modern interiors"
+  const base = [
+    collection.intro || collection.description || `Explore ${collection.title} selected for modern interiors and original canvas art collectors.`,
+    collection.sizeAdvice || "Start with wall width, furniture scale, viewing distance, and the mood of the room before choosing a painting.",
+    `This collection is useful for ${rooms}, with attention to scale, surface, palette, and how the artwork will feel in daily use.`,
+    "Use the filters below to compare room fit, color family, size, and orientation without changing the collection URL.",
+    "Each product card leads to a detailed artwork page with dimensions, material notes, shipping guidance, and custom request options when you need a closer match.",
+    collection.customPrompt || "If a listed work is close but not exact, YiiArt can discuss a custom canvas based on your wall measurements and room photos.",
+  ].join(" ")
+
+  return trimWords(base, 180)
+}
+
+function trimWords(text: string, maxWords: number) {
+  const words = text.split(/\s+/).filter(Boolean)
+  if (words.length <= maxWords) return text
+  return `${words.slice(0, maxWords).join(" ")}.`
 }
 
 function Info({ title, text }: { title: string; text: string }) {

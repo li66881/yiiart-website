@@ -21,6 +21,8 @@ export type ArtworkDiscoveryItem = {
   colors: string[]
   size: string
   orientation: string
+  handmade: boolean
+  customRequestAvailable: boolean
 }
 
 export type ArtworkFilterGroup = {
@@ -103,6 +105,8 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     colors: unique(colors.length > 0 ? colors : inferColors(artwork, category)),
     size,
     orientation,
+    handmade: true,
+    customRequestAvailable: true,
   }
 }
 
