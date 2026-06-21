@@ -40,18 +40,18 @@ export async function generateMetadata() {
     const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
     return buildSeoMetadata({
-      title: "Original Chinese Art for Calm Modern Homes",
+      title: "Handmade Modern Paintings, Custom Canvas Art & Large Wall Art",
       description:
-        "Shop original hand-painted paintings by independent Chinese artists, with worldwide delivery, signed certificates, and a 30-day return window.",
+        "Shop YiiArt handmade modern paintings, custom canvas art, large wall art, and home interior art with worldwide delivery and room-size advice.",
       path: "/",
       image,
       imageAlt: artwork ? pickEnglish(artwork.title, "Original YiiArt painting") : undefined,
     })
   } catch {
     return buildSeoMetadata({
-      title: "Original Chinese Art for Calm Modern Homes",
+      title: "Handmade Modern Paintings, Custom Canvas Art & Large Wall Art",
       description:
-        "Shop original hand-painted paintings by independent Chinese artists, with worldwide delivery, signed certificates, and a 30-day return window.",
+        "Shop YiiArt handmade modern paintings, custom canvas art, large wall art, and home interior art with worldwide delivery and room-size advice.",
       path: "/",
     })
   }
