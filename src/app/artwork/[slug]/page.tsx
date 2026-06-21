@@ -148,6 +148,16 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const invoiceUrl = getWhatsAppUrl(
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
   )
+  const cartItem = {
+    id: artwork._id,
+    title,
+    titleZh: artwork.title?.zh,
+    artist: artistName,
+    artistId: artwork.artist?._id,
+    price: priceCny,
+    image: imageUrl,
+    size: dimensions,
+  }
   const offer: Record<string, any> = {
     "@type": "Offer",
     url: `${baseUrl}/artwork/${slug}`,
@@ -249,7 +259,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         category={category}
       />
 
-      <main className="flex-1 pb-16 pt-24">
+      <main className="flex-1 pb-28 pt-24 lg:pb-16">
         <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-10">
           <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-stone-500" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
@@ -369,18 +379,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
               <div className="mt-8 space-y-4">
                 {directCheckoutAvailable ? (
-                  <AddToCartButton
-                    item={{
-                      id: artwork._id,
-                      title,
-                      titleZh: artwork.title?.zh,
-                      artist: artistName,
-                      artistId: artwork.artist?._id,
-                      price: priceCny,
-                      image: imageUrl,
-                      size: dimensions,
-                    }}
-                  />
+                  <AddToCartButton item={cartItem} />
                 ) : (
                   <div className="border border-stone-200 bg-[#fbfaf6] p-5">
                     <p className="font-medium">Confirm availability before checkout</p>
@@ -519,7 +518,61 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         </div>
       </main>
 
+      <MobileArtworkActionBar
+        directCheckoutAvailable={directCheckoutAvailable}
+        cartItem={cartItem}
+        invoiceUrl={invoiceUrl}
+        whatsappUrl={whatsappUrl}
+      />
       <Footer />
+    </div>
+  )
+}
+
+function MobileArtworkActionBar({
+  directCheckoutAvailable,
+  cartItem,
+  invoiceUrl,
+  whatsappUrl,
+}: {
+  directCheckoutAvailable: boolean
+  cartItem: {
+    id: string
+    title: string
+    titleZh?: string
+    artist: string
+    artistId?: string
+    price: number
+    image: string
+    size?: string
+  }
+  invoiceUrl: string
+  whatsappUrl: string
+}) {
+  return (
+    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] backdrop-blur lg:hidden">
+      <div className="grid grid-cols-2 gap-3">
+        {directCheckoutAvailable ? (
+          <AddToCartButton item={cartItem} />
+        ) : (
+          <a
+            href={invoiceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-black px-3 py-4 text-center text-sm font-medium text-white transition hover:bg-stone-800"
+          >
+            Request invoice
+          </a>
+        )}
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="border border-black px-3 py-4 text-center text-sm font-medium transition hover:bg-black hover:text-white"
+        >
+          Ask on WhatsApp
+        </a>
+      </div>
     </div>
   )
 }
