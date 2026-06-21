@@ -115,6 +115,16 @@ export default function AdminPage() {
       detail: "Ready when Resend, SendGrid, or Sanity subscriber storage is configured.",
     },
     {
+      label: "R2 media domain",
+      ready: status.r2MediaPublic,
+      detail: "Serves static media from Cloudflare R2 through assets.yiiart.com.",
+    },
+    {
+      label: "R2 media upload",
+      ready: status.r2MediaUpload,
+      detail: "Required for uploads into the yiiart-assets R2 bucket.",
+    },
+    {
       label: "GA4 analytics",
       ready: status.analytics,
       detail: "Required for Google Analytics traffic reports.",

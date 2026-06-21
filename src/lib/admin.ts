@@ -18,6 +18,21 @@ export function getAdminConfigStatus() {
     paypalConfigured: payment.paypal.configured,
     paypalWebhook: payment.paypal.webhookConfigured,
     newsletter: Boolean(process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY || process.env.SANITY_WRITE_TOKEN),
+    r2MediaPublic: Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_ASSET_BASE_URL || process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://assets.yiiart.com"),
+    r2MediaUpload: Boolean(
+      (
+        process.env.CLOUDFLARE_R2_ACCOUNT_ID
+        || process.env.CLOUDFLARE_ACCOUNT_ID
+      )
+      && (
+        process.env.CLOUDFLARE_R2_BUCKET
+        || process.env.R2_BUCKET_NAME
+      )
+      && (
+        (process.env.CLOUDFLARE_R2_ACCESS_KEY_ID && process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY)
+        || process.env.CLOUDFLARE_API_TOKEN
+      )
+    ),
     analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID),
     socialPixels: Boolean(process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID),
   }
