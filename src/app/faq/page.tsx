@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { faqItems, returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -14,26 +15,62 @@ export default function FAQPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen py-16 px-4">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-medium mb-8 text-center">FAQ</h1>
-          <div className="bg-white border">
-            {[
-              { q: "How long does shipping take?", a: "Standard shipping takes 7-14 business days worldwide. Express shipping is available for an additional fee." },
-              { q: "What is your return policy?", a: "We offer a 30-day trial period. If you are not satisfied, full refunds are available. The artwork must be returned in original condition." },
-              { q: "Are the artworks original?", a: "Yes, all artworks are 100% original and come with a signed certificate of authenticity." },
-              { q: "How is the artwork shipped?", a: "Artworks are carefully packaged and shipped flat or rolled in a protective tube, depending on the size and medium." },
-              { q: "Can I commission a custom artwork?", a: "Yes, contact us to discuss commissioning a custom piece from our artists." },
-            ].map((item, i) => (
-              <div key={i} className="border-b last:border-b-0 p-6">
-                <h3 className="font-medium mb-2">{item.q}</h3>
-                <p className="text-gray-600">{item.a}</p>
-              </div>
+      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-28 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-[1180px]">
+          <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Help center</p>
+              <h1 className="text-5xl font-light leading-tight">Artwork buying FAQ</h1>
+            </div>
+            <p className="max-w-3xl text-base leading-8 text-stone-600">
+              Clear answers for buying original handmade paintings, custom canvas art, shipping, returns, and room-size advice.
+            </p>
+          </section>
+
+          <section className="grid gap-5 py-14 md:grid-cols-4">
+            {trustPrinciples.map((item) => (
+              <Info key={item.title} title={item.title} text={item.text} />
             ))}
-          </div>
+          </section>
+
+          <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Common questions</p>
+              <h2 className="text-4xl font-light leading-tight">Before you choose a painting</h2>
+            </div>
+            <div className="divide-y divide-stone-200 border-y border-stone-200">
+              {faqItems.map((item) => (
+                <details key={item.question} className="group py-5">
+                  <summary className="cursor-pointer list-none font-medium">
+                    <span className="inline-flex w-full items-center justify-between gap-4">
+                      {item.question}
+                      <span className="text-stone-400 group-open:hidden">+</span>
+                      <span className="hidden text-stone-400 group-open:inline">-</span>
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-6 text-stone-600">{item.answer}</p>
+                </details>
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-5 py-14 md:grid-cols-2 lg:grid-cols-4">
+            {[...shippingHighlights, ...returnHighlights].slice(0, 4).map((item) => (
+              <Info key={item.title} title={item.title} text={item.text} />
+            ))}
+          </section>
         </div>
       </main>
       <Footer />
     </>
+  )
+}
+
+function Info({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="border-t border-stone-300 pt-5">
+      <h2 className="font-medium">{title}</h2>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{text}</p>
+    </div>
   )
 }

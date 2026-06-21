@@ -4,6 +4,7 @@ import Footer from "@/components/Footer"
 import ReviewCard from "@/components/ReviewCard"
 import ReviewTrustBadge from "@/components/ReviewTrustBadge"
 import { contactEmail } from "@/lib/site"
+import { trustPrinciples } from "@/lib/policy-content"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getFeaturedReviews } from "@/lib/reviews"
 
@@ -15,21 +16,6 @@ export const metadata: Metadata = buildSeoMetadata({
     "Learn how YiiArt connects collectors with independent artists through original hand-painted works, artist-first pricing, and worldwide delivery.",
   path: "/about",
 })
-
-const principles = [
-  {
-    title: "Hand-painted originals",
-    text: "YiiArt does not sell prints or reproductions. Every listed work is a physical painting on canvas by the named artist.",
-  },
-  {
-    title: "Artists first",
-    text: "80% of the artwork price goes directly to the artist. The remainder supports curation, documentation, packaging, customer care, and logistics.",
-  },
-  {
-    title: "Collector support",
-    text: "Sizing, framing, room fit, color confidence, international delivery, and returns are handled before and after checkout.",
-  },
-]
 
 export default async function AboutPage() {
   const reviews = await getFeaturedReviews(3)
@@ -57,8 +43,8 @@ export default async function AboutPage() {
             </div>
           </section>
 
-          <section className="grid gap-5 py-14 md:grid-cols-3">
-            {principles.map((item) => (
+          <section className="grid gap-5 py-14 md:grid-cols-4">
+            {trustPrinciples.map((item) => (
               <div key={item.title} className="border-t border-stone-300 pt-5">
                 <h2 className="text-xl font-medium">{item.title}</h2>
                 <p className="mt-3 text-sm leading-6 text-stone-600">{item.text}</p>

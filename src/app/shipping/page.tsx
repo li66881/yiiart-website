@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { shippingHighlights } from "@/lib/policy-content"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -14,60 +15,57 @@ export default function ShippingPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen py-16 px-4">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-medium mb-8 text-center">Shipping Information</h1>
-          <div className="bg-white p-8 border space-y-6">
-            <p className="text-gray-600">
-              YiiArt ships original artworks internationally with protective packaging and tracking. Final delivery time can vary by destination, customs review, and carrier conditions.
+      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-28 sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-[1180px]">
+          <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Shipping</p>
+              <h1 className="text-5xl font-light leading-tight">Shipping original artwork safely.</h1>
+            </div>
+            <p className="max-w-3xl text-base leading-8 text-stone-600">
+              YiiArt ships original paintings internationally with protective packaging and tracking when available.
+              Final timing depends on preparation, destination, customs review, and carrier conditions.
             </p>
+          </section>
+
+          <section className="grid gap-5 py-14 md:grid-cols-2 lg:grid-cols-4">
+            {shippingHighlights.map((item) => (
+              <Info key={item.title} title={item.title} text={item.text} />
+            ))}
+          </section>
+
+          <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
-              <h2 className="text-xl font-medium mb-3">Shipping Methods</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between gap-4">
-                  <span>Standard Shipping</span>
-                  <span className="text-green-600">Free</span>
-                </div>
-                <div className="flex justify-between gap-4">
-                  <span>Express Shipping</span>
-                  <span>Calculated at checkout</span>
-                </div>
-              </div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Timeline</p>
+              <h2 className="text-4xl font-light leading-tight">Preparation first, then carrier transit.</h2>
             </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Delivery Times</h2>
-              <ul className="space-y-2 text-gray-600">
-                <li>Standard: 7-14 business days worldwide after dispatch</li>
-                <li>Express: 3-5 business days where available</li>
-                <li>Artwork preparation: usually 5-7 business days before dispatch</li>
-              </ul>
+            <div className="grid gap-4">
+              <Timeline title="Artwork preparation" text="Final checks, documentation, packing, and dispatch preparation usually happen before carrier transit begins." />
+              <Timeline title="Standard international transit" text="Transit is often 7-14 business days after dispatch, but timing varies by destination and customs." />
+              <Timeline title="Oversized or custom work" text="Large canvas art and commissioned works may need extra production, drying, packing, or freight coordination time." />
             </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Packaging</h2>
-              <p className="text-gray-600">
-                All artworks are packaged with protective materials to reduce movement, moisture risk, and impact during transit. Large pieces may be shipped rolled in a tube when that is safer than framed shipment.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Customs and Duties</h2>
-              <p className="text-gray-600">
-                Import duties, VAT, customs fees, and local taxes are not included unless stated at checkout. These charges are set by the destination country and are the buyer's responsibility.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Damage in Transit</h2>
-              <p className="text-gray-600">
-                If a shipment arrives damaged, keep the packaging and contact us within 48 hours with photos of the artwork, box, and shipping label so we can open a carrier claim and arrange the next step.
-              </p>
-            </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Tracking</h2>
-              <p className="text-gray-600">Once shipped, you will receive a tracking number via email to monitor your delivery.</p>
-            </div>
-          </div>
+          </section>
         </div>
       </main>
       <Footer />
     </>
+  )
+}
+
+function Info({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="border-t border-stone-300 pt-5">
+      <h2 className="font-medium">{title}</h2>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{text}</p>
+    </div>
+  )
+}
+
+function Timeline({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="border border-stone-200 bg-white p-5">
+      <h3 className="font-medium">{title}</h3>
+      <p className="mt-2 text-sm leading-6 text-stone-600">{text}</p>
+    </div>
   )
 }
