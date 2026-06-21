@@ -135,6 +135,14 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const galleryImages = getArtworkImageUrls(artwork, { width: 1400 })
   const thumbnailImages = getArtworkImageUrls(artwork, { width: 240, height: 240 })
   const imageUrl = galleryImages[0] || ""
+  const artworkImageAlt = buildArtworkImageAlt({
+    title,
+    artistName,
+    category,
+    medium,
+    dimensions,
+    roomTypes,
+  })
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
@@ -285,7 +293,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             <div className="lg:sticky lg:top-28 lg:self-start">
               {imageUrl ? (
                 <div className="aspect-[4/5] overflow-hidden border border-stone-200 bg-white">
-                  <img src={imageUrl} alt={title} className="h-full w-full object-contain" />
+                  <img src={imageUrl} alt={artworkImageAlt} className="h-full w-full object-contain" />
                 </div>
               ) : (
                 <div className="flex aspect-[4/5] items-center justify-center border border-stone-200 bg-white text-stone-400">
@@ -297,7 +305,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 <div className="mt-4 grid grid-cols-4 gap-3">
                   {thumbnailImages.slice(1).map((thumbnailUrl, i) => (
                     <div key={thumbnailUrl} className="aspect-square overflow-hidden border border-stone-200 bg-white">
-                      <img src={thumbnailUrl} alt={`${title} detail ${i + 2}`} className="h-full w-full object-cover" />
+                      <img
+                        src={thumbnailUrl}
+                        alt={`${artworkImageAlt}, detail view ${i + 2}`}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                   ))}
                 </div>
@@ -589,6 +601,30 @@ function inferOrientation(dimensions?: string | null) {
   const [width, height] = numbers
   if (Math.abs(width - height) < 1) return "Square"
   return width > height ? "Landscape" : "Portrait"
+}
+
+function buildArtworkImageAlt({
+  title,
+  artistName,
+  category,
+  medium,
+  dimensions,
+  roomTypes,
+}: {
+  title: string
+  artistName: string
+  category?: string
+  medium?: string
+  dimensions?: string
+  roomTypes: string[]
+}) {
+  const artType = [category, medium].filter(Boolean).join(" ")
+  const scale = dimensions ? `${dimensions} canvas art` : "canvas art"
+  const roomFit = roomTypes.length > 0 ? ` for ${roomTypes.slice(0, 2).join(" and ")}` : " for home interiors"
+
+  return [`${title} by ${artistName}`, artType, scale + roomFit]
+    .filter(Boolean)
+    .join(", ")
 }
 
 function isArtworkDirectCheckoutAvailable(artwork: {
