@@ -41,7 +41,7 @@ export default function ShippingPage() {
             </div>
             <div className="grid gap-4">
               <Timeline title="Artwork preparation" text="Final checks, documentation, packing, and dispatch preparation usually happen before carrier transit begins." />
-              <Timeline title="Standard international transit" text="Transit is often 7-14 business days after dispatch, but timing varies by destination and customs." />
+              <Timeline title="International transit" text="Transit timing varies by destination, customs, carrier route, and artwork shipping format." />
               <Timeline title="Oversized or custom work" text="Large canvas art and commissioned works may need extra production, drying, packing, or freight coordination time." />
             </div>
           </section>

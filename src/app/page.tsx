@@ -79,7 +79,7 @@ const faqs = [
   },
   {
     question: "How long does shipping take?",
-    answer: "Timing depends on artwork preparation, size, destination, carrier route, and customs. International transit is often 7-14 business days after dispatch, but exact timing is confirmed per order.",
+    answer: "Timing depends on artwork preparation, size, destination, carrier route, and customs. YiiArt confirms available shipping guidance for the specific order before dispatch.",
   },
   {
     question: "What if the artwork arrives damaged?",

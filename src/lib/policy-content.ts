@@ -66,7 +66,7 @@ export const faqItems = [
   },
   {
     question: "How long does shipping take?",
-    answer: "Delivery time depends on preparation, carrier route, destination, and customs. Standard international transit is often 7-14 business days after dispatch, but timing is not guaranteed.",
+    answer: "Delivery time depends on preparation, carrier route, destination, customs, and carrier conditions. YiiArt confirms available shipping guidance for the specific order before dispatch.",
   },
   {
     question: "How is artwork packaged?",

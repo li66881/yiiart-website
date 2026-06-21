@@ -16,6 +16,7 @@ const routes = [
   { path: '/about', priority: 0.6 },
   { path: '/contact', priority: 0.6 },
   { path: '/faq', priority: 0.5 },
+  { path: '/shipping-returns', priority: 0.6 },
   { path: '/shipping', priority: 0.5 },
   { path: '/returns', priority: 0.5 },
   { path: '/privacy', priority: 0.3 },

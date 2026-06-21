@@ -604,13 +604,14 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 separate terms confirmed before production.
               </p>
               <div className="mt-5 flex flex-wrap gap-4 text-sm">
+                <Link href="/shipping-returns" className="underline underline-offset-4">Read Shipping & Returns</Link>
                 <Link href="/shipping" className="underline underline-offset-4">Read full Shipping page</Link>
                 <Link href="/returns" className="underline underline-offset-4">Read full Returns page</Link>
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <InfoBlock title="Processing time" text={shippingProfile || "Final checks and packaging are confirmed before dispatch."} />
-              <InfoBlock title="Shipping time" text="International transit is often 7-14 business days after dispatch, depending on destination, customs, and carrier route." />
+              <InfoBlock title="Shipping time" text="Transit timing depends on destination, customs, carrier route, and the safest shipping format for the artwork." />
               <InfoBlock title="Returns and damage" text="Keep all packaging if the artwork arrives damaged, then contact YiiArt promptly with photos for review." />
             </div>
           </section>
@@ -764,7 +765,7 @@ function ArtworkDetails({
     { label: "Handmade note", value: "Original hand-painted artwork, not a mass-produced print." },
     framingNotes ? { label: "Frame option", value: framingNotes } : null,
     { label: "Processing time", value: shippingProfile || "Final checks, documentation, and packing are confirmed before dispatch." },
-    { label: "Shipping time", value: "International transit is often 7-14 business days after dispatch, depending on destination and customs." },
+    { label: "Shipping time", value: "Transit timing depends on destination, customs, carrier route, and the safest shipping format for the artwork." },
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
 
