@@ -37,6 +37,9 @@ export default function Footer() {
           <div className="grid gap-8 sm:grid-cols-3">
             <FooterColumn title={t("footer.shop")}>
               <FooterLink href="/artworks">{t("footer.allArtworks")}</FooterLink>
+              <FooterLink href="/custom-painting">Custom Painting</FooterLink>
+              <FooterLink href="/size-guide">Size Guide</FooterLink>
+              <FooterLink href="/collections/large-canvas-art">Large Wall Art</FooterLink>
               <FooterLink href="/artworks?category=Abstract">{t("footer.abstract")}</FooterLink>
               <FooterLink href="/artworks?category=Texture">{t("footer.texture")}</FooterLink>
               <FooterLink href="/collections/abstract-art-for-living-room">{t("footer.livingRoomArt")}</FooterLink>

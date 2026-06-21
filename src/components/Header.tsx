@@ -10,10 +10,12 @@ import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
 
 const primaryNav = [
-  { href: "/artworks", key: "nav.explore" },
-  { href: "/artists", key: "nav.artists" },
-  { href: "/artworks?category=Abstract", key: "nav.abstract" },
-  { href: "/artworks?category=Texture", key: "nav.texture" },
+  { href: "/artworks", label: "Shop Art" },
+  { href: "/collections/large-canvas-art", label: "Large Wall Art" },
+  { href: "/custom-painting", label: "Custom Painting" },
+  { href: "/size-guide", label: "Size Guide" },
+  { href: "/reviews", label: "Reviews" },
+  { href: "/artists", label: "Artists" },
 ]
 
 export default function Header() {
@@ -31,6 +33,9 @@ export default function Header() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-stone-200 bg-[#fbfaf6]/92 backdrop-blur-xl">
+      <div className="bg-stone-950 px-4 py-2 text-center text-xs text-white sm:text-sm">
+        Handmade modern paintings, custom canvas art, free worldwide shipping, and 30-day returns.
+      </div>
       <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" className="shrink-0" onClick={closeMobileMenu} aria-label="YiiArt home">
@@ -40,7 +45,7 @@ export default function Header() {
           <nav className="hidden items-center gap-6 text-sm text-stone-700 lg:flex" aria-label="Primary navigation">
             {primaryNav.map((item) => (
               <Link key={item.href} href={item.href} className="transition hover:text-black">
-                {t(item.key)}
+                {item.label}
               </Link>
             ))}
           </nav>
@@ -154,7 +159,7 @@ export default function Header() {
           <nav className="grid gap-1 text-base" aria-label="Mobile navigation">
             {primaryNav.map((item) => (
               <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
-                {t(item.key)}
+                {item.label}
               </Link>
             ))}
             <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">

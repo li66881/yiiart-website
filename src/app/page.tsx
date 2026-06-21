@@ -74,6 +74,40 @@ export default async function Home() {
 
       <TrustSection />
 
+      <section className="border-b border-stone-200 bg-white py-16">
+        <div className="mx-auto grid max-w-[1440px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.75fr_1fr] lg:px-10">
+          <div>
+            <p className="mb-3 text-sm uppercase text-stone-500">Custom canvas art</p>
+            <h2 className="text-4xl font-light leading-tight md:text-5xl">
+              Commission a handmade painting for your exact wall.
+            </h2>
+          </div>
+          <div>
+            <p className="max-w-3xl text-base leading-8 text-stone-600">
+              If you need a specific size, palette, or room mood, YiiArt can help turn your wall measurements,
+              reference photos, and preferred style into a custom original painting. Confirm the scope on WhatsApp
+              before any payment decision.
+            </p>
+            <div className="mt-8 grid gap-3 md:grid-cols-3">
+              {["Share wall size and room photos", "Confirm style, palette, and timeline", "Approve details before production"].map((step, index) => (
+                <div key={step} className="border-t border-stone-300 pt-4">
+                  <p className="text-sm text-stone-400">0{index + 1}</p>
+                  <p className="mt-3 text-sm font-medium text-stone-950">{step}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/custom-painting" className="bg-black px-6 py-4 text-center text-sm text-white transition hover:bg-stone-800">
+                Start a custom painting
+              </Link>
+              <Link href="/size-guide" className="border border-stone-300 px-6 py-4 text-center text-sm transition hover:border-black">
+                Check size guide
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="border-b border-stone-200 py-20">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
           <div className="mb-10 grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
