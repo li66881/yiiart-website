@@ -19,13 +19,19 @@ export function getArtworkImageUrl(artwork: any, options: ImageUrlOptions = {}) 
 }
 
 export function getArtworkImageUrls(artwork: any, options: ImageUrlOptions = {}) {
+  const sanityImageUrls = getSanityImageUrls(artwork?.images, options)
+
+  if ((options.width || options.height) && sanityImageUrls.length > 0) {
+    return sanityImageUrls
+  }
+
   const cloudflareImages = getCloudflareImages(artwork)
 
   if (cloudflareImages.length > 0) {
     return cloudflareImages.map((image) => image.url!).filter(Boolean)
   }
 
-  return getSanityImageUrls(artwork?.images, options)
+  return sanityImageUrls
 }
 
 export function hasArtworkImage(artwork: any) {
