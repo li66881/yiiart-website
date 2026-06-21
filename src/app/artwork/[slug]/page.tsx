@@ -25,7 +25,13 @@ import {
 import { buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
 import { getWhatsAppUrl } from "@/lib/site"
-import { productAdviceItems, productConfidenceItems } from "@/lib/storefront-content"
+import {
+  productAdviceItems,
+  productConfidenceItems,
+  productFaqItems,
+  productPackagingItems,
+  productProcessItems,
+} from "@/lib/storefront-content"
 
 export const revalidate = 600
 
@@ -298,6 +304,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 <p className="text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
                 <p className="mt-2 text-xs leading-5 text-stone-500"><PriceDisclosure /></p>
               </div>
+              <div className="mb-6 grid gap-2 text-sm text-stone-700">
+                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Handmade original painting, not a mass-produced print.</p>
+                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Ask for extra daylight photos or a room-size check before purchase.</p>
+                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Free worldwide shipping and a 30-day return window for eligible ready-made works.</p>
+              </div>
               <div className="mb-6 text-sm text-stone-600">
                 {reviewStats.count > 0 ? (
                   <div className="flex flex-wrap items-center gap-2">
@@ -418,6 +429,63 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   title={<TranslatedText k={`product.advice.${index}.title`} fallback={item.title} />}
                   text={<TranslatedText k={`product.advice.${index}.text`} fallback={item.text} />}
                 />
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Handmade modern painting</p>
+              <h2 className="text-3xl font-light">What YiiArt checks before this artwork ships</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                Buying original canvas art online should feel clear before payment. These checks help you confirm
+                surface, color, scale, and delivery format before the work reaches your home.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {productProcessItems.map((item) => (
+                <InfoBlock key={item.title} title={item.title} text={item.text} />
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Packaging and delivery</p>
+              <h2 className="text-3xl font-light">Prepared for canvas size, surface, and shipping safety</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                Shipping format depends on the artwork size and safest handling method. Oversized canvas art may ship
+                rolled, while smaller works can sometimes ship stretched or framed.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              {productPackagingItems.map((item) => (
+                <InfoBlock key={item.title} title={item.title} text={item.text} />
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Before you decide</p>
+              <h2 className="text-3xl font-light">Product questions collectors often ask</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                These answers are written for original handmade paintings, large wall art, custom canvas inquiries,
+                and home interior placement decisions.
+              </p>
+            </div>
+            <div className="divide-y divide-stone-200 border-y border-stone-200">
+              {productFaqItems.map((item) => (
+                <details key={item.question} className="group py-5">
+                  <summary className="cursor-pointer list-none font-medium">
+                    <span className="inline-flex w-full items-center justify-between gap-4">
+                      {item.question}
+                      <span className="text-stone-400 group-open:hidden">+</span>
+                      <span className="hidden text-stone-400 group-open:inline">-</span>
+                    </span>
+                  </summary>
+                  <p className="mt-3 text-sm leading-6 text-stone-600">{item.answer}</p>
+                </details>
               ))}
             </div>
           </section>
