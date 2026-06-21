@@ -28,12 +28,38 @@ import { getWhatsAppUrl } from "@/lib/site"
 import {
   productAdviceItems,
   productConfidenceItems,
-  productFaqItems,
   productPackagingItems,
   productProcessItems,
 } from "@/lib/storefront-content"
 
 export const revalidate = 600
+
+const trustItems = [
+  { title: "Secure payment", text: "Checkout and invoice options are handled through configured payment providers or YiiArt support." },
+  { title: "Worldwide shipping", text: "International delivery is prepared according to artwork size, surface, and destination." },
+  { title: "Carefully packaged", text: "Rolled, stretched, or flat packaging is selected for the safest practical handling." },
+  { title: "Damage protection", text: "Keep all packaging and send photos promptly if carrier damage is found on arrival." },
+  { title: "Handmade artwork", text: "YiiArt focuses on physical hand-painted works rather than mass-produced poster prints." },
+]
+
+const artworkPageFaqs = [
+  {
+    question: "Will the painting look exactly like the photo?",
+    answer: "Photos are prepared to show the artwork clearly, but screen color, daylight, and room lighting can change how color and texture appear. Ask for extra daylight photos or a short video before purchase if palette accuracy is important.",
+  },
+  {
+    question: "Can I request a custom size?",
+    answer: "Yes. Send your wall size, room photo, preferred orientation, and color direction. YiiArt can confirm whether a custom canvas is possible before production starts.",
+  },
+  {
+    question: "Is the painting handmade?",
+    answer: "Yes. YiiArt product pages are intended for original hand-painted artwork unless a listing clearly says otherwise.",
+  },
+  {
+    question: "What if it arrives damaged?",
+    answer: "Keep the artwork, box, inner packaging, and shipping label. Contact YiiArt promptly with clear photos so the damage support process can be reviewed.",
+  },
+]
 
 async function getArtwork(slug: string) {
   try {
@@ -67,6 +93,31 @@ async function getArtwork(slug: string) {
   } catch (error) {
     console.error("Artwork fetch error:", error)
     return null
+  }
+}
+
+async function getRelatedArtworks(artworkId: string, category?: string | null, medium?: string | null) {
+  try {
+    return await client.fetch(
+      `*[_type == "artwork" && _id != $artworkId && (
+        (defined($category) && category == $category) ||
+        (defined($medium) && medium == $medium)
+      )] | order(featured desc, _createdAt desc)[0...4]{
+        _id,
+        title,
+        slug,
+        artist->{name},
+        price,
+        dimensions,
+        medium,
+        category,
+        cloudflareImages,
+        images
+      }`,
+      { artworkId, category: category || null, medium: medium || null }
+    )
+  } catch {
+    return []
   }
 }
 
@@ -150,8 +201,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const reviews = await getArtworkReviews(artwork._id)
   const reviewStats = getReviewStats(reviews)
+  const relatedArtworks = await getRelatedArtworks(artwork._id, artwork.category, artwork.medium)
   const whatsappUrl = getWhatsAppUrl(
     `Hello YiiArt, I am interested in ${title}. Can you advise on size, framing, and shipping?`
+  )
+  const customRequestUrl = getWhatsAppUrl(
+    `Hello YiiArt, I need a custom size or color palette based on ${title}. Can I share my wall size and room photo?`
   )
   const invoiceUrl = getWhatsAppUrl(
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
@@ -326,6 +381,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 <p className="text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
                 <p className="mt-2 text-xs leading-5 text-stone-500"><PriceDisclosure /></p>
               </div>
+              <div className="mb-6 space-y-3">
+                <PurchaseOption label="Selected size" value={dimensions || "Confirm exact size before purchase"} />
+                {framingNotes && <PurchaseOption label="Frame option" value={framingNotes} />}
+              </div>
               <div className="mb-6 grid gap-2 text-sm text-stone-700">
                 <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Handmade original painting, not a mass-produced print.</p>
                 <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Ask for extra daylight photos or a room-size check before purchase.</p>
@@ -411,21 +470,46 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   </div>
                 )}
                 <a
-                  href={whatsappUrl}
+                  href={customRequestUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block w-full border border-black py-4 text-center transition hover:bg-black hover:text-white"
                 >
-                  <TranslatedText k="product.askWhatsApp" />
+                  Request Custom Size / Color
+                </a>
+                <a
+                  href={whatsappUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block w-full border border-stone-300 py-3 text-center text-sm transition hover:border-black"
+                >
+                  Ask on WhatsApp before purchase
                 </a>
                 <SocialShare title={title} image={imageUrl} />
               </div>
             </div>
           </div>
 
+          <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Artwork Details</p>
+              <h2 className="text-3xl font-light">Know the artwork before it enters your room</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                Product rows are shown when the current listing has enough information. For missing production details,
+                YiiArt confirms the safest format before dispatch or custom production.
+              </p>
+            </div>
+            <ArtworkDetails
+              medium={medium}
+              surfaceFinish={surfaceFinish}
+              framingNotes={framingNotes}
+              shippingProfile={shippingProfile}
+            />
+          </section>
+
           <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Size in the room</p>
+              <p className="mb-3 text-sm uppercase text-stone-500">Size & Room Guide</p>
               <h2 className="text-3xl font-light">Check the scale before you choose</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
                 Use this as a practical starting point for sofas, beds, entryways, and feature walls. For exact advice,
@@ -440,13 +524,20 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">
-                <TranslatedText k="product.supportEyebrow" />
-              </p>
-              <h2 className="text-3xl font-light"><TranslatedText k="product.confirmTitle" /></h2>
+              <p className="mb-3 text-sm uppercase text-stone-500">Customization</p>
+              <h2 className="text-3xl font-light">Need a custom size, color palette, or matching artwork for your room?</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
-                <TranslatedText k="product.confirmText" />
+                Send your wall width, ceiling height, room photo, and preferred palette. YiiArt can help confirm whether
+                this artwork fits as listed or whether a custom painting is a better path.
               </p>
+              <a
+                href={customRequestUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 inline-flex bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800"
+              >
+                Request Custom Painting
+              </a>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               {productAdviceItems.map((item, index) => (
@@ -455,6 +546,18 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   title={<TranslatedText k={`product.advice.${index}.title`} fallback={item.title} />}
                   text={<TranslatedText k={`product.advice.${index}.text`} fallback={item.text} />}
                 />
+              ))}
+            </div>
+          </section>
+
+          <section className="mt-16 border-t border-stone-200 pt-12">
+            <div className="mb-8">
+              <p className="mb-3 text-sm uppercase text-stone-500">Trust Block</p>
+              <h2 className="text-3xl font-light">A safer way to buy handmade artwork online</h2>
+            </div>
+            <div className="grid gap-4 md:grid-cols-5">
+              {trustItems.map((item) => (
+                <InfoBlock key={item.title} title={item.title} text={item.text} />
               ))}
             </div>
           </section>
@@ -491,9 +594,30 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             </div>
           </section>
 
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Shipping & Returns Summary</p>
+              <h2 className="text-3xl font-light">Short version before checkout</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                Most ready-made works are prepared with protective packaging and international delivery support.
+                Eligible ready-made artworks can request returns within the stated policy window; custom work may have
+                separate terms confirmed before production.
+              </p>
+              <div className="mt-5 flex flex-wrap gap-4 text-sm">
+                <Link href="/shipping" className="underline underline-offset-4">Read full Shipping page</Link>
+                <Link href="/returns" className="underline underline-offset-4">Read full Returns page</Link>
+              </div>
+            </div>
+            <div className="grid gap-4 md:grid-cols-3">
+              <InfoBlock title="Processing time" text={shippingProfile || "Final checks and packaging are confirmed before dispatch."} />
+              <InfoBlock title="Shipping time" text="International transit is often 7-14 business days after dispatch, depending on destination, customs, and carrier route." />
+              <InfoBlock title="Returns and damage" text="Keep all packaging if the artwork arrives damaged, then contact YiiArt promptly with photos for review." />
+            </div>
+          </section>
+
           <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Before you decide</p>
+              <p className="mb-3 text-sm uppercase text-stone-500">FAQ</p>
               <h2 className="text-3xl font-light">Product questions collectors often ask</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
                 These answers are written for original handmade paintings, large wall art, custom canvas inquiries,
@@ -501,7 +625,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </p>
             </div>
             <div className="divide-y divide-stone-200 border-y border-stone-200">
-              {productFaqItems.map((item) => (
+              {artworkPageFaqs.map((item) => (
                 <details key={item.question} className="group py-5">
                   <summary className="cursor-pointer list-none font-medium">
                     <span className="inline-flex w-full items-center justify-between gap-4">
@@ -514,6 +638,30 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 </details>
               ))}
             </div>
+          </section>
+
+          <section className="mt-16 border-t border-stone-200 pt-12">
+            <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
+              <div>
+                <p className="mb-3 text-sm uppercase text-stone-500">Related Products</p>
+                <h2 className="text-3xl font-light">Similar artworks to compare</h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
+                  Compare works with a similar style or medium before deciding on size, palette, and room fit.
+                </p>
+              </div>
+              <Link href="/artworks" className="text-sm underline underline-offset-4">View all artworks</Link>
+            </div>
+            {relatedArtworks.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {relatedArtworks.map((related: any) => (
+                  <RelatedArtworkCard key={related._id} artwork={related} />
+                ))}
+              </div>
+            ) : (
+              <p className="border-y border-stone-200 py-12 text-center text-stone-500">
+                Related artworks will appear here when similar product data is available.
+              </p>
+            )}
           </section>
 
           <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
@@ -587,6 +735,86 @@ function MobileArtworkActionBar({
       </div>
     </div>
   )
+}
+
+function PurchaseOption({ label, value }: { label: string; value: ReactNode }) {
+  return (
+    <div className="border border-stone-200 bg-[#fbfaf6] p-4">
+      <p className="text-xs uppercase text-stone-500">{label}</p>
+      <p className="mt-1 text-sm font-medium leading-6">{value}</p>
+    </div>
+  )
+}
+
+function ArtworkDetails({
+  medium,
+  surfaceFinish,
+  framingNotes,
+  shippingProfile,
+}: {
+  medium?: string
+  surfaceFinish?: string
+  framingNotes?: string
+  shippingProfile?: string
+}) {
+  const rows = [
+    medium ? { label: "Material", value: inferMaterial(medium) } : null,
+    medium ? { label: "Medium", value: medium } : null,
+    medium && /canvas/i.test(medium) ? { label: "Canvas type", value: "Artist canvas" } : null,
+    { label: "Handmade note", value: "Original hand-painted artwork, not a mass-produced print." },
+    framingNotes ? { label: "Frame option", value: framingNotes } : null,
+    { label: "Processing time", value: shippingProfile || "Final checks, documentation, and packing are confirmed before dispatch." },
+    { label: "Shipping time", value: "International transit is often 7-14 business days after dispatch, depending on destination and customs." },
+    surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {rows.map((row) => (
+        <Detail key={row.label} label={row.label} value={row.value} />
+      ))}
+    </div>
+  )
+}
+
+function RelatedArtworkCard({ artwork }: { artwork: any }) {
+  const href = `/artwork/${artwork.slug?.current || artwork._id}`
+  const image = getArtworkImageUrl(artwork, { width: 700, height: 900 })
+  const title = pickEnglish(artwork.title, "Untitled artwork")
+  const category = normalizeCategory(artwork.category)
+  const medium = normalizeMedium(artwork.medium)
+
+  return (
+    <Link href={href} className="group block">
+      <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+        {image ? (
+          <img
+            src={image}
+            alt={`${title}, related handmade artwork`}
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center border border-stone-200 bg-white text-stone-400">
+            Artwork image coming soon
+          </div>
+        )}
+      </div>
+      <div className="pt-4">
+        <p className="text-xs uppercase text-stone-500">{[category, medium].filter(Boolean).join(" / ")}</p>
+        <h3 className="mt-2 font-medium leading-snug">{title}</h3>
+        <div className="mt-2 flex items-center justify-between gap-3 text-sm">
+          <span className="text-stone-500">{formatDimensions(artwork.dimensions)}</span>
+          <span className="font-semibold"><PriceText amountCny={artwork.price} /></span>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
+function inferMaterial(medium: string) {
+  if (/canvas/i.test(medium)) return "Canvas"
+  if (/panel/i.test(medium)) return "Panel"
+  return medium
 }
 
 function normalizeList(value?: string[] | null) {
