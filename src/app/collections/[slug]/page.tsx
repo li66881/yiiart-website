@@ -7,7 +7,7 @@ import { client } from "@/lib/sanity"
 import { getMarketingCollection } from "@/lib/collections"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
-import { buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-discovery"
 
 export const revalidate = 600
@@ -66,13 +66,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const artworks = await getCollectionArtworks(slug)
   const artworkWithImage = artworks.find(hasArtworkImage)
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
+  const description = buildCollectionMetaDescription(collection)
 
   return buildSeoMetadata({
-    title: collection.title,
-    description: collection.description,
+    title: `${collection.title} for Modern Interiors`,
+    description,
     path: `/collections/${slug}`,
     image,
-    imageAlt: artworkWithImage ? pickEnglish(artworkWithImage.title, collection.title) : collection.title,
+    imageAlt: artworkWithImage ? `${pickEnglish(artworkWithImage.title, collection.title)} from ${collection.title}` : collection.title,
   })
 }
 
@@ -91,6 +92,20 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Artworks", path: "/artworks" },
+            { name: collection.title, path: `/collections/${slug}` },
+          ])),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(collection.faqs)) }}
+      />
       <main className="flex-1 pt-28">
         <section className="border-b border-stone-200 py-14">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
@@ -262,6 +277,15 @@ function buildCollectionHeroCopy(collection: {
   ].join(" ")
 
   return trimWords(base, 180)
+}
+
+function buildCollectionMetaDescription(collection: {
+  description: string
+  rooms?: string[]
+}) {
+  const base = collection.description.replace(/\.$/, "")
+  const rooms = collection.rooms?.length ? ` for ${collection.rooms.slice(0, 2).join(" and ")}` : ""
+  return `${base}${rooms}. Compare handmade paintings by size, room fit, palette, and custom canvas options.`
 }
 
 function trimWords(text: string, maxWords: number) {

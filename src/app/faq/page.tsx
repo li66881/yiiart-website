@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { faqItems, returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
-import { buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
   title: "Artwork Buying FAQ",
@@ -15,6 +15,19 @@ export default function FAQPage() {
   return (
     <>
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "FAQ", path: "/faq" },
+          ])),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqItems)) }}
+      />
       <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-28 sm:px-6 lg:px-10">
         <div className="mx-auto max-w-[1180px]">
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">

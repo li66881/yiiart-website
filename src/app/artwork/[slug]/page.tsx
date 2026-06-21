@@ -22,7 +22,7 @@ import {
   convertCnyToStoreAmount,
   getStoreCurrency,
 } from "@/lib/pricing"
-import { buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
 import { getWhatsAppUrl } from "@/lib/site"
 import {
@@ -136,9 +136,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const title = pickEnglish(artwork.title, "Original artwork")
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
+  const dimensions = formatDimensions(artwork.dimensions)
+  const category = normalizeCategory(artwork.category)
+  const medium = normalizeMedium(artwork.medium)
   const description =
     pickEnglish(artwork.description) ||
-    `${title} is an original hand-painted artwork by ${artistName}, available from YiiArt with worldwide delivery and a signed certificate.`
+    buildArtworkMetaDescription({
+      title,
+      artistName,
+      category,
+      medium,
+      dimensions,
+    })
   const imageUrl = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
   return buildSeoMetadata({
@@ -146,7 +155,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description,
     path: `/artwork/${slug}`,
     image: imageUrl,
-    imageAlt: `${title} by ${artistName}`,
+    imageAlt: `${title} by ${artistName}, original handmade artwork`,
   })
 }
 
@@ -238,21 +247,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         "@type": "DefinedRegion",
         addressCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
       },
-      deliveryTime: {
-        "@type": "ShippingDeliveryTime",
-        handlingTime: {
-          "@type": "QuantitativeValue",
-          minValue: 5,
-          maxValue: 7,
-          unitCode: "DAY",
-        },
-        transitTime: {
-          "@type": "QuantitativeValue",
-          minValue: 7,
-          maxValue: 14,
-          unitCode: "DAY",
-        },
-      },
     },
     hasMerchantReturnPolicy: {
       "@type": "MerchantReturnPolicy",
@@ -279,6 +273,16 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       name: "YiiArt",
     },
     category: category || "Original artwork",
+    material: medium ? inferMaterial(medium) : undefined,
+    size: dimensions || undefined,
+    additionalProperty: [
+      dimensions ? { "@type": "PropertyValue", name: "Dimensions", value: dimensions } : null,
+      medium ? { "@type": "PropertyValue", name: "Medium", value: medium } : null,
+      category ? { "@type": "PropertyValue", name: "Style", value: category } : null,
+      orientation ? { "@type": "PropertyValue", name: "Orientation", value: orientation } : null,
+      roomTypes.length > 0 ? { "@type": "PropertyValue", name: "Recommended rooms", value: roomTypes.join(", ") } : null,
+      colorFamilies.length > 0 ? { "@type": "PropertyValue", name: "Color palette", value: colorFamilies.join(", ") } : null,
+    ].filter(Boolean),
     offers: offer,
   }
 
@@ -312,6 +316,21 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Artworks", path: "/artworks" },
+            ...(category ? [{ name: category, path: `/artworks?category=${encodeURIComponent(category)}` }] : []),
+            { name: title, path: `/artwork/${slug}` },
+          ])),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(artworkPageFaqs)) }}
       />
       <ArtworkViewTracker
         id={artwork._id}
@@ -816,6 +835,24 @@ function inferMaterial(medium: string) {
   if (/canvas/i.test(medium)) return "Canvas"
   if (/panel/i.test(medium)) return "Panel"
   return medium
+}
+
+function buildArtworkMetaDescription({
+  title,
+  artistName,
+  category,
+  medium,
+  dimensions,
+}: {
+  title: string
+  artistName: string
+  category?: string
+  medium?: string
+  dimensions?: string
+}) {
+  const details = [category, medium, dimensions].filter(Boolean).join(", ")
+  const prefix = details ? `${title} is an original ${details} artwork` : `${title} is an original handmade artwork`
+  return `${prefix} by ${artistName}, selected for modern interiors with size guidance, worldwide shipping support, and custom canvas advice from YiiArt.`
 }
 
 function normalizeList(value?: string[] | null) {

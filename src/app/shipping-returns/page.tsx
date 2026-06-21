@@ -3,8 +3,7 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { contactEmail } from "@/lib/site"
-import { faqItems, returnHighlights, shippingHighlights } from "@/lib/policy-content"
-import { buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
   title: "Shipping & Returns",
@@ -96,6 +95,19 @@ export default function ShippingReturnsPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(buildBreadcrumbJsonLd([
+            { name: "Home", path: "/" },
+            { name: "Shipping & Returns", path: "/shipping-returns" },
+          ])),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(shippingReturnFaqs)) }}
+      />
       <main className="flex-1 pt-28">
         <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">

@@ -172,7 +172,7 @@ function ArtworkTile({
         {artwork.imageUrl ? (
           <img
             src={artwork.imageUrl}
-            alt={artwork.title}
+            alt={buildArtworkTileAlt(artwork, translateOption)}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
@@ -221,6 +221,21 @@ function ArtworkTile({
       </div>
     </Link>
   )
+}
+
+function buildArtworkTileAlt(
+  artwork: ArtworkDiscoveryItem,
+  translateOption: (option: string) => string
+) {
+  const details = [
+    translateOption(artwork.category),
+    translateOption(artwork.medium),
+    artwork.dimensions,
+  ].filter(Boolean).join(", ")
+
+  return details
+    ? `${artwork.title}, handmade artwork, ${details}`
+    : `${artwork.title}, handmade artwork by ${artwork.artistName}`
 }
 
 function toggleFilter(

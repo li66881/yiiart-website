@@ -6,7 +6,7 @@ import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
-import { buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
 
@@ -110,18 +110,18 @@ export async function generateMetadata() {
     const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
     return buildSeoMetadata({
-      title: "Handmade Modern Paintings for Beautiful Interiors",
+      title: "Handmade Modern Paintings & Custom Canvas Art",
       description:
-        "Shop handmade modern paintings, custom-size canvas art, large wall art, and modern decorative paintings for living rooms, bedrooms, offices, and design projects.",
+        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
       path: "/",
       image,
-      imageAlt: artwork ? pickEnglish(artwork.title, "Original YiiArt painting") : undefined,
+      imageAlt: artwork ? `${pickEnglish(artwork.title, "Original YiiArt painting")} by YiiArt` : undefined,
     })
   } catch {
     return buildSeoMetadata({
-      title: "Handmade Modern Paintings for Beautiful Interiors",
+      title: "Handmade Modern Paintings & Custom Canvas Art",
       description:
-        "Shop handmade modern paintings, custom-size canvas art, large wall art, and modern decorative paintings for living rooms, bedrooms, offices, and design projects.",
+        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
       path: "/",
     })
   }
@@ -136,6 +136,14 @@ export default async function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd([{ name: "Home", path: "/" }])) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+      />
 
       <HeroSection
         imageUrl={heroImage}
