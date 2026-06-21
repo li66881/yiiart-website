@@ -414,6 +414,21 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Size in the room</p>
+              <h2 className="text-3xl font-light">Check the scale before you choose</h2>
+              <p className="mt-4 text-sm leading-6 text-stone-600">
+                Use this as a practical starting point for sofas, beds, entryways, and feature walls. For exact advice,
+                send your wall width and a room photo on WhatsApp before purchase.
+              </p>
+              <Link href="/size-guide" className="mt-5 inline-flex text-sm underline underline-offset-4">
+                Read full size guide
+              </Link>
+            </div>
+            <ScaleGuidance dimensions={artwork.dimensions} roomTypes={roomTypes} title={title} />
+          </section>
+
+          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
+            <div>
               <p className="mb-3 text-sm uppercase text-stone-500">
                 <TranslatedText k="product.supportEyebrow" />
               </p>
@@ -549,6 +564,133 @@ function getSchemaAvailability(
   if (directCheckoutAvailable) return "https://schema.org/InStock"
   if (artwork.availability === "reserved") return "https://schema.org/LimitedAvailability"
   return "https://schema.org/LimitedAvailability"
+}
+
+function ScaleGuidance({
+  dimensions,
+  roomTypes,
+  title,
+}: {
+  dimensions?: string | null
+  roomTypes: string[]
+  title: string
+}) {
+  const parsed = parseDimensionsCm(dimensions)
+  const scale = getScaleProfile(parsed)
+  const rooms = roomTypes.length > 0 ? roomTypes.join(", ") : scale.rooms
+
+  return (
+    <div className="border border-stone-200 bg-white p-6">
+      <div className="grid gap-4 md:grid-cols-[0.7fr_1fr] md:items-end">
+        <div>
+          <p className="text-xs uppercase text-stone-500">Artwork scale</p>
+          <h3 className="mt-2 text-2xl font-light">{scale.label}</h3>
+          <p className="mt-2 text-sm text-stone-500">
+            {parsed ? `${Math.round(parsed.width)} x ${Math.round(parsed.height)} cm` : "Confirm exact dimensions"}
+          </p>
+        </div>
+        <div className="space-y-2">
+          <ScaleBar label="Accent" active={scale.rank >= 1} />
+          <ScaleBar label="Room anchor" active={scale.rank >= 2} />
+          <ScaleBar label="Feature wall" active={scale.rank >= 3} />
+          <ScaleBar label="Oversized statement" active={scale.rank >= 4} />
+        </div>
+      </div>
+
+      <div className="mt-6 grid gap-3 md:grid-cols-3">
+        {scale.placements.map((placement) => (
+          <div key={placement.title} className="border-t border-stone-200 pt-4">
+            <h4 className="font-medium">{placement.title}</h4>
+            <p className="mt-2 text-sm leading-6 text-stone-600">{placement.text}</p>
+          </div>
+        ))}
+      </div>
+
+      <p className="mt-6 border-t border-stone-200 pt-4 text-sm leading-6 text-stone-600">
+        {title} is best reviewed against your actual wall, furniture width, ceiling height, and viewing distance.
+        Recommended spaces: {rooms}.
+      </p>
+    </div>
+  )
+}
+
+function ScaleBar({ label, active }: { label: string; active: boolean }) {
+  return (
+    <div className="flex items-center gap-3 text-xs text-stone-500">
+      <span className={`h-2 flex-1 ${active ? "bg-stone-950" : "bg-stone-200"}`} />
+      <span className="w-32">{label}</span>
+    </div>
+  )
+}
+
+function parseDimensionsCm(dimensions?: string | null) {
+  if (!dimensions) return null
+  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
+  if (!numbers || numbers.length < 2) return null
+
+  let [width, height] = numbers
+  if (/mm/i.test(dimensions) || Math.max(width, height) > 300) {
+    width = width / 10
+    height = height / 10
+  }
+
+  return { width, height }
+}
+
+function getScaleProfile(dimensions: { width: number; height: number } | null) {
+  const longest = dimensions ? Math.max(dimensions.width, dimensions.height) : 90
+  const rank = longest >= 150 ? 4 : longest >= 110 ? 3 : longest >= 70 ? 2 : 1
+  const label = rank === 4 ? "Oversized statement" : rank === 3 ? "Large wall art" : rank === 2 ? "Medium room anchor" : "Small accent"
+
+  if (rank >= 4) {
+    return {
+      rank,
+      label,
+      rooms: "feature walls, open living rooms, offices, and hospitality spaces",
+      placements: [
+        { title: "Sofa wall", text: "Use when the sofa wall has generous breathing room on both sides." },
+        { title: "Bed wall", text: "Works best above wide headboards or in rooms with strong ceiling height." },
+        { title: "Shipping", text: "Confirm rolled, stretched, or freight handling before purchase." },
+      ],
+    }
+  }
+
+  if (rank === 3) {
+    return {
+      rank,
+      label,
+      rooms: "living rooms, bedrooms, dining rooms, and feature walls",
+      placements: [
+        { title: "Sofa wall", text: "A strong option when the artwork is roughly two-thirds of the sofa width." },
+        { title: "Bed wall", text: "Can anchor a queen or king headboard when centered with room around lamps." },
+        { title: "Entryway", text: "Best for wider entries or open hallways with viewing distance." },
+      ],
+    }
+  }
+
+  if (rank === 2) {
+    return {
+      rank,
+      label,
+      rooms: "bedrooms, entries, offices, reading corners, and smaller living rooms",
+      placements: [
+        { title: "Sofa wall", text: "Use above compact sofas or pair with another work for wider furniture." },
+        { title: "Bed wall", text: "Good for smaller beds, guest rooms, or layered bedroom styling." },
+        { title: "Entryway", text: "Fits spaces where viewers stand closer to the artwork." },
+      ],
+    }
+  }
+
+  return {
+    rank,
+    label,
+    rooms: "small walls, shelves, corners, entries, and grouped arrangements",
+    placements: [
+      { title: "Sofa wall", text: "Usually better as part of a pair or gallery grouping above larger furniture." },
+      { title: "Bed wall", text: "Works for narrow beds, side walls, or intimate corners." },
+      { title: "Entryway", text: "A practical accent for compact walls and close viewing." },
+    ],
+  }
 }
 
 function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
