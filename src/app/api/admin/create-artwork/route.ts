@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
 import { adminMutationError, createSlug, stringField, validateAdminPublishing } from "@/lib/admin"
+import { isR2Configured, uploadR2Object } from "@/lib/r2"
 
 export const runtime = "nodejs"
 
@@ -61,21 +62,43 @@ export async function POST(request: NextRequest) {
     )
     const slug = existing > 0 ? `${baseSlug}-${Date.now().toString().slice(-6)}` : baseSlug
     const images = []
+    const cloudflareImages = []
+    const useR2 = isR2Configured()
+    const imageAlt = titleEn || titleZh || "YiiArt artwork"
 
     for (const file of files) {
       const buffer = Buffer.from(await file.arrayBuffer())
-      const asset = await writeClient.assets.upload("image", buffer, {
-        filename: cleanFilename(file.name),
-      })
 
-      images.push({
-        _type: "image",
-        _key: asset._id.replace(/[^a-zA-Z0-9]/g, "").slice(-12),
-        asset: {
-          _type: "reference",
-          _ref: asset._id,
-        },
-      })
+      if (useR2) {
+        const uploaded = await uploadR2Object({
+          namespace: "artworks",
+          filename: file.name,
+          body: buffer,
+          contentType: file.type || "application/octet-stream",
+        })
+
+        cloudflareImages.push({
+          _type: "cloudflareAsset",
+          _key: sanityKey(uploaded.key),
+          url: uploaded.url,
+          key: uploaded.key,
+          alt: imageAlt,
+          contentType: uploaded.contentType,
+        })
+      } else {
+        const asset = await writeClient.assets.upload("image", buffer, {
+          filename: cleanFilename(file.name),
+        })
+
+        images.push({
+          _type: "image",
+          _key: asset._id.replace(/[^a-zA-Z0-9]/g, "").slice(-12),
+          asset: {
+            _type: "reference",
+            _ref: asset._id,
+          },
+        })
+      }
     }
 
     const artworkDoc = {
@@ -95,7 +118,8 @@ export async function POST(request: NextRequest) {
       shippingProfile: shippingProfile || undefined,
       seoKeywords: seoKeywords.length > 0 ? seoKeywords : undefined,
       socialCaption: socialCaption || undefined,
-      images,
+      images: images.length > 0 ? images : undefined,
+      cloudflareImages: cloudflareImages.length > 0 ? cloudflareImages : undefined,
       description: { zh: descriptionZh, en: descriptionEn },
       featured,
     }
@@ -128,6 +152,10 @@ function isUploadFile(value: FormDataEntryValue): value is File {
 
 function cleanFilename(filename: string) {
   return filename.replace(/[^\w.\-\u4e00-\u9fff]/g, "_")
+}
+
+function sanityKey(value: string) {
+  return value.replace(/[^a-zA-Z0-9]/g, "").slice(-12) || Date.now().toString(36)
 }
 
 function listField(form: FormData, name: string) {

@@ -1,4 +1,5 @@
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
+import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { pickEnglish } from "@/lib/artwork-display"
 import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
 
@@ -32,6 +33,7 @@ type ArtworkForCheckout = {
   availability?: "available" | "reserved" | "sold"
   allowCheckout?: boolean
   reservedUntil?: string
+  cloudflareImages?: unknown[]
   images?: unknown[]
 }
 
@@ -54,6 +56,7 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       availability,
       allowCheckout,
       reservedUntil,
+      cloudflareImages,
       images
     }`,
     { ids }
@@ -84,7 +87,7 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       id: item.id,
       title: pickEnglish(artwork.title, "YiiArt artwork"),
       artistName: pickEnglish(artwork.artist?.name, ""),
-      image: artwork.images?.[0] ? urlFor(artwork.images[0]).width(1000).url() : undefined,
+      image: getArtworkImageUrl(artwork, { width: 1000 }),
       price,
       quantity: item.quantity,
     }

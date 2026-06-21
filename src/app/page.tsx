@@ -9,6 +9,7 @@ import TranslatedText, { TranslatedOptionList } from "@/components/TranslatedTex
 import TrustSection from "@/components/TrustSection"
 import { client, urlFor } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getFeaturedReviews } from "@/lib/reviews"
 import { collectorJourney, storefrontCollectionTiles, type StorefrontCollectionTile } from "@/lib/storefront-content"
@@ -31,11 +32,12 @@ async function getData() {
 
 export async function generateMetadata() {
   try {
-    const artwork = await client.fetch(`*[_type == "artwork" && defined(images[0])] | order(featured desc, _createdAt desc)[0]{
+    const artwork = await client.fetch(`*[_type == "artwork" && (defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
       title,
+      cloudflareImages,
       images
     }`)
-    const image = artwork?.images?.[0] ? urlFor(artwork.images[0]).width(1200).height(630).url() : undefined
+    const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
     return buildSeoMetadata({
       title: "Original Chinese Art for Calm Modern Homes",
@@ -57,10 +59,8 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const { artworks, artists, reviews } = await getData()
-  const heroArtwork = artworks.find((artwork: any) => artwork.images?.[0])
-  const heroImage = heroArtwork?.images?.[0]
-    ? urlFor(heroArtwork.images[0]).width(1800).height(1200).url()
-    : undefined
+  const heroArtwork = artworks.find(hasArtworkImage)
+  const heroImage = getArtworkImageUrl(heroArtwork, { width: 1800, height: 1200 })
   const featuredArtworks = artworks.slice(0, 8)
 
   return (
@@ -246,7 +246,7 @@ export default async function Home() {
 
 function ArtworkCard({ artwork }: { artwork: any }) {
   const href = `/artwork/${artwork.slug?.current || artwork._id}`
-  const image = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).height(900).url() : undefined
+  const image = getArtworkImageUrl(artwork, { width: 700, height: 900 })
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
@@ -286,12 +286,11 @@ function ArtworkCard({ artwork }: { artwork: any }) {
 
 function collectionPreviewImage(collection: StorefrontCollectionTile, artworks: any[]) {
   const matched = artworks.find((artwork) => {
-    if (!artwork.images?.[0]) return false
+    if (!hasArtworkImage(artwork)) return false
     if (!collection.categories?.length) return true
     return collection.categories.includes(normalizeCategory(artwork.category))
   })
 
-  const fallback = artworks.find((artwork) => artwork.images?.[0])
-  const image = matched?.images?.[0] || fallback?.images?.[0]
-  return image ? urlFor(image).width(900).height(540).url() : undefined
+  const fallback = artworks.find(hasArtworkImage)
+  return getArtworkImageUrl(matched || fallback, { width: 900, height: 540 })
 }

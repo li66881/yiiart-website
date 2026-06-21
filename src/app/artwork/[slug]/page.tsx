@@ -9,7 +9,7 @@ import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
   formatDimensions,
@@ -17,6 +17,7 @@ import {
   normalizeMedium,
   pickEnglish,
 } from "@/lib/artwork-display"
+import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
 import {
   convertCnyToStoreAmount,
   getStoreCurrency,
@@ -51,6 +52,7 @@ async function getArtwork(slug: string) {
         availability,
         allowCheckout,
         reservedUntil,
+        cloudflareImages,
         images,
         description
       }`,
@@ -80,7 +82,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const description =
     pickEnglish(artwork.description) ||
     `${title} is an original hand-painted artwork by ${artistName}, available from YiiArt with worldwide delivery and a signed certificate.`
-  const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1200).height(630).url() : undefined
+  const imageUrl = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
   return buildSeoMetadata({
     title: buildArtworkSeoTitle(artwork),
@@ -124,7 +126,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const surfaceFinish = artwork.surfaceFinish || ""
   const framingNotes = artwork.framingNotes || ""
   const shippingProfile = artwork.shippingProfile || ""
-  const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(1400).url() : ""
+  const galleryImages = getArtworkImageUrls(artwork, { width: 1400 })
+  const thumbnailImages = getArtworkImageUrls(artwork, { width: 240, height: 240 })
+  const imageUrl = galleryImages[0] || ""
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
@@ -189,10 +193,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     "@context": "https://schema.org",
     "@type": "Product",
     name: buildArtworkSeoTitle(artwork),
-    image: (artwork.images || [])
-      .filter((img: any) => img?.asset?._ref || img?._type === "image")
-      .slice(0, 10)
-      .map((img: any) => urlFor(img).width(1400).url()),
+    image: galleryImages.slice(0, 10),
     description: description || `${title} is an original hand-painted artwork by ${artistName}.`,
     brand: {
       "@type": "Brand",
@@ -276,11 +277,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 </div>
               )}
 
-              {artwork.images?.length > 1 && (
+              {thumbnailImages.length > 1 && (
                 <div className="mt-4 grid grid-cols-4 gap-3">
-                  {artwork.images.slice(1).map((img: any, i: number) => (
-                    <div key={i} className="aspect-square overflow-hidden border border-stone-200 bg-white">
-                      <img src={urlFor(img).width(240).height(240).url()} alt={`${title} detail ${i + 2}`} className="h-full w-full object-cover" />
+                  {thumbnailImages.slice(1).map((thumbnailUrl, i) => (
+                    <div key={thumbnailUrl} className="aspect-square overflow-hidden border border-stone-200 bg-white">
+                      <img src={thumbnailUrl} alt={`${title} detail ${i + 2}`} className="h-full w-full object-cover" />
                     </div>
                   ))}
                 </div>

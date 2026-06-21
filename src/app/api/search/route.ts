@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl } from "@/lib/artwork-images"
 
 const MAX_QUERY_LENGTH = 80
 
@@ -31,6 +32,7 @@ export async function GET(request: Request) {
         dimensions,
         medium,
         category,
+        cloudflareImages,
         images
       }`,
       { wildcard }
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
       artist: pickEnglish(artwork.artist?.name, "YiiArt"),
       href: `/artwork/${artwork.slug?.current || artwork._id}`,
       price: Number(artwork.price || 0),
-      image: artwork.images?.[0] ? urlFor(artwork.images[0]).width(240).height(300).url() : "",
+      image: getArtworkImageUrl(artwork, { width: 240, height: 300 }) || "",
       meta: [normalizeCategory(artwork.category), normalizeMedium(artwork.medium), formatDimensions(artwork.dimensions)]
         .filter(Boolean)
         .join(" / "),

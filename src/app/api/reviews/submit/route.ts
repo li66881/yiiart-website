@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
+import { isR2Configured, uploadR2Object } from "@/lib/r2"
 
 export const runtime = "nodejs"
 
@@ -62,18 +63,40 @@ export async function POST(request: NextRequest) {
 
     const photoPermission = stringField(form, "photoPermission") === "on"
     const photos = []
+    const cloudflarePhotos = []
+    const useR2 = isR2Configured()
+    const photoAlt = `Collector photo for ${pickInviteArtworkTitle(invite)}`
 
     for (const file of form.getAll("photos").filter(isUploadFile)) {
       const buffer = Buffer.from(await file.arrayBuffer())
-      const asset = await writeClient.assets.upload("image", buffer, {
-        filename: cleanFilename(file.name),
-      })
-      photos.push({
-        _type: "image",
-        _key: asset._id.replace(/[^a-zA-Z0-9]/g, "").slice(-12),
-        asset: { _type: "reference", _ref: asset._id },
-        alt: `Collector photo for ${pickInviteArtworkTitle(invite)}`,
-      })
+
+      if (useR2) {
+        const uploaded = await uploadR2Object({
+          namespace: "reviews",
+          filename: file.name,
+          body: buffer,
+          contentType: file.type || "application/octet-stream",
+        })
+
+        cloudflarePhotos.push({
+          _type: "cloudflareAsset",
+          _key: sanityKey(uploaded.key),
+          url: uploaded.url,
+          key: uploaded.key,
+          alt: photoAlt,
+          contentType: uploaded.contentType,
+        })
+      } else {
+        const asset = await writeClient.assets.upload("image", buffer, {
+          filename: cleanFilename(file.name),
+        })
+        photos.push({
+          _type: "image",
+          _key: asset._id.replace(/[^a-zA-Z0-9]/g, "").slice(-12),
+          asset: { _type: "reference", _ref: asset._id },
+          alt: photoAlt,
+        })
+      }
     }
 
     const now = new Date().toISOString()
@@ -97,7 +120,8 @@ export async function POST(request: NextRequest) {
       reviewTitle,
       reviewText,
       roomType: stringField(form, "roomType") || "Other",
-      photos,
+      photos: photos.length > 0 ? photos : undefined,
+      cloudflarePhotos: cloudflarePhotos.length > 0 ? cloudflarePhotos : undefined,
       displayPermission,
       photoPermission,
       status: "pending",
@@ -157,6 +181,10 @@ function isUploadFile(value: FormDataEntryValue): value is File {
 
 function cleanFilename(filename: string) {
   return filename.replace(/[^\w.\-\u4e00-\u9fff]/g, "_")
+}
+
+function sanityKey(value: string) {
+  return value.replace(/[^a-zA-Z0-9]/g, "").slice(-12) || Date.now().toString(36)
 }
 
 function pickInviteArtworkTitle(invite: any) {

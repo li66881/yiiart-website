@@ -72,6 +72,13 @@ export default {
         },
       ],
     },
+    {
+      name: 'cloudflarePhotos',
+      title: 'Cloudflare collector photos',
+      type: 'array',
+      description: 'R2-hosted review photo metadata. The website prefers these URLs and falls back to Sanity photos.',
+      of: [{ type: 'cloudflareAsset' }],
+    },
     { name: 'videoUrl', title: 'Video URL', type: 'url' },
     { name: 'displayPermission', title: 'Display permission', type: 'boolean', initialValue: false },
     { name: 'photoPermission', title: 'Photo display permission', type: 'boolean', initialValue: false },

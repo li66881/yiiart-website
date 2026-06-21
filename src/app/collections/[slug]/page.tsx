@@ -3,9 +3,10 @@ import { notFound } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
 import { getMarketingCollection } from "@/lib/collections"
 import { pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-discovery"
 
@@ -54,10 +55,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const artworks = await getCollectionArtworks(slug)
-  const artworkWithImage = artworks.find((artwork: any) => artwork.images?.[0])
-  const image = artworkWithImage?.images?.[0]
-    ? urlFor(artworkWithImage.images[0]).width(1200).height(630).url()
-    : undefined
+  const artworkWithImage = artworks.find(hasArtworkImage)
+  const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
 
   return buildSeoMetadata({
     title: collection.title,
@@ -75,7 +74,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
   const artworks = await getCollectionArtworks(slug)
   const artworkItems = artworks.map((artwork: any) => {
-    const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
+    const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
     return buildArtworkDiscoveryItem(artwork, imageUrl)
   })
 

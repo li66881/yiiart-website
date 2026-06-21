@@ -2,7 +2,8 @@ import Link from "next/link"
 import ReviewStars from "@/components/ReviewStars"
 import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { formatDimensions, pickEnglish } from "@/lib/artwork-display"
-import { formatReviewDate, hasPermittedPhotos, isVerifiedCollector, reviewLocation, type PublicReview } from "@/lib/reviews"
+import { getReviewPhotoUrl } from "@/lib/review-images"
+import { formatReviewDate, getPermittedReviewPhotos, isVerifiedCollector, reviewLocation, type PublicReview } from "@/lib/reviews"
 
 type ReviewCardProps = {
   review: PublicReview
@@ -14,14 +15,15 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
   const artistName = pickEnglish(review.artist?.name, "YiiArt")
   const location = reviewLocation(review)
   const artworkHref = review.artwork?.slug?.current ? `/artwork/${review.artwork.slug.current}` : "/artworks"
-  const photo = hasPermittedPhotos(review) ? review.photos?.find((item) => item.asset?.url) : undefined
+  const photo = getPermittedReviewPhotos(review)[0]
+  const photoUrl = getReviewPhotoUrl(photo)
 
   return (
     <article className="border border-stone-200 bg-white p-5">
       <div className="flex items-start gap-4">
-        {photo?.asset?.url ? (
+        {photoUrl ? (
           <img
-            src={photo.asset.url}
+            src={photoUrl}
             alt={photo.alt || `${artworkTitle} in ${review.roomType || "a collector space"}`}
             className="h-20 w-20 flex-shrink-0 object-cover"
           />

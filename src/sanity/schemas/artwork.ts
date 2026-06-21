@@ -43,6 +43,10 @@ export default {
     { name: 'socialCaption', title: 'Social caption', type: 'text',
       description: 'Optional caption for Instagram, Pinterest, TikTok, or link-in-bio campaigns.'},
     { name: 'images', title: 'Images', type: 'array', of: [{ type: 'image', options: { hotspot: true } }]},
+    { name: 'cloudflareImages', title: 'Cloudflare images', type: 'array',
+      description: 'R2-hosted artwork image metadata. The website prefers these URLs and falls back to Sanity images.',
+      of: [{ type: 'cloudflareAsset' }],
+    },
     { name: 'description', title: 'Description', type: 'object', fields: [
         { name: 'zh', title: 'Chinese', type: 'text' },
         { name: 'en', title: 'English', type: 'text' },

@@ -5,6 +5,7 @@ import { PriceText } from "@/components/PriceText"
 import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const revalidate = 600
@@ -132,9 +133,9 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
                   <Link key={artwork._id} href={`/artwork/${artwork.slug?.current || artwork._id}`}>
                     <div className="group cursor-pointer">
                       <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
-                        {artwork.images?.[0] && (
+                        {getArtworkImageUrl(artwork, { width: 600 }) && (
                           <img
-                            src={urlFor(artwork.images[0]).width(600).url()}
+                            src={getArtworkImageUrl(artwork, { width: 600 })}
                             alt={pickEnglish(artwork.title, "Artwork")}
                             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />

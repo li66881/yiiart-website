@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { pickEnglish } from "@/lib/artwork-display"
-import { hasPermittedPhotos, reviewLocation, type PublicReview } from "@/lib/reviews"
+import { getReviewPhotoUrl } from "@/lib/review-images"
+import { getPermittedReviewPhotos, reviewLocation, type PublicReview } from "@/lib/reviews"
 
 type ReviewPhotoGridProps = {
   reviews: PublicReview[]
@@ -8,9 +9,7 @@ type ReviewPhotoGridProps = {
 
 export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
   const items = reviews.flatMap((review) => {
-    if (!hasPermittedPhotos(review)) return []
-    return (review.photos || [])
-      .filter((photo) => photo.asset?.url)
+    return getPermittedReviewPhotos(review)
       .map((photo) => ({ review, photo }))
   })
 
@@ -28,12 +27,13 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
         const artworkTitle = pickEnglish(review.artwork?.title, "YiiArt artwork")
         const artistName = pickEnglish(review.artist?.name, "YiiArt")
         const artworkHref = review.artwork?.slug?.current ? `/artwork/${review.artwork.slug.current}` : "/artworks"
+        const photoUrl = getReviewPhotoUrl(photo)
 
         return (
-          <article key={`${review._id}-${photo._key || photo.asset?.url}`} className="group">
+          <article key={`${review._id}-${photo._key || photoUrl}`} className="group">
             <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
               <img
-                src={photo.asset!.url!}
+                src={photoUrl}
                 alt={photo.alt || `${artworkTitle} in ${review.roomType || "a collector space"}`}
                 className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
               />

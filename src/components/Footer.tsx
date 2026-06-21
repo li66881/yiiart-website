@@ -6,6 +6,7 @@ import { useLanguage } from "@/context/LanguageContext"
 import NewsletterSignup from "@/components/NewsletterSignup"
 import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
+import { siteAssetUrl } from "@/lib/assets"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 
 export default function Footer() {
@@ -16,7 +17,7 @@ export default function Footer() {
       <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 lg:px-10">
         <div className="grid gap-10 border-b border-white/15 pb-10 lg:grid-cols-[1.2fr_2fr_1fr]">
           <div>
-            <img src="/brand/yiiart-logo-light.svg" alt="YiiArt" className="h-9 w-auto" />
+            <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-9 w-auto" />
             <p className="mt-5 max-w-xs text-sm leading-6 text-white/64">{t("footer.tagline")}</p>
             <div className="mt-5 space-y-2">
               <TrackableEmailLink email={contactEmail} className="block text-sm text-white/70 hover:text-white" leadType="footer_email">

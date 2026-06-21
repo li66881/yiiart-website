@@ -3,7 +3,8 @@ import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { ArtworksPageHeroCopy, CuratedPathsCopy, LivingRoomsLinkCopy } from "@/components/ArtworksPageCopy"
 import { StorefrontCollectionSummary } from "@/components/StorefrontCollectionCopy"
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
+import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
@@ -44,12 +45,12 @@ async function getCategoryArtworks(category?: string) {
 
 async function getSeoImage(category?: string) {
   const artworks = await getCategoryArtworks(category).catch(() => [])
-  const artworkWithImage = artworks.find((artwork: any) => artwork.images?.[0])
+  const artworkWithImage = artworks.find(hasArtworkImage)
 
-  if (!artworkWithImage?.images?.[0]) return undefined
+  if (!artworkWithImage) return undefined
 
   return {
-    image: urlFor(artworkWithImage.images[0]).width(1200).height(630).url(),
+    image: getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 }),
     alt: pickEnglish(artworkWithImage.title, "Original YiiArt painting"),
   }
 }
@@ -78,7 +79,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
   const activeCategory = normalizeCategory(params.category)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
-    const imageUrl = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
+    const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
     return buildArtworkDiscoveryItem(artwork, imageUrl)
   })
 

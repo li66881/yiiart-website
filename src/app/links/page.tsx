@@ -3,8 +3,9 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import SocialLinks from "@/components/SocialLinks"
 import { PriceText } from "@/components/PriceText"
-import { client, urlFor } from "@/lib/sanity"
+import { client } from "@/lib/sanity"
 import { formatDimensions, pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
@@ -24,6 +25,7 @@ async function getShareableArtworks() {
       slug,
       price,
       dimensions,
+      cloudflareImages,
       images
     }`)
   } catch {
@@ -84,7 +86,7 @@ export default async function LinksPage() {
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {artworks.length > 0 ? artworks.map((artwork: any) => {
                 const title = pickEnglish(artwork.title, "Original artwork")
-                const image = artwork.images?.[0] ? urlFor(artwork.images[0]).width(700).url() : undefined
+                const image = getArtworkImageUrl(artwork, { width: 700 })
 
                 return (
                   <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`} className="group">

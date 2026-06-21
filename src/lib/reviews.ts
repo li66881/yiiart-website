@@ -1,8 +1,13 @@
 import { client } from "@/lib/sanity"
+import { getReviewPhotoUrl } from "@/lib/review-images"
 
 export type ReviewPhoto = {
+  _type?: string
   _key?: string
+  key?: string
+  url?: string
   alt?: string
+  contentType?: string
   asset?: {
     _id?: string
     url?: string
@@ -26,6 +31,7 @@ export type PublicReview = {
   reviewText?: string
   roomType?: string
   photos?: ReviewPhoto[]
+  cloudflarePhotos?: ReviewPhoto[]
   photoPermission?: boolean
   featured?: boolean
   featuredOnHome?: boolean
@@ -38,6 +44,7 @@ export type PublicReview = {
     title?: { en?: string; zh?: string }
     slug?: { current?: string }
     dimensions?: string
+    cloudflareImages?: any[]
     images?: any[]
   }
   artist?: {
@@ -116,6 +123,13 @@ const reviewProjection = `{
     ...,
     asset->{_id, url}
   },
+  cloudflarePhotos[]{
+    _key,
+    key,
+    url,
+    alt,
+    contentType
+  },
   photoPermission,
   featured,
   featuredOnHome,
@@ -128,6 +142,7 @@ const reviewProjection = `{
     title,
     slug,
     dimensions,
+    cloudflareImages,
     images
   },
   artist->{
@@ -205,7 +220,12 @@ export function isVerifiedCollector(review: PublicReview) {
 }
 
 export function hasPermittedPhotos(review: PublicReview) {
-  return Boolean(review.photoPermission && review.photos?.some((photo) => photo.asset?.url))
+  return getPermittedReviewPhotos(review).length > 0
+}
+
+export function getPermittedReviewPhotos(review: PublicReview) {
+  if (!review.photoPermission) return []
+  return [...(review.cloudflarePhotos || []), ...(review.photos || [])].filter((photo) => getReviewPhotoUrl(photo))
 }
 
 export function reviewLocation(review: PublicReview) {
