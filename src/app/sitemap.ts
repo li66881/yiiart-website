@@ -11,6 +11,8 @@ const routes = [
   { path: '/reviews', priority: 0.8 },
   { path: '/art-in-real-homes', priority: 0.8 },
   { path: '/custom-painting', priority: 0.8 },
+  { path: '/guides', priority: 0.7 },
+  { path: '/guides/home-wall-art-pairing-guide', priority: 0.7 },
   { path: '/size-guide', priority: 0.7 },
   { path: '/artists', priority: 0.8 },
   { path: '/about', priority: 0.6 },

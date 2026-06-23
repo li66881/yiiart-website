@@ -63,6 +63,7 @@ const sizeBands = [
 ]
 
 const links = [
+  { title: "Wall Art Pairing Guide", href: "/guides/home-wall-art-pairing-guide" },
   { title: "Custom Painting", href: "/custom-painting" },
   { title: "Large Wall Art", href: "/collections/large-canvas-art" },
   { title: "Living Room Art", href: "/collections/abstract-art-for-living-room" },
@@ -144,7 +145,7 @@ export default function SizeGuidePage() {
               <p className="mb-3 text-sm uppercase text-stone-500">Helpful Links</p>
               <h2 className="text-4xl font-light leading-tight">Continue by room, scale, or custom size</h2>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
               {links.map((item) => (
                 <Link key={item.href} href={item.href} className="flex min-h-24 items-center justify-between border border-stone-200 bg-[#fbfaf6] px-5 py-4 transition hover:border-black hover:bg-white">
                   <span className="font-medium">{item.title}</span>

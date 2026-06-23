@@ -51,6 +51,7 @@ export default function Footer() {
               <FooterLink href="/contact">{t("footer.contactUs")}</FooterLink>
               <FooterLink href="/reviews">{t("footer.reviews")}</FooterLink>
               <FooterLink href="/art-in-real-homes">{t("footer.artInRealHomes")}</FooterLink>
+              <FooterLink href="/guides/home-wall-art-pairing-guide">Wall Art Guide</FooterLink>
               <FooterLink href="/faq">{t("footer.faq")}</FooterLink>
               <FooterLink href="/shipping-returns">Shipping & Returns</FooterLink>
               <FooterLink href="/shipping">{t("footer.shippingInfo")}</FooterLink>
