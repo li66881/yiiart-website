@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import './globals.css'
 import Providers from '@/components/SessionProvider'
 import { CartProvider } from '@/context/CartContext'
@@ -11,6 +12,8 @@ import MarketingPixels from '@/components/MarketingPixels'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
+
+const gaMeasurementId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -59,6 +62,46 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {gaMeasurementId && (
+          <>
+            <Script
+              id="yiiart-google-consent-default"
+              strategy="beforeInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('consent', 'default', {
+                    analytics_storage: 'denied',
+                    ad_storage: 'denied',
+                    ad_user_data: 'denied',
+                    ad_personalization: 'denied',
+                    wait_for_update: 500
+                  });
+                `,
+              }}
+            />
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+              strategy="afterInteractive"
+            />
+            <Script
+              id="yiiart-ga4-head"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `
+                  gtag('js', new Date());
+                  gtag('config', ${JSON.stringify(gaMeasurementId)}, {
+                    anonymize_ip: true,
+                    send_page_view: false
+                  });
+                `,
+              }}
+            />
+          </>
+        )}
+      </head>
       <body className="antialiased">
         <Providers>
           <LanguageProvider>

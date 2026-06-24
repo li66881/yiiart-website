@@ -33,7 +33,7 @@ export function getAdminConfigStatus() {
         || process.env.CLOUDFLARE_API_TOKEN
       )
     ),
-    analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID),
+    analytics: Boolean(process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID),
     socialPixels: Boolean(process.env.NEXT_PUBLIC_META_PIXEL_ID || process.env.NEXT_PUBLIC_PINTEREST_TAG_ID),
   }
 }

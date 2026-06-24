@@ -11,7 +11,7 @@ export default function MarketingPixels() {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
   const trackedUrlRef = useRef<string | null>(null)
   const pathname = usePathname()
-  const gaId = process.env.NEXT_PUBLIC_GA_ID
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
   const pinterestTagId = process.env.NEXT_PUBLIC_PINTEREST_TAG_ID
   const tiktokPixelId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID
@@ -31,16 +31,19 @@ export default function MarketingPixels() {
     if (!analyticsAllowed) return
 
     const currentUrl = window.location.href
-    if (trackedUrlRef.current === null) {
-      trackedUrlRef.current = currentUrl
-      return
+
+    if (gaId) {
+      const gtag = (window as Window & { gtag?: (...args: any[]) => void }).gtag
+      gtag?.("consent", "update", {
+        analytics_storage: "granted",
+      })
     }
 
     if (trackedUrlRef.current === currentUrl) return
 
     trackedUrlRef.current = currentUrl
     trackPageView(currentUrl)
-  }, [analyticsAllowed, pathname])
+  }, [analyticsAllowed, gaId, pathname])
 
   if (!analyticsAllowed) {
     return null
@@ -48,24 +51,6 @@ export default function MarketingPixels() {
 
   return (
     <>
-      {gaId && (
-        <>
-          <Script src={`https://www.googletagmanager.com/gtag/js?id=${gaId}`} strategy="afterInteractive" />
-          <Script
-            id="yiiart-ga4"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', ${JSON.stringify(gaId)}, { anonymize_ip: true });
-              `,
-            }}
-          />
-        </>
-      )}
-
       {metaPixelId && (
         <Script
           id="yiiart-meta-pixel"
