@@ -11,7 +11,7 @@ export default function MarketingPixels() {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
   const trackedUrlRef = useRef<string | null>(null)
   const pathname = usePathname()
-  const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID
+  const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "G-8B8R7YY67Q"
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
   const pinterestTagId = process.env.NEXT_PUBLIC_PINTEREST_TAG_ID
   const tiktokPixelId = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID
