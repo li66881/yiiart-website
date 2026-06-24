@@ -4,7 +4,7 @@ import Footer from "@/components/Footer"
 import { PriceText } from "@/components/PriceText"
 import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 
@@ -148,7 +148,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
                         />
                       </p>
                       <h3 className="mt-1 font-medium">{pickEnglish(artwork.title, "Untitled artwork")}</h3>
-                      <p className="text-sm text-gray-500">{formatDimensions(artwork.dimensions)}</p>
+                      <p className="text-sm text-gray-500">{formatArtworkDimensions(artwork)}</p>
                       <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                     </div>
                   </Link>

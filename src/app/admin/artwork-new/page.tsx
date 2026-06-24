@@ -32,6 +32,8 @@ export default function NewArtworkPage() {
   const [titleEn, setTitleEn] = useState("")
   const [price, setPrice] = useState("")
   const [dimensions, setDimensions] = useState("")
+  const [widthCm, setWidthCm] = useState("")
+  const [heightCm, setHeightCm] = useState("")
   const [medium, setMedium] = useState(mediums[0])
   const [category, setCategory] = useState(categories[0])
   const [roomTypes, setRoomTypes] = useState<string[]>([])
@@ -73,6 +75,8 @@ export default function NewArtworkPage() {
     formData.append("titleEn", titleEn)
     formData.append("price", price)
     formData.append("dimensions", dimensions)
+    formData.append("widthCm", widthCm)
+    formData.append("heightCm", heightCm)
     formData.append("medium", medium)
     formData.append("category", category)
     roomTypes.forEach((value) => formData.append("roomTypes", value))
@@ -173,6 +177,31 @@ export default function NewArtworkPage() {
                     </option>
                   ))}
                 </select>
+              </Field>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Artwork width (cm)">
+                <input
+                  type="number"
+                  min="1"
+                  step="0.1"
+                  value={widthCm}
+                  onChange={(event) => setWidthCm(event.target.value)}
+                  placeholder="80"
+                  className={inputClass}
+                />
+              </Field>
+              <Field label="Artwork height (cm)">
+                <input
+                  type="number"
+                  min="1"
+                  step="0.1"
+                  value={heightCm}
+                  onChange={(event) => setHeightCm(event.target.value)}
+                  placeholder="120"
+                  className={inputClass}
+                />
               </Field>
             </div>
 

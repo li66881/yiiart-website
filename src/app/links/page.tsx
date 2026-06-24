@@ -4,7 +4,7 @@ import Footer from "@/components/Footer"
 import SocialLinks from "@/components/SocialLinks"
 import { PriceText } from "@/components/PriceText"
 import { client } from "@/lib/sanity"
-import { formatDimensions, pickEnglish } from "@/lib/artwork-display"
+import { formatArtworkDimensions, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 
@@ -25,6 +25,8 @@ async function getShareableArtworks() {
       slug,
       price,
       dimensions,
+      widthCm,
+      heightCm,
       cloudflareImages,
       images
     }`)
@@ -104,7 +106,7 @@ export default async function LinksPage() {
                       )}
                     </div>
                     <h3 className="font-medium">{title}</h3>
-                    <p className="mt-1 text-sm text-gray-500">{formatDimensions(artwork.dimensions)}</p>
+                    <p className="mt-1 text-sm text-gray-500">{formatArtworkDimensions(artwork)}</p>
                     <p className="mt-1 font-semibold"><PriceText amountCny={artwork.price} /></p>
                   </Link>
                 )

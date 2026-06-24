@@ -48,18 +48,57 @@ export function formatDimensions(value?: string | null) {
 
   const clean = value.replace(/\s+/g, " ").trim()
   if (!clean) return ""
-  if (/in/i.test(clean) && /cm/i.test(clean)) return clean
 
   const numbers = clean.match(/\d+(?:\.\d+)?/g)?.map(Number)
   if (!numbers || numbers.length < 2) return clean
 
-  let [width, height] = numbers
-  const isMillimeters = /mm/i.test(clean) || (!/cm/i.test(clean) && Math.max(width, height) > 300)
+  const [rawWidth, rawHeight] = numbers
+  let width = rawWidth
+  let height = rawHeight
+  const hasCm = /cm/i.test(clean)
+  const hasMm = /mm/i.test(clean)
+  const hasInches = /\b(in|inch|inches)\b/i.test(clean)
 
-  if (isMillimeters) {
+  if (!hasCm && !hasMm && Math.max(rawWidth, rawHeight) > 1000 && Math.min(rawWidth, rawHeight) > 500) {
+    return ""
+  }
+
+  if (hasMm || (!hasCm && !hasInches && Math.max(width, height) > 300)) {
     width = width / 10
     height = height / 10
+  } else if (hasInches && !hasCm) {
+    width = width * 2.54
+    height = height * 2.54
   }
+
+  return formatDimensionPair(width, height)
+}
+
+export function formatArtworkDimensions(artwork?: {
+  dimensions?: string | null
+  widthCm?: number | string | null
+  heightCm?: number | string | null
+} | null) {
+  const widthCm = readDimensionNumber(artwork?.widthCm)
+  const heightCm = readDimensionNumber(artwork?.heightCm)
+
+  if (widthCm && heightCm) {
+    return formatDimensionPair(widthCm, heightCm)
+  }
+
+  return formatDimensions(artwork?.dimensions)
+}
+
+export function parseArtworkDimensionsCm(dimensions?: string | null) {
+  const formatted = formatDimensions(dimensions)
+  const numbers = formatted.match(/\d+(?:\.\d+)?/g)?.map(Number)
+  if (!numbers || numbers.length < 2) return null
+
+  return { width: numbers[0], height: numbers[1] }
+}
+
+function formatDimensionPair(width: number, height: number) {
+  if (!isPlausibleArtworkSizeCm(width, height)) return ""
 
   const widthCm = formatNumber(width)
   const heightCm = formatNumber(height)
@@ -69,16 +108,30 @@ export function formatDimensions(value?: string | null) {
   return `${widthCm} x ${heightCm} cm / ${widthIn} x ${heightIn} in`
 }
 
+function readDimensionNumber(value?: number | string | null) {
+  const number = typeof value === "number" ? value : Number(String(value || "").trim())
+  return Number.isFinite(number) && number > 0 ? number : null
+}
+
+function isPlausibleArtworkSizeCm(width: number, height: number) {
+  const shortest = Math.min(width, height)
+  const longest = Math.max(width, height)
+
+  return shortest >= 10 && longest <= 320
+}
+
 export function buildArtworkSeoTitle(artwork: {
   title?: LocalizedText
   category?: string
   medium?: string
   dimensions?: string
+  widthCm?: number | string | null
+  heightCm?: number | string | null
 }) {
   const title = pickEnglish(artwork.title, "Original artwork")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
-  const dimensions = formatDimensions(artwork.dimensions)
+  const dimensions = formatArtworkDimensions(artwork)
   const details = [category, medium, dimensions].filter(Boolean).join(", ")
 
   return details ? `${title} - ${details}` : title

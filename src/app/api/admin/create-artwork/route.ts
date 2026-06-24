@@ -27,6 +27,8 @@ export async function POST(request: NextRequest) {
     const titleEn = stringField(form, "titleEn")
     const price = Number(stringField(form, "price"))
     const dimensions = stringField(form, "dimensions")
+    const widthCm = optionalNumberField(form, "widthCm")
+    const heightCm = optionalNumberField(form, "heightCm")
     const medium = stringField(form, "medium") || "Oil on Canvas"
     const category = stringField(form, "category") || "Abstract"
     const roomTypes = listField(form, "roomTypes")
@@ -108,6 +110,8 @@ export async function POST(request: NextRequest) {
       artist: artistId ? { _type: "reference", _ref: artistId } : undefined,
       price,
       dimensions,
+      widthCm: widthCm || undefined,
+      heightCm: heightCm || undefined,
       medium,
       category,
       roomTypes: roomTypes.length > 0 ? roomTypes : undefined,
@@ -174,6 +178,11 @@ function commaListField(form: FormData, name: string) {
       .map((value) => value.trim())
       .filter(Boolean)
   )
+}
+
+function optionalNumberField(form: FormData, name: string) {
+  const value = Number(stringField(form, name))
+  return Number.isFinite(value) && value > 0 ? value : null
 }
 
 function unique(values: string[]) {

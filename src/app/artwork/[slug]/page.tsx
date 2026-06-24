@@ -12,9 +12,10 @@ import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTempl
 import { client } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
-  formatDimensions,
+  formatArtworkDimensions,
   normalizeCategory,
   normalizeMedium,
+  parseArtworkDimensionsCm,
   pickEnglish,
 } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
@@ -71,6 +72,8 @@ async function getArtwork(slug: string) {
         artist->{_id, name, slug, bio, location},
         price,
         dimensions,
+        widthCm,
+        heightCm,
         medium,
         category,
         roomTypes,
@@ -109,6 +112,8 @@ async function getRelatedArtworks(artworkId: string, category?: string | null, m
         artist->{name},
         price,
         dimensions,
+        widthCm,
+        heightCm,
         medium,
         category,
         cloudflareImages,
@@ -136,7 +141,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   const title = pickEnglish(artwork.title, "Original artwork")
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
-  const dimensions = formatDimensions(artwork.dimensions)
+  const dimensions = formatArtworkDimensions(artwork)
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
   const description =
@@ -184,11 +189,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
-  const dimensions = formatDimensions(artwork.dimensions)
+  const dimensions = formatArtworkDimensions(artwork)
   const description = pickEnglish(artwork.description)
   const roomTypes = normalizeList(artwork.roomTypes)
   const colorFamilies = normalizeList(artwork.colorFamilies)
-  const orientation = artwork.orientation || inferOrientation(artwork.dimensions)
+  const orientation = artwork.orientation || inferOrientation(dimensions)
   const surfaceFinish = artwork.surfaceFinish || ""
   const framingNotes = artwork.framingNotes || ""
   const shippingProfile = artwork.shippingProfile || ""
@@ -823,7 +828,7 @@ function RelatedArtworkCard({ artwork }: { artwork: any }) {
         <p className="text-xs uppercase text-stone-500">{[category, medium].filter(Boolean).join(" / ")}</p>
         <h3 className="mt-2 font-medium leading-snug">{title}</h3>
         <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-          <span className="text-stone-500">{formatDimensions(artwork.dimensions)}</span>
+          <span className="text-stone-500">{formatArtworkDimensions(artwork)}</span>
           <span className="font-semibold"><PriceText amountCny={artwork.price} /></span>
         </div>
       </div>
@@ -979,17 +984,7 @@ function ScaleBar({ label, active }: { label: string; active: boolean }) {
 }
 
 function parseDimensionsCm(dimensions?: string | null) {
-  if (!dimensions) return null
-  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
-  if (!numbers || numbers.length < 2) return null
-
-  let [width, height] = numbers
-  if (/mm/i.test(dimensions) || Math.max(width, height) > 300) {
-    width = width / 10
-    height = height / 10
-  }
-
-  return { width, height }
+  return parseArtworkDimensionsCm(dimensions)
 }
 
 function getScaleProfile(dimensions: { width: number; height: number } | null) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server"
 import { client } from "@/lib/sanity"
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 
 const MAX_QUERY_LENGTH = 80
@@ -30,6 +30,8 @@ export async function GET(request: Request) {
         artist->{name},
         price,
         dimensions,
+        widthCm,
+        heightCm,
         medium,
         category,
         cloudflareImages,
@@ -45,7 +47,7 @@ export async function GET(request: Request) {
       href: `/artwork/${artwork.slug?.current || artwork._id}`,
       price: Number(artwork.price || 0),
       image: getArtworkImageUrl(artwork, { width: 240, height: 300 }) || "",
-      meta: [normalizeCategory(artwork.category), normalizeMedium(artwork.medium), formatDimensions(artwork.dimensions)]
+      meta: [normalizeCategory(artwork.category), normalizeMedium(artwork.medium), formatArtworkDimensions(artwork)]
         .filter(Boolean)
         .join(" / "),
     }))

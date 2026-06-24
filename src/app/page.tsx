@@ -4,7 +4,7 @@ import Footer from "@/components/Footer"
 import HeroSection from "@/components/HeroSection"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client } from "@/lib/sanity"
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
@@ -385,7 +385,7 @@ function ArtworkCard({ artwork }: { artwork: any }) {
           </div>
         )}
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/72 px-4 py-3 text-sm text-white opacity-0 transition group-hover:opacity-100">
-          <span>{formatDimensions(artwork.dimensions)}</span>
+          <span>{formatArtworkDimensions(artwork)}</span>
           <span>View artwork</span>
         </div>
       </div>

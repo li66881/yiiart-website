@@ -1,4 +1,10 @@
-import { formatDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
+import {
+  formatArtworkDimensions,
+  normalizeCategory,
+  normalizeMedium,
+  parseArtworkDimensionsCm,
+  pickEnglish,
+} from "@/lib/artwork-display"
 
 export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
 
@@ -80,9 +86,9 @@ export function normalizeArtworkFilters(initial?: Partial<ArtworkFilterState>): 
 export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): ArtworkDiscoveryItem {
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
-  const dimensions = formatDimensions(artwork.dimensions)
-  const orientation = normalizeOrientation(artwork.orientation) || inferArtworkOrientation(artwork.dimensions)
-  const size = inferArtworkSize(artwork.dimensions)
+  const dimensions = formatArtworkDimensions(artwork)
+  const orientation = normalizeOrientation(artwork.orientation) || inferArtworkOrientation(dimensions)
+  const size = inferArtworkSize(dimensions)
   const rooms = normalizeList(artwork.roomTypes).map(normalizeRoom)
   const colors = normalizeList(artwork.colorFamilies).map(normalizeColor)
   const title = pickEnglish(artwork.title, "Untitled artwork")
@@ -147,18 +153,7 @@ export function inferArtworkOrientation(dimensions?: string | null) {
 }
 
 export function parseDimensionsCm(dimensions?: string | null) {
-  if (!dimensions) return null
-
-  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
-  if (!numbers || numbers.length < 2) return null
-
-  let [width, height] = numbers
-  if (/mm/i.test(dimensions) || Math.max(width, height) > 300) {
-    width = width / 10
-    height = height / 10
-  }
-
-  return { width, height }
+  return parseArtworkDimensionsCm(dimensions)
 }
 
 function matchesAny(values: string[], active: string[]) {
