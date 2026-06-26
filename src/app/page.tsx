@@ -131,7 +131,7 @@ export default async function Home() {
   const { artworks } = await getData()
   const heroArtwork = artworks.find(hasArtworkImage)
   const heroImage = getArtworkImageUrl(heroArtwork, { width: 1800, height: 1200 })
-  const bestSellerArtworks = artworks.slice(0, 8)
+  const featuredArtworks = artworks.slice(0, 8)
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
@@ -153,7 +153,7 @@ export default async function Home() {
       <main className="flex-1">
         <ShopByRoomSection />
         <ShopByStyleSection />
-        <BestSellersSection artworks={bestSellerArtworks} />
+        <FeaturedWorksSection artworks={featuredArtworks} />
         <WhyYiiArtSection />
         <CustomPaintingSection />
         <StudioProcessSection />
@@ -210,15 +210,15 @@ function ShopByStyleSection() {
   )
 }
 
-function BestSellersSection({ artworks }: { artworks: any[] }) {
+function FeaturedWorksSection({ artworks }: { artworks: any[] }) {
   return (
-    <section id="best-sellers" className="border-b border-stone-200 bg-white py-20 scroll-mt-28">
+    <section id="featured-works" className="border-b border-stone-200 bg-white py-20 scroll-mt-28">
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <SectionIntro
-            eyebrow="Best Sellers"
+            eyebrow="Featured Works"
             title="Collector-ready paintings for modern homes"
-            text="This area uses the current artwork data in the store. When sales ranking data is connected, this section can be sorted by real order performance."
+            text="A focused edit of handmade canvas paintings selected for scale, surface, and easy room pairing."
             compact
           />
           <Link href="/artworks" className="text-sm underline underline-offset-4">
@@ -231,7 +231,7 @@ function BestSellersSection({ artworks }: { artworks: any[] }) {
             <ArtworkCard key={artwork._id} artwork={artwork} />
           )) : (
             <div className="col-span-full border-y border-stone-200 bg-[#fbfaf6] py-20 text-center">
-              <p className="text-stone-500">Best seller artworks will appear here when product data is available.</p>
+              <p className="text-stone-500">No featured artworks are available right now.</p>
             </div>
           )}
         </div>
@@ -297,13 +297,12 @@ function StudioProcessSection() {
       <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
         <div className="mb-10 grid gap-6 lg:grid-cols-[0.72fr_1fr]">
           <div>
-            <p className="mb-3 text-sm uppercase text-stone-500">Customer Photos / Studio Process</p>
-            <h2 className="text-4xl font-light leading-tight">Real customer photos will appear when verified.</h2>
+            <p className="mb-3 text-sm uppercase text-stone-500">Studio Process</p>
+            <h2 className="text-4xl font-light leading-tight">From room advice to carefully packed canvas art</h2>
           </div>
           <p className="max-w-3xl text-base leading-8 text-stone-600">
-            Until verified customer room photos are available, YiiArt shows the studio process instead of inventing
-            reviews or lifestyle images. This keeps the store honest while still explaining how custom and ready-made
-            paintings are prepared.
+            YiiArt helps collectors choose size, palette, surface, and shipping format with direct studio guidance.
+            The process keeps custom requests and ready-made paintings practical from first question to delivery.
           </p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -381,7 +380,7 @@ function ArtworkCard({ artwork }: { artwork: any }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center border border-stone-200 bg-[#fbfaf6] text-stone-400">
-            Artwork image coming soon
+            Artwork image available on request
           </div>
         )}
         <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/72 px-4 py-3 text-sm text-white opacity-0 transition group-hover:opacity-100">

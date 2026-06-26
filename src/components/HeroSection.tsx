@@ -44,8 +44,8 @@ export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artw
             Custom-size canvas art for living rooms, bedrooms, offices, and design projects.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="#best-sellers" className="bg-white px-7 py-4 text-center text-sm font-medium text-black transition hover:bg-stone-100">
-              Shop Best Sellers
+            <Link href="#featured-works" className="bg-white px-7 py-4 text-center text-sm font-medium text-black transition hover:bg-stone-100">
+              Shop Featured Works
             </Link>
             <Link href="/custom-painting" className="border border-white/65 px-7 py-4 text-center text-sm font-medium text-white transition hover:bg-white hover:text-black">
               Request Custom Painting

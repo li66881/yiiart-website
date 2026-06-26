@@ -684,7 +684,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
             ) : (
               <p className="border-y border-stone-200 py-12 text-center text-stone-500">
-                Related artworks will appear here when similar product data is available.
+                No similar artworks are available for comparison right now.
               </p>
             )}
           </section>
@@ -820,7 +820,7 @@ function RelatedArtworkCard({ artwork }: { artwork: any }) {
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center border border-stone-200 bg-white text-stone-400">
-            Artwork image coming soon
+            Artwork image available on request
           </div>
         )}
       </div>
