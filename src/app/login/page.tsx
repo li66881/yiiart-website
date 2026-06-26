@@ -88,7 +88,7 @@ export default function LoginPage() {
         </p>
         
         <p className="mt-6 text-center text-xs text-gray-500">
-          Customer accounts are being prepared. Checkout is still available from the cart.
+          Checkout is available from the cart without signing in.
         </p>
       </div>
     </div>

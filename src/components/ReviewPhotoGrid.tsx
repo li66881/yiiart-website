@@ -16,7 +16,7 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
   if (items.length === 0) {
     return (
       <div className="border p-8 text-center text-gray-600">
-        Real home photos will appear here as collectors begin sharing their spaces.
+        Explore collector reviews or contact YiiArt for recent room references.
       </div>
     )
   }
@@ -43,7 +43,7 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
             </h2>
             <p className="text-sm text-gray-500">{artistName}</p>
             <p className="mt-1 text-sm text-gray-500">
-              {[review.roomType, reviewLocation(review)].filter(Boolean).join(" · ")}
+              {[review.roomType, reviewLocation(review)].filter(Boolean).join(" / ")}
             </p>
             {review.reviewText && <p className="mt-3 line-clamp-3 text-sm leading-6 text-gray-600">{review.reviewText}</p>}
           </article>

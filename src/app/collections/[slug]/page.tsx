@@ -181,7 +181,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
             <ArtworkDiscoveryGrid
               items={artworkItems}
-              emptyText="New works for this collection are being prepared."
+              emptyText="No works match this collection right now."
             />
           </div>
         </section>
