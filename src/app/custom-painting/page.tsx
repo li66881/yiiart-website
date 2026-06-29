@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import CustomPaintingRequestForm from "@/components/CustomPaintingRequestForm"
-import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
+import { getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -145,8 +145,8 @@ export default function CustomPaintingPage() {
               <p className="mb-3 text-sm uppercase text-stone-500">Request Form</p>
               <h2 className="text-4xl font-light leading-tight">Tell us what your room needs.</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">
-                Image upload is not connected yet. Please describe the room here, then attach photos when you reply by
-                email or open WhatsApp. TODO: connect a secure upload endpoint if custom requests need file storage.
+                Share room photos, wall measurements, or inspiration images. We review every request before confirming
+                the quote, production schedule, and safest delivery format.
               </p>
               <a
                 href={whatsappUrl}
@@ -157,13 +157,13 @@ export default function CustomPaintingPage() {
                 Open WhatsApp instead
               </a>
             </div>
-            <CustomPaintingRequestForm contactEmail={contactEmail} whatsappNumber={whatsappNumber} />
+            <CustomPaintingRequestForm whatsappNumber={whatsappNumber} />
           </div>
         </section>
 
         <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-[1440px]">
-            <SectionIntro eyebrow="Trust Section" title="Clear support before custom production starts" />
+            <SectionIntro eyebrow="What to expect" title="Clear support before custom production starts" />
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
               {trustItems.map((item) => (
                 <InfoBlock key={item.title} title={item.title} text={item.text} />

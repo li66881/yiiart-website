@@ -14,6 +14,10 @@ const bannedPatterns = [
   { pattern: /\bwill appear here\b/i, reason: "placeholder future-state copy" },
   { pattern: /\bcoming soon\b/i, reason: "unfinished public copy" },
   { pattern: /\bbeing prepared\b/i, reason: "unfinished public copy" },
+  { pattern: /\bTODO\b/i, reason: "development task note" },
+  { pattern: /\bnot connected yet\b/i, reason: "unfinished integration note" },
+  { pattern: /Opening your email app/i, reason: "local email client dependency" },
+  { pattern: /email app after this form opens/i, reason: "local email client dependency" },
 ]
 
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".md", ".mdx"])
