@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "test": "tsx --test src/**/*.test.ts",
     "start": "next start",
     "lint": "next lint",
     "copy:check": "node scripts/check-public-copy.mjs",
@@ -15,6 +16,7 @@
   "dependencies": {
     "@auth/core": "^0.41.0",
     "@aws-sdk/client-s3": "^3.1073.0",
+    "@aws-sdk/s3-request-presigner": "^3.1075.0",
     "@neondatabase/serverless": "^1.1.0",
     "@sanity/cli": "^6.3.1",
     "@sanity/client": "^5.0.0",
@@ -39,5 +41,8 @@
     "styled-components": "^6.4.0",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "tsx": "^4.22.4"
   }
 }
