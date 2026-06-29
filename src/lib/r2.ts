@@ -1,5 +1,6 @@
 import crypto from "crypto"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 type UploadR2ObjectInput = {
   namespace: string
@@ -7,6 +8,12 @@ type UploadR2ObjectInput = {
   body: Buffer
   contentType?: string
   cacheControl?: string
+}
+
+type PresignR2UploadInput = {
+  namespace: string
+  filename: string
+  contentType: string
 }
 
 type R2Config = {
@@ -49,6 +56,37 @@ export async function uploadR2Object(input: UploadR2ObjectInput) {
     url: getR2PublicUrl(key, config.publicUrl),
     contentType,
   }
+}
+
+export async function createPresignedR2Upload(input: PresignR2UploadInput) {
+  const config = getR2Config()
+
+  if (!config) {
+    throw new Error("Cloudflare R2 is not configured.")
+  }
+
+  const key = createR2ObjectKey(config.prefix, input.namespace, input.filename)
+  const command = new PutObjectCommand({
+    Bucket: config.bucket,
+    Key: key,
+    ContentType: input.contentType,
+    CacheControl: "private, no-store",
+  })
+
+  return {
+    key,
+    url: getR2PublicUrl(key, config.publicUrl),
+    uploadUrl: await getSignedUrl(getR2Client(config), command, { expiresIn: 600 }),
+    contentType: input.contentType,
+  }
+}
+
+export function getR2NamespacePrefix(namespace: string) {
+  const config = getR2Config()
+  if (!config) return ""
+
+  const safeNamespace = cleanPathSegment(namespace) || "files"
+  return `${config.prefix}/${safeNamespace}/`
 }
 
 export function getR2PublicUrl(key: string, publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL || "") {

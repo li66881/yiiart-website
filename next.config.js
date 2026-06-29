@@ -87,7 +87,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' data: https://cdn.sanity.io https://images.unsplash.com https://picsum.photos https://res.cloudinary.com https://*.public.blob.vercel-storage.com",
               "font-src 'self' https://fonts.gstatic.com",
-              "connect-src 'self' https://*.sanity.io https://api.stripe.com https://www.paypal.com https://*.supabase.co https://www.google-analytics.com https://www.facebook.com https://ct.pinterest.com https://analytics.tiktok.com https://*.vercel-insights.com",
+              "connect-src 'self' https://assets.yiiart.com https://*.r2.cloudflarestorage.com https://*.sanity.io https://api.stripe.com https://www.paypal.com https://*.supabase.co https://www.google-analytics.com https://www.facebook.com https://ct.pinterest.com https://analytics.tiktok.com https://*.vercel-insights.com",
               "frame-src 'self' https://www.paypal.com https://js.stripe.com https://www.youtube.com",
               "object-src 'none'",
               "base-uri 'self'",
