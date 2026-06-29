@@ -3,6 +3,8 @@ import test from "node:test"
 import {
   CUSTOM_PAINTING_MAX_FILE_SIZE,
   buildCustomPaintingDocument,
+  buildCustomPaintingNotification,
+  createCustomPaintingReference,
   validateCustomPaintingRequest,
   validateUploadFiles,
   validateUploadedAssets,
@@ -107,4 +109,18 @@ test("builds a reviewable Sanity request document", () => {
   assert.equal(document.status, "new")
   assert.equal(document.notificationStatus, "pending")
   assert.equal(document.referenceImages[0].key, "uploads/custom-requests/2026/06/request.jpg")
+})
+
+test("creates a public-safe request reference and notification", () => {
+  const reference = createCustomPaintingReference()
+  assert.match(reference, /^YAC-[A-F0-9]{8}$/)
+
+  const result = validateCustomPaintingRequest(validRequest)
+  assert.equal(result.ok, true)
+  if (!result.ok) return
+
+  const notification = buildCustomPaintingNotification(result.value, "YAC-AB12CD34")
+  assert.match(notification, /YAC-AB12CD34/)
+  assert.match(notification, /ada@example\.com/)
+  assert.match(notification, /Warm neutral/)
 })

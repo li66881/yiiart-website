@@ -5,5 +5,14 @@ import cloudflareAsset from './cloudflareAsset'
 import newsletterSubscriber from './newsletterSubscriber'
 import review from './review'
 import reviewInvite from './reviewInvite'
+import customPaintingRequest from './customPaintingRequest'
 
-export const schemaTypes: SchemaTypeDefinition[] = [artist, artwork, cloudflareAsset, newsletterSubscriber, review, reviewInvite]
+export const schemaTypes: SchemaTypeDefinition[] = [
+  artist,
+  artwork,
+  cloudflareAsset,
+  newsletterSubscriber,
+  review,
+  reviewInvite,
+  customPaintingRequest,
+]

@@ -1,5 +1,5 @@
 import crypto from "crypto"
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { HeadObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 type UploadR2ObjectInput = {
@@ -87,6 +87,23 @@ export function getR2NamespacePrefix(namespace: string) {
 
   const safeNamespace = cleanPathSegment(namespace) || "files"
   return `${config.prefix}/${safeNamespace}/`
+}
+
+export async function inspectR2Object(key: string) {
+  const config = getR2Config()
+  if (!config) throw new Error("Cloudflare R2 is not configured.")
+
+  const result = await getR2Client(config).send(
+    new HeadObjectCommand({
+      Bucket: config.bucket,
+      Key: key,
+    })
+  )
+
+  return {
+    contentType: result.ContentType || "",
+    size: result.ContentLength || 0,
+  }
 }
 
 export function getR2PublicUrl(key: string, publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL || "") {

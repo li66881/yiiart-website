@@ -203,6 +203,31 @@ export function buildCustomPaintingDocument(
   }
 }
 
+export function createCustomPaintingReference() {
+  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(4))
+  const code = Array.from(bytes, (value) => value.toString(16).padStart(2, "0")).join("").toUpperCase()
+  return `YAC-${code}`
+}
+
+export function buildCustomPaintingNotification(request: CustomPaintingRequest, reference: string) {
+  return [
+    `New YiiArt custom painting request: ${reference}`,
+    "",
+    `Name: ${request.name}`,
+    `Email: ${request.email}`,
+    `Artwork size: ${request.artworkSize || "Not provided"}`,
+    `Preferred colors: ${request.preferredColors || "Not provided"}`,
+    `Room type: ${request.roomType || "Not provided"}`,
+    `Budget: ${request.budget || "Not provided"}`,
+    "",
+    "Project details:",
+    request.message || "Not provided",
+    "",
+    "Reference images:",
+    ...(request.assets.length > 0 ? request.assets.map((asset) => asset.url) : ["No images uploaded"]),
+  ].join("\n")
+}
+
 function cleanString(value: unknown, maxLength: number) {
   return typeof value === "string" ? value.trim().slice(0, maxLength) : ""
 }
