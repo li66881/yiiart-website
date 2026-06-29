@@ -28,7 +28,6 @@ export default function CustomPaintingRequestForm({
   whatsappNumber,
 }: CustomPaintingRequestFormProps) {
   const formRef = useRef<HTMLFormElement>(null)
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<File[]>([])
   const [status, setStatus] = useState<FormStatus>({ kind: "idle", message: "" })
   const [reference, setReference] = useState("")
@@ -173,16 +172,18 @@ export default function CustomPaintingRequestForm({
           <span className="text-xs text-stone-500">{files.length}/{CUSTOM_PAINTING_MAX_FILES} selected</span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isWorking || files.length >= CUSTOM_PAINTING_MAX_FILES}
-          className="mt-3 flex min-h-24 w-full items-center justify-center border border-dashed border-stone-400 bg-white px-5 py-4 text-center text-sm font-medium transition hover:border-black disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+        <label
+          htmlFor="custom-reference-images"
+          aria-disabled={isWorking || files.length >= CUSTOM_PAINTING_MAX_FILES}
+          className={`mt-3 flex min-h-24 w-full items-center justify-center border border-dashed border-stone-400 bg-white px-5 py-4 text-center text-sm font-medium transition focus-within:outline focus-within:outline-2 focus-within:outline-offset-2 ${
+            isWorking || files.length >= CUSTOM_PAINTING_MAX_FILES
+              ? "cursor-not-allowed opacity-50"
+              : "cursor-pointer hover:border-black"
+          }`}
         >
           Choose room photos or inspiration images
-        </button>
+        </label>
         <input
-          ref={fileInputRef}
           id="custom-reference-images"
           type="file"
           accept={CUSTOM_PAINTING_ALLOWED_TYPES.join(",")}
@@ -218,10 +219,13 @@ export default function CustomPaintingRequestForm({
         )}
       </div>
 
-      <label className="sr-only" aria-hidden="true">
-        Company
-        <input name="company" tabIndex={-1} autoComplete="off" />
-      </label>
+      <input
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-px w-px overflow-hidden"
+      />
 
       <div className="mt-6 grid gap-3 sm:grid-cols-2">
         <button

@@ -5,20 +5,20 @@ import { createPresignedR2Upload, isR2Configured } from "@/lib/r2"
 export const runtime = "nodejs"
 
 export async function POST(request: NextRequest) {
-  if (!isR2Configured()) {
-    console.error("Custom painting upload requested without R2 configuration.")
-    return NextResponse.json(
-      { error: "Image upload is temporarily unavailable." },
-      { status: 503 }
-    )
-  }
-
   try {
     const body = await request.json()
     const validation = validateUploadFiles(body?.files)
 
     if (!validation.ok) {
       return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+
+    if (!isR2Configured()) {
+      console.error("Custom painting upload requested without R2 configuration.")
+      return NextResponse.json(
+        { error: "Image upload is temporarily unavailable." },
+        { status: 503 }
+      )
     }
 
     const uploads = await Promise.all(

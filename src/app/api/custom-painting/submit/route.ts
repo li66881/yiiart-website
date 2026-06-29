@@ -21,14 +21,6 @@ const writeClient = createClient({
 })
 
 export async function POST(request: NextRequest) {
-  if (!process.env.SANITY_WRITE_TOKEN) {
-    console.error("Custom painting submission requested without SANITY_WRITE_TOKEN.")
-    return NextResponse.json(
-      { error: "Custom requests are temporarily unavailable." },
-      { status: 503 }
-    )
-  }
-
   try {
     const body = await request.json()
     const validation = validateCustomPaintingRequest(body, {
@@ -41,6 +33,14 @@ export async function POST(request: NextRequest) {
 
     if (!validation.ok) {
       return NextResponse.json({ error: validation.error }, { status: 400 })
+    }
+
+    if (!process.env.SANITY_WRITE_TOKEN) {
+      console.error("Custom painting submission requested without SANITY_WRITE_TOKEN.")
+      return NextResponse.json(
+        { error: "Custom requests are temporarily unavailable." },
+        { status: 503 }
+      )
     }
 
     for (const asset of validation.value.assets) {
