@@ -4,6 +4,7 @@ import Footer from "@/components/Footer"
 import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
+import { mergeDuplicateArtists } from "@/lib/artists"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
@@ -17,7 +18,11 @@ export const metadata = buildSeoMetadata({
 
 async function getArtists() {
   try {
-    return await client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)`)
+    const artists = await client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc){
+      ...,
+      "artworkCount": count(*[_type == "artwork" && references(^._id)])
+    }`)
+    return mergeDuplicateArtists(artists)
   } catch {
     return []
   }

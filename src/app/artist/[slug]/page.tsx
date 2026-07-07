@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { PriceText } from "@/components/PriceText"
@@ -6,13 +7,18 @@ import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTempl
 import { client, urlFor } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
+import { resolveCanonicalArtistForSlug } from "@/lib/artists"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const revalidate = 600
 
 async function getArtist(slug: string) {
   try {
-    return await client.fetch(`*[_type == "artist" && (slug.current == $slug || _id == $slug)][0]`, { slug })
+    const artists = await client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc){
+      ...,
+      "artworkCount": count(*[_type == "artwork" && references(^._id)])
+    }`)
+    return resolveCanonicalArtistForSlug(artists, slug)
   } catch (error) {
     console.error("Artist fetch error:", error)
     return null
@@ -78,7 +84,11 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
     )
   }
 
-  const artworks = await getArtistArtworks(artist._id)
+  if (artist.slug?.current && slug !== artist.slug.current) {
+    redirect(`/artist/${artist.slug.current}`)
+  }
+
+  const artworks = await getArtistArtworks(artist.canonicalArtistId || artist._id)
   const artistName = pickEnglish(artist.name, "YiiArt")
   const styles = Array.isArray(artist.style) ? artist.style : []
 
