@@ -4,6 +4,7 @@ import {
   isOrderStorageConfigured,
 } from "@/lib/order-storage"
 import {
+  findOrderByNumber,
   findOrderByProviderCheckout,
   markOrderPaid,
   markOrderPaymentFailed,
@@ -11,6 +12,10 @@ import {
   recordPaymentEvent,
 } from "@/lib/orders"
 import { verifyPayPalWebhookSignature } from "@/lib/paypal"
+import {
+  getPayPalWebhookOrderIdentifiers,
+  type PayPalWebhookEvent,
+} from "@/lib/paypal-webhook"
 
 export const runtime = "nodejs"
 
@@ -54,12 +59,14 @@ export async function POST(request: Request) {
 }
 
 async function handlePayPalEvent(event: PayPalWebhookEvent) {
-  const providerCheckoutId = getPayPalOrderId(event)
-  const order = providerCheckoutId
-    ? await findOrderByProviderCheckout("paypal", providerCheckoutId)
-    : null
-  const orderId = order?.id || event.resource?.custom_id || null
-  const eventId = event.id || `${event.event_type}-${providerCheckoutId || Date.now()}`
+  const identifiers = getPayPalWebhookOrderIdentifiers(event)
+  const order = identifiers.providerCheckoutId
+    ? await findOrderByProviderCheckout("paypal", identifiers.providerCheckoutId)
+    : identifiers.orderNumber
+      ? await findOrderByNumber(identifiers.orderNumber)
+      : null
+  const orderId = order?.id || identifiers.internalOrderId || null
+  const eventId = event.id || `${event.event_type}-${identifiers.providerCheckoutId || identifiers.orderNumber || identifiers.internalOrderId || Date.now()}`
 
   const recorded = await recordPaymentEvent({
     provider: "paypal",
@@ -75,7 +82,7 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
     await markOrderPaid({
       orderId,
       provider: "paypal",
-      providerCheckoutId,
+      providerCheckoutId: identifiers.providerCheckoutId,
       providerPaymentId: event.resource?.id || null,
     })
     return
@@ -94,23 +101,3 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
   }
 }
 
-function getPayPalOrderId(event: PayPalWebhookEvent) {
-  return event.resource?.supplementary_data?.related_ids?.order_id
-    || event.resource?.invoice_id
-    || null
-}
-
-type PayPalWebhookEvent = {
-  id?: string
-  event_type: string
-  resource?: {
-    id?: string
-    custom_id?: string
-    invoice_id?: string
-    supplementary_data?: {
-      related_ids?: {
-        order_id?: string
-      }
-    }
-  }
-}
