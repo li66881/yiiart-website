@@ -43,6 +43,25 @@ const trustItems = [
   { title: "Handmade artwork", text: "YiiArt focuses on physical hand-painted works rather than mass-produced poster prints." },
 ]
 
+const checkoutTrustItems = [
+  {
+    title: "PayPal secure checkout",
+    text: "Pay through PayPal-supported checkout or request a YiiArt invoice before confirming the artwork.",
+  },
+  {
+    title: "Free worldwide shipping",
+    text: "Ready-made works include international shipping support, with packaging selected for the artwork size.",
+  },
+  {
+    title: "30-day return window",
+    text: "Eligible ready-made artworks can request a return within 30 days under the published policy.",
+  },
+  {
+    title: "Extra photos before purchase",
+    text: "Ask for daylight photos, detail images, or a short room-fit check before payment.",
+  },
+]
+
 const artworkPageFaqs = [
   {
     question: "Will the painting look exactly like the photo?",
@@ -493,6 +512,14 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                     </a>
                   </div>
                 )}
+                <div className="grid gap-3 border-y border-stone-200 py-4 sm:grid-cols-2">
+                  {checkoutTrustItems.map((item) => (
+                    <div key={item.title} className="border-l border-stone-300 pl-3">
+                      <p className="text-sm font-medium text-stone-950">{item.title}</p>
+                      <p className="mt-1 text-xs leading-5 text-stone-600">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
                 <a
                   href={customRequestUrl}
                   target="_blank"

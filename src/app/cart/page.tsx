@@ -21,11 +21,35 @@ export default function CartPage() {
           <h1 className="text-3xl font-light mb-8">{t("cart.title")}</h1>
           
           {items.length === 0 ? (
-            <div className="text-center py-20">
-              <p className="text-gray-500 mb-6">{t("cart.empty")}</p>
-              <Link href="/artworks" className="px-8 py-3 bg-black text-white">
-                {t("cart.continueShopping")}
-              </Link>
+            <div className="mx-auto max-w-4xl py-16">
+              <div className="text-center">
+                <p className="text-sm uppercase tracking-[0.18em] text-stone-400">Collector path</p>
+                <h2 className="mt-3 text-3xl font-light text-stone-950">{t("cart.empty")}</h2>
+                <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-stone-600">
+                  Choose a ready-made painting, ask for room advice, or begin a custom canvas request when you need a
+                  specific scale, palette, or wall fit.
+                </p>
+              </div>
+              <div className="mt-10 grid gap-4 md:grid-cols-3">
+                <EmptyCartAction
+                  href="/artworks"
+                  title="Shop curated artworks"
+                  text="Browse original paintings selected for modern homes, feature walls, and calm interiors."
+                  cta="View artworks"
+                />
+                <EmptyCartAction
+                  href="/contact"
+                  title="Request room advice"
+                  text="Send wall size, room photos, and color direction before choosing the right piece."
+                  cta="Get advice"
+                />
+                <EmptyCartAction
+                  href="/custom-painting"
+                  title="Start a custom painting"
+                  text="Plan a handmade canvas around your room, dimensions, preferred palette, and mood."
+                  cta="Start request"
+                />
+              </div>
             </div>
           ) : (
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -109,5 +133,27 @@ export default function CartPage() {
       
       <Footer />
     </div>
+  )
+}
+
+function EmptyCartAction({
+  href,
+  title,
+  text,
+  cta,
+}: {
+  href: string
+  title: string
+  text: string
+  cta: string
+}) {
+  return (
+    <Link href={href} className="group border border-stone-200 bg-white p-6 text-left transition hover:border-stone-950">
+      <h3 className="text-lg font-medium text-stone-950">{title}</h3>
+      <p className="mt-3 min-h-20 text-sm leading-6 text-stone-600">{text}</p>
+      <span className="mt-5 inline-block text-sm font-medium underline underline-offset-4 group-hover:no-underline">
+        {cta}
+      </span>
+    </Link>
   )
 }
