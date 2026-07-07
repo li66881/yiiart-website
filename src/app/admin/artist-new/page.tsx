@@ -10,12 +10,12 @@ type Result = {
 }
 
 export default function ArtistNewPage() {
-  const [nameZh, setNameZh] = useState("黄亮")
-  const [nameEn, setNameEn] = useState("Huang Liang")
-  const [location, setLocation] = useState("Beijing")
-  const [style, setStyle] = useState("Abstract, Oil painting")
-  const [bioZh, setBioZh] = useState("中国当代艺术家，专注于手绘艺术创作。")
-  const [bioEn, setBioEn] = useState("Contemporary Chinese artist specializing in hand-drawn artworks.")
+  const [nameZh, setNameZh] = useState("")
+  const [nameEn, setNameEn] = useState("")
+  const [location, setLocation] = useState("")
+  const [style, setStyle] = useState("")
+  const [bioZh, setBioZh] = useState("")
+  const [bioEn, setBioEn] = useState("")
   const [password, setPassword] = useState("")
   const [result, setResult] = useState<Result | null>(null)
   const [loading, setLoading] = useState(false)
