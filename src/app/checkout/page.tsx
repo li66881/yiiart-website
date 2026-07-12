@@ -126,6 +126,7 @@ export default function CheckoutPage() {
           items: items.map((item) => ({
             id: item.id,
             quantity: item.quantity,
+            presentationOption: item.presentationOption,
           })),
           shippingAddress,
           displayCurrency: currency,
@@ -327,6 +328,7 @@ export default function CheckoutPage() {
                         <div className="flex-1">
                           <p className="font-medium">{item.title}</p>
                           <p className="text-sm text-gray-500">by {item.artist}</p>
+                          {item.presentationOption && <p className="text-sm text-gray-500">{item.presentationOption}</p>}
                         </div>
                         <p className="text-sm"><PriceText amountCny={item.price} /> x {item.quantity}</p>
                       </div>
@@ -362,6 +364,7 @@ export default function CheckoutPage() {
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{item.title}</p>
+                        {item.presentationOption && <p className="text-xs text-gray-500">{item.presentationOption}</p>}
                         <p className="text-xs text-gray-500">x {item.quantity}</p>
                       </div>
                       <p className="text-sm"><PriceText amountCny={item.price * item.quantity} /></p>
@@ -495,7 +498,7 @@ function buildClientInvoiceMessage({
   currency,
   shippingAddress,
 }: {
-  items: Array<{ title: string; artist?: string; price: number; quantity: number }>
+  items: Array<{ title: string; artist?: string; price: number; quantity: number; presentationOption?: string }>
   subtotal: number
   currency: StoreCurrency
   shippingAddress: Record<string, string>
@@ -504,7 +507,7 @@ function buildClientInvoiceMessage({
     "Hello YiiArt, I would like to request an invoice for this order.",
     "",
     "Items:",
-    ...items.map((item) => `- ${item.title}${item.artist ? ` by ${item.artist}` : ""} x ${item.quantity}`),
+    ...items.map((item) => `- ${item.title}${item.artist ? ` by ${item.artist}` : ""}${item.presentationOption ? ` (${item.presentationOption})` : ""} x ${item.quantity}`),
     `Cart total before final confirmation: ${currency} ${convertCnyToStoreAmount(subtotal, currency).toFixed(2)}`,
     "",
     `Name: ${shippingAddress.name}`,

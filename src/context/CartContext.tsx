@@ -12,6 +12,7 @@ export interface CartItem {
   image: string
   quantity: number
   size?: string
+  presentationOption?: string
 }
 
 interface CartContextType {
@@ -93,7 +94,7 @@ export function useCart() {
   return context
 }
 
-function isValidCartItem(item: unknown): item is CartItem {
+export function isValidCartItem(item: unknown): item is CartItem {
   if (!item || typeof item !== "object") return false
 
   const value = item as Partial<CartItem>
@@ -103,4 +104,5 @@ function isValidCartItem(item: unknown): item is CartItem {
     && value.title.length > 0
     && Number.isFinite(Number(value.price))
     && Number(value.price) > 0
+    && (value.presentationOption === undefined || typeof value.presentationOption === "string")
 }
