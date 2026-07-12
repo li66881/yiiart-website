@@ -8,6 +8,14 @@ const items = [
 ]
 
 describe("ArtworkHeroGallery", () => {
+  it("uses a vertical desktop rail and horizontal mobile strip", () => {
+    const { container } = render(<ArtworkHeroGallery items={items} />)
+    expect(container.querySelector('[data-gallery-layout="natural-studio"]'))
+      .toHaveClass("lg:grid-cols-[6.5rem_minmax(0,1fr)]")
+    expect(screen.getByRole("group", { name: "Artwork views" }))
+      .toHaveClass("lg:flex-col", "overflow-x-auto", "lg:overflow-visible")
+  })
+
   it("starts with the room visualization even when it is not the first asset", () => {
     render(<ArtworkHeroGallery items={[items[1], items[0]]} />)
     expect(screen.getByRole("img", { name: "Room visualization" })).toBeInTheDocument()
