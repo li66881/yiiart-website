@@ -52,9 +52,42 @@ const baseProps = {
   whatsappUrl: "https://example.com/whatsapp",
   displayPriceOverride: undefined,
   previewMode: false,
+  productTags: [
+    { label: "Original Artwork" },
+    { label: "Hand-Painted Texture" },
+    { label: "Certificate Included" },
+  ],
+  sizeGuideHref: "/size-guide",
+  studioPhotoMode: "included" as const,
 }
 
 describe("ArtworkPurchaseExperience", () => {
+  it("renders natural studio tags, size guide, and photo approval copy", () => {
+    render(<ArtworkPurchaseExperience {...baseProps} />)
+    expect(screen.getByText("Original Artwork")).toBeInTheDocument()
+    expect(screen.getByText("Hand-Painted Texture")).toBeInTheDocument()
+    expect(screen.getByText("Certificate Included")).toBeInTheDocument()
+    expect(screen.getByRole("link", { name: "Size & room guide" }))
+      .toHaveAttribute("href", "/size-guide")
+    expect(screen.getByText("We send studio photos before shipping.")).toBeInTheDocument()
+  })
+
+  it("renders presentation options as rows with supporting copy", () => {
+    render(<ArtworkPurchaseExperience {...baseProps} presentationOptions={[
+      { label: "Rolled Canvas", image: "/rolled.png", description: "Ships rolled in a protective tube" },
+      { label: "Stretched", image: "/stretched.png", description: "Ready to hang" },
+    ]} />)
+    expect(screen.getByRole("button", { name: "Rolled Canvas" }))
+      .toHaveAttribute("aria-pressed", "true")
+    expect(screen.getByText("Ships rolled in a protective tube")).toBeInTheDocument()
+    expect(screen.getByText("Ready to hang")).toBeInTheDocument()
+  })
+
+  it("uses request wording when studio photos are not included", () => {
+    render(<ArtworkPurchaseExperience {...baseProps} studioPhotoMode="request" />)
+    expect(screen.getByText("Request studio photos before shipping.")).toBeInTheDocument()
+  })
+
   it("selects a presentation option and passes it to both purchase actions", () => {
     render(<ArtworkPurchaseExperience {...baseProps} presentationOptions={[
       { label: "Rolled Canvas" },
