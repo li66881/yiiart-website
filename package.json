@@ -10,7 +10,9 @@
     "copy:check": "node scripts/check-public-copy.mjs",
     "r2:upload-public": "node scripts/upload-public-assets-to-r2.mjs",
     "r2:migrate-sanity-images": "node scripts/migrate-sanity-images-to-r2.mjs",
-    "media:upload-r2": "npm run r2:upload-public"
+    "media:upload-r2": "npm run r2:upload-public",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@auth/core": "^0.41.0",
@@ -39,5 +41,11 @@
     "styled-components": "^6.4.0",
     "tailwindcss": "^3.4.19",
     "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "jsdom": "^29.1.1",
+    "vitest": "^4.1.10"
   }
 }
