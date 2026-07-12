@@ -76,6 +76,15 @@ describe("ArtworkPurchaseExperience", () => {
     expect(screen.getByText("Confirm presentation before dispatch")).toBeInTheDocument()
   })
 
+  it("renders configured presentation thumbnails", () => {
+    render(<ArtworkPurchaseExperience {...baseProps} presentationOptions={[
+      { label: "Rolled Canvas", image: "/rolled.png" },
+      { label: "Stretched", image: "/stretched.png" },
+    ]} />)
+    expect(screen.getByRole("img", { name: "Rolled Canvas" })).toHaveAttribute("src", "/rolled.png")
+    expect(screen.getByRole("img", { name: "Stretched" })).toHaveAttribute("src", "/stretched.png")
+  })
+
   it("uses the invoice path when direct checkout is unavailable", () => {
     render(<ArtworkPurchaseExperience {...baseProps} directCheckoutAvailable={false} />)
     expect(screen.getAllByRole("link", { name: "Request an invoice" })[0])

@@ -21,9 +21,9 @@ const quietMeridian: ArtworkDetailPreview = {
   dimensions: "90 x 140 cm / 35.4 x 55.1 in",
   displayPrice: "$1,520 USD",
   presentationOptions: [
-    { label: "Rolled Canvas" },
-    { label: "Stretched" },
-    { label: "Natural Oak Float Frame" },
+    { label: "Rolled Canvas", image: "/prototypes/quiet-meridian/rolled.png" },
+    { label: "Stretched", image: "/prototypes/quiet-meridian/stretched.png" },
+    { label: "Natural Oak Float Frame", image: "/prototypes/quiet-meridian/edge.png" },
   ],
   gallery: [
     { url: "/prototypes/quiet-meridian/room.png", role: "room", alt: "Quiet Meridian room visualization showing artwork scale", isVisualization: true },
@@ -36,4 +36,8 @@ const quietMeridian: ArtworkDetailPreview = {
 export function getArtworkDetailPreview(previewKey: string | undefined, isProduction: boolean) {
   if (isProduction || previewKey !== "quiet-meridian") return undefined
   return quietMeridian
+}
+
+export function isArtworkPreviewDisabled(isProduction: boolean, localQaFlag: string | undefined) {
+  return isProduction && localQaFlag !== "1"
 }

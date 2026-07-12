@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint vitest.config.ts src/test/setup.ts src/features/artwork-detail src/app/artwork/[slug]/page.tsx src/lib/artwork-images.ts src/lib/checkout.ts src/context/CartContext.tsx src/components/AddToCartButton.tsx src/app/cart/page.tsx src/app/checkout/page.tsx src/sanity/schemas/artwork.ts src/sanity/schemas/artworkGalleryAsset.ts src/sanity/schemas/index.ts --max-warnings=0",
+    "lint": "eslint vitest.config.ts src/test/setup.ts src/features/artwork-detail src/app/artwork/[slug]/page.tsx src/lib/artwork-images.ts src/lib/checkout.ts src/context/CartContext.tsx src/components/AddToCartButton.tsx src/components/ChatWidget.tsx src/components/ChatWidget.test.tsx src/app/cart/page.tsx src/app/checkout/page.tsx src/sanity/schemas/artwork.ts src/sanity/schemas/artworkGalleryAsset.ts src/sanity/schemas/index.ts --max-warnings=0",
     "copy:check": "node scripts/check-public-copy.mjs",
     "r2:upload-public": "node scripts/upload-public-assets-to-r2.mjs",
     "r2:migrate-sanity-images": "node scripts/migrate-sanity-images-to-r2.mjs",

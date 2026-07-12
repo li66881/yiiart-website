@@ -12,7 +12,7 @@ import ArtworkSupportingSections, {
   inferArtworkMaterial,
 } from "@/features/artwork-detail/ArtworkSupportingSections"
 import { normalizePresentationOptions } from "@/features/artwork-detail/model"
-import { getArtworkDetailPreview } from "@/features/artwork-detail/preview"
+import { getArtworkDetailPreview, isArtworkPreviewDisabled } from "@/features/artwork-detail/preview"
 import { client } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
@@ -161,7 +161,13 @@ export default async function ArtworkPage({
   }
 
   const { productPreview } = searchParams ? await searchParams : {}
-  const preview = getArtworkDetailPreview(productPreview, process.env.NODE_ENV === "production")
+  const preview = getArtworkDetailPreview(
+    productPreview,
+    isArtworkPreviewDisabled(
+      process.env.NODE_ENV === "production",
+      process.env.YIIART_ENABLE_LOCAL_PREVIEW,
+    ),
+  )
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const category = normalizeCategory(artwork.category)
@@ -276,8 +282,8 @@ export default async function ArtworkPage({
       {!preview && <ArtworkViewTracker id={artwork._id} title={title} price={priceCny} currency={currency} value={offerPrice} category={category} />}
 
       <main className="flex-1 pb-32 pt-24 lg:pb-16">
-        <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10 lg:py-10">
-          <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-[#6f675d]" aria-label="Breadcrumb">
+        <div className="mx-auto max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-10">
+          <nav className="sr-only" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-[#181613]"><TranslatedText k="common.home" /></Link>
             <span>/</span>
             <Link href="/artworks" className="hover:text-[#181613]"><TranslatedText k="common.artworks" /></Link>
@@ -326,6 +332,7 @@ export default async function ArtworkPage({
         </div>
       </main>
       <Footer />
+      <div className="h-24 bg-stone-950 lg:hidden" aria-hidden="true" />
     </div>
   )
 }

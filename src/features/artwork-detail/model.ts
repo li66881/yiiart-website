@@ -9,6 +9,7 @@ export type ArtworkGalleryItem = {
 
 export type PresentationOption = {
   label: string
+  image?: string
 }
 
 type GalleryInput = {

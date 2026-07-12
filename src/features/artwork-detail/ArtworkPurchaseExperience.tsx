@@ -92,13 +92,13 @@ export default function ArtworkPurchaseExperience({
         )}
 
         <p className="text-sm text-[#6f675d]">{eyebrow}</p>
-        <h1 className="mt-2 font-serif text-5xl font-light leading-[0.98] tracking-[-0.025em] lg:text-[3.45rem]">
+        <h1 className="mt-2 font-serif text-5xl font-light leading-[0.98] tracking-[-0.025em] lg:text-[3.2rem]">
           {title}
         </h1>
-        <p className="mt-4 text-base text-[#6f675d]">by {artistName}</p>
-        <p className="mt-5 max-w-xl text-sm leading-6 text-[#6f675d]">{description}</p>
+        <p className="mt-3 text-base text-[#6f675d]">by {artistName}</p>
+        <p className="mt-4 max-w-xl text-sm leading-5 text-[#6f675d]">{description}</p>
 
-        <div className="mt-7 border-y border-[#ded8ce] py-5">
+        <div className="mt-5 border-y border-[#ded8ce] py-4">
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div className="text-2xl font-medium">
               {displayPriceOverride || <PriceText amountCny={priceCny} />}
@@ -107,26 +107,28 @@ export default function ArtworkPurchaseExperience({
           </div>
         </div>
 
-        <div className="border-b border-[#ded8ce] py-5">
+        <div className="border-b border-[#ded8ce] py-4">
           <p className="text-xs uppercase tracking-[0.13em] text-[#6f675d]">{t("product.selectedSize")}</p>
           <p className="mt-2 text-sm font-medium">{dimensions}</p>
         </div>
 
-        <div className="py-5">
+        <div className="py-4">
           <p className="text-xs uppercase tracking-[0.13em] text-[#6f675d]">{t("product.chooseFinish")}</p>
           {presentationOptions.length > 0 ? (
-            <div className="mt-3 grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
+            <div className="mt-3 grid grid-cols-3 gap-2 lg:grid-cols-1 xl:grid-cols-3">
               {presentationOptions.map((option) => {
                 const selected = selectedPresentation === option.label
                 return (
                   <button
                     key={option.label}
                     type="button"
+                    aria-label={option.label}
                     aria-pressed={selected}
                     onClick={() => setSelectedPresentation(option.label)}
-                    className={`min-h-12 border px-3 py-3 text-left text-xs leading-4 transition focus:outline-none focus:ring-2 focus:ring-[#181613] focus:ring-offset-2 ${selected ? "border-[#181613] bg-[#f1eee7] font-medium" : "border-[#ded8ce] hover:border-[#181613]"}`}
+                    className={`border text-xs leading-4 transition focus:outline-none focus:ring-2 focus:ring-[#181613] focus:ring-offset-2 ${option.image ? "overflow-hidden text-center" : "min-h-12 px-3 py-3 text-left"} ${selected ? "border-[#181613] bg-[#f1eee7] font-medium" : "border-[#ded8ce] hover:border-[#181613]"}`}
                   >
-                    {option.label}
+                    {option.image && <img src={option.image} alt={option.label} className="aspect-[4/3] w-full object-cover" />}
+                    <span className={option.image ? "flex min-h-10 items-center justify-center px-2 py-2" : ""}>{option.label}</span>
                   </button>
                 )
               })}
@@ -148,8 +150,8 @@ export default function ArtworkPurchaseExperience({
           </a>
         </div>
 
-        <div className="mt-5 hidden divide-y divide-[#ded8ce] border-t border-[#ded8ce] text-sm text-[#6f675d] lg:block">
-          {trustRows.map((row) => <p key={row} className="py-3">{row}</p>)}
+        <div className="mt-4 hidden divide-y divide-[#ded8ce] border-t border-[#ded8ce] text-sm text-[#6f675d] lg:block">
+          {trustRows.map((row) => <p key={row} className="py-2">{row}</p>)}
         </div>
       </aside>
 

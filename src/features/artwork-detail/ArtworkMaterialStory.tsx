@@ -15,7 +15,7 @@ export default function ArtworkMaterialStory({
   if (detailItems.length < 2) return null
 
   return (
-    <section className="grid gap-8 border-t border-[#ded8ce] py-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-14">
+    <section className="grid gap-8 border-t border-[#ded8ce] py-10 lg:grid-cols-[0.7fr_1.3fr] lg:gap-14">
       <h2 className="max-w-sm font-serif text-4xl font-light leading-tight text-[#181613] lg:text-5xl">
         {heading}
       </h2>
