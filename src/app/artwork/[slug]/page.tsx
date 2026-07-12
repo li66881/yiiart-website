@@ -87,6 +87,8 @@ async function getArtwork(slug: string) {
         availability,
         allowCheckout,
         reservedUntil,
+        galleryAssets[]{role, alt, url, image},
+        presentationOptions,
         cloudflareImages,
         images,
         description
