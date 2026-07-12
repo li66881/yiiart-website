@@ -7,11 +7,12 @@ import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import ArtworkHeroGallery from "@/features/artwork-detail/ArtworkHeroGallery"
 import ArtworkMaterialStory from "@/features/artwork-detail/ArtworkMaterialStory"
 import ArtworkPurchaseExperience from "@/features/artwork-detail/ArtworkPurchaseExperience"
+import ArtworkSimilarStrip from "@/features/artwork-detail/ArtworkSimilarStrip"
 import ArtworkSupportingSections, {
   artworkPageFaqs,
   inferArtworkMaterial,
 } from "@/features/artwork-detail/ArtworkSupportingSections"
-import { normalizePresentationOptions } from "@/features/artwork-detail/model"
+import { buildArtworkProductTags, normalizePresentationOptions } from "@/features/artwork-detail/model"
 import { getArtworkDetailPreview, isArtworkPreviewDisabled } from "@/features/artwork-detail/preview"
 import { client } from "@/lib/sanity"
 import {
@@ -60,6 +61,7 @@ async function getArtwork(slug: string) {
         reservedUntil,
         galleryAssets[]{role, alt, url, image},
         presentationOptions,
+        certificateIncluded,
         cloudflareImages,
         images,
         description
@@ -191,6 +193,13 @@ export default async function ArtworkPage({
   const visibleCategory = preview?.category || category
   const visibleMedium = preview?.medium || medium
   const presentationOptions = preview?.presentationOptions || normalizePresentationOptions(artwork.presentationOptions)
+  const productTags = buildArtworkProductTags({
+    medium: visibleMedium,
+    surfaceFinish,
+    certificateIncluded: preview?.certificateIncluded || artwork.certificateIncluded === true,
+    previewMode: Boolean(preview),
+  })
+  const studioPhotoMode = preview ? "included" as const : "request" as const
   const priceCny = Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
@@ -292,7 +301,7 @@ export default async function ArtworkPage({
             <span className="text-[#181613]">{title}</span>
           </nav>
 
-          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,2fr)_minmax(380px,0.95fr)] lg:gap-10">
+          <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1.8fr)_minmax(400px,1fr)] lg:gap-8">
             <ArtworkHeroGallery items={galleryItems} />
             <ArtworkPurchaseExperience
               eyebrow={[visibleCategory, visibleMedium].filter(Boolean).join(" / ")}
@@ -311,9 +320,13 @@ export default async function ArtworkPage({
               invoiceUrl={invoiceUrl}
               whatsappUrl={whatsappUrl}
               previewMode={Boolean(preview)}
+              productTags={productTags}
+              sizeGuideHref="/size-guide"
+              studioPhotoMode={studioPhotoMode}
             />
           </div>
 
+          <ArtworkSimilarStrip artworks={relatedArtworks} />
           <ArtworkMaterialStory items={galleryItems} heading={<TranslatedText k="product.materialStory" fallback="Made by hand, understood in the room." />} />
           <div className="flex justify-end border-b border-[#ded8ce] pb-8"><SocialShare title={visibleTitle} image={galleryItems[0]?.url || imageUrl} /></div>
           <ArtworkSupportingSections
@@ -325,7 +338,6 @@ export default async function ArtworkPage({
             dimensionsSource={artwork.dimensions}
             roomTypes={roomTypes}
             customRequestUrl={customRequestUrl}
-            relatedArtworks={relatedArtworks}
             reviews={reviews}
             reviewStats={reviewStats}
           />
