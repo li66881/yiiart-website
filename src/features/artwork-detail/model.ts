@@ -10,6 +10,18 @@ export type ArtworkGalleryItem = {
 export type PresentationOption = {
   label: string
   image?: string
+  description?: string
+}
+
+export type ProductTag = {
+  label: string
+}
+
+export type ArtworkProductFacts = {
+  medium?: string
+  surfaceFinish?: string
+  certificateIncluded?: boolean
+  previewMode?: boolean
 }
 
 type GalleryInput = {
@@ -60,8 +72,41 @@ export function normalizePresentationOptions(input: unknown): PresentationOption
     const key = label.toLocaleLowerCase()
     if (!label || seen.has(key)) return []
     seen.add(key)
-    return [{ label }]
+    return [{ label, description: getPresentationDescription(label) }]
   })
+}
+
+export function buildArtworkProductTags({
+  medium = "",
+  surfaceFinish = "",
+  certificateIncluded = false,
+  previewMode = false,
+}: ArtworkProductFacts): ProductTag[] {
+  const textureSource = `${medium} ${surfaceFinish}`
+  const tags: ProductTag[] = [
+    { label: "Original Artwork" },
+    {
+      label: /texture|plaster|mixed media/i.test(textureSource)
+        ? "Hand-Painted Texture"
+        : "Hand-Painted",
+    },
+  ]
+
+  if (certificateIncluded || previewMode) {
+    tags.push({ label: "Certificate Included" })
+  }
+
+  return tags.slice(0, 3)
+}
+
+export function getPresentationDescription(label: string) {
+  const descriptions: Record<string, string> = {
+    "Rolled Canvas": "Ships rolled in a protective tube",
+    Stretched: "Ready to hang",
+    "Natural Oak Float Frame": "Warm oak frame with a float mount",
+  }
+
+  return descriptions[label]
 }
 
 export function validatePresentationOption(

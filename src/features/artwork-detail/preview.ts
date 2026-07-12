@@ -8,6 +8,7 @@ export type ArtworkDetailPreview = {
   description: string
   dimensions: string
   displayPrice: string
+  certificateIncluded: boolean
   gallery: ArtworkGalleryItem[]
   presentationOptions: PresentationOption[]
 }
@@ -20,10 +21,11 @@ const quietMeridian: ArtworkDetailPreview = {
   description: "Built in thin layers of plaster, ash gray, and muted gold, this original painting brings a measured focal point to calm interiors.",
   dimensions: "90 x 140 cm / 35.4 x 55.1 in",
   displayPrice: "$1,520 USD",
+  certificateIncluded: true,
   presentationOptions: [
-    { label: "Rolled Canvas", image: "/prototypes/quiet-meridian/rolled.png" },
-    { label: "Stretched", image: "/prototypes/quiet-meridian/stretched.png" },
-    { label: "Natural Oak Float Frame", image: "/prototypes/quiet-meridian/edge.png" },
+    { label: "Rolled Canvas", image: "/prototypes/quiet-meridian/rolled.png", description: "Ships rolled in a protective tube" },
+    { label: "Stretched", image: "/prototypes/quiet-meridian/stretched.png", description: "Ready to hang" },
+    { label: "Natural Oak Float Frame", image: "/prototypes/quiet-meridian/edge.png", description: "Warm oak frame with a float mount" },
   ],
   gallery: [
     { url: "/prototypes/quiet-meridian/room.png", role: "room", alt: "Quiet Meridian room visualization showing artwork scale", isVisualization: true },

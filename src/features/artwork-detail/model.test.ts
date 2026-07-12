@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest"
 import {
+  buildArtworkProductTags,
   buildGalleryItems,
+  getPresentationDescription,
   normalizePresentationOptions,
   validatePresentationOption,
 } from "./model"
@@ -38,12 +40,46 @@ describe("buildGalleryItems", () => {
 describe("presentation options", () => {
   it("trims, removes blanks, and deduplicates case-insensitively", () => {
     expect(normalizePresentationOptions([" Rolled Canvas ", "", "rolled canvas", "Stretched"]))
-      .toEqual([{ label: "Rolled Canvas" }, { label: "Stretched" }])
+      .toEqual([
+        { label: "Rolled Canvas", description: "Ships rolled in a protective tube" },
+        { label: "Stretched", description: "Ready to hang" },
+      ])
   })
 
   it("accepts only a configured option", () => {
     const options = [{ label: "Rolled Canvas" }, { label: "Stretched" }]
     expect(validatePresentationOption("Stretched", options)).toBe("Stretched")
     expect(validatePresentationOption("Gold Frame", options)).toBeUndefined()
+  })
+})
+
+describe("natural studio product content", () => {
+  it("shows only truthful product tags", () => {
+    expect(buildArtworkProductTags({
+      medium: "Mixed media on canvas",
+      surfaceFinish: "Raised plaster texture",
+      certificateIncluded: false,
+      previewMode: false,
+    })).toEqual([
+      { label: "Original Artwork" },
+      { label: "Hand-Painted Texture" },
+    ])
+  })
+
+  it("allows the certificate tag only from configured or preview facts", () => {
+    expect(buildArtworkProductTags({ certificateIncluded: true, previewMode: false }))
+      .toContainEqual({ label: "Certificate Included" })
+    expect(buildArtworkProductTags({ certificateIncluded: false, previewMode: true }))
+      .toContainEqual({ label: "Certificate Included" })
+  })
+
+  it("returns safe supporting copy for known presentation labels", () => {
+    expect(getPresentationDescription("Rolled Canvas"))
+      .toBe("Ships rolled in a protective tube")
+    expect(getPresentationDescription("Stretched"))
+      .toBe("Ready to hang")
+    expect(getPresentationDescription("Natural Oak Float Frame"))
+      .toBe("Warm oak frame with a float mount")
+    expect(getPresentationDescription("Custom format")).toBeUndefined()
   })
 })

@@ -3,7 +3,10 @@ import { getArtworkDetailPreview, isArtworkPreviewDisabled } from "./preview"
 
 describe("getArtworkDetailPreview", () => {
   it("returns Quiet Meridian only outside production", () => {
-    expect(getArtworkDetailPreview("quiet-meridian", false)?.title).toBe("Quiet Meridian")
+    const preview = getArtworkDetailPreview("quiet-meridian", false)
+    expect(preview?.title).toBe("Quiet Meridian")
+    expect(preview?.certificateIncluded).toBe(true)
+    expect(preview?.presentationOptions.every((option) => option.description)).toBe(true)
     expect(getArtworkDetailPreview("quiet-meridian", true)).toBeUndefined()
   })
 
