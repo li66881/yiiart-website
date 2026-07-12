@@ -1,16 +1,10 @@
 import Link from "next/link"
 import type { ReactNode } from "react"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
-import { PriceText } from "@/components/PriceText"
 import TranslatedText from "@/components/TranslatedText"
 import {
-  formatArtworkDimensions,
-  normalizeCategory,
-  normalizeMedium,
   parseArtworkDimensionsCm,
-  pickEnglish,
 } from "@/lib/artwork-display"
-import { getArtworkImageUrl } from "@/lib/artwork-images"
 import type { PublicReview, ReviewStats } from "@/lib/reviews"
 import {
   productAdviceItems,
@@ -55,7 +49,6 @@ export type ArtworkSupportingSectionsProps = {
   dimensionsSource?: string
   roomTypes: string[]
   customRequestUrl: string
-  relatedArtworks: any[]
   reviews: PublicReview[]
   reviewStats: ReviewStats
 }
@@ -69,7 +62,6 @@ export default function ArtworkSupportingSections({
   dimensionsSource,
   roomTypes,
   customRequestUrl,
-  relatedArtworks,
   reviews,
   reviewStats,
 }: ArtworkSupportingSectionsProps): ReactNode {
@@ -186,24 +178,6 @@ export default function ArtworkSupportingSections({
         </div>
       </section>
 
-      <section className="mt-16 border-t border-[#ded8ce] pt-12">
-        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
-          <SectionIntro
-            eyebrow="Related Products"
-            title="Similar artworks to compare"
-            text="Compare works with a similar style or medium before deciding on size, palette, and room fit."
-          />
-          <Link href="/artworks" className="text-sm underline underline-offset-4">View all artworks</Link>
-        </div>
-        {relatedArtworks.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {relatedArtworks.map((related: any) => <RelatedArtworkCard key={related._id} artwork={related} />)}
-          </div>
-        ) : (
-          <p className="border-y border-[#ded8ce] py-12 text-center text-[#6f675d]">No similar artworks are available for comparison right now.</p>
-        )}
-      </section>
-
       <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
 
       <section className="mt-16 grid gap-6 border-t border-[#ded8ce] pt-12 md:grid-cols-4">
@@ -253,30 +227,6 @@ function ArtworkDetails({ medium, surfaceFinish, framingNotes, shippingProfile }
   ].filter(Boolean) as Array<{ label: string; value: string }>
 
   return <div className="grid gap-3 sm:grid-cols-2">{rows.map((row) => <Detail key={row.label} label={row.label} value={row.value} />)}</div>
-}
-
-function RelatedArtworkCard({ artwork }: { artwork: any }) {
-  const href = `/artwork/${artwork.slug?.current || artwork._id}`
-  const image = getArtworkImageUrl(artwork, { width: 700, height: 900 })
-  const title = pickEnglish(artwork.title, "Untitled artwork")
-  const category = normalizeCategory(artwork.category)
-  const medium = normalizeMedium(artwork.medium)
-
-  return (
-    <Link href={href} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#f1eee7]">
-        {image ? <img src={image} alt={`${title}, related handmade artwork`} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" /> : <div className="flex h-full items-center justify-center text-[#6f675d]">Artwork image available on request</div>}
-      </div>
-      <div className="pt-4">
-        <p className="text-xs uppercase text-[#6f675d]">{[category, medium].filter(Boolean).join(" / ")}</p>
-        <h3 className="mt-2 font-medium leading-snug">{title}</h3>
-        <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-          <span className="text-[#6f675d]">{formatArtworkDimensions(artwork)}</span>
-          <span className="font-semibold"><PriceText amountCny={artwork.price} /></span>
-        </div>
-      </div>
-    </Link>
-  )
 }
 
 export function inferArtworkMaterial(medium: string) {
