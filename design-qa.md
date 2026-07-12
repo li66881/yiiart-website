@@ -1,46 +1,45 @@
-# Design QA — YiiArt room-first artwork detail
+# Design QA — YiiArt Natural Studio product detail
 
 ## Source of truth
 
-- Approved reference: `docs/superpowers/specs/assets/yiiart-room-first-product-detail.png`
-- Reference intent: room visualization first, purchase panel second, restrained warm-neutral editorial styling, and material proof immediately below the fold.
+- Live visual reference: `docs/superpowers/specs/assets/mesonart-sg234-reference.png`
+- Approved direction: `docs/superpowers/specs/assets/yiiart-natural-studio-product-detail-selected.png`
+- Design intent: a calm, gallery-like product page with a dominant room scene, a narrow thumbnail rail, compact product facts, finish cards, clear purchase actions, and visually similar work immediately after the hero.
 
 ## Implementation evidence
 
-- Desktop final, 1440 × 1024: `docs/superpowers/specs/assets/yiiart-room-first-desktop-qa-final.png`
-- Mobile hero, 390 × 844: `docs/superpowers/specs/assets/yiiart-room-first-mobile-qa-final.png`
-- Mobile finish options, 390 × 844: `docs/superpowers/specs/assets/yiiart-room-first-mobile-options-qa.png`
-- Mobile footer safe area, 390 × 844: `docs/superpowers/specs/assets/yiiart-room-first-mobile-bottom-qa.png`
-- QA state: local `Quiet Meridian` preview on the existing `Afternoon` artwork route, English source content, cookie banner dismissed. Chrome may visually translate the final mobile captures because browser translation is enabled.
+- Desktop, 1440 × 1024: `docs/superpowers/specs/assets/yiiart-natural-studio-desktop-qa.png`
+- Mobile hero, 390 × 844: `docs/superpowers/specs/assets/yiiart-natural-studio-mobile-qa.png`
+- QA state: local `Quiet Meridian` preview on the existing `Afternoon` artwork route. Chrome translated the captured English source content into Chinese because browser translation is enabled.
 
 ## Full-view comparison
 
-The reference and the final desktop screenshot were reviewed together at the same 1440 × 1024 viewport. The implementation preserves the defining composition: a dominant room scene at left, a compact purchase column at right, neutral cream/black tokens, editorial serif title, three presentation cards, two purchase actions, trust rows, and a material-story transition at the fold.
+The MesonArt reference, approved Natural Studio direction, and desktop implementation were inspected together. The final page keeps the defining composition: a warm room visualization with vertical artwork views on the left, an editorial product title and price hierarchy on the right, three product-fact tags, a size-guide row, image-backed presentation options, studio-photo reassurance, black primary CTA, WhatsApp action, and compact trust details.
 
-The mobile layout was checked at 390 × 844 against the approved responsive behavior in the implementation plan. It has no horizontal overflow, keeps the gallery and finish controls usable, retains a persistent purchase action, and reserves a safe area below the footer.
+The mobile layout was checked at 390 × 844. The hero image remains dominant, thumbnails become a horizontal rail, text and prices retain the approved hierarchy, and the fixed purchase action stays available without horizontal overflow.
 
 ## Focused surface checks
 
-- Typography: large light-weight serif product title and section headings match the reference hierarchy; UI labels remain compact sans serif.
-- Spacing and layout: desktop 2-column hero, sticky purchase panel, thumbnail strip, trust rows, and below-fold story align with the reference rhythm. Mobile stacks cleanly without clipped controls.
-- Colors and tokens: warm off-white background, stone rules, charcoal text, and black CTAs stay inside YiiArt's existing palette.
-- Image quality: the room, artwork, texture, edge, rolled-canvas, and stretched-canvas assets are purpose-generated raster images with crops matched to their slots.
-- Copy and content: realistic title, artist, dimensions, description, finish options, trust copy, material story, sizing guidance, customization, shipping, FAQ, related work, and review disclosure are present.
-- Icons: existing YiiArt header controls and support widget were retained. No placeholder glyphs or improvised SVG assets were introduced.
-- Interaction: gallery switching, finish selection, preview purchase feedback, WhatsApp link, and the real Sanity artwork add-to-cart path were exercised in Chrome.
+- Typography: light serif product title and section headings preserve the selected editorial hierarchy; labels and controls use compact sans serif type.
+- Spacing and layout: desktop and mobile breakpoints align cleanly, with consistent warm-white gutters, thin rules, and compact purchase controls.
+- Colors and tokens: warm off-white, stone borders, charcoal text, muted green reassurance, and black CTAs stay inside YiiArt's existing palette.
+- Image quality: the room, artwork, texture, edge, rolled-canvas, and framed presentation assets are real raster assets sized and cropped for their slots.
+- Copy and content: product tags, artist, dimensions, description, presentation guidance, studio-photo promise, shipping, returns, payment, and related-artwork content are present without fabricated reviews.
+- Icons: Phosphor icons are used for the new product facts and reassurance controls; no placeholder glyphs, emoji, or improvised SVGs were added.
+- Interaction: gallery switching, finish selection, preview add-to-cart feedback, trust-detail expansion, mobile fixed CTA, the real `white-boat-on-grey` cart path, and cart cleanup all passed.
+- Responsive safety: 390 px viewport reported no horizontal overflow.
 
-## Iteration history
+## Iteration notes
 
-1. P1 — Responsive utility classes were absent because Tailwind did not scan `src/features`. Fixed the content glob and added a regression test.
-2. P2 — Finish cards lacked visual proof and the first viewport was vertically loose. Added generated rolled/stretched assets, role-aware option images, visually hidden breadcrumbs, and compact purchase-panel spacing.
-3. P2 — The mobile WhatsApp button overlapped the fixed purchase action, and the purchase bar obscured footer copyright content at the absolute bottom. Raised the support widget on small screens and added a footer safe-area spacer, both covered by tests.
-4. Final comparison — no open P0, P1, or P2 visual issues.
+1. The purchase panel was condensed into the approved Natural Studio rhythm while preserving YiiArt's existing header, cart, support, and artwork data flow.
+2. Related works were promoted into a dedicated visual strip directly after the product hero.
+3. Desktop and mobile screenshots were compared against the selected direction; no open P0, P1, or P2 visual issues remain.
 
 ## Intentional differences and environment notes
 
-- Preview reviews are hidden because no verified reviews exist for the generated prototype; the UI does not fabricate collector claims.
-- The existing YiiArt promo bar, navigation, search, wishlist, cart, and support widget remain intact rather than being replaced by mock controls.
-- Interactive gallery thumbnails remain visible below the room image to support the required texture and edge views.
-- Local console output includes the project's pre-existing Auth.js configuration error and a Chrome-extension module error. Neither originates from the product-detail changes, and core page/cart interactions pass.
+- YiiArt's existing announcement bar, full desktop navigation, and support widget remain intact rather than being replaced by reference-site chrome.
+- Real artworks only show certificate and presentation claims when the product data supports them; the generated preview explicitly includes these facts.
+- The browser translation layer changed screenshot language only; source copy remains English.
+- The project still emits three pre-existing unused-variable build warnings outside this product-detail work.
 
 Final result: passed.
