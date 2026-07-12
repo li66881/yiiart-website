@@ -59,7 +59,6 @@ export default function ArtworkHeroGallery({ items }: { items: ArtworkGalleryIte
               type="button"
               aria-label={`Show ${item.alt}`}
               aria-pressed={selectedIndex === index}
-              aria-selected={selectedIndex === index}
               onClick={() => setSelectedIndex(index)}
               onKeyDown={(event) => handleThumbnailKeyDown(event, index)}
               className={`h-20 w-24 shrink-0 border-2 bg-[#f1eee7] p-1 transition focus:outline-none focus:ring-2 focus:ring-[#181613] focus:ring-offset-2 ${selectedIndex === index ? "border-[#181613]" : "border-transparent opacity-70 hover:opacity-100"}`}

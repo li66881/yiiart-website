@@ -1,3 +1,4 @@
+import type { ReactNode } from "react"
 import type { ArtworkGalleryItem } from "./model"
 
 export default function ArtworkMaterialStory({
@@ -5,7 +6,7 @@ export default function ArtworkMaterialStory({
   heading,
 }: {
   items: ArtworkGalleryItem[]
-  heading: string
+  heading: ReactNode
 }) {
   const detailItems = items
     .filter((item) => item.role === "texture" || item.role === "edge")

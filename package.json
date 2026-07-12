@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint vitest.config.ts src/test/setup.ts src/features/artwork-detail src/app/artwork/[slug]/page.tsx src/lib/artwork-images.ts src/lib/checkout.ts src/context/CartContext.tsx src/components/AddToCartButton.tsx src/app/cart/page.tsx src/app/checkout/page.tsx src/sanity/schemas/artwork.ts src/sanity/schemas/artworkGalleryAsset.ts src/sanity/schemas/index.ts --max-warnings=0",
     "copy:check": "node scripts/check-public-copy.mjs",
     "r2:upload-public": "node scripts/upload-public-assets-to-r2.mjs",
     "r2:migrate-sanity-images": "node scripts/migrate-sanity-images-to-r2.mjs",
@@ -45,6 +45,8 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "^15.5.15",
     "jsdom": "^29.1.1",
     "vitest": "^4.1.10"
   }

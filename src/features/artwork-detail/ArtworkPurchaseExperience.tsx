@@ -18,7 +18,7 @@ type ArtworkPurchaseExperienceProps = {
   reviewCount: number
   reviewOverall: number
   presentationOptions: PresentationOption[]
-  presentationFallbackText: string
+  presentationFallbackText?: string
   baseCartItem: AddToCartItem
   directCheckoutAvailable: boolean
   invoiceUrl: string
@@ -132,7 +132,7 @@ export default function ArtworkPurchaseExperience({
               })}
             </div>
           ) : (
-            <p className="mt-3 text-sm leading-6 text-[#6f675d]">{presentationFallbackText}</p>
+            <p className="mt-3 text-sm leading-6 text-[#6f675d]">{presentationFallbackText || t("product.confirmPresentation")}</p>
           )}
         </div>
 
