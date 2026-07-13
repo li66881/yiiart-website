@@ -7,17 +7,20 @@ import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 
+export type AddToCartItem = {
+  id: string
+  title: string
+  titleZh?: string
+  artist: string
+  artistId?: string
+  price: number
+  image: string
+  size?: string
+  presentationOption?: string
+}
+
 type AddToCartButtonProps = {
-  item: {
-    id: string
-    title: string
-    titleZh?: string
-    artist: string
-    artistId?: string
-    price: number
-    image: string
-    size?: string
-  }
+  item: AddToCartItem
 }
 
 export default function AddToCartButton({ item }: AddToCartButtonProps) {

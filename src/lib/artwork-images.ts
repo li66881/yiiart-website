@@ -1,4 +1,5 @@
 import { urlFor } from "@/lib/sanity"
+import { buildGalleryItems, type GalleryRole } from "@/features/artwork-detail/model"
 
 export type CloudflareImage = {
   _type?: string
@@ -36,6 +37,35 @@ export function getArtworkImageUrls(artwork: any, options: ImageUrlOptions = {})
 
 export function hasArtworkImage(artwork: any) {
   return Boolean(getArtworkImageUrl(artwork))
+}
+
+export function getArtworkGalleryItems(
+  artwork: any,
+  options: ImageUrlOptions = {},
+  title = "Artwork",
+) {
+  const explicit = Array.isArray(artwork?.galleryAssets)
+    ? artwork.galleryAssets.map((asset: any) => ({
+        url: resolveGalleryAssetUrl(asset, options),
+        role: asset?.role as GalleryRole | undefined,
+        alt: asset?.alt,
+      }))
+    : []
+
+  return buildGalleryItems({
+    title,
+    explicit,
+    fallbackUrls: getArtworkImageUrls(artwork, options),
+  })
+}
+
+function resolveGalleryAssetUrl(asset: any, options: ImageUrlOptions) {
+  if (typeof asset?.url === "string" && asset.url.trim()) return asset.url.trim()
+  if (!asset?.image) return ""
+  let builder = urlFor(asset.image)
+  if (options.width) builder = builder.width(options.width)
+  if (options.height) builder = builder.height(options.height)
+  return builder.url()
 }
 
 function getCloudflareImages(artwork: any): CloudflareImage[] {

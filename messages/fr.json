@@ -118,6 +118,17 @@
     "demoEmail": "demo@yiiart.com",
     "demoPassword": "demo123"
   },
+  "product": {
+    "selectedSize": "Format sélectionné",
+    "chooseFinish": "Choisir la finition",
+    "confirmPresentation": "Confirmer la présentation avant l’expédition",
+    "roomVisualization": "Visualisation en intérieur",
+    "materialStory": "Fait main, compris dans l’espace.",
+    "oneOfAKind": "Œuvre originale unique",
+    "certificateIncluded": "Certificat d’authenticité inclus",
+    "worldwideDelivery": "Livraison mondiale gratuite",
+    "returnWindow": "Délai de retour de 30 jours"
+  },
   "footer": {
     "shop": "Boutique",
     "support": "Support",

@@ -21,7 +21,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center bg-black text-sm font-medium text-white shadow-xl transition hover:bg-stone-800"
+        className="fixed bottom-24 right-6 z-50 flex h-14 w-14 items-center justify-center bg-black text-sm font-medium text-white shadow-xl transition hover:bg-stone-800 lg:bottom-6"
         aria-label={t("chat.openSupport")}
       >
         WA
@@ -30,7 +30,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 w-[calc(100vw-2rem)] max-w-sm border border-stone-200 bg-white shadow-2xl">
+    <div className="fixed bottom-24 right-6 z-50 w-[calc(100vw-2rem)] max-w-sm border border-stone-200 bg-white shadow-2xl lg:bottom-6">
       <div className="flex items-start justify-between bg-stone-950 p-4 text-white">
         <div>
           <h3 className="font-medium">{t("chat.title")}</h3>

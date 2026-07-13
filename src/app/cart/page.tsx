@@ -43,6 +43,7 @@ export default function CartPage() {
                             <h3 className="font-medium">{item.title}</h3>
                             <p className="text-sm text-gray-500">{item.artist}</p>
                             {item.size && <p className="text-sm text-gray-400">{item.size}</p>}
+                            {item.presentationOption && <p className="text-sm text-gray-400">{item.presentationOption}</p>}
                           </div>
                           <p className="font-medium"><PriceText amountCny={item.price} /></p>
                         </div>

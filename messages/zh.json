@@ -118,6 +118,17 @@
     "demoEmail": "demo@yiiart.com",
     "demoPassword": "demo123"
   },
+  "product": {
+    "selectedSize": "已选尺寸",
+    "chooseFinish": "选择装裱方式",
+    "confirmPresentation": "发货前确认装裱方式",
+    "roomVisualization": "空间效果示意图",
+    "materialStory": "手工层次，置于空间才真正可见。",
+    "oneOfAKind": "独一无二的原创作品",
+    "certificateIncluded": "附带作品真品证书",
+    "worldwideDelivery": "全球免费配送",
+    "returnWindow": "30 天退货期限"
+  },
   "footer": {
     "shop": "商店",
     "support": "客服",
