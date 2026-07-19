@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
 import { adminMutationError, createSlug, stringField, validateAdminPublishing } from "@/lib/admin"
+import { parseArtworkCatalogFields } from "@/lib/admin/artwork-input"
 import { isR2Configured, uploadR2Object } from "@/lib/r2"
 
 export const runtime = "nodejs"
@@ -44,6 +45,16 @@ export async function POST(request: NextRequest) {
     const artistId = stringField(form, "artistId")
     const featured = stringField(form, "featured") === "true"
     const files = form.getAll("images").filter(isUploadFile)
+    let catalogFields
+
+    try {
+      catalogFields = parseArtworkCatalogFields(form)
+    } catch (error) {
+      return NextResponse.json(
+        { success: false, error: error instanceof Error ? error.message : "Invalid catalog fields." },
+        { status: 400 },
+      )
+    }
 
     if (!titleZh && !titleEn) {
       return NextResponse.json({ success: false, error: "Artwork title is required." }, { status: 400 })
@@ -108,6 +119,7 @@ export async function POST(request: NextRequest) {
       title: { zh: titleZh, en: titleEn },
       slug: { _type: "slug", current: slug },
       artist: artistId ? { _type: "reference", _ref: artistId } : undefined,
+      ...catalogFields,
       price,
       dimensions,
       widthCm: widthCm || undefined,

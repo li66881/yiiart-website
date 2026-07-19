@@ -18,6 +18,20 @@ type Result = {
   slug?: string
 }
 
+type SizeDraft = {
+  id: string
+  label: string
+  widthCm: string
+  heightCm: string
+  priceCny: string
+}
+
+type FinishDraft = {
+  id: string
+  label: string
+  priceDeltaCny: string
+}
+
 const mediums = ["Oil on Canvas", "Acrylic on Canvas", "Oil on Panel", "Mixed Media"]
 const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi", "Minimalist"]
 const roomTypeOptions = ["Living room", "Bedroom", "Dining room", "Entryway", "Office", "Hospitality space"]
@@ -28,6 +42,10 @@ const shippingProfileOptions = ["Ships stretched", "Ships rolled", "Confirm befo
 export default function NewArtworkPage() {
   const [artists, setArtists] = useState<Artist[]>([])
   const [artistId, setArtistId] = useState("")
+  const [collectionType, setCollectionType] = useState("new_collection")
+  const [productionModel, setProductionModel] = useState("hand_painted_to_order")
+  const [rightsStatus, setRightsStatus] = useState("needs_review")
+  const [migrationStatus, setMigrationStatus] = useState("needs_rights_review")
   const [titleZh, setTitleZh] = useState("")
   const [titleEn, setTitleEn] = useState("")
   const [price, setPrice] = useState("")
@@ -46,6 +64,16 @@ export default function NewArtworkPage() {
   const [socialCaption, setSocialCaption] = useState("")
   const [descriptionZh, setDescriptionZh] = useState("")
   const [descriptionEn, setDescriptionEn] = useState("")
+  const [shortDescription, setShortDescription] = useState("")
+  const [artworkStory, setArtworkStory] = useState("")
+  const [materials, setMaterials] = useState("")
+  const [creationWindow, setCreationWindow] = useState("Painted in 7-12 business days.")
+  const [standardSizes, setStandardSizes] = useState<SizeDraft[]>([
+    { id: "80x100", label: "80 x 100 cm", widthCm: "80", heightCm: "100", priceCny: "" },
+  ])
+  const [frameOptions, setFrameOptions] = useState<FinishDraft[]>([
+    { id: "rolled", label: "Rolled canvas", priceDeltaCny: "0" },
+  ])
   const [featured, setFeatured] = useState(false)
   const [password, setPassword] = useState("")
   const [files, setFiles] = useState<FileList | null>(null)
@@ -71,6 +99,10 @@ export default function NewArtworkPage() {
     const formData = new FormData()
     formData.append("password", password)
     formData.append("artistId", artistId)
+    formData.append("collectionType", collectionType)
+    formData.append("productionModel", productionModel)
+    formData.append("rightsStatus", rightsStatus)
+    formData.append("migrationStatus", migrationStatus)
     formData.append("titleZh", titleZh)
     formData.append("titleEn", titleEn)
     formData.append("price", price)
@@ -89,6 +121,20 @@ export default function NewArtworkPage() {
     formData.append("socialCaption", socialCaption)
     formData.append("descriptionZh", descriptionZh)
     formData.append("descriptionEn", descriptionEn)
+    formData.append("shortDescription", shortDescription)
+    formData.append("artworkStory", artworkStory)
+    formData.append("materials", materials)
+    formData.append("creationWindow", creationWindow)
+    formData.append("standardSizes", JSON.stringify(standardSizes.map((size) => ({
+      ...size,
+      widthCm: Number(size.widthCm),
+      heightCm: Number(size.heightCm),
+      priceCny: Number(size.priceCny),
+    }))))
+    formData.append("frameOptions", JSON.stringify(frameOptions.map((finish) => ({
+      ...finish,
+      priceDeltaCny: Number(finish.priceDeltaCny),
+    }))))
     formData.append("featured", String(featured))
 
     Array.from(files || []).forEach((file) => formData.append("images", file))
@@ -139,6 +185,41 @@ export default function NewArtworkPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="border bg-white p-6 space-y-5">
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <Field label="Storefront collection">
+                <select value={collectionType} onChange={(event) => setCollectionType(event.target.value)} className={inputClass}>
+                  <option value="new_collection">New Collection</option>
+                  <option value="artist_collection">Artist Collection</option>
+                </select>
+              </Field>
+              <Field label="Production model">
+                <select value={productionModel} onChange={(event) => setProductionModel(event.target.value)} className={inputClass}>
+                  <option value="hand_painted_to_order">Hand-painted to order</option>
+                  <option value="original">Existing original artwork</option>
+                </select>
+              </Field>
+              <Field label="Rights status">
+                <select value={rightsStatus} onChange={(event) => setRightsStatus(event.target.value)} className={inputClass}>
+                  <option value="needs_review">Needs review</option>
+                  <option value="approved">Approved for storefront</option>
+                  <option value="blocked">Blocked</option>
+                </select>
+              </Field>
+              <Field label="Migration status">
+                <select value={migrationStatus} onChange={(event) => setMigrationStatus(event.target.value)} className={inputClass}>
+                  <option value="needs_rights_review">Needs rights review</option>
+                  <option value="needs_copy">Needs English copy</option>
+                  <option value="needs_images">Needs images</option>
+                  <option value="ready">Ready</option>
+                  <option value="archive">Archive</option>
+                </select>
+              </Field>
+            </div>
+
+            <p className="border-l-4 border-amber-400 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              Products remain internal until rights and migration status are reviewed. Only approved, ready records should be promoted in the New Collection.
+            </p>
+
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Chinese title">
                 <input value={titleZh} onChange={(event) => setTitleZh(event.target.value)} className={inputClass} />
@@ -204,6 +285,64 @@ export default function NewArtworkPage() {
                 />
               </Field>
             </div>
+
+            {productionModel === "hand_painted_to_order" && (
+              <fieldset className="space-y-4 border p-4">
+                <legend className="px-1 text-sm font-medium">Standard sizes and authoritative prices</legend>
+                {standardSizes.map((size, index) => (
+                  <div key={`${size.id}-${index}`} className="grid gap-3 border-b pb-4 md:grid-cols-5">
+                    <Field label="ID">
+                      <input value={size.id} onChange={(event) => setStandardSizes((current) => updateDraft(current, index, "id", event.target.value))} className={inputClass} required />
+                    </Field>
+                    <Field label="Label">
+                      <input value={size.label} onChange={(event) => setStandardSizes((current) => updateDraft(current, index, "label", event.target.value))} className={inputClass} required />
+                    </Field>
+                    <Field label="Width cm">
+                      <input type="number" min="1" value={size.widthCm} onChange={(event) => setStandardSizes((current) => updateDraft(current, index, "widthCm", event.target.value))} className={inputClass} />
+                    </Field>
+                    <Field label="Height cm">
+                      <input type="number" min="1" value={size.heightCm} onChange={(event) => setStandardSizes((current) => updateDraft(current, index, "heightCm", event.target.value))} className={inputClass} />
+                    </Field>
+                    <Field label="Price CNY">
+                      <input type="number" min="1" value={size.priceCny} onChange={(event) => setStandardSizes((current) => updateDraft(current, index, "priceCny", event.target.value))} className={inputClass} required />
+                    </Field>
+                    {standardSizes.length > 1 && (
+                      <button type="button" onClick={() => setStandardSizes((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="text-left text-sm text-red-600">
+                        Remove size
+                      </button>
+                    )}
+                  </div>
+                ))}
+                <button type="button" onClick={() => setStandardSizes((current) => [...current, { id: `size-${current.length + 1}`, label: "", widthCm: "", heightCm: "", priceCny: "" }])} className="text-sm underline underline-offset-4">
+                  Add another size
+                </button>
+              </fieldset>
+            )}
+
+            <fieldset className="space-y-4 border p-4">
+              <legend className="px-1 text-sm font-medium">Finish and frame options</legend>
+              {frameOptions.map((finish, index) => (
+                <div key={`${finish.id}-${index}`} className="grid gap-3 border-b pb-4 md:grid-cols-3">
+                  <Field label="ID">
+                    <input value={finish.id} onChange={(event) => setFrameOptions((current) => updateDraft(current, index, "id", event.target.value))} className={inputClass} required />
+                  </Field>
+                  <Field label="Label">
+                    <input value={finish.label} onChange={(event) => setFrameOptions((current) => updateDraft(current, index, "label", event.target.value))} className={inputClass} required />
+                  </Field>
+                  <Field label="Additional price CNY">
+                    <input type="number" min="0" value={finish.priceDeltaCny} onChange={(event) => setFrameOptions((current) => updateDraft(current, index, "priceDeltaCny", event.target.value))} className={inputClass} required />
+                  </Field>
+                  {frameOptions.length > 1 && (
+                    <button type="button" onClick={() => setFrameOptions((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="text-left text-sm text-red-600">
+                      Remove finish
+                    </button>
+                  )}
+                </div>
+              ))}
+              <button type="button" onClick={() => setFrameOptions((current) => [...current, { id: `finish-${current.length + 1}`, label: "", priceDeltaCny: "0" }])} className="text-sm underline underline-offset-4">
+                Add another finish
+              </button>
+            </fieldset>
 
             <div className="grid gap-4 md:grid-cols-2">
               <Field label="Medium">
@@ -305,6 +444,23 @@ export default function NewArtworkPage() {
               <textarea value={descriptionEn} onChange={(event) => setDescriptionEn(event.target.value)} rows={4} className={textareaClass} />
             </Field>
 
+            <Field label="Short English product description">
+              <textarea value={shortDescription} onChange={(event) => setShortDescription(event.target.value)} rows={2} maxLength={240} className={textareaClass} />
+            </Field>
+
+            <Field label="Artwork story">
+              <textarea value={artworkStory} onChange={(event) => setArtworkStory(event.target.value)} rows={4} className={textareaClass} />
+            </Field>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              <Field label="Materials and details">
+                <textarea value={materials} onChange={(event) => setMaterials(event.target.value)} rows={3} className={textareaClass} />
+              </Field>
+              <Field label="Creation window">
+                <textarea value={creationWindow} onChange={(event) => setCreationWindow(event.target.value)} rows={3} className={textareaClass} />
+              </Field>
+            </div>
+
             <label className="flex items-center gap-3 text-sm">
               <input type="checkbox" checked={featured} onChange={(event) => setFeatured(event.target.checked)} />
               Feature this artwork on the home page
@@ -388,6 +544,15 @@ function toggleOption(current: string[], value: string) {
   return current.includes(value)
     ? current.filter((item) => item !== value)
     : [...current, value]
+}
+
+function updateDraft<T extends Record<string, string>, K extends keyof T>(
+  current: T[],
+  index: number,
+  key: K,
+  value: T[K],
+) {
+  return current.map((item, itemIndex) => itemIndex === index ? { ...item, [key]: value } : item)
 }
 
 const inputClass = "w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"

@@ -276,7 +276,7 @@ function finiteNumber(value: unknown) {
 
 function readDimension(value: string, index: number) {
   const number = value.match(/\d+(?:\.\d+)?/g)?.map(Number)[index]
-  return Number.isFinite(number) && number > 0 ? number : null
+  return typeof number === "number" && Number.isFinite(number) && number > 0 ? number : null
 }
 
 function slugify(value: string) {
