@@ -126,6 +126,8 @@ export default function CheckoutPage() {
           items: items.map((item) => ({
             id: item.id,
             quantity: item.quantity,
+            sizeId: item.sizeId,
+            finishId: item.finishId,
           })),
           shippingAddress,
           displayCurrency: currency,
@@ -320,13 +322,15 @@ export default function CheckoutPage() {
                   <section className="space-y-4 py-4">
                     <h3 className="font-medium">Items</h3>
                     {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-4">
+                      <div key={item.key} className="flex items-center gap-4">
                         <div className="h-16 w-16 bg-gray-100">
                           <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.title}</p>
                           <p className="text-sm text-gray-500">by {item.artist}</p>
+                          {item.sizeLabel && <p className="text-xs text-gray-500">{item.sizeLabel}</p>}
+                          {item.finishLabel && <p className="text-xs text-gray-500">{item.finishLabel}</p>}
                         </div>
                         <p className="text-sm"><PriceText amountCny={item.price} /> x {item.quantity}</p>
                       </div>
@@ -356,12 +360,14 @@ export default function CheckoutPage() {
                 <h2 className="text-xl font-medium mb-6">Order summary</h2>
                 <div className="space-y-3 mb-6">
                   {items.map((item) => (
-                    <div key={item.id} className="flex gap-3">
+                    <div key={item.key} className="flex gap-3">
                       <div className="h-16 w-16 flex-shrink-0 bg-gray-100">
                         <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{item.title}</p>
+                        {item.sizeLabel && <p className="truncate text-xs text-gray-500">{item.sizeLabel}</p>}
+                        {item.finishLabel && <p className="truncate text-xs text-gray-500">{item.finishLabel}</p>}
                         <p className="text-xs text-gray-500">x {item.quantity}</p>
                       </div>
                       <p className="text-sm"><PriceText amountCny={item.price * item.quantity} /></p>
@@ -495,7 +501,14 @@ function buildClientInvoiceMessage({
   currency,
   shippingAddress,
 }: {
-  items: Array<{ title: string; artist?: string; price: number; quantity: number }>
+  items: Array<{
+    title: string
+    artist?: string
+    price: number
+    quantity: number
+    sizeLabel?: string
+    finishLabel?: string
+  }>
   subtotal: number
   currency: StoreCurrency
   shippingAddress: Record<string, string>
@@ -504,7 +517,12 @@ function buildClientInvoiceMessage({
     "Hello YiiArt, I would like to request an invoice for this order.",
     "",
     "Items:",
-    ...items.map((item) => `- ${item.title}${item.artist ? ` by ${item.artist}` : ""} x ${item.quantity}`),
+    ...items.map((item) => [
+      `- ${item.title}${item.artist ? ` by ${item.artist}` : ""}`,
+      item.sizeLabel ? `size ${item.sizeLabel}` : "",
+      item.finishLabel ? `finish ${item.finishLabel}` : "",
+      `x ${item.quantity}`,
+    ].filter(Boolean).join(" · ")),
     `Cart total before final confirmation: ${currency} ${convertCnyToStoreAmount(subtotal, currency).toFixed(2)}`,
     "",
     `Name: ${shippingAddress.name}`,

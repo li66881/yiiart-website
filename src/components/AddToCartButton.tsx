@@ -2,21 +2,15 @@
 
 import { useState } from "react"
 import { useCart } from "@/context/CartContext"
+import type { CartItemInput, CartProductionModel } from "@/lib/cart/cart"
 import { useCurrency } from "@/context/CurrencyContext"
 import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 
 type AddToCartButtonProps = {
-  item: {
-    id: string
-    title: string
-    titleZh?: string
-    artist: string
-    artistId?: string
-    price: number
-    image: string
-    size?: string
+  item: Omit<CartItemInput, "quantity" | "productionModel"> & {
+    productionModel?: CartProductionModel
   }
 }
 
@@ -27,7 +21,11 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
   const [added, setAdded] = useState(false)
 
   const handleClick = () => {
-    addItem({ ...item, quantity: 1 })
+    addItem({
+      ...item,
+      productionModel: item.productionModel || "original",
+      quantity: 1,
+    })
     trackMarketingEvent("AddToCart", {
       content_ids: item.id,
       content_name: item.title,

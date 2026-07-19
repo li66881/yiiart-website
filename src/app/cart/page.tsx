@@ -9,7 +9,7 @@ import { useCart } from "@/context/CartContext"
 import { useLanguage } from "@/context/LanguageContext"
 
 export default function CartPage() {
-  const { items, subtotal, removeItem, itemCount } = useCart()
+  const { items, subtotal, removeItem, updateQuantity, itemCount } = useCart()
   const { t } = useLanguage()
 
   return (
@@ -33,7 +33,7 @@ export default function CartPage() {
               <div className="lg:col-span-2">
                 <div className="border-t">
                   {items.map((item) => (
-                    <div key={item.id} className="py-6 border-b flex gap-4">
+                    <div key={item.key} className="py-6 border-b flex gap-4">
                       <div className="w-32 h-32 bg-gray-100 flex-shrink-0">
                         <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                       </div>
@@ -42,15 +42,31 @@ export default function CartPage() {
                           <div>
                             <h3 className="font-medium">{item.title}</h3>
                             <p className="text-sm text-gray-500">{item.artist}</p>
-                            {item.size && <p className="text-sm text-gray-400">{item.size}</p>}
+                            {item.sizeLabel && <p className="text-sm text-gray-500">Size: {item.sizeLabel}</p>}
+                            {item.finishLabel && <p className="text-sm text-gray-500">Finish: {item.finishLabel}</p>}
                           </div>
                           <p className="font-medium"><PriceText amountCny={item.price} /></p>
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
-                            <span className="border px-3 py-1 text-sm">One original artwork</span>
+                            <span className="border px-3 py-1 text-sm">
+                              {item.productionModel === "hand_painted_to_order" ? "Hand-painted to order" : "One original artwork"}
+                            </span>
+                            {item.productionModel === "hand_painted_to_order" && (
+                              <label className="flex items-center gap-2 text-sm">
+                                Qty
+                                <input
+                                  type="number"
+                                  min="1"
+                                  max="99"
+                                  value={item.quantity}
+                                  onChange={(event) => updateQuantity(item.key, Number(event.target.value))}
+                                  className="w-16 border px-2 py-1"
+                                />
+                              </label>
+                            )}
                             <button 
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => removeItem(item.key)}
                               className="ml-4 text-sm text-red-500 hover:underline"
                             >
                               {t("cart.remove")}
