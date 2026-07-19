@@ -7,6 +7,7 @@ import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const dynamic = "force-dynamic"
 
@@ -89,7 +90,7 @@ const faqs = [
 
 async function getData() {
   try {
-    const artworks = await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...18]{
+    const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
       ...,
       artist->{name}
     }`)
@@ -102,7 +103,7 @@ async function getData() {
 
 export async function generateMetadata() {
   try {
-    const artwork = await client.fetch(`*[_type == "artwork" && (defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
+    const artwork = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && (defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
       title,
       cloudflareImages,
       images

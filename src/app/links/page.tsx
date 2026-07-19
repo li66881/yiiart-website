@@ -7,6 +7,7 @@ import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const dynamic = "force-dynamic"
 
@@ -19,7 +20,7 @@ export const metadata = buildSeoMetadata({
 
 async function getShareableArtworks() {
   try {
-    return await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...6]{
+    return await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...6]{
       _id,
       title,
       slug,

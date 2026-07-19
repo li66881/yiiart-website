@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { marketingCollections } from '@/lib/collections'
 import { client } from '@/lib/sanity'
+import { PUBLIC_ARTWORK_GROQ_FILTER } from '@/lib/artwork-publication'
 
 const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yiiart.com').replace(/\/$/, '')
 
@@ -53,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const [artworks, artists] = await Promise.all([
-      client.fetch(`*[_type == "artwork" && defined(slug.current)]{slug}`),
+      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && defined(slug.current)]{slug}`),
       client.fetch(`*[_type == "artist" && defined(slug.current)]{slug}`),
     ])
 

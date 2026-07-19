@@ -7,6 +7,7 @@ import { client, urlFor } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const revalidate = 600
 
@@ -22,7 +23,7 @@ async function getArtist(slug: string) {
 async function getArtistArtworks(artistId: string) {
   try {
     return await client.fetch(
-      `*[_type == "artwork" && artist._ref == $artistId] | order(_createdAt desc)`,
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && artist._ref == $artistId] | order(_createdAt desc)`,
       { artistId }
     )
   } catch (error) {

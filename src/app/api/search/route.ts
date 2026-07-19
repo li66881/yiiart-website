@@ -2,6 +2,7 @@ import { NextResponse } from "next/server"
 import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 const MAX_QUERY_LENGTH = 80
 
@@ -16,7 +17,7 @@ export async function GET(request: Request) {
   try {
     const wildcard = `*${query}*`
     const artworks = await client.fetch(
-      `*[_type == "artwork" && (
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && (
         title.en match $wildcard
         || title.zh match $wildcard
         || category match $wildcard

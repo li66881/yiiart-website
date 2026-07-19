@@ -9,10 +9,12 @@ import {
   ArtworkFilterKey,
   ArtworkFilterState,
   artworkFilterGroups,
+  artworkMatchesCollection,
   artworkMatchesFilters,
   countActiveArtworkFilters,
   emptyArtworkFilters,
   normalizeArtworkFilters,
+  type ArtworkCollectionTab,
 } from "@/lib/artwork-discovery"
 
 type SortMode = "featured" | "price-asc" | "price-desc" | "large-first"
@@ -31,29 +33,73 @@ export default function ArtworkDiscoveryGrid({
   const { t } = useLanguage()
   const [filters, setFilters] = useState<ArtworkFilterState>(() => normalizeArtworkFilters(initialFilters))
   const [sortMode, setSortMode] = useState<SortMode>("featured")
+  const [collection, setCollection] = useState<ArtworkCollectionTab>("all")
+  const [filtersOpen, setFiltersOpen] = useState(false)
   const activeCount = countActiveArtworkFilters(filters)
 
+  const collectionItems = useMemo(
+    () => items.filter((item) => artworkMatchesCollection(item, collection)),
+    [collection, items],
+  )
+
   const filteredItems = useMemo(() => {
-    return items
+    return collectionItems
       .filter((item) => artworkMatchesFilters(item, filters))
       .slice()
       .sort((a, b) => sortArtworkItems(a, b, sortMode))
-  }, [filters, items, sortMode])
+  }, [collectionItems, filters, sortMode])
 
-  const optionCounts = useMemo(() => buildOptionCounts(items), [items])
+  const optionCounts = useMemo(() => buildOptionCounts(collectionItems), [collectionItems])
   const translateOption = (option: string) => {
     const translated = t(`discovery.option.${option}`)
     return translated === `discovery.option.${option}` ? option : translated
   }
 
   return (
-    <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <aside className="border-y border-stone-200 bg-[#fbfaf6] py-5 lg:sticky lg:top-24 lg:self-start lg:border lg:px-5">
+    <div>
+      <div className="mb-8 flex gap-1 overflow-hidden border-b border-stone-300 md:overflow-x-auto" role="tablist" aria-label="Artwork collections">
+        {([
+          ["all", "All Art", "All"],
+          ["new_collection", "New Collections", "New Works"],
+          ["artist_collection", "Artist Collection", "Artists"],
+        ] as const).map(([value, label, compactLabel]) => (
+          <button
+            key={value}
+            type="button"
+            role="tab"
+            aria-selected={collection === value}
+            onClick={() => setCollection(value)}
+            className={`min-h-12 min-w-0 flex-1 whitespace-nowrap border-b-2 px-2 text-sm transition md:flex-none md:px-5 ${
+              collection === value
+                ? "border-stone-950 text-stone-950"
+                : "border-transparent text-stone-500 hover:text-stone-950"
+            }`}
+          >
+            <span className="md:hidden">{compactLabel}</span>
+            <span className="hidden md:inline">{label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
+      <aside className="border-y border-stone-200 bg-[#fbfaf6] lg:sticky lg:top-24 lg:self-start lg:border lg:px-5 lg:py-5">
+        <button
+          type="button"
+          onClick={() => setFiltersOpen((open) => !open)}
+          aria-expanded={filtersOpen}
+          aria-controls="artwork-filter-options"
+          className="flex min-h-14 w-full items-center justify-between py-3 text-sm lg:hidden"
+        >
+          <span>{t("discovery.filters")}{activeCount > 0 ? ` (${activeCount})` : ""}</span>
+          <span aria-hidden="true">{filtersOpen ? "−" : "+"}</span>
+        </button>
+
+        <div id="artwork-filter-options" className={`${filtersOpen ? "block" : "hidden"} pb-5 lg:block lg:pb-0`}>
         <div className="mb-5 flex items-center justify-between gap-3">
           <div>
             <p className="text-xs uppercase text-stone-500">{t("discovery.filters")}</p>
             <p className="mt-1 text-sm text-stone-600">
-              {formatResultCount(t("discovery.resultCount"), filteredItems.length, items.length)}
+              {formatResultCount(t("discovery.resultCount"), filteredItems.length, collectionItems.length)}
             </p>
           </div>
           <button
@@ -98,6 +144,7 @@ export default function ArtworkDiscoveryGrid({
               </div>
             </fieldset>
           ))}
+        </div>
         </div>
       </aside>
 
@@ -149,12 +196,13 @@ export default function ArtworkDiscoveryGrid({
           )}
         </div>
 
-        {items.length > 0 && (
+        {collectionItems.length > 0 && (
           <p className="mt-8 text-center text-xs text-stone-500">
             <PriceDisclosure />
           </p>
         )}
       </section>
+      </div>
     </div>
   )
 }
@@ -185,9 +233,14 @@ function ArtworkTile({
       </div>
       <div className="bg-white px-1 py-4">
         <div className="mb-3 flex flex-wrap gap-1.5">
-          {artwork.handmade && (
+          {artwork.productionModel === "hand_painted_to_order" && (
             <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
-              Handmade
+              Hand-painted to order
+            </span>
+          )}
+          {artwork.collectionType === "artist_collection" && (
+            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+              Artist Collection
             </span>
           )}
           {artwork.customRequestAvailable && (

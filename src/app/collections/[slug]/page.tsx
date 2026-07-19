@@ -9,6 +9,7 @@ import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-discovery"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const revalidate = 600
 
@@ -30,13 +31,13 @@ async function getCollectionArtworks(slug: string) {
   try {
     artworks = collection.categories?.length
       ? await client.fetch(
-          `*[_type == "artwork" && category in $categories] | order(featured desc, _createdAt desc)[0...24]{
+          `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc)[0...24]{
             ...,
             artist->{name}
           }`,
           { categories: collection.categories }
         )
-      : await client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc)[0...30]{
+      : await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...30]{
           ...,
           artist->{name}
         }`)

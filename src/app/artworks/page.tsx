@@ -8,6 +8,7 @@ import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 
 export const revalidate = 600
@@ -17,7 +18,7 @@ interface Props {
 }
 
 async function getArtworks() {
-  return client.fetch(`*[_type == "artwork"] | order(featured desc, _createdAt desc){
+  return client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc){
     ...,
     artist->{name}
   }`)
@@ -35,7 +36,7 @@ async function getCategoryArtworks(category?: string) {
   }
 
   return client.fetch(
-    `*[_type == "artwork" && category in $categories] | order(featured desc, _createdAt desc)[0...12]{
+    `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc)[0...12]{
       ...,
       artist->{name}
     }`,
@@ -98,9 +99,9 @@ export default async function ArtworksPage({ searchParams }: Props) {
                 <LivingRoomsLinkCopy />
               </a>
             </div>
-            <div className="grid gap-3 md:grid-cols-3">
+            <div className="flex snap-x gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
               {storefrontCollectionTiles.map((collection) => (
-                <a key={collection.href} href={collection.href} className="border border-stone-200 bg-white p-4 transition hover:border-black">
+                <a key={collection.href} href={collection.href} className="min-w-[78vw] snap-start border border-stone-200 bg-white p-4 transition hover:border-black md:min-w-0">
                   <StorefrontCollectionSummary collection={collection} />
                 </a>
               ))}

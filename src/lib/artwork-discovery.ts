@@ -7,6 +7,7 @@ import {
 } from "@/lib/artwork-display"
 
 export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
+export type ArtworkCollectionTab = "all" | "new_collection" | "artist_collection"
 
 export type ArtworkFilterState = Record<ArtworkFilterKey, string[]>
 
@@ -27,6 +28,8 @@ export type ArtworkDiscoveryItem = {
   colors: string[]
   size: string
   orientation: string
+  collectionType: "new_collection" | "artist_collection"
+  productionModel: "hand_painted_to_order" | "original"
   handmade: boolean
   customRequestAvailable: boolean
 }
@@ -86,7 +89,11 @@ export function normalizeArtworkFilters(initial?: Partial<ArtworkFilterState>): 
 export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): ArtworkDiscoveryItem {
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
-  const dimensions = formatArtworkDimensions(artwork)
+  const productionModel = artwork.productionModel === "hand_painted_to_order" ? "hand_painted_to_order" : "original"
+  const standardSize = Array.isArray(artwork.standardSizes)
+    ? artwork.standardSizes.find((size: any) => Number(size?.priceCny) > 0)
+    : undefined
+  const dimensions = formatArtworkDimensions(artwork) || String(standardSize?.label || "")
   const orientation = normalizeOrientation(artwork.orientation) || inferArtworkOrientation(dimensions)
   const size = inferArtworkSize(dimensions)
   const rooms = normalizeList(artwork.roomTypes).map(normalizeRoom)
@@ -102,7 +109,7 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     artistName,
     category,
     medium,
-    price: artwork.price,
+    price: productionModel === "hand_painted_to_order" ? standardSize?.priceCny : artwork.price,
     dimensions,
     rawDimensions: artwork.dimensions,
     createdAt: artwork._createdAt,
@@ -111,9 +118,15 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     colors: unique(colors.length > 0 ? colors : inferColors(artwork, category)),
     size,
     orientation,
+    collectionType: artwork.collectionType === "new_collection" ? "new_collection" : "artist_collection",
+    productionModel,
     handmade: true,
     customRequestAvailable: true,
   }
+}
+
+export function artworkMatchesCollection(item: ArtworkDiscoveryItem, collection: ArtworkCollectionTab) {
+  return collection === "all" || item.collectionType === collection
 }
 
 export function artworkMatchesFilters(item: ArtworkDiscoveryItem, filters: ArtworkFilterState) {

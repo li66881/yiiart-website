@@ -2,12 +2,13 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import AddToCartButton from "@/components/AddToCartButton"
+import ProductGallery from "@/components/storefront/ProductGallery"
+import ProductPurchasePanel from "@/components/storefront/ProductPurchasePanel"
 import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
-import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import { PriceText } from "@/components/PriceText"
 import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client } from "@/lib/sanity"
 import {
@@ -23,6 +24,8 @@ import {
   convertCnyToStoreAmount,
   getStoreCurrency,
 } from "@/lib/pricing"
+import { buildStorefrontProduct } from "@/lib/storefront/product"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
 import { getWhatsAppUrl } from "@/lib/site"
@@ -65,11 +68,15 @@ const artworkPageFaqs = [
 async function getArtwork(slug: string) {
   try {
     return await client.fetch(
-      `*[_type == "artwork" && slug.current == $slug][0]{
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && slug.current == $slug][0]{
         _id,
         title,
         slug,
         artist->{_id, name, slug, bio, location},
+        collectionType,
+        productionModel,
+        rightsStatus,
+        migrationStatus,
         price,
         dimensions,
         widthCm,
@@ -78,7 +85,11 @@ async function getArtwork(slug: string) {
         category,
         roomTypes,
         colorFamilies,
+        styleTags,
         orientation,
+        standardSizes,
+        frameOptions,
+        creationWindow,
         surfaceFinish,
         framingNotes,
         shippingProfile,
@@ -89,7 +100,10 @@ async function getArtwork(slug: string) {
         reservedUntil,
         cloudflareImages,
         images,
-        description
+        description,
+        shortDescription,
+        artworkStory,
+        materials
       }`,
       { slug }
     )
@@ -102,7 +116,7 @@ async function getArtwork(slug: string) {
 async function getRelatedArtworks(artworkId: string, category?: string | null, medium?: string | null) {
   try {
     return await client.fetch(
-      `*[_type == "artwork" && _id != $artworkId && (
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && _id != $artworkId && (
         (defined($category) && category == $category) ||
         (defined($medium) && medium == $medium)
       )] | order(featured desc, _createdAt desc)[0...4]{
@@ -198,7 +212,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const framingNotes = artwork.framingNotes || ""
   const shippingProfile = artwork.shippingProfile || ""
   const galleryImages = getArtworkImageUrls(artwork, { width: 1400 })
-  const thumbnailImages = getArtworkImageUrls(artwork, { width: 240, height: 240 })
   const imageUrl = galleryImages[0] || ""
   const artworkImageAlt = buildArtworkImageAlt({
     title,
@@ -208,10 +221,20 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     dimensions,
     roomTypes,
   })
-  const priceCny = Number(artwork.price || 0)
+  const storefrontProduct = buildStorefrontProduct(
+    artwork,
+    galleryImages.map((src: string, index: number) => ({
+      src,
+      alt: index === 0 ? artworkImageAlt : `${artworkImageAlt}, detail view ${index + 1}`,
+      width: 1400,
+      height: 1750,
+      kind: index === 0 ? "artwork" as const : "detail" as const,
+    })),
+  )
+  const priceCny = storefrontProduct.sizes[0]?.priceCny || Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
-  const directCheckoutAvailable = priceCny > 0 && isArtworkDirectCheckoutAvailable(artwork)
+  const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkDirectCheckoutAvailable(artwork)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const reviews = await getArtworkReviews(artwork._id)
   const reviewStats = getReviewStats(reviews)
@@ -219,22 +242,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const whatsappUrl = getWhatsAppUrl(
     `Hello YiiArt, I am interested in ${title}. Can you advise on size, framing, and shipping?`
   )
-  const customRequestUrl = getWhatsAppUrl(
-    `Hello YiiArt, I need a custom size or color palette based on ${title}. Can I share my wall size and room photo?`
-  )
   const invoiceUrl = getWhatsAppUrl(
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
   )
-  const cartItem = {
-    id: artwork._id,
-    title,
-    titleZh: artwork.title?.zh,
-    artist: artistName,
-    artistId: artwork.artist?._id,
-    price: priceCny,
-    image: imageUrl,
-    size: dimensions,
-  }
   const offer: Record<string, any> = {
     "@type": "Offer",
     url: `${baseUrl}/artwork/${slug}`,
@@ -370,50 +380,18 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)]">
             <div className="lg:sticky lg:top-28 lg:self-start">
-              {imageUrl ? (
-                <div className="aspect-[4/5] overflow-hidden border border-stone-200 bg-white">
-                  <img src={imageUrl} alt={artworkImageAlt} className="h-full w-full object-contain" />
-                </div>
-              ) : (
-                <div className="flex aspect-[4/5] items-center justify-center border border-stone-200 bg-white text-stone-400">
-                  <TranslatedText k="product.imageComingSoon" />
-                </div>
-              )}
-
-              {thumbnailImages.length > 1 && (
-                <div className="mt-4 grid grid-cols-4 gap-3">
-                  {thumbnailImages.slice(1).map((thumbnailUrl, i) => (
-                    <div key={thumbnailUrl} className="aspect-square overflow-hidden border border-stone-200 bg-white">
-                      <img
-                        src={thumbnailUrl}
-                        alt={`${artworkImageAlt}, detail view ${i + 2}`}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ))}
-                </div>
-              )}
+              <ProductGallery images={galleryImages} alt={artworkImageAlt} />
             </div>
 
-            <div className="border border-stone-200 bg-white p-6 md:p-8">
-              <p className="mb-2 text-sm uppercase text-stone-500">
-                <TranslatedOptionList values={[category, medium]} separator=" / " />
-              </p>
-              <h1 className="mb-3 text-4xl font-light leading-tight md:text-5xl">{title}</h1>
-              <p className="mb-6 text-lg text-stone-500"><TranslatedText k="artwork.by" /> {artistName}</p>
-              <div className="mb-6 border-y border-stone-200 py-5">
-                <p className="text-3xl font-semibold"><PriceText amountCny={priceCny} /></p>
-                <p className="mt-2 text-xs leading-5 text-stone-500"><PriceDisclosure /></p>
-              </div>
-              <div className="mb-6 space-y-3">
-                <PurchaseOption label="Selected size" value={dimensions || "Confirm exact size before purchase"} />
-                {framingNotes && <PurchaseOption label="Frame option" value={framingNotes} />}
-              </div>
-              <div className="mb-6 grid gap-2 text-sm text-stone-700">
-                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Handmade original painting, not a mass-produced print.</p>
-                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Ask for extra daylight photos or a room-size check before purchase.</p>
-                <p className="border border-stone-200 bg-[#fbfaf6] px-4 py-3">Free worldwide shipping and a 30-day return window for eligible ready-made works.</p>
-              </div>
+            <div className="space-y-6">
+              <ProductPurchasePanel
+                product={storefrontProduct}
+                directCheckoutAvailable={directCheckoutAvailable}
+                invoiceUrl={invoiceUrl}
+                whatsappUrl={whatsappUrl}
+              />
+
+              <div className="border border-stone-200 bg-white p-6 md:p-8">
               <div className="mb-6 text-sm text-stone-600">
                 {reviewStats.count > 0 ? (
                   <div className="flex flex-wrap items-center gap-2">
@@ -472,44 +450,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 </section>
               </div>
 
-              <div className="mt-8 space-y-4">
-                {directCheckoutAvailable ? (
-                  <AddToCartButton item={cartItem} />
-                ) : (
-                  <div className="border border-stone-200 bg-[#fbfaf6] p-5">
-                    <p className="font-medium">Confirm availability before checkout</p>
-                    <p className="mt-2 text-sm leading-6 text-stone-600">
-                      {priceCny > 0
-                        ? "This artwork needs final availability confirmation before direct checkout."
-                        : "This artwork is available by request. YiiArt will confirm price, shipping, and payment details before issuing an invoice."}
-                    </p>
-                    <a
-                      href={invoiceUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-4 block w-full bg-black py-4 text-center text-white transition hover:bg-stone-800"
-                    >
-                      Request invoice
-                    </a>
-                  </div>
-                )}
-                <a
-                  href={customRequestUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full border border-black py-4 text-center transition hover:bg-black hover:text-white"
-                >
-                  Request Custom Size / Color
-                </a>
-                <a
-                  href={whatsappUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block w-full border border-stone-300 py-3 text-center text-sm transition hover:border-black"
-                >
-                  Ask on WhatsApp before purchase
-                </a>
+              <div className="mt-8">
                 <SocialShare title={title} image={imageUrl} />
+              </div>
               </div>
             </div>
           </div>
@@ -554,14 +497,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 Send your wall width, ceiling height, room photo, and preferred palette. YiiArt can help confirm whether
                 this artwork fits as listed or whether a custom painting is a better path.
               </p>
-              <a
-                href={customRequestUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href={`/custom-painting?artwork=${encodeURIComponent(slug)}`}
                 className="mt-6 inline-flex bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800"
               >
                 Request Custom Painting
-              </a>
+              </Link>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               {productAdviceItems.map((item, index) => (
@@ -703,70 +644,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         </div>
       </main>
 
-      <MobileArtworkActionBar
-        directCheckoutAvailable={directCheckoutAvailable}
-        cartItem={cartItem}
-        invoiceUrl={invoiceUrl}
-        whatsappUrl={whatsappUrl}
-      />
       <Footer />
-    </div>
-  )
-}
-
-function MobileArtworkActionBar({
-  directCheckoutAvailable,
-  cartItem,
-  invoiceUrl,
-  whatsappUrl,
-}: {
-  directCheckoutAvailable: boolean
-  cartItem: {
-    id: string
-    title: string
-    titleZh?: string
-    artist: string
-    artistId?: string
-    price: number
-    image: string
-    size?: string
-  }
-  invoiceUrl: string
-  whatsappUrl: string
-}) {
-  return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-4 py-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)] backdrop-blur lg:hidden">
-      <div className="grid grid-cols-2 gap-3">
-        {directCheckoutAvailable ? (
-          <AddToCartButton item={cartItem} />
-        ) : (
-          <a
-            href={invoiceUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="bg-black px-3 py-4 text-center text-sm font-medium text-white transition hover:bg-stone-800"
-          >
-            Request invoice
-          </a>
-        )}
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="border border-black px-3 py-4 text-center text-sm font-medium transition hover:bg-black hover:text-white"
-        >
-          Ask on WhatsApp
-        </a>
-      </div>
-    </div>
-  )
-}
-
-function PurchaseOption({ label, value }: { label: string; value: ReactNode }) {
-  return (
-    <div className="border border-stone-200 bg-[#fbfaf6] p-4">
-      <p className="text-xs uppercase text-stone-500">{label}</p>
-      <p className="mt-1 text-sm font-medium leading-6">{value}</p>
     </div>
   )
 }
