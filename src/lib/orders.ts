@@ -64,6 +64,11 @@ export type PublicOrder = {
     artistName?: string | null
     imageUrl?: string | null
     quantity: number
+    productionModel: "hand_painted_to_order" | "original"
+    sizeId?: string | null
+    sizeLabel?: string | null
+    finishId?: string | null
+    finishLabel?: string | null
     unitAmount: number
     totalAmount: number
     currency: string
@@ -104,6 +109,11 @@ type OrderItemRow = {
   artist_name: string | null
   image_url: string | null
   quantity: number
+  production_model: "hand_painted_to_order" | "original"
+  size_id: string | null
+  size_label: string | null
+  finish_id: string | null
+  finish_label: string | null
   unit_amount: number | string
   total_amount: number | string
   currency: string
@@ -186,6 +196,11 @@ export async function createPendingOrder(input: CreatePendingOrderInput) {
           artist_name,
           image_url,
           quantity,
+          production_model,
+          size_id,
+          size_label,
+          finish_id,
+          finish_label,
           unit_amount,
           total_amount,
           currency
@@ -197,6 +212,11 @@ export async function createPendingOrder(input: CreatePendingOrderInput) {
           ${item.artistName || null},
           ${item.image || null},
           ${item.quantity},
+          ${item.productionModel},
+          ${item.sizeId},
+          ${item.sizeLabel},
+          ${item.finishId},
+          ${item.finishLabel},
           ${roundAmount(item.price)},
           ${roundAmount(item.price * item.quantity)},
           ${currency}
@@ -309,6 +329,7 @@ export async function markOrderPaid(input: {
 
   try {
     const artworkIds = orderItems
+      .filter((item) => item.production_model === "original")
       .map((item) => item.artwork_id)
       .filter((id): id is string => Boolean(id))
     const orderNumber = orderRows[0]?.order_number || input.orderId
@@ -439,6 +460,11 @@ async function getOrderItems(orderId: string) {
       artist_name,
       image_url,
       quantity,
+      production_model,
+      size_id,
+      size_label,
+      finish_id,
+      finish_label,
       unit_amount,
       total_amount,
       currency
@@ -479,6 +505,11 @@ function serializeOrder(order: OrderRow, items: OrderItemRow[]): PublicOrder {
       artistName: item.artist_name,
       imageUrl: item.image_url,
       quantity: item.quantity,
+      productionModel: item.production_model,
+      sizeId: item.size_id,
+      sizeLabel: item.size_label,
+      finishId: item.finish_id,
+      finishLabel: item.finish_label,
       unitAmount: Number(item.unit_amount),
       totalAmount: Number(item.total_amount),
       currency: item.currency,

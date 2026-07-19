@@ -70,7 +70,14 @@ function buildInvoiceMessage({
   shippingAddress,
 }: {
   orderNumber?: string
-  items: Array<{ title: string; artistName?: string; price: number; quantity: number }>
+  items: Array<{
+    title: string
+    artistName?: string
+    price: number
+    quantity: number
+    sizeLabel: string
+    finishLabel: string
+  }>
   currency: string
   shippingAddress: unknown
 }) {
@@ -83,7 +90,13 @@ function buildInvoiceMessage({
     orderNumber ? `Order number: ${orderNumber}` : "",
     "",
     "Items:",
-    ...items.map((item) => `- ${item.title}${item.artistName ? ` by ${item.artistName}` : ""} x ${item.quantity} (${currency} ${item.price.toFixed(2)})`),
+    ...items.map((item) => [
+      `- ${item.title}${item.artistName ? ` by ${item.artistName}` : ""}`,
+      item.sizeLabel,
+      item.finishLabel,
+      `x ${item.quantity}`,
+      `(${currency} ${item.price.toFixed(2)})`,
+    ].filter(Boolean).join(" · ")),
     `Total before final confirmation: ${currency} ${total.toFixed(2)}`,
     "",
     `Name: ${stringValue(address.name)}`,

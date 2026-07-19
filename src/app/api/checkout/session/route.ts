@@ -35,7 +35,11 @@ export async function POST(request: Request) {
         currency,
         product_data: {
           name: item.title,
-          description: item.artistName ? `Artwork by ${item.artistName}` : undefined,
+          description: [
+            item.artistName ? `Artwork by ${item.artistName}` : "",
+            item.sizeLabel,
+            item.finishLabel,
+          ].filter(Boolean).join(" · "),
           images: item.image ? [item.image] : [],
         },
         unit_amount: Math.round(item.price * 100),

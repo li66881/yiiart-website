@@ -79,7 +79,11 @@ export async function POST(request: Request) {
             },
             items: checkoutItems.map((item) => ({
               name: item.title.slice(0, 127),
-              description: item.artistName ? `Artwork by ${item.artistName}`.slice(0, 127) : undefined,
+              description: [
+                item.artistName ? `Artwork by ${item.artistName}` : "",
+                item.sizeLabel,
+                item.finishLabel,
+              ].filter(Boolean).join(" · ").slice(0, 127),
               quantity: String(item.quantity),
               unit_amount: {
                 currency_code: currency,

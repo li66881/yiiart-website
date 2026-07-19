@@ -42,11 +42,22 @@ create table if not exists public.order_items (
   artist_name text,
   image_url text,
   quantity integer not null default 1,
+  production_model text not null default 'original',
+  size_id text,
+  size_label text,
+  finish_id text,
+  finish_label text,
   unit_amount numeric(12, 2) not null,
   total_amount numeric(12, 2) not null,
   currency text not null,
   created_at timestamptz not null default now()
 );
+
+alter table public.order_items add column if not exists production_model text not null default 'original';
+alter table public.order_items add column if not exists size_id text;
+alter table public.order_items add column if not exists size_label text;
+alter table public.order_items add column if not exists finish_id text;
+alter table public.order_items add column if not exists finish_label text;
 
 create table if not exists public.payment_events (
   id uuid primary key default gen_random_uuid(),

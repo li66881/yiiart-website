@@ -2,6 +2,13 @@ import { client } from "@/lib/sanity"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { pickEnglish } from "@/lib/artwork-display"
 import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
+import {
+  CheckoutValidationError,
+  resolveCheckoutSelection,
+  type CheckoutSelectionArtwork,
+} from "@/lib/checkout-selection"
+
+export { CheckoutValidationError } from "@/lib/checkout-selection"
 
 export type CheckoutLineItem = {
   id: string
@@ -10,15 +17,21 @@ export type CheckoutLineItem = {
   image?: string
   price: number
   quantity: number
+  productionModel: "hand_painted_to_order" | "original"
+  sizeId: string
+  sizeLabel: string
+  finishId: string
+  finishLabel: string
 }
 
 type CheckoutItemInput = {
   id: string
   quantity: number
+  sizeId?: string
+  finishId?: string
 }
 
-type ArtworkForCheckout = {
-  _id: string
+type ArtworkForCheckout = CheckoutSelectionArtwork & {
   title?: {
     zh?: string
     en?: string
@@ -37,8 +50,6 @@ type ArtworkForCheckout = {
   images?: unknown[]
 }
 
-export class CheckoutValidationError extends Error {}
-
 export function getBaseUrl() {
   return (process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000").replace(/\/$/, "")
 }
@@ -53,6 +64,10 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       title,
       artist->{name},
       price,
+      dimensions,
+      productionModel,
+      standardSizes,
+      frameOptions,
       availability,
       allowCheckout,
       reservedUntil,
@@ -75,13 +90,10 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       throw new CheckoutValidationError(`${pickEnglish(artwork.title, "This artwork")} is not available for checkout.`)
     }
 
-    const basePriceCny = Number(artwork.price)
-    if (!Number.isFinite(basePriceCny) || basePriceCny <= 0) {
-      throw new CheckoutValidationError("One or more artworks do not have a valid price.")
-    }
+    const selection = resolveCheckoutSelection(artwork, item)
 
     const currency = getStoreCurrency(checkoutCurrency || process.env.STRIPE_CURRENCY || process.env.NEXT_PUBLIC_STORE_CURRENCY)
-    const price = convertCnyToStoreAmount(basePriceCny, currency)
+    const price = convertCnyToStoreAmount(selection.priceCny, currency)
 
     return {
       id: item.id,
@@ -89,7 +101,12 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       artistName: pickEnglish(artwork.artist?.name, ""),
       image: getArtworkImageUrl(artwork, { width: 1000 }),
       price,
-      quantity: item.quantity,
+      quantity: selection.quantity,
+      productionModel: selection.productionModel,
+      sizeId: selection.sizeId,
+      sizeLabel: selection.sizeLabel,
+      finishId: selection.finishId,
+      finishLabel: selection.finishLabel,
     }
   })
 }
@@ -115,12 +132,14 @@ function normalizeCheckoutItems(items: unknown): CheckoutItemInput[] {
     const input = item as Partial<CheckoutItemInput>
     const id = typeof input.id === "string" ? input.id : ""
     const quantity = Number(input.quantity)
+    const sizeId = typeof input.sizeId === "string" ? input.sizeId.trim() : undefined
+    const finishId = typeof input.finishId === "string" ? input.finishId.trim() : undefined
 
-    if (!id || !Number.isInteger(quantity) || quantity !== 1) {
+    if (!id || !Number.isInteger(quantity) || quantity < 1 || quantity > 99) {
       throw new CheckoutValidationError("Invalid cart item.")
     }
 
-    return { id, quantity }
+    return { id, quantity, sizeId, finishId }
   })
 }
 

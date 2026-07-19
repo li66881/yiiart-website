@@ -30,6 +30,11 @@ type Order = {
     artistName?: string | null
     imageUrl?: string | null
     quantity: number
+    productionModel: "hand_painted_to_order" | "original"
+    sizeId?: string | null
+    sizeLabel?: string | null
+    finishId?: string | null
+    finishLabel?: string | null
     unitAmount: number
     totalAmount: number
     currency: string
@@ -149,13 +154,15 @@ export default function OrdersPage() {
                           <h3 className="font-medium mb-2">Items</h3>
                           <div className="space-y-3">
                             {order.items.map((item) => (
-                              <div key={item.artworkId} className="flex gap-4 items-center">
+                              <div key={`${item.artworkId}:${item.sizeId || "original"}:${item.finishId || "as-listed"}`} className="flex gap-4 items-center">
                                 <div className="w-16 h-16 bg-gray-100">
                                   {item.imageUrl && <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />}
                                 </div>
                                 <div>
                                   <p className="font-medium">{item.title}</p>
                                   {item.artistName && <p className="text-sm text-gray-500">by {item.artistName}</p>}
+                                  {item.sizeLabel && <p className="text-xs text-gray-500">Size: {item.sizeLabel}</p>}
+                                  {item.finishLabel && <p className="text-xs text-gray-500">Finish: {item.finishLabel}</p>}
                                   <p className="text-sm">{formatMoney(item.unitAmount, item.currency)} x {item.quantity}</p>
                                 </div>
                               </div>
