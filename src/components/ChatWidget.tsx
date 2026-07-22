@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation"
 import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { getWhatsAppUrl, whatsappNumber } from "@/lib/site"
+import { shouldShowFloatingChatOnMobile } from "@/lib/chat-widget"
 
 const quickMessages = ["0", "1", "2"]
 
@@ -13,7 +14,9 @@ export default function ChatWidget() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const defaultUrl = useMemo(() => getWhatsAppUrl(), [])
-  const mobilePosition = pathname.startsWith("/artwork/") ? "bottom-24 right-4" : "bottom-6 right-6"
+  const mobilePosition = shouldShowFloatingChatOnMobile(pathname) ? "bottom-24 right-4" : "bottom-6 right-6"
+  const mobileVisibility = shouldShowFloatingChatOnMobile(pathname) ? "flex" : "hidden md:flex"
+  const mobilePanelVisibility = shouldShowFloatingChatOnMobile(pathname) ? "block" : "hidden md:block"
 
   const trackWhatsAppLead = (leadType: string) => {
     trackMarketingEvent("Lead", { lead_type: leadType, channel: "whatsapp" })
@@ -24,7 +27,7 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`fixed ${mobilePosition} z-50 flex h-14 w-14 items-center justify-center bg-black text-sm font-medium text-white shadow-xl transition hover:bg-stone-800 md:bottom-6 md:right-6`}
+        className={`fixed ${mobilePosition} ${mobileVisibility} z-50 h-14 w-14 items-center justify-center bg-black text-sm font-medium text-white shadow-xl transition hover:bg-stone-800 md:bottom-6 md:right-6`}
         aria-label={t("chat.openSupport")}
       >
         WA
@@ -33,7 +36,7 @@ export default function ChatWidget() {
   }
 
   return (
-    <div className={`fixed ${mobilePosition} z-50 w-[calc(100vw-2rem)] max-w-sm border border-stone-200 bg-white shadow-2xl md:bottom-6 md:right-6`}>
+    <div className={`fixed ${mobilePosition} ${mobilePanelVisibility} z-50 w-[calc(100vw-2rem)] max-w-sm border border-stone-200 bg-white shadow-2xl md:bottom-6 md:right-6`}>
       <div className="flex items-start justify-between bg-stone-950 p-4 text-white">
         <div>
           <h3 className="font-medium">{t("chat.title")}</h3>

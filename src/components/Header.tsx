@@ -66,7 +66,7 @@ export default function Header() {
 
           <Link
             href="/contact"
-            className="hidden h-9 items-center bg-black px-4 text-sm text-white transition hover:bg-stone-800 xl:inline-flex"
+            className="hidden h-9 items-center bg-black px-4 text-sm text-white transition hover:bg-stone-800 2xl:inline-flex"
           >
             {t("home.requestRoomAdvice")}
           </Link>
