@@ -57,7 +57,7 @@ export default function ArtworkDiscoveryGrid({
 
   return (
     <div>
-      <div className="mb-8 flex gap-1 overflow-hidden border-b border-stone-300 md:overflow-x-auto" role="tablist" aria-label="Artwork collections">
+      <div className="mb-12 flex gap-1 overflow-hidden border-b border-black/20 md:overflow-x-auto" role="tablist" aria-label="Artwork collections">
         {([
           ["all", "All Art", "All"],
           ["new_collection", "New Collections", "New Works"],
@@ -69,10 +69,10 @@ export default function ArtworkDiscoveryGrid({
             role="tab"
             aria-selected={collection === value}
             onClick={() => setCollection(value)}
-            className={`min-h-12 min-w-0 flex-1 whitespace-nowrap border-b-2 px-2 text-sm transition md:flex-none md:px-5 ${
+            className={`min-h-12 min-w-0 flex-1 whitespace-nowrap border-b-2 px-2 text-sm transition-colors duration-200 md:flex-none md:px-5 ${
               collection === value
-                ? "border-stone-950 text-stone-950"
-                : "border-transparent text-stone-500 hover:text-stone-950"
+                ? "border-[#26352c] text-[#26352c]"
+                : "border-transparent text-stone-500 hover:text-[#26352c]"
             }`}
           >
             <span className="md:hidden">{compactLabel}</span>
@@ -81,8 +81,8 @@ export default function ArtworkDiscoveryGrid({
         ))}
       </div>
 
-      <div className="grid gap-10 lg:grid-cols-[280px_minmax(0,1fr)]">
-      <aside className="border-y border-stone-200 bg-[#fbfaf6] lg:sticky lg:top-24 lg:self-start lg:border lg:px-5 lg:py-5">
+      <div className="grid gap-12 lg:grid-cols-[250px_minmax(0,1fr)]">
+      <aside className="border-y border-black/15 bg-[#f4f0e8] lg:sticky lg:top-28 lg:self-start lg:border-0 lg:border-t lg:px-0 lg:py-5">
         <button
           type="button"
           onClick={() => setFiltersOpen((open) => !open)}
@@ -125,7 +125,7 @@ export default function ArtworkDiscoveryGrid({
                     <label
                       key={option}
                       className={`flex min-h-10 items-center justify-between gap-3 border px-3 py-2 text-sm transition ${
-                        checked ? "border-black bg-black text-white" : "border-stone-200 bg-white hover:border-black"
+                        checked ? "border-[#26352c] bg-[#26352c] text-white" : "border-black/15 bg-[#fffdf8] hover:border-[#26352c]"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -153,7 +153,7 @@ export default function ArtworkDiscoveryGrid({
           <div className="flex flex-wrap gap-2">
             {activeCount > 0 ? (
               activeFilterLabels(filters, t, translateOption).map((label) => (
-                <span key={label} className="border border-stone-200 bg-white px-3 py-1 text-xs text-stone-600">
+                <span key={label} className="border border-black/15 bg-[#fffdf8] px-3 py-1 text-xs text-stone-600">
                   {label}
                 </span>
               ))
@@ -167,7 +167,7 @@ export default function ArtworkDiscoveryGrid({
             <select
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
-              className="border border-stone-300 bg-white px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black"
+              className="border border-black/20 bg-[#fffdf8] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
             >
               <option value="featured">{t("discovery.sortFeatured")}</option>
               <option value="price-asc">{t("discovery.sortPriceAsc")}</option>
@@ -177,7 +177,7 @@ export default function ArtworkDiscoveryGrid({
           </label>
         </div>
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-5 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
           {filteredItems.length > 0 ? (
             filteredItems.map((artwork) => (
               <ArtworkTile key={artwork.id} artwork={artwork} translateOption={translateOption} />
@@ -215,36 +215,36 @@ function ArtworkTile({
   translateOption: (option: string) => string
 }) {
   return (
-    <Link href={artwork.href} className="group block border border-transparent transition hover:border-stone-300">
-      <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
+    <Link href={artwork.href} className="group block">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d6]">
         {artwork.imageUrl ? (
           <img
             src={artwork.imageUrl}
             alt={buildArtworkTileAlt(artwork, translateOption)}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/70 px-4 py-3 text-sm text-white opacity-0 transition group-hover:opacity-100">
+        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/68 px-4 py-3 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
           <span>{artwork.orientation}</span>
           <span>View details</span>
         </div>
       </div>
-      <div className="bg-white px-1 py-4">
+      <div className="bg-transparent px-0 py-4">
         <div className="mb-3 flex flex-wrap gap-1.5">
           {artwork.productionModel === "hand_painted_to_order" && (
-            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
               Hand-painted to order
             </span>
           )}
           {artwork.collectionType === "artist_collection" && (
-            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
               Artist Collection
             </span>
           )}
           {artwork.customRequestAvailable && (
-            <span className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
               Custom request
             </span>
           )}
@@ -261,12 +261,12 @@ function ArtworkTile({
             <PriceText amountCny={artwork.price} />
           </p>
         </div>
-        <p className="mt-3 border-y border-stone-200 py-2 text-sm font-medium text-stone-700">
+        <p className="mt-3 border-y border-black/15 py-2 text-sm font-medium text-stone-700">
           {artwork.dimensions || "Size on request"}
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
           {[artwork.size, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
-            <span key={tag} className="border border-stone-200 bg-[#fbfaf6] px-2 py-1 text-xs text-stone-600">
+            <span key={tag} className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
               {translateOption(tag)}
             </span>
           ))}
