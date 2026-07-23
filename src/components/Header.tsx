@@ -32,19 +32,19 @@ export default function Header() {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-stone-200 bg-[#fbfaf6]/92 backdrop-blur-xl">
-      <div className="bg-stone-950 px-4 py-2 text-center text-xs text-white sm:text-sm">
+    <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/15 bg-[#1d1c18]/95 text-[#fffdf8] backdrop-blur-xl">
+      <div className="bg-[#75432f] px-4 py-2 text-center text-xs text-[#fffdf8] sm:text-sm">
         Handmade modern paintings, custom canvas art, free worldwide shipping, and 30-day returns.
       </div>
-      <div className="mx-auto flex h-16 max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-8">
           <Link href="/" className="shrink-0" onClick={closeMobileMenu} aria-label="YiiArt home">
-            <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-8 w-auto" />
+            <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-8 w-auto" />
           </Link>
 
-          <nav className="hidden items-center gap-6 text-sm text-stone-700 lg:flex" aria-label="Primary navigation">
+          <nav className="hidden items-center gap-7 text-sm text-white/80 lg:flex" aria-label="Primary navigation">
             {primaryNav.map((item) => (
-              <Link key={item.href} href={item.href} className="transition hover:text-black">
+              <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white">
                 {item.label}
               </Link>
             ))}
@@ -59,25 +59,25 @@ export default function Header() {
           <button
             type="button"
             onClick={openSearch}
-            className="hidden h-9 border border-stone-300 px-3 text-sm text-stone-700 transition hover:border-black hover:text-black md:inline-flex md:items-center"
+            className="hidden h-9 border border-white/35 px-3 text-sm text-white/85 transition-colors duration-200 hover:border-white hover:text-white md:inline-flex md:items-center"
           >
             {t("common.search")}
           </button>
 
           <Link
             href="/contact"
-            className="hidden h-9 items-center bg-black px-4 text-sm text-white transition hover:bg-stone-800 2xl:inline-flex"
+            className="hidden h-9 items-center bg-[#fffdf8] px-4 text-sm text-[#1d1c18] transition-colors duration-200 hover:bg-[#e9e2d6] 2xl:inline-flex"
           >
             {t("home.requestRoomAdvice")}
           </Link>
 
           <Link
             href="/wishlist"
-            className="relative hidden h-9 items-center border border-transparent px-2 text-sm text-stone-700 transition hover:border-stone-300 hover:text-black md:inline-flex"
+            className="relative hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
           >
             {t("common.wishlist")}
             {wishlistItems.length > 0 && (
-              <span className="ml-2 flex h-5 min-w-5 items-center justify-center bg-black px-1.5 text-xs text-white">
+              <span className="ml-2 flex h-5 min-w-5 items-center justify-center bg-[#fffdf8] px-1.5 text-xs text-[#1d1c18]">
                 {wishlistItems.length}
               </span>
             )}
@@ -86,7 +86,7 @@ export default function Header() {
           {session && (
             <Link
               href="/orders"
-              className="hidden h-9 items-center border border-transparent px-2 text-sm text-stone-700 transition hover:border-stone-300 hover:text-black md:inline-flex"
+              className="hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
             >
               {t("common.orders")}
             </Link>
@@ -94,7 +94,7 @@ export default function Header() {
 
           <Link
             href="/cart"
-            className="hidden h-9 items-center border border-transparent px-2 text-sm text-stone-700 transition hover:border-stone-300 hover:text-black md:inline-flex"
+            className="hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
           >
             {t("common.cart")}
           </Link>
@@ -127,10 +127,10 @@ export default function Header() {
             </div>
           ) : (
             <div className="hidden items-center gap-2 md:flex">
-              <Link href="/login" className="text-sm text-stone-700 transition hover:text-black">
+              <Link href="/login" className="text-sm text-white/80 transition-colors hover:text-white">
                 {t("common.login")}
               </Link>
-              <Link href="/register" className="border border-black px-3 py-2 text-sm transition hover:bg-black hover:text-white">
+              <Link href="/register" className="border border-white/65 px-3 py-2 text-sm transition-colors hover:bg-white hover:text-[#1d1c18]">
                 {t("common.register")}
               </Link>
             </div>
@@ -138,47 +138,47 @@ export default function Header() {
 
           <button
             type="button"
-            className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-1 border border-stone-300 bg-white md:hidden"
+            className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-1 border border-white/35 bg-transparent md:hidden"
             aria-label={mobileMenuOpen ? t("common.closeMenu") : t("common.openMenu")}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((open) => !open)}
           >
-            <span className="h-px w-5 bg-black" />
-            <span className="h-px w-5 bg-black" />
-            <span className="h-px w-5 bg-black" />
+            <span className="h-px w-5 bg-white" />
+            <span className="h-px w-5 bg-white" />
+            <span className="h-px w-5 bg-white" />
           </button>
         </div>
       </div>
 
       {mobileMenuOpen && (
-        <div className="border-t border-stone-200 bg-[#fbfaf6] px-4 py-4 shadow-xl md:hidden">
+        <div className="border-t border-white/15 bg-[#1d1c18] px-4 py-4 text-[#fffdf8] shadow-xl md:hidden">
           <div className="mb-4 sm:hidden">
             <StorefrontControls />
           </div>
 
           <nav className="grid gap-1 text-base" aria-label="Mobile navigation">
             {primaryNav.map((item) => (
-              <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
+              <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
                 {item.label}
               </Link>
             ))}
-            <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
+            <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
               {t("nav.contact")}
             </Link>
           </nav>
 
-          <div className="mt-3 grid gap-1 border-t border-stone-200 pt-3 text-sm">
-            <button type="button" onClick={openSearch} className="px-3 py-2 text-left hover:bg-white">
+          <div className="mt-3 grid gap-1 border-t border-white/15 pt-3 text-sm">
+            <button type="button" onClick={openSearch} className="px-3 py-2 text-left text-white/88 hover:bg-white/10">
               {t("common.search")}
             </button>
-            <Link href="/wishlist" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
+            <Link href="/wishlist" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
               {t("common.wishlist")}{wishlistItems.length > 0 ? ` (${wishlistItems.length})` : ""}
             </Link>
-            <Link href="/cart" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
+            <Link href="/cart" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
               {t("common.cart")}
             </Link>
             {session && (
-              <Link href="/orders" onClick={closeMobileMenu} className="px-3 py-2 hover:bg-white">
+              <Link href="/orders" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
                 {t("common.orders")}
               </Link>
             )}
@@ -189,16 +189,16 @@ export default function Header() {
                   closeMobileMenu()
                   signOut()
                 }}
-                className="px-3 py-2 text-left text-red-700 hover:bg-white"
+                className="px-3 py-2 text-left text-red-300 hover:bg-white/10"
               >
                 {t("auth.signOut")}
               </button>
             ) : (
               <div className="grid grid-cols-2 gap-2 px-3 pt-2">
-                <Link href="/login" onClick={closeMobileMenu} className="border border-stone-300 px-3 py-2 text-center hover:bg-white">
+                <Link href="/login" onClick={closeMobileMenu} className="border border-white/35 px-3 py-2 text-center text-white hover:bg-white/10">
                   {t("common.login")}
                 </Link>
-                <Link href="/register" onClick={closeMobileMenu} className="bg-black px-3 py-2 text-center text-white">
+                <Link href="/register" onClick={closeMobileMenu} className="bg-white px-3 py-2 text-center text-[#1d1c18]">
                   {t("common.register")}
                 </Link>
               </div>

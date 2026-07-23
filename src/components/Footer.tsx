@@ -13,21 +13,21 @@ export default function Footer() {
   const { t } = useLanguage()
 
   return (
-    <footer className="bg-stone-950 text-white">
-      <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 lg:px-10">
-        <div className="grid gap-10 border-b border-white/15 pb-10 lg:grid-cols-[1.2fr_2fr_1fr]">
+    <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
+      <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:px-10">
+        <div className="grid gap-12 border-b border-white/20 pb-12 lg:grid-cols-[1.15fr_2fr_0.95fr]">
           <div>
             <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-9 w-auto" />
-            <p className="mt-5 max-w-xs text-sm leading-6 text-white/64">{t("footer.tagline")}</p>
+            <p className="mt-5 max-w-xs text-sm leading-6 text-white/66">{t("footer.tagline")}</p>
             <div className="mt-5 space-y-2">
-              <TrackableEmailLink email={contactEmail} className="block text-sm text-white/70 hover:text-white" leadType="footer_email">
+              <TrackableEmailLink email={contactEmail} className="block text-sm text-white/72 transition-colors hover:text-white" leadType="footer_email">
                 {contactEmail}
               </TrackableEmailLink>
               <a
                 href={getWhatsAppUrl("Hello YiiArt, I found you from the website footer.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-sm text-white/70 hover:text-white"
+                className="block text-sm text-white/72 transition-colors hover:text-white"
               >
                 WhatsApp +{whatsappNumber}
               </a>
@@ -80,7 +80,7 @@ export default function Footer() {
 
         <div className="flex flex-col justify-between gap-3 pt-6 text-sm text-white/50 md:flex-row">
           <p>{t("footer.copyright")}</p>
-          <p>Original paintings, careful documentation, worldwide collector support.</p>
+          <p>Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
         </div>
       </div>
     </footer>
@@ -90,8 +90,8 @@ export default function Footer() {
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="mb-4 font-medium">{title}</h4>
-      <ul className="space-y-2 text-sm text-white/62">{children}</ul>
+      <h4 className="mb-4 text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{title}</h4>
+      <ul className="space-y-2 text-sm text-white/68">{children}</ul>
     </div>
   )
 }
@@ -99,7 +99,7 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <li>
-      <Link href={href} className="transition hover:text-white">
+      <Link href={href} className="transition-colors duration-200 hover:text-white">
         {children}
       </Link>
     </li>

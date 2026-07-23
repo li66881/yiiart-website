@@ -39,18 +39,18 @@ export default function StorefrontControls() {
   }, [openPanel])
 
   return (
-    <div ref={controlsRef} className="relative flex items-center border bg-white text-xs sm:text-sm">
+    <div ref={controlsRef} className="relative flex items-center border border-white/25 bg-transparent text-xs text-white sm:text-sm">
       <button
         id="yiiart-language"
         type="button"
         aria-haspopup="listbox"
         aria-expanded={openPanel === "language"}
         onClick={() => setOpenPanel(openPanel === "language" ? null : "language")}
-        className="flex h-9 items-center gap-1.5 border-r px-2 outline-none transition hover:bg-gray-50"
+        className="flex h-9 items-center gap-1.5 border-r border-white/20 px-2 outline-none transition-colors hover:bg-white/10"
       >
         <FlagIcon code={selectedLanguage.flagCode} label={selectedLanguage.name} />
         <span>{selectedLanguage.label}</span>
-        <span aria-hidden="true" className="text-gray-400">v</span>
+        <span aria-hidden="true" className="text-white/45">v</span>
       </button>
 
       <button
@@ -59,12 +59,12 @@ export default function StorefrontControls() {
         aria-haspopup="listbox"
         aria-expanded={openPanel === "market"}
         onClick={() => setOpenPanel(openPanel === "market" ? null : "market")}
-        className="flex h-9 min-w-0 items-center gap-1.5 px-2 outline-none transition hover:bg-gray-50"
+        className="flex h-9 min-w-0 items-center gap-1.5 px-2 outline-none transition-colors hover:bg-white/10"
       >
         <FlagIcon code={market.flagCode} label={selectedMarketName} />
         <span className="hidden max-w-28 truncate sm:inline">{selectedMarketName}</span>
         <span>{market.currency}</span>
-        <span aria-hidden="true" className="text-gray-400">v</span>
+        <span aria-hidden="true" className="text-white/45">v</span>
       </button>
 
       {openPanel === "language" && (
