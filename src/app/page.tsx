@@ -2,6 +2,7 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import HeroSection from "@/components/HeroSection"
+import EditorialHome from "@/components/home/EditorialHome"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
@@ -130,9 +131,6 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const { artworks } = await getData()
-  const heroArtwork = artworks.find(hasArtworkImage)
-  const heroImage = getArtworkImageUrl(heroArtwork, { width: 1800, height: 1200 })
-  const featuredArtworks = artworks.slice(0, 8)
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
@@ -146,20 +144,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
       />
 
-      <HeroSection
-        imageUrl={heroImage}
-        imageAlt={heroArtwork ? `${pickEnglish(heroArtwork.title, "Original YiiArt artwork")} in an interior art setting` : undefined}
-      />
-
-      <main className="flex-1">
-        <ShopByRoomSection />
-        <ShopByStyleSection />
-        <FeaturedWorksSection artworks={featuredArtworks} />
-        <WhyYiiArtSection />
-        <CustomPaintingSection />
-        <StudioProcessSection />
-        <FaqSection />
-      </main>
+      <EditorialHome artworks={artworks} />
 
       <Footer />
     </div>
