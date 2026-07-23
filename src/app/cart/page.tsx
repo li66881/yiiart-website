@@ -13,43 +13,44 @@ export default function CartPage() {
   const { t } = useLanguage()
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#f4f0e8] text-[#181613]">
       <Header />
       
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-3xl font-light mb-8">{t("cart.title")}</h1>
+      <main className="flex-1 pb-20 pt-32">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-10">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-[#75432f]">Your selected works</p>
+          <h1 className="mb-12 text-5xl font-light leading-[.98] tracking-[-0.055em]">{t("cart.title")}</h1>
           
           {items.length === 0 ? (
-            <div className="text-center py-20">
+            <div className="border-y border-black/15 py-20 text-center">
               <p className="text-gray-500 mb-6">{t("cart.empty")}</p>
-              <Link href="/artworks" className="px-8 py-3 bg-black text-white">
+              <Link href="/artworks" className="inline-flex min-h-12 items-center bg-[#26352c] px-7 text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
                 {t("cart.continueShopping")}
               </Link>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_340px]">
               {/* Cart Items */}
-              <div className="lg:col-span-2">
-                <div className="border-t">
+              <div>
+                <div className="border-t border-black/15">
                   {items.map((item) => (
-                    <div key={item.key} className="py-6 border-b flex gap-4">
-                      <div className="w-32 h-32 bg-gray-100 flex-shrink-0">
+                    <div key={item.key} className="flex gap-5 border-b border-black/15 py-6">
+                      <div className="h-32 w-28 shrink-0 bg-[#e8e1d6]">
                         <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between">
                           <div>
                             <h3 className="font-medium">{item.title}</h3>
-                            <p className="text-sm text-gray-500">{item.artist}</p>
-                            {item.sizeLabel && <p className="text-sm text-gray-500">Size: {item.sizeLabel}</p>}
-                            {item.finishLabel && <p className="text-sm text-gray-500">Finish: {item.finishLabel}</p>}
+                            <p className="text-sm text-stone-500">{item.artist}</p>
+                            {item.sizeLabel && <p className="text-sm text-stone-500">Size: {item.sizeLabel}</p>}
+                            {item.finishLabel && <p className="text-sm text-stone-500">Finish: {item.finishLabel}</p>}
                           </div>
                           <p className="font-medium"><PriceText amountCny={item.price} /></p>
                         </div>
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
-                            <span className="border px-3 py-1 text-sm">
+                            <span className="border border-black/15 bg-[#fffdf8] px-3 py-1 text-sm">
                               {item.productionModel === "hand_painted_to_order" ? "Hand-painted to order" : "One original artwork"}
                             </span>
                             {item.productionModel === "hand_painted_to_order" && (
@@ -61,7 +62,7 @@ export default function CartPage() {
                                   max="99"
                                   value={item.quantity}
                                   onChange={(event) => updateQuantity(item.key, Number(event.target.value))}
-                                  className="w-16 border px-2 py-1"
+                                  className="w-16 border border-black/20 bg-[#fffdf8] px-2 py-1"
                                 />
                               </label>
                             )}
@@ -81,16 +82,16 @@ export default function CartPage() {
               </div>
 
               {/* Order Summary */}
-              <div className="lg:col-span-1">
-                <div className="bg-gray-50 p-6">
+              <div>
+                <div className="sticky top-28 border border-black/15 bg-[#fffdf8] p-7">
                   <h2 className="text-lg font-medium mb-4">{t("cart.orderSummary") || "Order Summary"}</h2>
                   <div className="space-y-3 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-500">{t("cart.subtotal")} ({itemCount} items)</span>
+                      <span className="text-stone-500">{t("cart.subtotal")} ({itemCount} items)</span>
                       <span><PriceText amountCny={subtotal} /></span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-500">{t("cart.shipping")}</span>
+                      <span className="text-stone-500">{t("cart.shipping")}</span>
                       <span>{t("cart.free")}</span>
                     </div>
                     <div className="border-t pt-3 flex justify-between font-medium">
@@ -100,7 +101,7 @@ export default function CartPage() {
                   </div>
                   <Link
                     href="/checkout"
-                    className="block w-full mt-6 py-3 bg-black text-white text-center hover:bg-gray-800"
+                    className="mt-6 block w-full bg-[#26352c] py-4 text-center text-sm font-medium text-white transition-colors hover:bg-[#1e2520]"
                   >
                     {t("cart.proceedToCheckout")}
                   </Link>

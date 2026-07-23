@@ -157,12 +157,13 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-[#f4f0e8] text-[#181613]">
       <Header />
 
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4 max-w-5xl">
-          <h1 className="text-3xl font-light mb-8">Checkout</h1>
+      <main className="flex-1 pb-20 pt-32">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-[#75432f]">Secure studio checkout</p>
+          <h1 className="mb-10 text-5xl font-light leading-[.98] tracking-[-0.055em]">Checkout</h1>
 
           <div className="mb-8 flex flex-wrap items-center justify-center gap-3 text-sm">
             <StepIndicator active={step === "shipping"} complete={step !== "shipping"} label="Shipping" number="1" />
@@ -175,7 +176,7 @@ export default function CheckoutPage() {
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               {step === "shipping" && (
-                <form onSubmit={handleShippingSubmit} className="border bg-white p-6">
+                <form onSubmit={handleShippingSubmit} className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Shipping information</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     <TextField
@@ -241,14 +242,14 @@ export default function CheckoutPage() {
                       />
                     </div>
                   </div>
-                  <button type="submit" className="mt-6 w-full bg-black py-3 text-white hover:bg-gray-800">
+                  <button type="submit" className="mt-6 w-full bg-[#26352c] py-4 text-white transition-colors hover:bg-[#1e2520]">
                     Continue to payment
                   </button>
                 </form>
               )}
 
               {step === "payment" && (
-                <form onSubmit={handlePaymentSubmit} className="border bg-white p-6">
+                <form onSubmit={handlePaymentSubmit} className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Payment method</h2>
                   {configLoading && (
                     <div className="mb-4 border bg-gray-50 p-4 text-sm text-gray-600">
@@ -293,7 +294,7 @@ export default function CheckoutPage() {
                     <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
                       Back
                     </button>
-                    <button type="submit" className="flex-1 bg-black py-3 text-white hover:bg-gray-800">
+                    <button type="submit" className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520]">
                       Review order
                     </button>
                   </div>
@@ -301,7 +302,7 @@ export default function CheckoutPage() {
               )}
 
               {step === "confirm" && (
-                <div className="border bg-white p-6">
+                <div className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Review your order</h2>
 
                   <section className="border-b pb-4">
@@ -346,7 +347,7 @@ export default function CheckoutPage() {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={loading}
-                      className="flex-1 bg-black py-3 text-white hover:bg-gray-800 disabled:opacity-50"
+                      className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520] disabled:opacity-50"
                     >
                       {loading ? "Redirecting..." : paymentMethod === "invoice" ? "Request invoice" : "Place order"}
                     </button>
@@ -356,7 +357,7 @@ export default function CheckoutPage() {
             </div>
 
             <aside className="lg:col-span-1">
-              <div className="sticky top-24 border bg-white p-6">
+              <div className="sticky top-28 border border-black/15 bg-[#fffdf8] p-6">
                 <h2 className="text-xl font-medium mb-6">Order summary</h2>
                 <div className="space-y-3 mb-6">
                   {items.map((item) => (
