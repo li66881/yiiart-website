@@ -8,15 +8,14 @@ type HeroSectionProps = {
 }
 
 const confidenceKeys = [
-  { value: "100%", title: "trust.original", text: "trust.originalDesc" },
-  { valueKey: "cart.free", title: "trust.shipping", text: "trust.shippingDesc" },
-  { value: "30", title: "trust.trial", text: "trust.trialDesc" },
-  { value: "80%", title: "trust.support", text: "trust.supportDesc" },
+  "Painted by hand",
+  "Made to order",
+  "Guidance for your room",
 ]
 
 export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artwork in a home interior" }: HeroSectionProps) {
   return (
-    <section className="relative mt-24 min-h-[calc(100svh-6rem)] overflow-hidden bg-stone-950 text-white">
+    <section className="relative mt-[104px] min-h-[calc(100svh-6.5rem)] overflow-hidden bg-stone-950 text-white">
       {imageUrl ? (
         <img
           src={imageUrl}
@@ -31,34 +30,31 @@ export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artw
           <div className="absolute bottom-0 left-0 right-0 h-[28%] bg-[#15130f]" />
         </div>
       )}
-      <div className="absolute inset-0 bg-gradient-to-r from-black/76 via-black/38 to-black/18" />
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/70 to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-r from-black/72 via-black/42 to-black/12" />
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-6rem)] max-w-[1440px] flex-col justify-end px-4 pb-8 pt-20 sm:px-6 lg:px-10">
-        <div className="max-w-3xl pb-10">
-          <p className="mb-5 text-sm uppercase text-white/72">Handmade canvas art for modern homes</p>
-          <h1 className="max-w-3xl text-5xl font-light leading-none md:text-7xl">
-            Handmade Modern Paintings for Beautiful Interiors
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-6.5rem)] max-w-[1440px] flex-col justify-end px-4 pb-8 pt-20 sm:px-6 lg:px-10">
+        <div className="max-w-2xl pb-10">
+          <p className="mb-5 text-sm uppercase tracking-[0.1em] text-[#e0bda8]">Hand-painted to order</p>
+          <h1 className="max-w-[10.8ch] text-5xl font-light leading-[.98] tracking-[-0.062em] md:text-7xl">
+            Art, painted for the room you live in.
           </h1>
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-white/86 md:text-xl">
-            Custom-size canvas art for living rooms, bedrooms, offices, and design projects.
+          <p className="mt-7 max-w-md text-lg leading-8 text-white/86">
+            Made-to-order, hand-painted canvas art shaped by real brushwork and prepared for your space.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="#featured-works" className="bg-white px-7 py-4 text-center text-sm font-medium text-black transition hover:bg-stone-100">
-              Shop Featured Works
+            <Link href="#featured-works" className="bg-white px-7 py-4 text-center text-sm font-medium text-black transition hover:bg-[#eee7da]">
+              Shop Hand-Painted Art
             </Link>
-            <Link href="/custom-painting" className="border border-white/65 px-7 py-4 text-center text-sm font-medium text-white transition hover:bg-white hover:text-black">
-              Request Custom Painting
+            <Link href="#process" className="border border-white/65 px-7 py-4 text-center text-sm font-medium text-white transition hover:bg-white/10">
+              How It&apos;s Painted
             </Link>
           </div>
         </div>
 
-        <div className="grid border-t border-white/24 pt-5 text-white/86 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid max-w-xl border-t border-white/24 pt-5 text-white/86 sm:grid-cols-3">
           {confidenceKeys.map((item) => (
-            <div key={item.title} className="border-white/20 py-4 sm:pr-6 lg:border-r lg:px-6 lg:first:pl-0 lg:last:border-r-0">
-              <p className="text-2xl font-light">{item.valueKey ? "Free" : item.value}</p>
-              <p className="mt-2 font-medium">{trustLabel(item.title)}</p>
-              <p className="mt-1 text-sm text-white/62">{trustLabel(item.text)}</p>
+            <div key={item} className="min-h-11 border-white/20 py-2 pr-4 text-sm leading-5 sm:border-r sm:px-4 sm:first:pl-0 sm:last:border-r-0">
+              {item}
             </div>
           ))}
         </div>
@@ -67,17 +63,3 @@ export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artw
   )
 }
 
-function trustLabel(key: string) {
-  const labels: Record<string, string> = {
-    "trust.original": "Handmade paintings",
-    "trust.originalDesc": "Original canvas works",
-    "trust.shipping": "Worldwide shipping",
-    "trust.shippingDesc": "Secure packaging",
-    "trust.trial": "30-day support",
-    "trust.trialDesc": "Eligible returns",
-    "trust.support": "Artist-led studio",
-    "trust.supportDesc": "Custom art guidance",
-  }
-
-  return labels[key] || key
-}
