@@ -4,18 +4,21 @@
 
 - Reference: `D:\Documents\网站yiiart.com建设\.worktrees\yiiart-preview`
 - Migrated production build: `D:\Documents\网站yiiart.com建设\.worktrees\yiiart-integration`
-- Captured browser route: `http://127.0.0.1:3001/`
+- Captured browser route: `http://127.0.0.1:3002/`
 
 ## Automated evidence
 
 - `npm run test`: 31 tests passed; public copy check passed.
 - `npm run build`: completed successfully and generated 41 routes.
 
+## Accepted current captures
+
+- Home: current 2.1 hero copy, dark editorial header, image-led composition, and three trust points are visible.
+- Artworks: current 2.1 header, editorial display typography, warm paper surface, and curated path grid are visible.
+
 ## Visual review status
 
-The browser surface returned an earlier local server response after the current production build was restarted. The captured home hero still displayed the prior 1.0 copy rather than the committed 2.1 hero copy, so it cannot be accepted as evidence for the current build.
-
-No release decision may be made from that stale preview. A new browser capture must show the current build for the home, `/artworks`, a made-to-order artwork detail page, cart, and checkout at desktop and mobile widths.
+The local preview initially reused an older listener on port 3001. Port 3002 now serves the current production build and has accepted home and catalogue captures. Product detail, cart, checkout, and mobile captures remain outstanding, so this is not a release approval.
 
 ## Required interactive checks after a current preview is available
 
