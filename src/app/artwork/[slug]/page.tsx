@@ -3,6 +3,7 @@ import type { ReactNode } from "react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ProductGallery from "@/components/storefront/ProductGallery"
+import ProductDisclosure from "@/components/storefront/ProductDisclosure"
 import ProductPurchasePanel from "@/components/storefront/ProductPurchasePanel"
 import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
@@ -453,6 +454,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <div className="mt-8">
                 <SocialShare title={title} image={imageUrl} />
               </div>
+              <ProductDisclosure productionModel={storefrontProduct.productionModel} />
               </div>
             </div>
           </div>

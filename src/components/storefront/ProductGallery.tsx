@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import styles from "./storefront.module.css"
 
 type Props = {
@@ -6,7 +9,8 @@ type Props = {
 }
 
 export default function ProductGallery({ images, alt }: Props) {
-  const image = images[0]
+  const [selectedImage, setSelectedImage] = useState(0)
+  const image = images[selectedImage] || images[0]
 
   if (!image) {
     return <div className={styles.galleryEmpty}>Artwork image is not available for this listing.</div>
@@ -19,10 +23,17 @@ export default function ProductGallery({ images, alt }: Props) {
       </div>
       {images.length > 1 && (
         <div className={styles.thumbnailGrid} aria-label="Additional artwork views">
-          {images.slice(1, 9).map((src, index) => (
-            <div className={styles.thumbnail} key={src}>
+          {images.slice(0, 8).map((src, index) => (
+            <button
+              type="button"
+              className={styles.thumbnail}
+              key={src}
+              aria-label={`Show artwork view ${index + 1}`}
+              aria-pressed={selectedImage === index}
+              onClick={() => setSelectedImage(index)}
+            >
               <img src={src} alt={`${alt}, detail view ${index + 2}`} />
-            </div>
+            </button>
           ))}
         </div>
       )}
