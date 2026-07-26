@@ -27,6 +27,7 @@ export default function Header() {
   const { itemCount: cartItemCount } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false)
   const navigationGroups = headerNavigationGroups(primaryNav)
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
@@ -54,7 +55,7 @@ export default function Header() {
               </Link>
             ))}
             </div>
-            <div className="flex items-center gap-4 border-l border-white/20 pl-5 text-xs text-white/58">
+            <div className="flex items-center gap-4 border-l border-white/20 pl-5 text-xs text-white/72">
               {navigationGroups.secondary.map((item) => (
                 <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white/90">
                   {item.label}
@@ -120,19 +121,38 @@ export default function Header() {
           {status === "loading" ? (
             <div className="hidden h-8 w-8 animate-pulse bg-stone-200 md:block" />
           ) : session ? (
-            <div className="group relative hidden md:block">
-              <button className="flex h-8 w-8 items-center justify-center bg-stone-200 text-sm text-stone-700">
+            <div
+              className="group relative hidden md:block"
+              onKeyDown={(event) => {
+                if (event.key === "Escape") setAccountMenuOpen(false)
+              }}
+              onBlur={(event) => {
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                  setAccountMenuOpen(false)
+                }
+              }}
+            >
+              <button
+                type="button"
+                aria-haspopup="menu"
+                aria-expanded={accountMenuOpen}
+                aria-label="Account menu"
+                onClick={() => setAccountMenuOpen((open) => !open)}
+                className="flex h-8 w-8 items-center justify-center bg-stone-200 text-sm text-stone-700"
+              >
                 {session.user?.name?.[0] || session.user?.email?.[0] || "?"}
               </button>
-              <div className="absolute right-0 mt-3 hidden w-56 border border-stone-200 bg-white shadow-xl group-hover:block">
+              <div
+                className={`absolute right-0 mt-3 w-56 border border-stone-200 bg-white shadow-xl group-hover:block ${accountMenuOpen ? "block" : "hidden"}`}
+              >
                 <div className="border-b border-stone-200 px-4 py-3 text-sm">
                   <p className="font-medium">{session.user?.name || "User"}</p>
                   <p className="mt-1 truncate text-xs text-stone-500">{session.user?.email}</p>
                 </div>
-                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-stone-50">
+                <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-stone-50" onClick={() => setAccountMenuOpen(false)}>
                   {t("common.orders")}
                 </Link>
-                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-stone-50">
+                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-stone-50" onClick={() => setAccountMenuOpen(false)}>
                   {t("common.wishlist")}
                 </Link>
                 <button
