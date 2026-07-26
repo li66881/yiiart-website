@@ -8,6 +8,7 @@ import { useWishlist } from "@/context/WishlistContext"
 import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
+import { headerNavigationGroups } from "@/lib/storefront/editorial-presentation"
 
 const primaryNav = [
   { href: "/artworks", label: "Shop Art" },
@@ -24,6 +25,7 @@ export default function Header() {
   const { items: wishlistItems } = useWishlist()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
+  const navigationGroups = headerNavigationGroups(primaryNav)
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
   const openSearch = () => {
@@ -42,12 +44,21 @@ export default function Header() {
             <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-8 w-auto" />
           </Link>
 
-          <nav className="hidden items-center gap-7 text-sm text-white/80 lg:flex" aria-label="Primary navigation">
-            {primaryNav.map((item) => (
+          <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Primary navigation">
+            <div className="flex items-center gap-6 text-white/88">
+            {navigationGroups.primary.map((item) => (
               <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white">
                 {item.label}
               </Link>
             ))}
+            </div>
+            <div className="flex items-center gap-4 border-l border-white/20 pl-5 text-xs text-white/58">
+              {navigationGroups.secondary.map((item) => (
+                <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white/90">
+                  {item.label}
+                </Link>
+              ))}
+            </div>
           </nav>
         </div>
 
@@ -59,14 +70,14 @@ export default function Header() {
           <button
             type="button"
             onClick={openSearch}
-            className="hidden h-9 border border-white/35 px-3 text-sm text-white/85 transition-colors duration-200 hover:border-white hover:text-white md:inline-flex md:items-center"
+            className="hidden h-9 border border-white/20 px-3 text-xs uppercase tracking-[0.08em] text-white/75 transition-colors duration-200 hover:border-white/60 hover:text-white md:inline-flex md:items-center"
           >
             {t("common.search")}
           </button>
 
           <Link
             href="/contact"
-            className="hidden h-9 items-center bg-[#fffdf8] px-4 text-sm text-[#1d1c18] transition-colors duration-200 hover:bg-[#e9e2d6] 2xl:inline-flex"
+            className="hidden h-9 items-center bg-[#fffdf8] px-4 text-xs font-medium uppercase tracking-[0.08em] text-[#1d1c18] transition-colors duration-200 hover:bg-[#e9e2d6] 2xl:inline-flex"
           >
             {t("home.requestRoomAdvice")}
           </Link>

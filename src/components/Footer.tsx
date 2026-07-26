@@ -14,11 +14,11 @@ export default function Footer() {
 
   return (
     <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
-      <div className="mx-auto max-w-[1440px] px-4 py-16 sm:px-6 lg:px-10">
-        <div className="grid gap-12 border-b border-white/20 pb-12 lg:grid-cols-[1.15fr_2fr_0.95fr]">
+      <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10">
+        <div className="grid gap-12 border-b border-white/15 pb-14 lg:grid-cols-[1.1fr_2fr_0.9fr]">
           <div>
             <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-9 w-auto" />
-            <p className="mt-5 max-w-xs text-sm leading-6 text-white/66">{t("footer.tagline")}</p>
+            <p className="mt-5 max-w-xs font-serif text-lg leading-7 text-white/75">{t("footer.tagline")}</p>
             <div className="mt-5 space-y-2">
               <TrackableEmailLink email={contactEmail} className="block text-sm text-white/72 transition-colors hover:text-white" leadType="footer_email">
                 {contactEmail}
@@ -67,18 +67,18 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="font-medium">{t("footer.newsletter")}</h4>
+            <h4 className="text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{t("footer.newsletter")}</h4>
             <div className="mt-4">
               <NewsletterSignup />
             </div>
             <div className="mt-6">
-              <h4 className="mb-3 font-medium">{t("footer.follow")}</h4>
+              <h4 className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{t("footer.follow")}</h4>
               <SocialLinks variant="dark" />
             </div>
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-3 pt-6 text-sm text-white/50 md:flex-row">
+        <div className="flex flex-col justify-between gap-3 pt-6 text-xs uppercase tracking-[0.06em] text-white/45 md:flex-row">
           <p>{t("footer.copyright")}</p>
           <p>Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
         </div>

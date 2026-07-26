@@ -16,3 +16,10 @@ export function tileCollectionCue({ collectionType, productionModel }: TileColle
   if (productionModel === "hand_painted_to_order") return "Hand-painted to order"
   return null
 }
+
+export function headerNavigationGroups<T>(items: T[]) {
+  return {
+    primary: items.slice(0, 4),
+    secondary: items.slice(4),
+  }
+}

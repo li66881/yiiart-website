@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { tileCollectionCue, visibleFilterOptions } from "./editorial-presentation"
+import { headerNavigationGroups, tileCollectionCue, visibleFilterOptions } from "./editorial-presentation"
 
 test("keeps active zero-count filters while hiding inactive empty filters", () => {
   const counts = new Map([
@@ -21,4 +21,18 @@ test("uses one collection cue instead of stacking product badges", () => {
     tileCollectionCue({ collectionType: "artist_collection", productionModel: "original" }),
     "Artist collection",
   )
+})
+
+test("keeps browse links ahead of collector information in the gallery header", () => {
+  const groups = headerNavigationGroups([
+    "Shop Art",
+    "Large Wall Art",
+    "Custom Painting",
+    "Size Guide",
+    "Reviews",
+    "Artists",
+  ])
+
+  assert.deepEqual(groups.primary, ["Shop Art", "Large Wall Art", "Custom Painting", "Size Guide"])
+  assert.deepEqual(groups.secondary, ["Reviews", "Artists"])
 })
