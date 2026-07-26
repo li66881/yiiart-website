@@ -34,18 +34,18 @@ export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artw
 
       <div className="relative z-10 mx-auto flex min-h-[calc(100svh-6.5rem)] max-w-[1440px] flex-col justify-end px-4 pb-8 pt-20 sm:px-6 lg:px-10">
         <div className="max-w-2xl pb-10">
-          <p className="mb-5 text-sm uppercase tracking-[0.1em] text-[#e0bda8]">Hand-painted to order</p>
+          <p className="mb-5 text-xs font-medium uppercase tracking-[0.16em] text-[#e0bda8]">Hand-painted to order</p>
           <h1 className="max-w-[10.8ch] text-5xl font-light leading-[.98] tracking-[-0.062em] md:text-7xl">
             Art, painted for the room you live in.
           </h1>
-          <p className="mt-7 max-w-md text-lg leading-8 text-white/86">
+          <p className="mt-7 max-w-md text-base leading-7 text-white/82 md:text-lg md:leading-8">
             Made-to-order, hand-painted canvas art shaped by real brushwork and prepared for your space.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="#featured-works" className="bg-white px-7 py-4 text-center text-sm font-medium text-black transition hover:bg-[#eee7da]">
+            <Link href="#featured-works" className="bg-white px-7 py-4 text-center text-xs font-medium uppercase tracking-[0.1em] text-black transition hover:bg-[#eee7da]">
               Shop Hand-Painted Art
             </Link>
-            <Link href="#process" className="border border-white/65 px-7 py-4 text-center text-sm font-medium text-white transition hover:bg-white/10">
+            <Link href="#process" className="border border-white/45 px-7 py-4 text-center text-xs font-medium uppercase tracking-[0.1em] text-white transition hover:bg-white/10">
               How It&apos;s Painted
             </Link>
           </div>
