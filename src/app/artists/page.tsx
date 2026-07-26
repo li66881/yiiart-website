@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -47,12 +48,14 @@ export default async function ArtistsPage() {
               return (
                 <Link key={artist._id} href={artistHref}>
                   <div className="group cursor-pointer">
-                    <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+                    <div className="relative mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
                       {artist.image ? (
-                        <img
+                        <Image
                           src={urlFor(artist.image).width(600).url()}
                           alt={pickEnglish(artist.name, "Artist")}
-                          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          fill
+                          sizes="(min-width: 768px) 33vw, 50vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <div className="flex h-full w-full items-center justify-center text-gray-300">

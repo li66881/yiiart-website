@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import ReviewStars from "@/components/ReviewStars"
 import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
@@ -22,9 +23,11 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
     <article className="border border-stone-200 bg-white p-5">
       <div className="flex items-start gap-4">
         {photoUrl ? (
-          <img
+          <Image
             src={photoUrl}
             alt={photo.alt || `${artworkTitle} in ${review.roomType || "a collector space"}`}
+            width={160}
+            height={160}
             className="h-20 w-20 flex-shrink-0 object-cover"
           />
         ) : null}

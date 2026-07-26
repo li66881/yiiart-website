@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import type { ReactNode } from "react"
 import Header from "@/components/Header"
@@ -707,10 +708,12 @@ function RelatedArtworkCard({ artwork }: { artwork: any }) {
     <Link href={href} className="group block">
       <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
         {image ? (
-          <img
+          <Image
             src={image}
             alt={`${title}, related handmade artwork`}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(min-width: 1024px) 25vw, 50vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center border border-stone-200 bg-white text-stone-400">

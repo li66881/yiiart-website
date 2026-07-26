@@ -10,7 +10,7 @@
 .textLink:hover { color: var(--yiiart-clay); }
 .artworkGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(28px, 3vw, 48px) clamp(16px, 2.3vw, 34px); }
 .artworkCard { display: block; min-width: 0; }
-.artworkMedia { aspect-ratio: 4 / 5; display: grid; overflow: hidden; place-items: center; background: #e8e1d6; color: var(--yiiart-muted); font-size: .9rem; text-align: center; }
+.artworkMedia { position: relative; aspect-ratio: 4 / 5; display: grid; overflow: hidden; place-items: center; background: #e8e1d6; color: var(--yiiart-muted); font-size: .9rem; text-align: center; }
 .artworkMedia img { width: 100%; height: 100%; object-fit: cover; transition: transform .36s ease; }
 .artworkCard:hover .artworkMedia img { transform: scale(1.025); }
 .artworkCopy { display: grid; gap: 8px; padding-top: 16px; }
@@ -26,7 +26,7 @@
 .roomGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .roomCard { overflow: hidden; background: var(--yiiart-paper-strong); transition: transform .22s ease; }
 .roomCard:hover { transform: translateY(-4px); }
-.roomMedia { aspect-ratio: 16 / 10; display: grid; overflow: hidden; place-items: center; background: #d8d0c2; color: var(--yiiart-muted); }
+.roomMedia { position: relative; aspect-ratio: 16 / 10; display: grid; overflow: hidden; place-items: center; background: #d8d0c2; color: var(--yiiart-muted); }
 .roomMedia img, .customMedia img { width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
 .roomCard:hover .roomMedia img { transform: scale(1.025); }
 .roomCopy { min-height: 154px; padding: 22px 24px; }
@@ -46,7 +46,7 @@
 .artistGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
 .custom { padding-block: clamp(76px, 9vw, 132px); background: #20211d; color: var(--yiiart-paper-strong); }
 .customLayout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, .9fr); gap: clamp(44px, 8vw, 108px); align-items: center; }
-.customMedia { aspect-ratio: 4 / 3; display: grid; overflow: hidden; place-items: center; background: #141512; color: rgb(255 253 248 / .68); }
+.customMedia { position: relative; aspect-ratio: 4 / 3; display: grid; overflow: hidden; place-items: center; background: #141512; color: rgb(255 253 248 / .68); }
 .customCopy > p:not(.darkEyebrow) { max-width: 510px; margin: 28px 0 34px; color: rgb(255 253 248 / .76); font-size: 1.05rem; line-height: 1.6; }
 .lightButton { display: inline-flex; min-height: 52px; align-items: center; padding: 13px 24px; background: var(--yiiart-paper-strong); color: var(--yiiart-forest); font-size: .95rem; font-weight: 650; transition: background .18s ease, transform .18s ease; }
 .lightButton:hover { background: #ebe3d5; transform: translateY(-2px); }

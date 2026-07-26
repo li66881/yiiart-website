@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { FormEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
@@ -328,8 +329,8 @@ export default function CheckoutPage() {
                     <h3 className="font-medium">Items</h3>
                     {items.map((item) => (
                       <div key={item.key} className="flex items-center gap-4">
-                        <div className="h-16 w-16 bg-gray-100">
-                          <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+                        <div className="relative h-16 w-16 bg-gray-100">
+                          {item.image && <Image src={item.image} alt={item.title} fill sizes="64px" className="object-cover" />}
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.title}</p>
@@ -366,8 +367,8 @@ export default function CheckoutPage() {
                 <div className="space-y-3 mb-6">
                   {items.map((item) => (
                     <div key={item.key} className="flex gap-3">
-                      <div className="h-16 w-16 flex-shrink-0 bg-gray-100">
-                        <img src={item.image} alt={item.title} className="h-full w-full object-cover" />
+                      <div className="relative h-16 w-16 flex-shrink-0 bg-gray-100">
+                        {item.image && <Image src={item.image} alt={item.title} fill sizes="64px" className="object-cover" />}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{item.title}</p>

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { Dispatch, SetStateAction, useMemo, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
@@ -221,10 +222,12 @@ function ArtworkTile({
     <Link href={artwork.href} className="group block">
       <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d6]">
         {artwork.imageUrl ? (
-          <img
+          <Image
             src={artwork.imageUrl}
             alt={buildArtworkTileAlt(artwork, translateOption)}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+            fill
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.025]"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>

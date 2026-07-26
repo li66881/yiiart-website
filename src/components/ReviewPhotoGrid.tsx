@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getReviewPhotoUrl } from "@/lib/review-images"
@@ -31,11 +32,13 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
 
         return (
           <article key={`${review._id}-${photo._key || photoUrl}`} className="group">
-            <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
-              <img
+            <div className="relative mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+              <Image
                 src={photoUrl}
                 alt={photo.alt || `${artworkTitle} in ${review.roomType || "a collector space"}`}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                fill
+                sizes="(min-width: 1024px) 33vw, 50vw"
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
             </div>
             <h2 className="font-medium">

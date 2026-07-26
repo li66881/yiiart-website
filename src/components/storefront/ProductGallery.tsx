@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import { useState } from "react"
 import styles from "./storefront.module.css"
 
@@ -19,7 +20,7 @@ export default function ProductGallery({ images, alt }: Props) {
   return (
     <figure className={styles.gallery}>
       <div className={styles.galleryStage}>
-        <img src={image} alt={alt} />
+        <Image src={image} alt={alt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" />
       </div>
       {images.length > 1 && (
         <div className={styles.thumbnailGrid} aria-label="Additional artwork views">
@@ -32,7 +33,7 @@ export default function ProductGallery({ images, alt }: Props) {
               aria-pressed={selectedImage === index}
               onClick={() => setSelectedImage(index)}
             >
-              <img src={src} alt={`${alt}, detail view ${index + 2}`} />
+              <Image src={src} alt={`${alt}, detail view ${index + 2}`} fill sizes="120px" />
             </button>
           ))}
         </div>

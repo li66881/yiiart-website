@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -96,9 +97,11 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
           <div className="mt-4 flex flex-col items-start gap-12 md:flex-row">
             <div className="w-64 flex-shrink-0">
               {artist.image ? (
-                <img
+                <Image
                   src={urlFor(artist.image).width(500).height(500).url()}
                   alt={artistName}
+                  width={500}
+                  height={500}
                   className="aspect-square w-full object-cover"
                 />
               ) : (
@@ -133,12 +136,14 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
                 {artworks.map((artwork: any) => (
                   <Link key={artwork._id} href={`/artwork/${artwork.slug?.current || artwork._id}`}>
                     <div className="group cursor-pointer">
-                      <div className="mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
+                      <div className="relative mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
                         {getArtworkImageUrl(artwork, { width: 600 }) && (
-                          <img
+                          <Image
                             src={getArtworkImageUrl(artwork, { width: 600 })}
                             alt={pickEnglish(artwork.title, "Artwork")}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            fill
+                            sizes="(min-width: 768px) 33vw, 50vw"
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                           />
                         )}
                       </div>

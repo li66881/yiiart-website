@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
@@ -69,7 +70,12 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
               <Link key={room.href} href={room.href} className={styles.roomCard}>
                 <div className={styles.roomMedia}>
                   {resolveVisualImage(roomImages.slice(index)) ? (
-                    <img src={resolveVisualImage(roomImages.slice(index)) || ""} alt={`${room.title} wall art inspiration`} />
+                    <Image
+                      src={resolveVisualImage(roomImages.slice(index)) || ""}
+                      alt={`${room.title} wall art inspiration`}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    />
                   ) : (
                     <span>Room guidance</span>
                   )}
@@ -116,7 +122,16 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
       <section className={styles.custom}>
         <div className={`${styles.shell} ${styles.customLayout}`}>
           <div className={styles.customMedia}>
-            {resolveVisualImage(roomImages) ? <img src={resolveVisualImage(roomImages) || ""} alt="Custom canvas art styled in a warm interior" /> : <span>Custom canvas art</span>}
+            {resolveVisualImage(roomImages) ? (
+              <Image
+                src={resolveVisualImage(roomImages) || ""}
+                alt="Custom canvas art styled in a warm interior"
+                fill
+                sizes="(min-width: 1024px) 50vw, 100vw"
+              />
+            ) : (
+              <span>Custom canvas art</span>
+            )}
           </div>
           <div className={styles.customCopy}>
             <p className={styles.darkEyebrow}>Custom art service</p>
@@ -159,7 +174,18 @@ function ArtworkCard({ artwork, compact = false }: { artwork: any; compact?: boo
   const meta = [normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")
 
   return <Link href={href} className={styles.artworkCard}>
-    <div className={styles.artworkMedia}>{image ? <img src={image} alt={`${title}, hand-painted canvas art`} /> : <span>Artwork image available on request</span>}</div>
+    <div className={styles.artworkMedia}>
+      {image ? (
+        <Image
+          src={image}
+          alt={`${title}, hand-painted canvas art`}
+          fill
+          sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+        />
+      ) : (
+        <span>Artwork image available on request</span>
+      )}
+    </div>
     <div className={styles.artworkCopy}><p>{meta}</p><div><h3>{title}</h3><span>{compact ? pickEnglish(artwork.artist?.name, "YiiArt") : formatArtworkDimensions(artwork)}</span></div><strong><PriceText amountCny={artwork.price} /></strong></div>
   </Link>
 }

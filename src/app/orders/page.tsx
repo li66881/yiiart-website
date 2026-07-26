@@ -1,6 +1,7 @@
 "use client"
 
 import { FormEvent, useEffect, useState } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -155,8 +156,8 @@ export default function OrdersPage() {
                           <div className="space-y-3">
                             {order.items.map((item) => (
                               <div key={`${item.artworkId}:${item.sizeId || "original"}:${item.finishId || "as-listed"}`} className="flex gap-4 items-center">
-                                <div className="w-16 h-16 bg-gray-100">
-                                  {item.imageUrl && <img src={item.imageUrl} alt={item.title} className="w-full h-full object-cover" />}
+                                <div className="relative w-16 h-16 bg-gray-100">
+                                  {item.imageUrl && <Image src={item.imageUrl} alt={item.title} fill sizes="64px" className="object-cover" />}
                                 </div>
                                 <div>
                                   <p className="font-medium">{item.title}</p>

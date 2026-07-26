@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { PriceText } from "@/components/PriceText"
@@ -132,9 +133,9 @@ export default function SearchDialog({ open, onClose }: SearchDialogProps) {
                   onClick={onClose}
                   className="grid grid-cols-[4.5rem_1fr] gap-4 border p-3 transition hover:bg-gray-50"
                 >
-                  <div className="aspect-[4/5] bg-gray-100">
+                  <div className="relative aspect-[4/5] bg-gray-100">
                     {result.image ? (
-                      <img src={result.image} alt={result.title} className="h-full w-full object-cover" />
+                      <Image src={result.image} alt={result.title} fill sizes="72px" className="object-cover" />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">Art</div>
                     )}

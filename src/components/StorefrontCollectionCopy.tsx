@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import { useLanguage } from "@/context/LanguageContext"
 import type { StorefrontCollectionTile } from "@/lib/storefront-content"
@@ -28,10 +29,12 @@ export function StorefrontCollectionCard({ collection, image }: StorefrontCollec
     <Link href={collection.href} className="group block border border-stone-200 bg-white transition hover:border-stone-950">
       <div className="relative aspect-[5/3] overflow-hidden bg-stone-100">
         {image ? (
-          <img
+          <Image
             src={image}
             alt={translated.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            fill
+            sizes="(min-width: 1024px) 33vw, 100vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-stone-400">YiiArt collection</div>

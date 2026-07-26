@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -35,8 +36,8 @@ export default function CartPage() {
                 <div className="border-t border-black/15">
                   {items.map((item) => (
                     <div key={item.key} className="flex gap-5 border-b border-black/15 py-6">
-                      <div className="h-32 w-28 shrink-0 bg-[#e8e1d6]">
-                        <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <div className="relative h-32 w-28 shrink-0 bg-[#e8e1d6]">
+                        {item.image && <Image src={item.image} alt={item.title} fill sizes="112px" className="object-cover" />}
                       </div>
                       <div className="flex-1">
                         <div className="flex justify-between">

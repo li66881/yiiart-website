@@ -4,6 +4,7 @@
 
 .galleryStage,
 .galleryEmpty {
+  position: relative;
   display: flex;
   aspect-ratio: 4 / 5;
   align-items: center;
@@ -31,6 +32,7 @@
 }
 
 .thumbnail {
+  position: relative;
   aspect-ratio: 1;
   overflow: hidden;
   border: 1px solid #ded8ce;

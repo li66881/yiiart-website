@@ -1,3 +1,4 @@
+import Image from "next/image"
 import Link from "next/link"
 
 type HeroSectionProps = {
@@ -15,10 +16,13 @@ export default function HeroSection({ imageUrl, imageAlt = "Original YiiArt artw
   return (
     <section className="relative mt-[104px] min-h-[calc(100svh-6.5rem)] overflow-hidden bg-stone-950 text-white">
       {imageUrl ? (
-        <img
+        <Image
           src={imageUrl}
           alt={imageAlt}
-          className="absolute inset-0 h-full w-full object-cover"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
         />
       ) : (
         <div className="absolute inset-0 bg-[#24211d]">

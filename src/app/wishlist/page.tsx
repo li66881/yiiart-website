@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -30,12 +31,16 @@ export default function WishlistPage() {
               {items.map((item) => (
                 <div key={item.id} className="border group">
                   <Link href={`/artwork/${item.slug}`}>
-                    <div className="aspect-[4/5] bg-gray-100 overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                      />
+                    <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+                      {item.image && (
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          sizes="(min-width: 1024px) 25vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      )}
                     </div>
                   </Link>
                   <div className="p-4">
