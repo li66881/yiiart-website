@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { headerNavigationGroups, tileCollectionCue, visibleFilterOptions } from "./editorial-presentation"
+import { headerNavigationGroups, productDetailGroups, tileCollectionCue, visibleFilterOptions } from "./editorial-presentation"
 
 test("keeps active zero-count filters while hiding inactive empty filters", () => {
   const counts = new Map([
@@ -35,4 +35,8 @@ test("keeps browse links ahead of collector information in the gallery header", 
 
   assert.deepEqual(groups.primary, ["Shop Art", "Large Wall Art", "Custom Painting", "Size Guide"])
   assert.deepEqual(groups.secondary, ["Reviews", "Artists"])
+})
+
+test("keeps handmade support in a single product confidence group", () => {
+  assert.deepEqual(productDetailGroups().map((group) => group.id), ["artwork", "room", "care"])
 })

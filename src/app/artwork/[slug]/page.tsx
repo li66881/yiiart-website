@@ -36,6 +36,7 @@ import {
   productPackagingItems,
   productProcessItems,
 } from "@/lib/storefront-content"
+import { productDetailGroups } from "@/lib/storefront/editorial-presentation"
 
 export const revalidate = 600
 
@@ -201,6 +202,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   }
 
   const title = pickEnglish(artwork.title, "Untitled artwork")
+  const detailGroups = productDetailGroups()
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
@@ -461,8 +463,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Artwork Details</p>
-              <h2 className="text-3xl font-light">Know the artwork before it enters your room</h2>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[0].eyebrow}</p>
+              <h2 className="text-3xl font-light">{detailGroups[0].title}</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
                 Product rows are shown when the current listing has enough information. For missing production details,
                 YiiArt confirms the safest format before dispatch or custom production.
@@ -478,8 +480,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Size & Room Guide</p>
-              <h2 className="text-3xl font-light">Check the scale before you choose</h2>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[1].eyebrow}</p>
+              <h2 className="text-3xl font-light">{detailGroups[1].title}</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
                 Use this as a practical starting point for sofas, beds, entryways, and feature walls. For exact advice,
                 send your wall width and a room photo on WhatsApp before purchase.
@@ -519,8 +521,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <section className="mt-16 border-t border-stone-200 pt-12">
             <div className="mb-8">
-              <p className="mb-3 text-sm uppercase text-stone-500">Trust Block</p>
-              <h2 className="text-3xl font-light">A safer way to buy handmade artwork online</h2>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[2].eyebrow}</p>
+              <h2 className="text-3xl font-light">{detailGroups[2].title}</h2>
             </div>
             <div className="grid gap-4 md:grid-cols-5">
               {trustItems.map((item) => (

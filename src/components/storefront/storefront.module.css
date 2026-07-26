@@ -71,9 +71,9 @@
 }
 
 .purchasePanel {
-  border: 1px solid #ded8ce;
+  border: 1px solid #d7cfc3;
   background: #fffdf8;
-  padding: clamp(1.5rem, 3vw, 2.25rem);
+  padding: clamp(1.75rem, 3vw, 2.6rem);
 }
 
 .kickerRow {
@@ -122,7 +122,7 @@
 .priceBlock {
   margin: 1.5rem 0;
   padding: 1.25rem 0;
-  border-block: 1px solid #e7e5e4;
+  border-block: 1px solid #ded8ce;
 }
 
 .price {
@@ -209,11 +209,15 @@
   color: #fff;
   cursor: pointer;
   text-decoration: none;
-  transition: background 180ms ease;
+  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  transition: background 180ms ease, transform 180ms ease;
 }
 
 .primaryAction:hover {
   background: #1e2520;
+  transform: translateY(-1px);
 }
 
 .secondaryActions {

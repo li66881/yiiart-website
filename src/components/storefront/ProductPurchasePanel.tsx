@@ -165,9 +165,6 @@ export default function ProductPurchasePanel({
         </a>
       </div>
 
-      <p className={styles.variation}>
-        Each painting is created by hand. Natural variations in brushwork and color make every finished work unique.
-      </p>
       <p className={styles.confirmation} role="status" aria-live="polite">{confirmation}</p>
 
       {directCheckoutAvailable && selection && (

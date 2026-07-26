@@ -23,3 +23,11 @@ export function headerNavigationGroups<T>(items: T[]) {
     secondary: items.slice(4),
   }
 }
+
+export function productDetailGroups() {
+  return [
+    { id: "artwork", eyebrow: "Artwork details", title: "Know the work before it enters your room." },
+    { id: "room", eyebrow: "Size and room guidance", title: "Check the scale before you choose." },
+    { id: "care", eyebrow: "Handmade, shipping and support", title: "Clear support for a made-to-order canvas." },
+  ] as const
+}
