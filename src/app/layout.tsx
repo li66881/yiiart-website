@@ -103,6 +103,30 @@ export default function RootLayout({
         )}
       </head>
       <body className="antialiased">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@graph": [
+                {
+                  "@type": "Organization",
+                  "@id": `${siteUrl}/#organization`,
+                  name: siteName,
+                  url: siteUrl,
+                  logo: `${siteUrl}/brand/yiiart-logo.svg`,
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${siteUrl}/#website`,
+                  name: siteName,
+                  url: siteUrl,
+                  publisher: { "@id": `${siteUrl}/#organization` },
+                },
+              ],
+            }),
+          }}
+        />
         <Providers>
           <LanguageProvider>
             <CurrencyProvider>

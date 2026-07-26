@@ -5,6 +5,7 @@ import { useState } from "react"
 import { useSession, signOut } from "next-auth/react"
 import { useLanguage } from "@/context/LanguageContext"
 import { useWishlist } from "@/context/WishlistContext"
+import { useCart } from "@/context/CartContext"
 import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
@@ -23,6 +24,7 @@ export default function Header() {
   const { data: session, status } = useSession()
   const { t } = useLanguage()
   const { items: wishlistItems } = useWishlist()
+  const { itemCount: cartItemCount } = useCart()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const navigationGroups = headerNavigationGroups(primaryNav)
@@ -105,9 +107,14 @@ export default function Header() {
 
           <Link
             href="/cart"
-            className="hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
+            className="relative hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
           >
             {t("common.cart")}
+            {cartItemCount > 0 && (
+              <span className="ml-2 flex h-5 min-w-5 items-center justify-center bg-[#fffdf8] px-1.5 text-xs text-[#1d1c18]">
+                {cartItemCount}
+              </span>
+            )}
           </Link>
 
           {status === "loading" ? (
@@ -186,7 +193,7 @@ export default function Header() {
               {t("common.wishlist")}{wishlistItems.length > 0 ? ` (${wishlistItems.length})` : ""}
             </Link>
             <Link href="/cart" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
-              {t("common.cart")}
+              {t("common.cart")}{cartItemCount > 0 ? ` (${cartItemCount})` : ""}
             </Link>
             {session && (
               <Link href="/orders" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">

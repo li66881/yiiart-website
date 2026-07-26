@@ -10,7 +10,7 @@ import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
-export const dynamic = "force-dynamic"
+export const revalidate = 600
 
 const roomLinks = [
   {

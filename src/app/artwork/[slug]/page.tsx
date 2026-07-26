@@ -249,10 +249,15 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const invoiceUrl = getWhatsAppUrl(
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
   )
+  const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10)
   const offer: Record<string, any> = {
     "@type": "Offer",
     url: `${baseUrl}/artwork/${slug}`,
+    sku: artwork.sku || slug,
     priceCurrency: currency,
+    priceValidUntil,
     availability: getSchemaAvailability(artwork, directCheckoutAvailable),
     itemCondition: "https://schema.org/NewCondition",
     shippingDetails: {
@@ -279,6 +284,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
   if (priceCny > 0) {
     offer.price = offerPrice.toFixed(2)
+  } else if (offer.availability === "https://schema.org/InStock") {
+    // An InStock offer without a price fails rich-result validation; downgrade it.
+    offer.availability = "https://schema.org/LimitedAvailability"
   }
 
   const productJsonLd: Record<string, any> = {
