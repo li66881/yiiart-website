@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import PaymentBadges from "@/components/PaymentBadges"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
@@ -290,6 +291,9 @@ export default function CheckoutPage() {
                       Secure invoice checkout is available for this order. YiiArt will confirm artwork availability, packing, shipping, and the safest payment method before payment.
                     </div>
                   )}
+                  <div className="mt-5">
+                    <PaymentBadges />
+                  </div>
                   <div className="mt-6 flex gap-4">
                     <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
                       Back

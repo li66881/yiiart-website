@@ -23,8 +23,8 @@ export default function ShippingPage() {
               <h1 className="text-5xl font-light leading-tight">Shipping original artwork safely.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              YiiArt ships original paintings internationally with protective packaging and tracking when available.
-              Final timing depends on preparation, destination, customs review, and carrier conditions.
+              Shipping is free worldwide and included in the price. Every painting travels insured with an express
+              carrier such as DHL, FedEx, or UPS, with tracking emailed the day it ships.
             </p>
           </section>
 
@@ -40,9 +40,9 @@ export default function ShippingPage() {
               <h2 className="text-4xl font-light leading-tight">Preparation first, then carrier transit.</h2>
             </div>
             <div className="grid gap-4">
-              <Timeline title="Artwork preparation" text="Final checks, documentation, packing, and dispatch preparation usually happen before carrier transit begins." />
-              <Timeline title="International transit" text="Transit timing varies by destination, customs, carrier route, and artwork shipping format." />
-              <Timeline title="Oversized or custom work" text="Large canvas art and commissioned works may need extra production, drying, packing, or freight coordination time." />
+              <Timeline title="Artwork preparation: 3-5 business days" text="Ready-made works are inspected, photographed before packing, documented, and handed to the carrier within 3-5 business days of your order." />
+              <Timeline title="International transit: 5-10 business days" text="Express carriers such as DHL, FedEx, or UPS usually deliver within 5-10 business days of dispatch. Import duties and local taxes, where applicable, are set by the destination country and collected by the carrier." />
+              <Timeline title="Oversized or custom work: 2-4 weeks production" text="Commissioned paintings need 2-4 weeks for production and drying before dispatch. Very large works may need extra freight coordination, confirmed with you in advance." />
             </div>
           </section>
         </div>

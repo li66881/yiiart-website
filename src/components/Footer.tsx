@@ -4,6 +4,7 @@ import Link from "next/link"
 import type { ReactNode } from "react"
 import { useLanguage } from "@/context/LanguageContext"
 import NewsletterSignup from "@/components/NewsletterSignup"
+import PaymentBadges from "@/components/PaymentBadges"
 import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
 import { siteAssetUrl } from "@/lib/assets"
@@ -15,6 +16,13 @@ export default function Footer() {
   return (
     <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
       <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10">
+        <div className="mb-14 grid grid-cols-2 gap-6 border-b border-white/15 pb-10 lg:grid-cols-4">
+          <GuaranteeItem title="Free insured shipping" text="Included worldwide, door to door" />
+          <GuaranteeItem title="Hand-painted originals" text="Signed certificate of authenticity" />
+          <GuaranteeItem title="30-day returns" text="Refund within 5 business days" />
+          <GuaranteeItem title="Secure payment" text="PayPal and major cards over SSL" />
+        </div>
+
         <div className="grid gap-12 border-b border-white/15 pb-14 lg:grid-cols-[1.1fr_2fr_0.9fr]">
           <div>
             <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-9 w-auto" />
@@ -78,12 +86,24 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="flex flex-col justify-between gap-3 pt-6 text-xs uppercase tracking-[0.06em] text-white/45 md:flex-row">
+        <div className="flex flex-col items-start justify-between gap-4 pt-6 md:flex-row md:items-center">
+          <PaymentBadges variant="dark" />
+          <p className="text-xs uppercase tracking-[0.06em] text-white/45">Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
+        </div>
+        <div className="pt-4 text-xs uppercase tracking-[0.06em] text-white/45">
           <p>{t("footer.copyright")}</p>
-          <p>Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
         </div>
       </div>
     </footer>
+  )
+}
+
+function GuaranteeItem({ title, text }: { title: string; text: string }) {
+  return (
+    <div>
+      <p className="text-sm font-medium text-white/90">{title}</p>
+      <p className="mt-1 text-xs text-white/55">{text}</p>
+    </div>
   )
 }
 

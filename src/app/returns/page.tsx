@@ -24,8 +24,9 @@ export default function ReturnsPage() {
               <h1 className="text-5xl font-light leading-tight">Clear return terms for original art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              Eligible ready-made artworks can be returned within 30 days of delivery. Custom or commissioned works
-              may have separate terms confirmed before production because they are made for a specific request.
+              Ready-made artworks can be returned within 30 days of delivery for any reason, with the refund issued
+              within 5 business days of the artwork arriving back. Custom commissions are final sale because they are
+              made for a specific request, and can be cancelled free of charge before production starts.
             </p>
           </section>
 
@@ -42,10 +43,10 @@ export default function ReturnsPage() {
             </div>
             <ol className="grid gap-4">
               {[
-                `Contact ${contactEmail} within the return window and include your order number and artwork title.`,
+                `Contact ${contactEmail} within 30 days of delivery and include your order number and artwork title.`,
                 "Share the reason for return and photos if the artwork arrived damaged or materially different from the listing.",
-                "Wait for return packing and shipping instructions before sending the artwork back.",
-                "Pack the artwork securely in original packaging when possible, with all documentation included.",
+                "Wait for return packing and shipping instructions, then ship the artwork back within 14 days of approval.",
+                "Pack the artwork securely in original packaging when possible, with all documentation included. Your refund is issued within 5 business days of the artwork arriving back.",
               ].map((item, index) => (
                 <li key={item} className="border border-stone-200 bg-white p-5 text-sm leading-6 text-stone-600">
                   <span className="mb-2 block text-xs uppercase text-stone-400">Step 0{index + 1}</span>

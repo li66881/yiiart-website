@@ -54,12 +54,12 @@ const whyItems = [
     text: "Start from your wall measurements, room photos, palette direction, and preferred composition.",
   },
   {
-    title: "Secure worldwide shipping",
-    text: "Packaging format is selected around artwork size, surface, and shipping safety.",
+    title: "Free insured shipping",
+    text: "Shipping is included in the price worldwide, fully insured door to door, with tracking emailed at dispatch.",
   },
   {
-    title: "Damage protection",
-    text: "If damage happens in transit, keep packaging and send photos so YiiArt can review the next step.",
+    title: "30-day returns",
+    text: "Ready-made works can be returned within 30 days for any reason. Damage in transit is covered by a free replacement or full refund.",
   },
 ]
 
@@ -81,11 +81,11 @@ const faqs = [
   },
   {
     question: "How long does shipping take?",
-    answer: "Timing depends on artwork preparation, size, destination, carrier route, and customs. YiiArt confirms available shipping guidance for the specific order before dispatch.",
+    answer: "Ready-made works dispatch within 3-5 business days and arrive 5-10 business days later with insured express carriers such as DHL, FedEx, or UPS. Shipping is free worldwide and included in the price.",
   },
   {
     question: "What if the artwork arrives damaged?",
-    answer: "Keep the artwork and all packaging, then send clear photos as soon as possible. YiiArt will review the case and guide the damage support process.",
+    answer: "Every shipment is insured. Keep the packaging and send photos within 48 hours; YiiArt arranges a free replacement or a full refund.",
   },
 ]
 

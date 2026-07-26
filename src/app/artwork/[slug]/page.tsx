@@ -29,6 +29,7 @@ import { buildStorefrontProduct } from "@/lib/storefront/product"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
+import PaymentBadges from "@/components/PaymentBadges"
 import { getWhatsAppUrl } from "@/lib/site"
 import {
   productAdviceItems,
@@ -41,11 +42,11 @@ import { productDetailGroups } from "@/lib/storefront/editorial-presentation"
 export const revalidate = 600
 
 const trustItems = [
-  { title: "Secure payment", text: "Checkout and invoice options are handled through configured payment providers or YiiArt support." },
-  { title: "Worldwide shipping", text: "International delivery is prepared according to artwork size, surface, and destination." },
+  { title: "Secure payment", text: "Pay with PayPal or major cards over an encrypted SSL checkout. YiiArt never stores your card details." },
+  { title: "Free insured shipping", text: "Shipping is included in the price worldwide, fully insured door to door, typically 5-10 business days after dispatch." },
   { title: "Carefully packaged", text: "Rolled, stretched, or flat packaging is selected for the safest practical handling." },
-  { title: "Damage protection", text: "Keep all packaging and send photos promptly if carrier damage is found on arrival." },
-  { title: "Handmade artwork", text: "YiiArt focuses on physical hand-painted works rather than mass-produced poster prints." },
+  { title: "30-day returns", text: "Ready-made works can be returned within 30 days for any reason. Damage in transit is covered by a free replacement or full refund." },
+  { title: "Handmade artwork", text: "Original hand-painted work with a signed certificate of authenticity, not a mass-produced print." },
 ]
 
 const artworkPageFaqs = [
@@ -529,6 +530,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 <InfoBlock key={item.title} title={item.title} text={item.text} />
               ))}
             </div>
+            <div className="mt-6">
+              <PaymentBadges />
+            </div>
           </section>
 
           <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
@@ -568,9 +572,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <p className="mb-3 text-sm uppercase text-stone-500">Shipping & Returns Summary</p>
               <h2 className="text-3xl font-light">Short version before checkout</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
-                Most ready-made works are prepared with protective packaging and international delivery support.
-                Eligible ready-made artworks can request returns within the stated policy window; custom work may have
-                separate terms confirmed before production.
+                Shipping is free worldwide and included in the price. Ready-made works dispatch within 3-5 business
+                days, arrive insured with tracked express delivery in 5-10 business days, and can be returned within
+                30 days of delivery for any reason. Custom work is confirmed separately before production.
               </p>
               <div className="mt-5 flex flex-wrap gap-4 text-sm">
                 <Link href="/shipping-returns" className="underline underline-offset-4">Read Shipping & Returns</Link>
@@ -580,8 +584,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             </div>
             <div className="grid gap-4 md:grid-cols-3">
               <InfoBlock title="Processing time" text={shippingProfile || "Final checks and packaging are confirmed before dispatch."} />
-              <InfoBlock title="Shipping time" text="Transit timing depends on destination, customs, carrier route, and the safest shipping format for the artwork." />
-              <InfoBlock title="Returns and damage" text="Keep all packaging if the artwork arrives damaged, then contact YiiArt promptly with photos for review." />
+              <InfoBlock title="Shipping time" text="Typically 5-10 business days after dispatch with insured express carriers such as DHL, FedEx, or UPS. Tracking is emailed the day it ships." />
+              <InfoBlock title="Returns and damage" text="30-day returns on ready-made works. If damage happens in transit, send photos within 48 hours for a free replacement or full refund." />
             </div>
           </section>
 
@@ -671,7 +675,7 @@ function ArtworkDetails({
     { label: "Handmade note", value: "Original hand-painted artwork, not a mass-produced print." },
     framingNotes ? { label: "Frame option", value: framingNotes } : null,
     { label: "Processing time", value: shippingProfile || "Final checks, documentation, and packing are confirmed before dispatch." },
-    { label: "Shipping time", value: "Transit timing depends on destination, customs, carrier route, and the safest shipping format for the artwork." },
+    { label: "Shipping time", value: "Typically 5-10 business days after dispatch, free worldwide, insured and tracked." },
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
 

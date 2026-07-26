@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import PaymentBadges from "@/components/PaymentBadges"
 import ReviewCard from "@/components/ReviewCard"
 import ReviewTrustBadge from "@/components/ReviewTrustBadge"
 import { contactEmail } from "@/lib/site"
@@ -67,6 +68,34 @@ export default async function AboutPage() {
                 confirm size, palette, framing, and shipping format before payment.
               </p>
               <p>Email: {contactEmail}</p>
+            </div>
+          </section>
+
+          <section className="grid gap-10 border-b border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">What you can count on</p>
+              <h2 className="text-4xl font-light leading-tight">Concrete promises, not slogans.</h2>
+            </div>
+            <div className="space-y-6">
+              <ul className="grid gap-4 text-sm leading-6 text-stone-600 sm:grid-cols-2">
+                <li className="border border-stone-200 bg-white p-5">
+                  <span className="block font-medium text-stone-900">Replies within 12 hours</span>
+                  Questions by email or WhatsApp are answered within 12 hours, including extra photos or a short video of any artwork before you buy.
+                </li>
+                <li className="border border-stone-200 bg-white p-5">
+                  <span className="block font-medium text-stone-900">Free insured shipping</span>
+                  Shipping is included in the price, fully insured door to door, with tracking emailed at dispatch and delivery in 5-10 business days.
+                </li>
+                <li className="border border-stone-200 bg-white p-5">
+                  <span className="block font-medium text-stone-900">30-day returns</span>
+                  Ready-made works can be returned within 30 days for any reason, with the refund issued within 5 business days of the artwork arriving back.
+                </li>
+                <li className="border border-stone-200 bg-white p-5">
+                  <span className="block font-medium text-stone-900">Signed certificate</span>
+                  Every original ships with a signed certificate of authenticity and care instructions in the package.
+                </li>
+              </ul>
+              <PaymentBadges />
             </div>
           </section>
 

@@ -23,7 +23,7 @@ const steps = [
   },
   {
     title: "We create your handmade painting",
-    text: "YiiArt confirms the scope and production timeline before the studio begins the handmade artwork.",
+    text: "YiiArt confirms the scope, price, and a 2-4 week production timeline before the studio begins the handmade artwork. No payment is taken before you approve the plan.",
   },
   {
     title: "Carefully packed and shipped to you",
@@ -51,18 +51,18 @@ const trustItems = [
   },
   {
     title: "Clear production timeline",
-    text: "YiiArt confirms expected preparation and shipping timing according to size and complexity.",
+    text: "Most custom paintings are completed in 2-4 weeks, then shipped free worldwide with insured, tracked express delivery.",
   },
   {
     title: "Damage protection",
-    text: "Artwork is packed carefully, and damage issues are reviewed with photos and packaging evidence.",
+    text: "Every shipment is fully insured. If artwork arrives damaged, send photos within 48 hours and YiiArt arranges a free replacement or full refund.",
   },
 ]
 
 const faqs = [
   {
     question: "How long does custom painting take?",
-    answer: "Timing depends on size, surface, complexity, and artist schedule. YiiArt confirms the estimated production and shipping timeline before the custom order starts.",
+    answer: "Most custom paintings are completed in 2-4 weeks depending on size, surface, and complexity. Add 5-10 business days of insured express shipping, and YiiArt confirms the exact timeline with you before the order starts.",
   },
   {
     question: "Can I send a reference image?",
@@ -145,8 +145,8 @@ export default function CustomPaintingPage() {
               <p className="mb-3 text-sm uppercase text-stone-500">Request Form</p>
               <h2 className="text-4xl font-light leading-tight">Tell us what your room needs.</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">
-                Image upload is not connected yet. Please describe the room here, then attach photos when you reply by
-                email or open WhatsApp. TODO: connect a secure upload endpoint if custom requests need file storage.
+                Share your wall size, room photos, and the mood you want. YiiArt replies within 12 hours with sizing,
+                palette, and pricing guidance, and confirms the full scope with you before any payment is taken.
               </p>
               <a
                 href={whatsappUrl}
