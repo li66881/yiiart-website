@@ -16,6 +16,7 @@ import {
   normalizeArtworkFilters,
   type ArtworkCollectionTab,
 } from "@/lib/artwork-discovery"
+import { tileCollectionCue, visibleFilterOptions } from "@/lib/storefront/editorial-presentation"
 
 type SortMode = "featured" | "price-asc" | "price-desc" | "large-first"
 
@@ -117,7 +118,7 @@ export default function ArtworkDiscoveryGrid({
             <fieldset key={group.key}>
               <legend className="mb-3 text-sm font-medium">{t(`discovery.group.${group.key}`)}</legend>
               <div className="space-y-2">
-                {group.options.map((option) => {
+              {visibleFilterOptions(group.options, optionCounts[group.key], filters[group.key]).map((option) => {
                   const checked = filters[group.key].includes(option)
                   const count = optionCounts[group.key].get(option) || 0
 
@@ -214,6 +215,8 @@ function ArtworkTile({
   artwork: ArtworkDiscoveryItem
   translateOption: (option: string) => string
 }) {
+  const collectionCue = tileCollectionCue(artwork)
+
   return (
     <Link href={artwork.href} className="group block">
       <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d6]">
@@ -232,23 +235,7 @@ function ArtworkTile({
         </div>
       </div>
       <div className="bg-transparent px-0 py-4">
-        <div className="mb-3 flex flex-wrap gap-1.5">
-          {artwork.productionModel === "hand_painted_to_order" && (
-            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
-              Hand-painted to order
-            </span>
-          )}
-          {artwork.collectionType === "artist_collection" && (
-            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
-              Artist Collection
-            </span>
-          )}
-          {artwork.customRequestAvailable && (
-            <span className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
-              Custom request
-            </span>
-          )}
-        </div>
+        {collectionCue && <p className="mb-3 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[#75432f]">{collectionCue}</p>}
         <p className="text-xs uppercase text-stone-500">
           {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
         </p>
@@ -261,16 +248,10 @@ function ArtworkTile({
             <PriceText amountCny={artwork.price} />
           </p>
         </div>
-        <p className="mt-3 border-y border-black/15 py-2 text-sm font-medium text-stone-700">
+        <p className="mt-3 text-sm text-stone-500">
           {artwork.dimensions || "Size on request"}
         </p>
-        <div className="mt-3 flex flex-wrap gap-1.5">
-          {[artwork.size, artwork.rooms[0], artwork.colors[0]].filter(Boolean).map((tag) => (
-            <span key={tag} className="border border-black/15 bg-[#fffdf8] px-2 py-1 text-xs text-stone-600">
-              {translateOption(tag)}
-            </span>
-          ))}
-        </div>
+        {artwork.customRequestAvailable && <p className="mt-3 text-xs text-stone-500">Custom size and colour available</p>}
       </div>
     </Link>
   )

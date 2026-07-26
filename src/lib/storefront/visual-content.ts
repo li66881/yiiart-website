@@ -19,3 +19,7 @@ export function buildEditorialHomeEdit<T extends EditorialArtwork>(artworks: T[]
     artistCollection: artistCollection.slice(0, 3),
   }
 }
+
+export function editorialHomeSequence() {
+  return ["discover", "place", "process", "customize", "trust"] as const
+}

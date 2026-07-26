@@ -63,7 +63,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
 
       <section className={`${styles.section} ${styles.rooms}`}>
         <div className={styles.shell}>
-          <SectionHeading eyebrow="Browse by room" title="Art, painted for the room you live in." />
+          <SectionHeading eyebrow="Place it with confidence" title="Find the right scale for your room." />
           <div className={styles.roomGrid}>
             {roomPaths.map((room, index) => (
               <Link key={room.href} href={room.href} className={styles.roomCard}>
@@ -88,8 +88,8 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
       <section id="process" className={styles.process}>
         <div className={`${styles.shell} ${styles.processLayout}`}>
           <div className={styles.stickyCopy}>
-            <p className={styles.darkEyebrow}>Studio process</p>
-            <h2>From room advice to hand-painted canvas art.</h2>
+            <p className={styles.darkEyebrow}>From studio to wall</p>
+            <h2>A clear process, from room advice to final brushwork.</h2>
           </div>
           <ol className={styles.processList}>
             {process.map((item, index) => <li key={item}><span>0{index + 1}</span><p>{item}</p></li>)}

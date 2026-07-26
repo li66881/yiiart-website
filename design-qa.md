@@ -30,3 +30,10 @@ The local preview initially reused an older listener on port 3001. Port 3002 now
 - Mobile menu, search, focus state, and reduced-motion behavior remain usable.
 
 final result: blocked
+# Editorial gallery refinement QA — 2026-07-26
+
+- Automated checks: `npm run test` passed (36 tests and public-copy check).
+- Production build: `npm run build` passed and generated 41 routes.
+- Local homepage check: confirmed updated hero hierarchy, room-guidance heading, studio-process heading, primary navigation, image-led featured works, and all primary home actions at `http://127.0.0.1:3003/`.
+- Interaction safeguards preserved by unit coverage: filtering, sorting inputs, collection membership, product variants, cart selection, and made-to-order disclosures.
+- Manual follow-up for release: recheck desktop and mobile screenshots of `/artworks` and `/artwork/afternoon2` after deployment because browser screenshot capture has intermittently timed out in this environment.

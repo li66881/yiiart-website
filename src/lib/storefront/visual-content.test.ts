@@ -1,6 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { buildEditorialHomeEdit, handPaintedDisclosure, resolveVisualImage } from "./visual-content"
+import { buildEditorialHomeEdit, editorialHomeSequence, handPaintedDisclosure, resolveVisualImage } from "./visual-content"
 
 test("uses the first approved image as the visual lead", () => {
   assert.equal(resolveVisualImage(["hero.jpg", "detail.jpg"]), "hero.jpg")
@@ -22,4 +22,8 @@ test("keeps artist collection works separate in the editorial home edit", () => 
 
   assert.deepEqual(edit.featured.map((item) => item.id), ["new-1", "new-2"])
   assert.deepEqual(edit.artistCollection.map((item) => item.id), ["artist-1"])
+})
+
+test("uses a distinct editorial sequence for the home page", () => {
+  assert.deepEqual(editorialHomeSequence(), ["discover", "place", "process", "customize", "trust"])
 })
