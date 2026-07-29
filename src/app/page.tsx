@@ -43,9 +43,10 @@ async function getData() {
 
 export async function generateMetadata() {
   try {
-    const artwork = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && (defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
+    const artwork = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && (defined(productMedia[approvedForStorefront == true && mediaType == "image"][0].url) || defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
       title,
       cloudflareImages,
+      productMedia,
       images
     }`)
     const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })

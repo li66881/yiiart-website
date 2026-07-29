@@ -72,6 +72,7 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       allowCheckout,
       reservedUntil,
       cloudflareImages,
+      productMedia,
       images
     }`,
     { ids }

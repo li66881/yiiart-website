@@ -1,0 +1,5936 @@
+{
+  "generatedAt": "2026-07-29T15:42:04.561Z",
+  "summary": {
+    "folderCount": 46,
+    "fileCount": 272,
+    "completeFolderCount": 39,
+    "suspiciousFolderCount": 1,
+    "highConfidenceMatches": 41,
+    "readyForUpload": 38,
+    "needsReview": 5,
+    "unmatched": 0,
+    "sanityArtworkCount": 63
+  },
+  "folders": [
+    {
+      "sourceFolder": "30-40-2",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 7,
+      "complete": false,
+      "missingRoles": [],
+      "duplicateRoles": [
+        {
+          "role": "angle",
+          "count": 2,
+          "exactDuplicate": true
+        }
+      ],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 626504,
+          "sha256": "4b992520e83337a66308123d18d459e48360d00aa1009552a1d43e934a0b27d8",
+          "width": 1322,
+          "height": 1279
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1987074,
+          "sha256": "686f126330748dcd4f1086d8956229863b805d08dabcbf3caa3e93d93f98ad48",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2378319,
+          "sha256": "85c796d6b9c2efd354971ade0697ab4518165328f19a038bd733e38b244838a2",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2687531,
+          "sha256": "0f04b274a0e5f446b7b1ac5869122175e448ea2bc581189cce8bb6a23ef7a223",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle..png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2272052,
+          "sha256": "34fc92c60929b2546ff92867c66f4ef5e419ba50fce180a0152762c7ae80f0d6",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2272052,
+          "sha256": "34fc92c60929b2546ff92867c66f4ef5e419ba50fce180a0152762c7ae80f0d6",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2565548,
+          "sha256": "0e728165aba0327e04c80793353920a407d1a8b9a25a99cbaf6482cc41e10afd",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1322,
+        "height": 1279
+      },
+      "matchConfidence": "high",
+      "readyForUpload": false,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqzs",
+        "slug": "rain-garden-lines",
+        "title": "Rain Garden Lines",
+        "score": 100,
+        "reasons": [
+          "Sanity main image pixels"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqzs",
+          "slug": "rain-garden-lines",
+          "title": "Rain Garden Lines",
+          "score": 100,
+          "reasons": [
+            "Sanity main image pixels"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "30-40-3",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 5,
+      "complete": false,
+      "missingRoles": [
+        "original"
+      ],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2295346,
+          "sha256": "08977e4c2baa2575d037b1662d607d68dc2cd38a435cc733f8eb595367055666",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2102321,
+          "sha256": "8eb9cc16a72e093caa8c7db76c2163f953fdd930a5a3e1094f3e73f6f912acfe",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2476822,
+          "sha256": "81b0a6994068682728f3174af5f420ab869c5d2bc039d3aa01f9a70eddba5ab1",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2786726,
+          "sha256": "dba0967902e46aff84e1dab3d0454ac9df8f789e54685e15d813d40e51532988",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2277745,
+          "sha256": "ac72bf6f82d4546d588fd3aaa8b36c6a4c8667885dd98cf32b41c39636e83f9b",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": null,
+      "matchConfidence": "review",
+      "readyForUpload": false,
+      "suggestedMatch": null,
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+          "slug": "nocturne-diptych",
+          "title": "Nocturne Diptych",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "30-40-5",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 7,
+      "complete": false,
+      "missingRoles": [
+        "original"
+      ],
+      "duplicateRoles": [
+        {
+          "role": "angle",
+          "count": 2,
+          "exactDuplicate": false
+        },
+        {
+          "role": "bedroom",
+          "count": 2,
+          "exactDuplicate": false
+        }
+      ],
+      "files": [
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2866366,
+          "sha256": "b2ef3884162e7f3112eef0dac2ff9ea6343c1c96e47eda4cba5fe9509f0692b1",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2889033,
+          "sha256": "a169b4ae18330b3b8c20be673ba3b5ecf58f120a79eabcc553344fa222465f9c",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2841835,
+          "sha256": "cbc1b9015dbec3e338bae41f7db8d858b54c2b104cad0e2371edef306832a82e",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle..png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2766544,
+          "sha256": "efc9a1963c9f2989d3f72a0febfebfc1d3d5b7b81608cc493d164e0b6ec2690a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2614903,
+          "sha256": "8e52f36c55aa405b19858a98a250fd579bb893c61f753023a924139b760b43bf",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom..png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2742331,
+          "sha256": "979ffa6f126dd9a78450f86908897da1aa92a9f8fddaa1f0d2cc6de5db7654f3",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2457523,
+          "sha256": "d15928b4d51a2ccd91adac37dabda525818cd3a55993405114708b9c38fec270",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": null,
+      "matchConfidence": "review",
+      "readyForUpload": false,
+      "suggestedMatch": null,
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+          "slug": "nocturne-diptych",
+          "title": "Nocturne Diptych",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "30-40-7",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 654754,
+          "sha256": "e53b7f9bd13d7ee45a5da99e42308ef48122f6b16680192a2dbd94b490e2cc39",
+          "width": 1279,
+          "height": 1736
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2912292,
+          "sha256": "8f28674ea62cebcdc6c4f2f8c9019580158663b2fb304ea725bd41bb215c36f1",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2608570,
+          "sha256": "71a83767067f529f75ff6967639dc11e4543daa395d458b8d9c3d5b28f927e30",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2583514,
+          "sha256": "4ee4a1d1fedf0e2e9c9ca667aca5ab48ccbc3696ddf44ed33efcf30d9fbe0f7c",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2504009,
+          "sha256": "04cb59badd8c767d642af32d8898362ccf760da7e737256de6f469fd31423523",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2575079,
+          "sha256": "5fd765dcdf2f421b8183bb34e3cc5b6fb82bbf0277cec4eeb44ec283df08309a",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1279,
+        "height": 1736
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqRI",
+        "slug": "violet-moss",
+        "title": "Violet Moss",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqRI",
+          "slug": "violet-moss",
+          "title": "Violet Moss",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "30-40-10",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 4,
+      "complete": false,
+      "missingRoles": [
+        "angle",
+        "bedroom"
+      ],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original..jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 501388,
+          "sha256": "76d1903ffb7a4760f11f91c38231559bbda2804b9ac0b04dd06d22a3992abc9c",
+          "width": 1282,
+          "height": 1688
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2907801,
+          "sha256": "946ca24ee58330bb3ac22199164a190adb150b437610b5c3b6ae8365791a4bf2",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3449517,
+          "sha256": "2415f15d05e7b125a96df53f85f501a5fb9757402502a88314774ad26434f1fa",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2413984,
+          "sha256": "49ccdfa670a3e996a930a9b4a4a562c59151858213fe197757bdffab447cbd72",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1282,
+        "height": 1688
+      },
+      "matchConfidence": "high",
+      "readyForUpload": false,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+        "slug": "magenta-cloud-garden",
+        "title": "Magenta Cloud Garden",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+          "slug": "nocturne-diptych",
+          "title": "Nocturne Diptych",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "30-40-12",
+      "physicalSize": {
+        "widthCm": 30,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 5,
+      "complete": false,
+      "missingRoles": [
+        "original",
+        "bedroom"
+      ],
+      "duplicateRoles": [
+        {
+          "role": "detail",
+          "count": 2,
+          "exactDuplicate": false
+        }
+      ],
+      "files": [
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 3841342,
+          "sha256": "a22a2d6c67c8a99b538a4ca9ccc3617e7bbafd59956e1e0602f1382c08cce6a9",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture..png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3063560,
+          "sha256": "0e20691c6b72f1d456040161b89136b5e486955a71403ecd0b1844b6558ba097",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3216108,
+          "sha256": "e8b05511baced254b35185853f5c2176d0f3d3b3a451998dfa91239a4cf294e4",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2823331,
+          "sha256": "1714996887f429654b3aff6d7c8468fb62cb64d490bb631b643d92c8d6a1471f",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2834843,
+          "sha256": "e889c9e14660663baa0a5c13c5ad0c7974beaa9fc81e1337f6b73f7414cb95ba",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": null,
+      "matchConfidence": "review",
+      "readyForUpload": false,
+      "suggestedMatch": null,
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
+          "slug": "green-rain-study",
+          "title": "Green Rain Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
+          "slug": "lime-blossom-field",
+          "title": "Lime Blossom Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
+          "slug": "magenta-cloud-garden",
+          "title": "Magenta Cloud Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+          "slug": "nocturne-diptych",
+          "title": "Nocturne Diptych",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 457543,
+          "sha256": "4ed892535af7824eb8e00778fc4b128c3c5387dc73d4295eabb165e9c04668cd",
+          "width": 1279,
+          "height": 1319
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1803291,
+          "sha256": "cbc329c3fabc2bb6f08d9163bdee26c4c832042baae248b681a92bfc066ba91a",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture..png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 1736799,
+          "sha256": "3d1d0d9dea50a564a13c02af55784c35bcb006eda642e944093562608927179a",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2432406,
+          "sha256": "d4961a47744d44d5789d85dc8a70511b6d128b1c2b599665854a10c9cf5b60d7",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2225661,
+          "sha256": "34bd5a70487fc4d90c26eb6d542504f104799a218f68b43fa9d3043dac338df8",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2504660,
+          "sha256": "dcddf84f9985e6264ca50931bdc23bf6b23f7ddd9ccffef6917bf6f5ccc4ba08",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1279,
+        "height": 1319
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZq1M",
+        "slug": "night-particles",
+        "title": "Night Particles",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZq1M",
+          "slug": "night-particles",
+          "title": "Night Particles",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-1",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 443065,
+          "sha256": "81df28e33eca63983e5aee3450529f04f697afc5e96f5f7f3f46080e510d65f7",
+          "width": 1292,
+          "height": 1284
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2246788,
+          "sha256": "ceff4efded696017027b9cabb2591ff31d62116fb5f07a61a93315ef2a3dde78",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2437498,
+          "sha256": "99b1134e74c884a91a87ab577c8a9d194f7d8dd41c924b229f37dec7ae17ffac",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2486744,
+          "sha256": "019b8d432caeab57f0fea4440fec91601b5a80b71650719ed7ac95abe2aa8b71",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2499967,
+          "sha256": "5fb011478661f556dd878e8179f379ab3715f002b87395a98c06973510253c3c",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2494313,
+          "sha256": "d8f4c26a2a60ceaefcf42450dd5626c41c59e6680bcf36354fab3c54a593338c",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1292,
+        "height": 1284
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZew4",
+        "slug": "purple-line-gesture",
+        "title": "Purple Line Gesture",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZew4",
+          "slug": "purple-line-gesture",
+          "title": "Purple Line Gesture",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-3",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 547748,
+          "sha256": "e096d5958ef255b8e7f89845e14b5133f8b241418252a1d7ef6a6c8dc481234e",
+          "width": 1349,
+          "height": 1279
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2269989,
+          "sha256": "28c86eb864257b4d83aa80d08b038130cc195438df5aaac4d1fbe6be52d7302c",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2500704,
+          "sha256": "50c419ca6935c96d70db87b324360847f3745981b4efaaa77c475a4b0020859e",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2548480,
+          "sha256": "6f50f190e9bd3dd21508f717238d7ff38242210b06bca630d2a5c3d299e4e8bd",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2585025,
+          "sha256": "55fdcfdf7f00bef8e1b8d1c37b6e21da6a8a5e535b3b32ffb0c621f81cd4576a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2526068,
+          "sha256": "313c0797b0007e38e93cfdfb68e8337f1a3a278936260772e27363cb17bb35f9",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1349,
+        "height": 1279
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrU8",
+        "slug": "striped-lotus-field",
+        "title": "Striped Lotus Field",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrU8",
+          "slug": "striped-lotus-field",
+          "title": "Striped Lotus Field",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-4",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 537055,
+          "sha256": "2de2e34927ba58795fd5ed9df787bf039ac5eefc16697e7d358d1770b900630c",
+          "width": 1302,
+          "height": 1278
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2539500,
+          "sha256": "acd223ebb96b9f221f3f581275337c0d642085ef059864a65854abf676de0d04",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2768003,
+          "sha256": "ed870b6aae235b90fa0653736381ec2d333feec0d2e1f3dcb6643448bc299a82",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2484529,
+          "sha256": "d509b185ace438ae33a3754864758c4050bd2b9d2ee95748d4e8d0fedbcec4ce",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2291188,
+          "sha256": "ed9946684b3b30aef314ea64a317afaf27b9e6825befe8b9851b5d3f8a902047",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2359364,
+          "sha256": "1aeeb4c7d1035ad2de4ba414b7561b135c55e81c0e01c58dcf9e1e39ee05b8b0",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1302,
+        "height": 1278
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrYS",
+        "slug": "indigo-bloom",
+        "title": "Indigo Bloom",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrYS",
+          "slug": "indigo-bloom",
+          "title": "Indigo Bloom",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-5",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 679666,
+          "sha256": "3c292e01a56b417ceaab716945703dcfc51ed90995d11cd157f336b23c62628c",
+          "width": 1278,
+          "height": 1314
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2308116,
+          "sha256": "165ec4de79b402a5d653428fbc7e2aecd2c80d9cddf8ad191123a612f51286a1",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2596815,
+          "sha256": "0f8a18b423a3baf688aa80f2488b91e8d3b7913e6e8b0eba0ac55b7885a65d6a",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2715873,
+          "sha256": "69ee801f8dd93117025f42c83dcd1ffc1f9f250e9313ab7db7d6087ab557e689",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2410549,
+          "sha256": "10883506c00e9fa8822faab379c4be2617c80eb04dff480c808183e1279ca616",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2402290,
+          "sha256": "d329b26166fc7f307f8194abf4272623920ec2b1bfdcad388bacfd1573a1787f",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1278,
+        "height": 1314
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrcm",
+        "slug": "pink-rain-field",
+        "title": "Pink Rain Field",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrcm",
+          "slug": "pink-rain-field",
+          "title": "Pink Rain Field",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-6",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 553248,
+          "sha256": "5b238d90c13e8f10cd73c0f23316f050a9de7891c3892a5462c09069f308ab9b",
+          "width": 1291,
+          "height": 1279
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2238041,
+          "sha256": "e4fb6f3838e9b2c49dc665924954eeb5a13cfaa41b7309f9dc8fdb886fe15ce7",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2639256,
+          "sha256": "ce5504be9b1d112aa91d2bd24178e5f535deece35db6cb1b97387d525fce96fb",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2586668,
+          "sha256": "38647d195a23c75630fac1927a65164002eeaae6946786cb83dc426749e8adb6",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2414775,
+          "sha256": "a0672d60d7181644bf0aecd6ab9335a3fb043553753ef5b31be1cb966119008a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2556471,
+          "sha256": "0e40d125d25572b877f31a82eee9a3da8b0883ae64aac726c7c343901c16c30f",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1291,
+        "height": 1279
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "XK7N94x9IeMzLuOXBWSkkr",
+        "slug": "soft-signal-meadow",
+        "title": "Soft Signal Meadow",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "XK7N94x9IeMzLuOXBWSkkr",
+          "slug": "soft-signal-meadow",
+          "title": "Soft Signal Meadow",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-7",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 708599,
+          "sha256": "0423f9bf641cb2644ad69ddadc0a7ec246d322e8fa18a33071c1df0159dccf02",
+          "width": 1312,
+          "height": 1278
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2037932,
+          "sha256": "5a6f4ad38b682ea52b784ee656a4c3adaa3d523af007208b83f8cc106c9a5de7",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2531651,
+          "sha256": "32ab35700015cf34fbd696b8613ef06a0ca5afd3f9c6be4b200df7b0025871c2",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2384699,
+          "sha256": "8597a1f91022f74de7db326028c51f9c3a811728f5557b33869850c63e4f1807",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2495871,
+          "sha256": "9ce9aaf785abc989d391fac02538b1fded497b22ded4f66ddcc4891d8177563a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2476014,
+          "sha256": "f053ddb589f36d43e566f30e826bc9795289d1900554c6c436ebb48309871605",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1312,
+        "height": 1278
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZenQ",
+        "slug": "sea-foam-field",
+        "title": "Sea Foam Field",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZenQ",
+          "slug": "sea-foam-field",
+          "title": "Sea Foam Field",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-8",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 5,
+      "complete": false,
+      "missingRoles": [
+        "living_room"
+      ],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 591372,
+          "sha256": "1949d96c2715c5b75b50fbfd487e67fb26488cf9dc1263ba5c137657ba62410e",
+          "width": 1276,
+          "height": 1280
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2234500,
+          "sha256": "e9f62b7fb5bb19e11c0e173e83c8a819227ae3528382a3dd1b594178eef101e9",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2704963,
+          "sha256": "9853d4f52888cb31a9ae09a7f5b12e3921aa502efda8244295456aaa0751bfa4",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2323545,
+          "sha256": "7c5d43fb823b7372209d4861c5be055daccbec6bdeb6e843e58e2f98f3bdd129",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2408934,
+          "sha256": "d8f4cd30188f86c8e34d3569a95b4f3dce5cf109e731152b79381401e9cb5aa5",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1276,
+        "height": 1280
+      },
+      "matchConfidence": "review",
+      "readyForUpload": false,
+      "suggestedMatch": null,
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrHA",
+          "slug": "green-reflection",
+          "title": "Green Reflection",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-9",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 5,
+      "complete": false,
+      "missingRoles": [
+        "original"
+      ],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 3395775,
+          "sha256": "8e9fbc4e4364b59603a3083b5ceabfdd710e7aecb34c95cfe728169faf1e3435",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3315598,
+          "sha256": "78d810929989a07196e41fb945ee54131cd063dafad5455f884043265ce94871",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2688258,
+          "sha256": "e1caaf0717b9133f1e139b4f38a1229136f49b10eba690336eb2a34f5b77c525",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2569814,
+          "sha256": "4023047ed3a4ec99a840b25390981447623647bf9bd3187f1c3607b03fc03f6b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2321639,
+          "sha256": "de3b8bd8adcc2034568cb8a93578212b14c4549f0045c1658101815e39caaa83",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": null,
+      "matchConfidence": "review",
+      "readyForUpload": false,
+      "suggestedMatch": null,
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrHA",
+          "slug": "green-reflection",
+          "title": "Green Reflection",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-11",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 657587,
+          "sha256": "e30b07fa8134250deac43bf8b6b3de843ea1897e2683fc4c187b455829539360",
+          "width": 1282,
+          "height": 1278
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2295346,
+          "sha256": "08977e4c2baa2575d037b1662d607d68dc2cd38a435cc733f8eb595367055666",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2102321,
+          "sha256": "8eb9cc16a72e093caa8c7db76c2163f953fdd930a5a3e1094f3e73f6f912acfe",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2476822,
+          "sha256": "81b0a6994068682728f3174af5f420ab869c5d2bc039d3aa01f9a70eddba5ab1",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2786726,
+          "sha256": "dba0967902e46aff84e1dab3d0454ac9df8f789e54685e15d813d40e51532988",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2277745,
+          "sha256": "ac72bf6f82d4546d588fd3aaa8b36c6a4c8667885dd98cf32b41c39636e83f9b",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1282,
+        "height": 1278
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZr4C",
+        "slug": "lavender-meadow",
+        "title": "Lavender Meadow",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr4C",
+          "slug": "lavender-meadow",
+          "title": "Lavender Meadow",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "40-40-13",
+      "physicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 400442,
+          "sha256": "b32f9653a839da224af5b9a2f36b0e52af16c5027ff1e472aadd83dac1f168ff",
+          "width": 1278,
+          "height": 1330
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1825521,
+          "sha256": "f6245afdcc90df32117e04c971f754523a3cdc1ad18bbdc2d71b877aa274503b",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2420375,
+          "sha256": "e3a8e3493dfbf7e5328d79d7440c663695ff18a48d51b75dfc0f9e77347ad945",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2546414,
+          "sha256": "5bbf7f39b6239b5919adb3523234c011465a939535f770df8c04d2e91ebd4db3",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2301056,
+          "sha256": "533512cd520889ac64765c5efcd02007d878659c1c02a3f982549f5f0d441b8b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2445812,
+          "sha256": "3e0b026c2136c7712a6f490db6e5ee5fc133991954a26446c96e48ef2f958f7b",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1278,
+        "height": 1330
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrCq",
+        "slug": "pale-leaves",
+        "title": "Pale Leaves",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrCq",
+          "slug": "pale-leaves",
+          "title": "Pale Leaves",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
+          "slug": "aqua-city-garden",
+          "title": "Aqua City Garden",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
+          "slug": "blue-mineral-cloud",
+          "title": "Blue Mineral Cloud",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
+          "slug": "blue-rain-veil",
+          "title": "Blue Rain Veil",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "50-150-1",
+      "physicalSize": {
+        "widthCm": 50,
+        "heightCm": 150
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 906693,
+          "sha256": "bf11442d6a276f09c6ca9a85c49b50abf7270d4e8972f6f2c33edcc278fc473f",
+          "width": 3255,
+          "height": 871
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1768751,
+          "sha256": "9426411ba87b118e8c60d501cb855047b329014621cf03d39a010df440c11886",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3110635,
+          "sha256": "49781f98dd2139e78707cbdfb066bd2425d2c03e913048c4b0ccf8cda4f60b0b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2939065,
+          "sha256": "6027a40fb38c22d33a02554407a888732115b75ed156b24fc58b3fcefed5efed",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2256258,
+          "sha256": "a3b1ae060ac8fbcaa6a92c449da54a27d42b0fb779c907a78c136b40125842b0",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2910939,
+          "sha256": "9655ab2156c58d864bb5db18b771944da01ead0db83fb943c7cc705fb4e566ea",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3255,
+        "height": 871
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
+        "slug": "river-stripe-study",
+        "title": "River Stripe Study",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
+          "slug": "river-stripe-study",
+          "title": "River Stripe Study",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
+          "slug": "green-river-horizon",
+          "title": "Green River Horizon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
+          "slug": "quiet-green-panel",
+          "title": "Quiet Green Panel",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "50-150-2",
+      "physicalSize": {
+        "widthCm": 50,
+        "heightCm": 150
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 690487,
+          "sha256": "5ba1199b41f333d3efb963a8f6102cbe6efb7f21c9d2dc11bd2942cff80c3ec8",
+          "width": 3322,
+          "height": 833
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1735846,
+          "sha256": "2abbb948e48c0c0d67dad42c798170cae43b82ef379467e9c7f8c265c4cf2f0b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2253322,
+          "sha256": "741420afc370f942651ef3fe1c4cf9eb56b6e1cd3536dc056fe7e8f28708e110",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2604706,
+          "sha256": "ef7a29d00f6877d3b3d41109b8f8bfcf7bf62745fc3aaf64460f505a5a01743b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2152328,
+          "sha256": "d4f584c0a0022d47f2d895df2ac1e16aab3b689406c1ecc0433430fa22de9489",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2452209,
+          "sha256": "a1ec1b938dce98c050ff1c59910cb9cd236280874eb96902e2c2343194ca4977",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3322,
+        "height": 833
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
+        "slug": "quiet-green-panel",
+        "title": "Quiet Green Panel",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
+          "slug": "quiet-green-panel",
+          "title": "Quiet Green Panel",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
+          "slug": "green-river-horizon",
+          "title": "Green River Horizon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
+          "slug": "river-stripe-study",
+          "title": "River Stripe Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "50-150-3",
+      "physicalSize": {
+        "widthCm": 50,
+        "heightCm": 150
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 658743,
+          "sha256": "3fd1b45f7dd8f805640c8315861975d8b4dcc81a33e1b512056e374cc3e8cf18",
+          "width": 3287,
+          "height": 858
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1645117,
+          "sha256": "0027b7bc2260be11ccb0a386177ca9104d2d2557f81846d187707fa2a4e5635b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2819731,
+          "sha256": "904e04321afaa85e707253069210ed4d3af0a6986adafbc3e08386bb4e49dd03",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2572110,
+          "sha256": "158777a141a17cd0aa87e8b1a99575f6c829dbd0b3157db0938c8f12690c01d8",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2094492,
+          "sha256": "4c62e669d386cc1bb004e7e1927b6321e7e692c621d5520a055ad46dc2a54b7d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2702829,
+          "sha256": "2db4ef0a972e5583de5f4ff5fa7110396d018b4ef7d54a54bff87aadece39a9f",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3287,
+        "height": 858
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
+        "slug": "green-river-horizon",
+        "title": "Green River Horizon",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
+          "slug": "green-river-horizon",
+          "title": "Green River Horizon",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
+          "slug": "quiet-green-panel",
+          "title": "Quiet Green Panel",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
+          "slug": "river-stripe-study",
+          "title": "River Stripe Study",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "70-80-1",
+      "physicalSize": {
+        "widthCm": 70,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1441780,
+          "sha256": "d082d77f704926d1ba88a5bfee4a57c8d8935446358aafe329f2e05e751db7f7",
+          "width": 3281,
+          "height": 2892
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1650724,
+          "sha256": "c7303b5ec9e9cf6bbe8e4685197610432dec49bc34d33dda5d6534a82b0002f8",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 1803236,
+          "sha256": "33d37a8e5f37cfb05ed6a1179c35f361e877b281c283287baf47669c05e53037",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2492864,
+          "sha256": "77e247797eb4033bc938172fe52dff3766a9208dae70f45ffc20aa96153fe3e5",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1921006,
+          "sha256": "363ca1a999e6b4282cd362d6abf70c733280a57d39cd4f23c3626560bea49d2d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2158947,
+          "sha256": "88411041cb895489517d3177fc712b54eff79dacf631ec12e9294c9e0a25daa7",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3281,
+        "height": 2892
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+        "slug": "rose-hat-figure",
+        "title": "Rose Hat Figure",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+          "slug": "rose-hat-figure",
+          "title": "Rose Hat Figure",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+          "slug": "bright-fuchsia-dress",
+          "title": "Bright Fuchsia Dress",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
+          "slug": "fuchsia-silhouette",
+          "title": "Fuchsia Silhouette",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+          "slug": "hill-garden-afternoon",
+          "title": "Hill Garden Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
+          "slug": "rose-profile",
+          "title": "Rose Profile",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "70-80-2",
+      "physicalSize": {
+        "widthCm": 70,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.png",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 15602414,
+          "sha256": "5d627cdbdef71d2af3c5fa778334eda8b9b0de64d0393756b43246b7840cbbbd",
+          "width": 2466,
+          "height": 2208
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1681331,
+          "sha256": "af989f353e16091938d63aa5ad0b5253c3a04f3020d55dd8cf7a3bf9131a8c68",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 1886877,
+          "sha256": "40331621f9579e4b4d2441b3527131a3fb60ae84dafce17f61d9ec4d2b94b4ca",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2541147,
+          "sha256": "1139a761e29cfcb9eb4b5b648f24a8437545d47ff39650bbb4d67d9db96adb1f",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2132321,
+          "sha256": "758fc8bb8e087976fc996ef4f0a445d8e323bbc7e2e51214b4345b22b6751b28",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2341860,
+          "sha256": "68b899b39403eb784291e50d04d05bc5f20595caaf3b8905d8baf9003482e59c",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 2466,
+        "height": 2208
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+        "slug": "hill-garden-afternoon",
+        "title": "Hill Garden Afternoon",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+          "slug": "hill-garden-afternoon",
+          "title": "Hill Garden Afternoon",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+          "slug": "bright-fuchsia-dress",
+          "title": "Bright Fuchsia Dress",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
+          "slug": "fuchsia-silhouette",
+          "title": "Fuchsia Silhouette",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+          "slug": "rose-hat-figure",
+          "title": "Rose Hat Figure",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
+          "slug": "rose-profile",
+          "title": "Rose Profile",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "70-80-3",
+      "physicalSize": {
+        "widthCm": 70,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1794879,
+          "sha256": "8f50efcf63611f5fd4bcee6ec6e5f77a21e333971a0db3a9f4e92a6cfa6fe75f",
+          "width": 3366,
+          "height": 2982
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1542199,
+          "sha256": "0e92144b99d22216e2f14f71b75cbcfde07b5c6ffaa14664a12ef0fa14b09e3c",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 1929726,
+          "sha256": "44fe93d6802c7ccf999e047766c22931968696c1b02cf63f66173466dacb07ff",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2437790,
+          "sha256": "0c3341fb812b6643c38a589b9279eefaefe2297dcabfb63eb0ccd58c055d18db",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2055852,
+          "sha256": "8d9e00de5294863bd31846e4b00f08aeddea382517c2841d02f68dcb49e55cd0",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2401881,
+          "sha256": "a34913520ca07b2360b710fb320bfeb6904330bf1208bfbf5f381109f6557b8c",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3366,
+        "height": 2982
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
+        "slug": "rose-profile",
+        "title": "Rose Profile",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
+          "slug": "rose-profile",
+          "title": "Rose Profile",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+          "slug": "bright-fuchsia-dress",
+          "title": "Bright Fuchsia Dress",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
+          "slug": "fuchsia-silhouette",
+          "title": "Fuchsia Silhouette",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+          "slug": "hill-garden-afternoon",
+          "title": "Hill Garden Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+          "slug": "rose-hat-figure",
+          "title": "Rose Hat Figure",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "70-80-8",
+      "physicalSize": {
+        "widthCm": 70,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1711680,
+          "sha256": "50d29398942c9b6c826465dc86789049fedc2fa5c7447270d2baff04be688847",
+          "width": 3275,
+          "height": 2970
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1678574,
+          "sha256": "c18ebfbf71d492cc27b7b71024b030de59af5b38962802f54112b5172f77d8e1",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2062488,
+          "sha256": "b483f17732dca7b1098c85a7ff02eac03cddd228fc0335b16d878595890b59e8",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2210384,
+          "sha256": "d85ccb49ced80e5264bc700a1e588837b5b885e892a3110bdf64af6512fde656",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2169052,
+          "sha256": "70ec192cada7d2f86449b98c2d63a0c7efbfe5c28520e9db4d7173421ad68da7",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2509289,
+          "sha256": "9ac1afeced24a5471c6b6b3a7fa37f1f199a2739ac51c0dacbb14e5192f9d32d",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3275,
+        "height": 2970
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZocu",
+        "slug": "rose-wing-profile",
+        "title": "Rose Wing Profile",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZocu",
+          "slug": "rose-wing-profile",
+          "title": "Rose Wing Profile",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+          "slug": "bright-fuchsia-dress",
+          "title": "Bright Fuchsia Dress",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
+          "slug": "fuchsia-silhouette",
+          "title": "Fuchsia Silhouette",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+          "slug": "hill-garden-afternoon",
+          "title": "Hill Garden Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+          "slug": "rose-hat-figure",
+          "title": "Rose Hat Figure",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "70-80-9",
+      "physicalSize": {
+        "widthCm": 70,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1796471,
+          "sha256": "ebea1094f6a8bb6805b8b5351b16aa07b0d75ac29fd0ae317d22b7d947f65b18",
+          "width": 3292,
+          "height": 2904
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2472241,
+          "sha256": "27ba46eea4fc8ed6e5b4fe14fe376bcd9a4b4ec5cb0b1c1122ae29e0fd451eeb",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3279278,
+          "sha256": "93c0dc6143a975186995228bf14823db68b6b0fb6450f2de87324c88818e8176",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2444251,
+          "sha256": "a32fd938ea6ab7cd5feaa59a810e3ac822515028b566b5652e1651a4a676064a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2507330,
+          "sha256": "de584bb96dec3a11a046938cc1057bbca28d2dc6e52004e6fe9f29c4954cc71d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2141724,
+          "sha256": "b4b00e13255b1f27daa328498f4d97b8010a5ceefd54fc14dea0f36d081ad569",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 3292,
+        "height": 2904
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+        "slug": "bright-fuchsia-dress",
+        "title": "Bright Fuchsia Dress",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZops",
+          "slug": "bright-fuchsia-dress",
+          "title": "Bright Fuchsia Dress",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
+          "slug": "fuchsia-silhouette",
+          "title": "Fuchsia Silhouette",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
+          "slug": "hill-garden-afternoon",
+          "title": "Hill Garden Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
+          "slug": "rose-hat-figure",
+          "title": "Rose Hat Figure",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
+          "slug": "rose-profile",
+          "title": "Rose Profile",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-80",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 545962,
+          "sha256": "5cbdfdc1047ee99e14bbdadd78dc1b1a0124a2844b059128a7dde8a24e922432",
+          "width": 1276,
+          "height": 1286
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2100513,
+          "sha256": "f5c07c66faaa6f815fed623ed51c7c813c37fbae676a1fa09fdcf40561eec817",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2465302,
+          "sha256": "b49d4f6d5f9dff6c102afd89c96c66bff379e793f6abe79aa4193e15598bdec2",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2726794,
+          "sha256": "c07dd5ae0dec152caf6919f1f5f00f4b5153545bce548741e9ab6c3b4c11e0ca",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2513676,
+          "sha256": "4d15d17d8656cd545055108e90e4a2f5e0758ff464d03ee610714d131957a413",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2551861,
+          "sha256": "32f06ef75e4afb14854a4f818f4d5f97e109ae767b8e3f125b8de83387dba398",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1276,
+        "height": 1286
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoPw",
+        "slug": "rose-garden-signals",
+        "title": "Rose Garden Signals",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoPw",
+          "slug": "rose-garden-signals",
+          "title": "Rose Garden Signals",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
+          "slug": "afternoon",
+          "title": "Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
+          "slug": "afternoon2",
+          "title": "Afternoon II",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
+          "slug": "electric-pink-meadow",
+          "title": "Electric Pink Meadow",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
+          "slug": "garden-house",
+          "title": "Garden House",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-80-1",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 505256,
+          "sha256": "b29b0f1495a4b90d7ed22d0779dccc81fd908265b2fed24dd43b6266ab80ee73",
+          "width": 1290,
+          "height": 1278
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1958650,
+          "sha256": "b03cf6f9bc08bf8254bc776d7cd450af27a8c3bd1672efd1d308c69a28fbfd69",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2815928,
+          "sha256": "65d763d0b3467f53d79534a49288530c777c07f6bad140bc4bdc947dad50391e",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2586160,
+          "sha256": "a980b932797ecc2b495dc424a66c0b2b9b291824b5eb566b391fa6c9aa43c5c8",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2280407,
+          "sha256": "2c77be88753569e37c950122fee5143cdfe158165ad01d55d9e1f28413e8d844",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2282959,
+          "sha256": "fef5c7df7846ed57829b3fa3016f3ed38f5e871895d4175c5cd61504a7d0ff79",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1290,
+        "height": 1278
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrLU",
+        "slug": "violet-garden-mist",
+        "title": "Violet Garden Mist",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrLU",
+          "slug": "violet-garden-mist",
+          "title": "Violet Garden Mist",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
+          "slug": "afternoon",
+          "title": "Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
+          "slug": "afternoon2",
+          "title": "Afternoon II",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
+          "slug": "electric-pink-meadow",
+          "title": "Electric Pink Meadow",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
+          "slug": "garden-house",
+          "title": "Garden House",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-80-2",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 575755,
+          "sha256": "8b38dca6b4bd9fe85d0a363609c91036c05c28bdcf3804f5fdb7a404e2a04576",
+          "width": 1294,
+          "height": 1278
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1848232,
+          "sha256": "b4de1c3643918003636b67d9ff84c769bd605f21a4c0737c9db07d1cd6b8f4a8",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2457967,
+          "sha256": "29c8d3e55351e8216fc013c0969f526c4c4b9e7138181c52dad4c7755213fc6b",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2705688,
+          "sha256": "ee485bdbd35df3404dea690f33f89cf44ce78c93f2e72e905fe4204113579a65",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2524813,
+          "sha256": "4c9596f2baf8c9aea99935db19f6cb34ed2300459de01cfc3a61fbeaae0b6745",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2645418,
+          "sha256": "4d7108fb68a3314d3a90ea046c3d893ca7a4b2c5d9865255e832b4de93ca9359",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1294,
+        "height": 1278
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
+        "slug": "electric-pink-meadow",
+        "title": "Electric Pink Meadow",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
+          "slug": "electric-pink-meadow",
+          "title": "Electric Pink Meadow",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
+          "slug": "afternoon",
+          "title": "Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
+          "slug": "afternoon2",
+          "title": "Afternoon II",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
+          "slug": "garden-house",
+          "title": "Garden House",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf0O",
+          "slug": "green-canopy-afternoon",
+          "title": "Green Canopy Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-80-3",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 80
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 519466,
+          "sha256": "2f795f72dffe7e46134b5e0caa2cd537b44554301d1bb7ba8198756ed85f4c5a",
+          "width": 1304,
+          "height": 1276
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1938319,
+          "sha256": "71d8ce4cbae4af9cdb62d00dc045a3aac3c151a7f0a726624b9ac344c7a10273",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2364780,
+          "sha256": "4fbbe30f1dfd60b0e1ef22274de14d4901012ff9f4fe1a809dd1e9010651597b",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2472728,
+          "sha256": "b058f433601c45954da8050091939b2150b9ce8e2c230d8dff111ff2dd9e6a2b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2500292,
+          "sha256": "e2ec0a9db8c2728872cf2aaa43bb045b28733988b0c2dcc12147da9fcfeb7f5b",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2358515,
+          "sha256": "170dad6073f057710060d56578af8578c219b12a9d5c192a835783207dd026ab",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1304,
+        "height": 1276
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqrE",
+        "slug": "pastel-signal-field",
+        "title": "Pastel Signal Field",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqrE",
+          "slug": "pastel-signal-field",
+          "title": "Pastel Signal Field",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
+          "slug": "afternoon",
+          "title": "Afternoon",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
+          "slug": "afternoon2",
+          "title": "Afternoon II",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
+          "slug": "electric-pink-meadow",
+          "title": "Electric Pink Meadow",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
+          "slug": "garden-house",
+          "title": "Garden House",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-1",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.png",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 15586897,
+          "sha256": "ee3b11deee09f40b0c52c1c2d4b56a73840eabb7f03115af3778f44f27a5b1ff",
+          "width": 1865,
+          "height": 2785
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2661306,
+          "sha256": "1067e79223de7d86a42a0d0e06e61a001e34b7a73f4e95e351856ed130b01fa0",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3584211,
+          "sha256": "8d777aae8f2ec5a4a5089325398c801d4ded24d913721513d3a6eb6e0148e0dc",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2622711,
+          "sha256": "08963c826e20f8b19a807263f352ca8a18ea2f22b7ed342a3f1aa2bd94d012a9",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2314374,
+          "sha256": "b6cbe4e2ae3c878b4b0ebcba5e912b1df61845c1cc489d7ae7e20c3a058f7733",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2454399,
+          "sha256": "f41104953ac6f5ae87919248c93f5ad8c0209efde649cef61acaa5ae29112858",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1865,
+        "height": 2785
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoCy",
+        "slug": "garden-keeper",
+        "title": "Garden Keeper",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoCy",
+          "slug": "garden-keeper",
+          "title": "Garden Keeper",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-2",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.png",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 12642439,
+          "sha256": "ced39f4674b2b75e305bf95667524254b2dbb5e4bbcab288117ed32fed49c708",
+          "width": 1889,
+          "height": 2922
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2019799,
+          "sha256": "33790af60748956b031c3562d3d7a64ebd1d27d2ea65f3c99c0ce1d738869102",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2495987,
+          "sha256": "391c163f9c85949c6e8d0108843981cbb416994b82d3814b34bdec9169c4e5f8",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2523856,
+          "sha256": "c796416f918d1fa0a0ef1045914d51f1b9674ab988a0079081d3d9b2eba41a65",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2415933,
+          "sha256": "962b467f1081a20f0d55538e5f6fa1b4558b6637e18a56999d9c370e33e4d93d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2263065,
+          "sha256": "ac4884689b49d1fa008083e0e1eb4f5e60a65b7f1edbad7b87246928d2380dd8",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1889,
+        "height": 2922
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoYa",
+        "slug": "pink-dress-study",
+        "title": "Pink Dress Study",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoYa",
+          "slug": "pink-dress-study",
+          "title": "Pink Dress Study",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-3",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.png",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 9464199,
+          "sha256": "b226d76558cdbc1f0cd81f3f400590bce2b251f1ddfa9d4865a7298c66535f3c",
+          "width": 1642,
+          "height": 2761
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 1969399,
+          "sha256": "8f46a6085819d5416720b19527676e533c4beb4084230399ccb8f87269b3cef4",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2605044,
+          "sha256": "43359d4e6645cd2d2393c23e3dda32b0df12eda4442d4ea1faf5dd90527f40ed",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2429677,
+          "sha256": "2797bee8f132222b5bd4e8cd73ec47c18d1d28083463c96c330ae95841a50b2d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2078456,
+          "sha256": "096780f3630a6e80a2956b163b46e2808d30ccd0b6cf5296685af4af1fcb1f1a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2073547,
+          "sha256": "0636be98d0967694354edd10d9021a1c08466f3b520d9217f370d42d41e1b5f5",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1642,
+        "height": 2761
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpBU",
+        "slug": "garden-crown",
+        "title": "Garden Crown",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpBU",
+          "slug": "garden-crown",
+          "title": "Garden Crown",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-4",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.png",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 12166832,
+          "sha256": "9dc56f5b613c3a1cd206ae1c00568ea1642398b729d46ada0fcdbe84c18a66c2",
+          "width": 1809,
+          "height": 2906
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2276244,
+          "sha256": "b7318b6003cbc8cd7566035828698bd24be49db1388ce7aa5f50a8df148fc012",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3007496,
+          "sha256": "68571236cb7b9e7e3a66ed3125891ed0cd29b240ac4ef9d3bd37ebfbca27753f",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2320501,
+          "sha256": "89119633eb82011e4c19d3bd4f6feb191052fe18fc84ba59bd16e5419653893d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2735172,
+          "sha256": "4a348d9dba20d3a36317dd9d8630316fbd4c6f8ff15cb330632d8e2e5e203dbf",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2298610,
+          "sha256": "14f202501753710a8d3448b5d5ba41fa53d5e85b9cd8b39a99e15de242536abd",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1809,
+        "height": 2906
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpsi",
+        "slug": "weathered-passage",
+        "title": "Weathered Passage",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpsi",
+          "slug": "weathered-passage",
+          "title": "Weathered Passage",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-5",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 599779,
+          "sha256": "3ef218a3883732123d71c32492baf453f81e1f1c57c7f8f47bfc0eaaae1e2769",
+          "width": 1080,
+          "height": 1920
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 3156918,
+          "sha256": "ec335c7bf0c301abce55c9740cfe16a752147644530a01618d9dbf7ce78da2e8",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2927953,
+          "sha256": "5f3b10d5a35f6c55681b3561c2db2ef8ae8846a16bbd598f5fe1f651022743ba",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2629595,
+          "sha256": "99c518607161847eaaf5e884e353e408219c461bc791f5335a8df18ff8fea9aa",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2258686,
+          "sha256": "1721ebcb85942c79847a0cf1722f733948be446f40285ede51b89655ad50acb5",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2869582,
+          "sha256": "04257c395dc1e75df6654eef8208708d2b7031fd8c5276c7d6f77a4a9ee57d1c",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1080,
+        "height": 1920
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+        "slug": "blue-violet-texture",
+        "title": "Blue Violet Texture",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
+          "slug": "crimson-slipper-no-2",
+          "title": "Crimson Slipper No. 2",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-6",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 315224,
+          "sha256": "ad47bd213ab05e5ef60dbc5fa18ed0f4ef90eba19269abb8537ad44d1f585485",
+          "width": 1282,
+          "height": 2120
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2024172,
+          "sha256": "da4866ffd379d9df9725091743111aeca1372448d76f3f593cd86b0621988c86",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2166799,
+          "sha256": "a5a8f870ae78286c3d6f8d47b44797c363361a61deeab7d044dc8df5593cc15d",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2242251,
+          "sha256": "49d9be5f453dbad3204bf27195a6c9ebc633927d3e24452a6e69d092abb423c4",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2085155,
+          "sha256": "de77a69e629d4cab93a91920c7607ef12a6e2c11004afc753c5cc244626ab3f9",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2297499,
+          "sha256": "db929ae3edfbbcb6da5b5b83a2c014a2e1856e463408929d79b8a2bf8ba4379e",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1282,
+        "height": 2120
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZfM0",
+        "slug": "light-rail-geometry",
+        "title": "Light Rail Geometry",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZfM0",
+          "slug": "light-rail-geometry",
+          "title": "Light Rail Geometry",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-7",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1198047,
+          "sha256": "b8685f59985dc910557c7d443b41d9853f4ed458233ea5394ea19a04d3a5112d",
+          "width": 1977,
+          "height": 2997
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2640086,
+          "sha256": "d2437aeb74f6e173d8e3b33a01c6f15a183b955443fc53ba2b1ada54cbd6d617",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2534844,
+          "sha256": "aaad2a1b06b93bf606076cdf460f45b67324490044c99d6e6e44bca189435fb3",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2372677,
+          "sha256": "701c25c244bfb152b4646519f1624544f9aec5419408175b0d6d90be9e9e1d5d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1960698,
+          "sha256": "c9dcad4670bdc900daa23b844919b8589803ce850e70ac9fde1e0529432fca7d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2431919,
+          "sha256": "bf7046136713c186296b46309bb6d53208428e45c5ce13f5332e35f8678d6f47",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1977,
+        "height": 2997
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+        "slug": "crimson-slipper-fragment",
+        "title": "Crimson Slipper Fragment",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
+          "slug": "crimson-slipper-no-2",
+          "title": "Crimson Slipper No. 2",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-8",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1582733,
+          "sha256": "4abc17e90823dc73a3158521cedf073f33472273009b4b62b3ae5880b01a2fab",
+          "width": 1961,
+          "height": 2969
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2181880,
+          "sha256": "9902d4cb30c23e4d4fbe32db325270a9381d2b58adeb74b551b2780b67eadbe8",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3158373,
+          "sha256": "3f7d1db0dde730d71b6daf778daf397f7c31405ecb0bbc157674aa6bd4ef0a29",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2536570,
+          "sha256": "6d8577e924581ce3752b3422f8c4d90f1ede35719cfcd17b75f460f74ff8ea80",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2316371,
+          "sha256": "1616ddf77b748ed9a0f2b42134dd9907d9a6f357a1851b94ab3e68dff898af8c",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2408755,
+          "sha256": "c0ea93545a6a36367ebff904d65b93ac0d55cc48e367175d29a83b2f070745ea",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1961,
+        "height": 2969
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpSm",
+        "slug": "floating-glass-notes",
+        "title": "Floating Glass Notes",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpSm",
+          "slug": "floating-glass-notes",
+          "title": "Floating Glass Notes",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-9",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 802945,
+          "sha256": "f479afd413fdb964f6cee4806901f3e1d4270ca74a1f20c62cb048a2a1e0c702",
+          "width": 1764,
+          "height": 2771
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2659970,
+          "sha256": "4694f14e69f39ff2b77a39151bd432f9cc0267801d433822bd3ac3a21591ed92",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 4036537,
+          "sha256": "e3818d5d836ff9b4014d38d44d9b25644e57f1a93b13403bc7676876fc12b3b4",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2640990,
+          "sha256": "f7107a4355564e956736ab0d9db13b2363e6750af19b49840077a9f6e5bc4c9d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2329896,
+          "sha256": "233d6cc689e29aba0540e580ad9e0b0bc8417aa2e2058512c25a0cceaf067cc6",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2412785,
+          "sha256": "59b9a41f03908a73676d5246d80e3d273d2f8a764a66104d46c3dfe0e3e86dca",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1764,
+        "height": 2771
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
+        "slug": "crimson-slipper-no-2",
+        "title": "Crimson Slipper No. 2",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
+          "slug": "crimson-slipper-no-2",
+          "title": "Crimson Slipper No. 2",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-10",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 749847,
+          "sha256": "7793d9f806f40bdce700b01daa3742281f403294f7a40438409a637ab3d0ba21",
+          "width": 1433,
+          "height": 2289
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2268357,
+          "sha256": "ccabeed4a205606ebe934e1f97228f8ed9ee129ced8c57d94a67536f6748a695",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2582328,
+          "sha256": "c617d5310f30a62bb87c1ded0fbb6e49c6b0b0bcb463cc0b4b4c5d9a6871ce07",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2460332,
+          "sha256": "0b5f8caadef057c9e3968e721f945be0b0931fda1a3600a44514b8c8123345d7",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2079813,
+          "sha256": "13a6ea1b1fdc31146f3a35c756cc7196591ff9edd790795b12741cd54f136938",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2207786,
+          "sha256": "276732a66f836d968c57d6151923c91fb43131918f2c5e341d360002ea8477b7",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1433,
+        "height": 2289
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "XK7N94x9IeMzLuOXBWSeJm",
+        "slug": "red-figure-in-stone",
+        "title": "Red Figure in Stone",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "XK7N94x9IeMzLuOXBWSeJm",
+          "slug": "red-figure-in-stone",
+          "title": "Red Figure in Stone",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-11",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1535449,
+          "sha256": "f63b913ea181802ae3e74d1662a426000006497ca8cb70db920bdbd71b499b21",
+          "width": 1969,
+          "height": 2473
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2273963,
+          "sha256": "243931b619c261c30b5efb143c8bee394be4b9d3e6211090ecd71910e3e01172",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2479672,
+          "sha256": "f59510f12366eb5110d3489e6d75686a53d0bc82aea99785a544bb8500a16967",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2303775,
+          "sha256": "92d9303ed1ede962b6c8497d112c5459c30915b6ba8196eec9569a9a7bf7ac0d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1954058,
+          "sha256": "42d33d59e7bba24bf78953ac23519e28c607a179185e80ba7692f7c3dc4c2655",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2186494,
+          "sha256": "d241d000884b0d8e8c6c7a8254602aac774855fd3f9fc684eb34d06c566057b0",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1969,
+        "height": 2473
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+        "slug": "blue-crossing",
+        "title": "Blue Crossing",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
+          "slug": "crimson-slipper-no-2",
+          "title": "Crimson Slipper No. 2",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-12",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1448393,
+          "sha256": "84e05b48a2f3b459d28428b6ea06c94c04697e7345b664754ba73a596c4cacad",
+          "width": 2074,
+          "height": 2545
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2096612,
+          "sha256": "17643a258a8a8ed72471d69e059643c619c86f51ba2decaf7728fdba98323aad",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2489889,
+          "sha256": "5382988cf892374c0d7d436e25f4c244976d39530da21cf854233c58f884fc5b",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2247232,
+          "sha256": "13daf04d56f523c759d18119318c28aa0f5edc3e317ba0731637c84ea0433898",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1929041,
+          "sha256": "275cd102d82401d9d8f9a9aa0cd9311922cd18cfc28f73c7c43fb38d123fff9c",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2342242,
+          "sha256": "b5723d38d7457088ce96c6503e4608c3ab04e567be3e16dc0c55f8975cefabb5",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 2074,
+        "height": 2545
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpbQ",
+        "slug": "paper-boat-garden",
+        "title": "Paper Boat Garden",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpbQ",
+          "slug": "paper-boat-garden",
+          "title": "Paper Boat Garden",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-13",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1239557,
+          "sha256": "93573a1759e96719eb3e1dab18b0246a8fe0b8f0717502cabb54e158918d7107",
+          "width": 1890,
+          "height": 2344
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2384069,
+          "sha256": "eea89d65ceff777ce8fa940e27ff0d63ac89eb6e35c6730cb42baa65b5ddb97e",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2570331,
+          "sha256": "d78a7d7f69b8ef639f345ace04b8c460486df961419f3a7bb6d08c99ddf3dc70",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2338183,
+          "sha256": "4b4d0bf81e8ebec2da2bf32e8fc1b6ae0d66e40fa7abc8d7e280e347d136527d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1959485,
+          "sha256": "154bd5255a20fad36ef358c64f83d3a64ef92305b99092c062c189738e8ade17",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2182888,
+          "sha256": "a0ff52a03f06aab50b35c84c50868d96e7e0ebaf7633e8f83ad86b3a4af55dfb",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1890,
+        "height": 2344
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpfk",
+        "slug": "ribbon-boat",
+        "title": "Ribbon Boat",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpfk",
+          "slug": "ribbon-boat",
+          "title": "Ribbon Boat",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-14",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1929966,
+          "sha256": "aee1174b23bd1e16167aa6d6810e24ad1cfc70d81d3b7facd91423c2850b0d26",
+          "width": 1993,
+          "height": 2433
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2594648,
+          "sha256": "8faac3ac9a9e3d2782fc2a2a41121f7be2d35fa369c05424cecfd49194201e29",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 3178227,
+          "sha256": "d5e6e7e50078302c7e6261309910286ee6d051f5b5f6eab69a90f8f632ad0737",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2646300,
+          "sha256": "be145df39a3da880650917649e46d87d81a897914ff861b4a3f83deea1a908b4",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2326694,
+          "sha256": "fa4197150c5c11d0e7fd7367842946c45afa21b79aaccbeb85fe3fbe3aa746bf",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2301161,
+          "sha256": "afb97bbc3c839b8f44726bf0d9facdfa8aacd1ac8be607d16e5ad3753caafee8",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1993,
+        "height": 2433
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZpk4",
+        "slug": "white-boat-on-grey",
+        "title": "White Boat on Grey",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpk4",
+          "slug": "white-boat-on-grey",
+          "title": "White Boat on Grey",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-15",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1442764,
+          "sha256": "1b79fe35a1e01c9418a73cd9167c64eb39e2c9d8586e4854bb0d34149d099b04",
+          "width": 2145,
+          "height": 2594
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2234122,
+          "sha256": "53ee6c2a3751f5da4a85ecce9e3f854568031722c18a0f0dc80279b41741db94",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2394930,
+          "sha256": "45ca0925c83b27d90124cf4d22e341daeb8c6d2b3dc28ef0f4827f1f4c844f5b",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2353427,
+          "sha256": "499ecaf9cb4ccef98aee3229a30011cc9ae918e482651596a224cb45198fd5fe",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2051877,
+          "sha256": "cf2a6a82d2c8eecedec8887c51e029ca296077940f52f7032c988f918c7cd95d",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2241267,
+          "sha256": "72dc099589ae5823b9540b3f9cf365783bbf9a2a361c86ec16d7d85eb826cb6f",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 2145,
+        "height": 2594
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZouC",
+        "slug": "paper-boat-memory",
+        "title": "Paper Boat Memory",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZouC",
+          "slug": "paper-boat-memory",
+          "title": "Paper Boat Memory",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "80-120-16",
+      "physicalSize": {
+        "widthCm": 80,
+        "heightCm": 120
+      },
+      "suspiciousFolderSize": false,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 1582324,
+          "sha256": "225ae6ad665f7a9a417ec989618f86a3d28fe3f7c440c5036dc29e436b78a4d4",
+          "width": 1825,
+          "height": 2298
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2370272,
+          "sha256": "46b3f40eef1cec9d435ea5cd282b1a82313d673db744dabacec69b0976f84e81",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 2673945,
+          "sha256": "9ff3d230fdc8c1503b26ce8ea919f7837cccb1ad8d300824a6d9f2b32711581b",
+          "width": 1024,
+          "height": 1536
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2276989,
+          "sha256": "82419bc7a67183133c6fbbaaf10f4a7200deb0190105ea0bc661ce7672982f6a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 1985026,
+          "sha256": "b299b2af5a47584ddf6a38718f9f92216cb6c0c8f83a9e1d8892d9918a2a9aef",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2246421,
+          "sha256": "41cdaf543e5c53cd0ffa0d115e2b7d0fb92cd297328fd34a3e9e9edfcdf99788",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1825,
+        "height": 2298
+      },
+      "matchConfidence": "high",
+      "readyForUpload": true,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZoyW",
+        "slug": "quiet-vase-and-birds",
+        "title": "Quiet Vase and Birds",
+        "score": 160,
+        "reasons": [
+          "Sanity main image pixels",
+          "listed artwork size"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoyW",
+          "slug": "quiet-vase-and-birds",
+          "title": "Quiet Vase and Birds",
+          "score": 160,
+          "reasons": [
+            "Sanity main image pixels",
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
+          "slug": "blue-crossing",
+          "title": "Blue Crossing",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
+          "slug": "blue-violet-texture",
+          "title": "Blue Violet Texture",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
+          "slug": "candy-field",
+          "title": "Candy Field",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        },
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
+          "slug": "crimson-slipper-fragment",
+          "title": "Crimson Slipper Fragment",
+          "score": 60,
+          "reasons": [
+            "listed artwork size"
+          ]
+        }
+      ]
+    },
+    {
+      "sourceFolder": "400-400-12",
+      "physicalSize": {
+        "widthCm": 400,
+        "heightCm": 400
+      },
+      "suspiciousFolderSize": true,
+      "fileCount": 6,
+      "complete": true,
+      "missingRoles": [],
+      "duplicateRoles": [],
+      "files": [
+        {
+          "name": "00-original.jpg",
+          "mediaType": "image",
+          "role": "original",
+          "bytes": 471608,
+          "sha256": "89edb7e5756f450dbdb8cd726c7fb42a42d591e45b026ebb3bfffde59ee793d7",
+          "width": 1284,
+          "height": 1280
+        },
+        {
+          "name": "01-white-bg-front.png",
+          "mediaType": "image",
+          "role": "front",
+          "bytes": 2143753,
+          "sha256": "d910dbeec6f14d1c0f517c19171407ffabf137611ae7d8ae62d478b150d26f87",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "02-detail-texture.png",
+          "mediaType": "image",
+          "role": "detail",
+          "bytes": 1925956,
+          "sha256": "5feb4d72b8134caace6b3494bf954820e553d15b6126c4ad181a03dc681e017f",
+          "width": 1024,
+          "height": 1024
+        },
+        {
+          "name": "03-scene-livingroom.png",
+          "mediaType": "image",
+          "role": "living_room",
+          "bytes": 2672395,
+          "sha256": "687fb67a31b1a0cb02d6b7256d160a0ca54436dfc9c95f0cd83f1d913d72b94a",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "04-scene-angle.png",
+          "mediaType": "image",
+          "role": "angle",
+          "bytes": 2333240,
+          "sha256": "0c711da161e672a69c4bb6d3f61a8e6b848141c452fe837e5e6d78c691b2086e",
+          "width": 1536,
+          "height": 1024
+        },
+        {
+          "name": "05-scene-bedroom.png",
+          "mediaType": "image",
+          "role": "bedroom",
+          "bytes": 2467507,
+          "sha256": "cfdc911d69e04ad670190868189ec721652d0ba2326e5b3a67364fc53afbf025",
+          "width": 1536,
+          "height": 1024
+        }
+      ],
+      "originalPixelSize": {
+        "width": 1284,
+        "height": 1280
+      },
+      "matchConfidence": "high",
+      "readyForUpload": false,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqvY",
+        "slug": "pink-garden-rhythm",
+        "title": "Pink Garden Rhythm",
+        "score": 100,
+        "reasons": [
+          "Sanity main image pixels"
+        ]
+      },
+      "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqvY",
+          "slug": "pink-garden-rhythm",
+          "title": "Pink Garden Rhythm",
+          "score": 100,
+          "reasons": [
+            "Sanity main image pixels"
+          ]
+        }
+      ]
+    }
+  ]
+}

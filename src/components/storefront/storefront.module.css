@@ -20,6 +20,13 @@
   object-fit: contain;
 }
 
+.galleryVideo {
+  width: 100%;
+  height: 100%;
+  background: #181613;
+  object-fit: contain;
+}
+
 .galleryEmpty {
   color: #78716c;
 }
@@ -33,7 +40,10 @@
 
 .thumbnail {
   position: relative;
+  display: flex;
   aspect-ratio: 1;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
   border: 1px solid #ded8ce;
   background: #fff;
@@ -54,6 +64,30 @@
 
 .thumbnail:hover img {
   transform: scale(1.025);
+}
+
+.videoBadge {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.35rem;
+  padding: 0.2rem 0.35rem;
+  background: rgba(24, 22, 19, 0.82);
+  color: #fff;
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.videoThumbnail {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  background: #26352c;
+  color: #fff;
+  font-size: 0.7rem;
+  text-align: center;
 }
 
 .gallery figcaption {

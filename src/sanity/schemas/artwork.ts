@@ -8,6 +8,8 @@ export default {
         { name: 'en', title: 'English', type: 'string' },
     ]},
     { name: 'slug', title: 'Slug', type: 'slug', options: { source: 'title.zh' }},
+    { name: 'catalogCode', title: 'Catalog / source code', type: 'string',
+      description: 'Stable unique code used to match local media folders, for example 80-120-13.'},
     { name: 'artist', title: 'Artist', type: 'reference', to: [{ type: 'artist' }]},
     { name: 'collectionType', title: 'Storefront collection', type: 'string', initialValue: 'artist_collection',
       options: { list: [
@@ -104,6 +106,10 @@ export default {
     { name: 'cloudflareImages', title: 'Cloudflare images', type: 'array',
       description: 'R2-hosted artwork image metadata. The website prefers these URLs and falls back to Sanity images.',
       of: [{ type: 'cloudflareAsset' }],
+    },
+    { name: 'productMedia', title: 'Product gallery media', type: 'array',
+      description: 'Audited images and videos for the product gallery. Public display requires storefront approval.',
+      of: [{ type: 'productMedia' }],
     },
     { name: 'description', title: 'Description', type: 'object', fields: [
         { name: 'zh', title: 'Chinese', type: 'text' },

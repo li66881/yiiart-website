@@ -22,6 +22,7 @@ import {
   pickEnglish,
 } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
+import { buildProductGalleryMedia } from "@/lib/artwork-media"
 import {
   convertCnyToStoreAmount,
   getStoreCurrency,
@@ -103,6 +104,7 @@ async function getArtwork(slug: string) {
         allowCheckout,
         reservedUntil,
         cloudflareImages,
+        productMedia,
         images,
         description,
         shortDescription,
@@ -135,6 +137,7 @@ async function getRelatedArtworks(artworkId: string, category?: string | null, m
         medium,
         category,
         cloudflareImages,
+        productMedia,
         images
       }`,
       { artworkId, category: category || null, medium: medium || null }
@@ -226,6 +229,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     dimensions,
     roomTypes,
   })
+  const galleryMedia = buildProductGalleryMedia(artwork, galleryImages, artworkImageAlt)
   const storefrontProduct = buildStorefrontProduct(
     artwork,
     galleryImages.map((src: string, index: number) => ({
@@ -393,7 +397,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)]">
             <div className="lg:sticky lg:top-28 lg:self-start">
-              <ProductGallery images={galleryImages} alt={artworkImageAlt} />
+              <ProductGallery media={galleryMedia} alt={artworkImageAlt} />
             </div>
 
             <div className="space-y-6">

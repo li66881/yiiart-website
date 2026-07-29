@@ -36,6 +36,7 @@ export async function GET(request: Request) {
         medium,
         category,
         cloudflareImages,
+        productMedia,
         images
       }`,
       { wildcard }

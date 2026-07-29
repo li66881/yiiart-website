@@ -143,6 +143,7 @@ const reviewProjection = `{
     slug,
     dimensions,
     cloudflareImages,
+    productMedia,
     images
   },
   artist->{

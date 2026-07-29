@@ -30,6 +30,7 @@ async function getShareableArtworks() {
       widthCm,
       heightCm,
       cloudflareImages,
+      productMedia,
       images
     }`)
   } catch {

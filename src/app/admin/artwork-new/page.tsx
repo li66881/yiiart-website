@@ -48,6 +48,7 @@ export default function NewArtworkPage() {
   const [migrationStatus, setMigrationStatus] = useState("needs_rights_review")
   const [titleZh, setTitleZh] = useState("")
   const [titleEn, setTitleEn] = useState("")
+  const [catalogCode, setCatalogCode] = useState("")
   const [price, setPrice] = useState("")
   const [dimensions, setDimensions] = useState("")
   const [widthCm, setWidthCm] = useState("")
@@ -105,6 +106,7 @@ export default function NewArtworkPage() {
     formData.append("migrationStatus", migrationStatus)
     formData.append("titleZh", titleZh)
     formData.append("titleEn", titleEn)
+    formData.append("catalogCode", catalogCode)
     formData.append("price", price)
     formData.append("dimensions", dimensions)
     formData.append("widthCm", widthCm)
@@ -228,6 +230,15 @@ export default function NewArtworkPage() {
                 <input value={titleEn} onChange={(event) => setTitleEn(event.target.value)} className={inputClass} />
               </Field>
             </div>
+
+            <Field label="Catalog / source code">
+              <input
+                value={catalogCode}
+                onChange={(event) => setCatalogCode(event.target.value)}
+                placeholder="80-120-13"
+                className={inputClass}
+              />
+            </Field>
 
             <div className="grid gap-4 md:grid-cols-3">
               <Field label="Base price (CNY)">

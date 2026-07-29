@@ -26,6 +26,7 @@ export async function POST(request: NextRequest) {
 
     const titleZh = stringField(form, "titleZh")
     const titleEn = stringField(form, "titleEn")
+    const catalogCode = stringField(form, "catalogCode")
     const price = Number(stringField(form, "price"))
     const dimensions = stringField(form, "dimensions")
     const widthCm = optionalNumberField(form, "widthCm")
@@ -118,6 +119,7 @@ export async function POST(request: NextRequest) {
       _type: "artwork",
       title: { zh: titleZh, en: titleEn },
       slug: { _type: "slug", current: slug },
+      catalogCode: catalogCode || undefined,
       artist: artistId ? { _type: "reference", _ref: artistId } : undefined,
       ...catalogFields,
       price,

@@ -1,4 +1,5 @@
 import { urlFor } from "@/lib/sanity"
+import { getApprovedProductImageUrls } from "@/lib/artwork-media"
 
 export type CloudflareImage = {
   _type?: string
@@ -19,6 +20,9 @@ export function getArtworkImageUrl(artwork: any, options: ImageUrlOptions = {}) 
 }
 
 export function getArtworkImageUrls(artwork: any, options: ImageUrlOptions = {}) {
+  const productMediaUrls = getApprovedProductImageUrls(artwork)
+  if (productMediaUrls.length > 0) return productMediaUrls
+
   const sanityImageUrls = getSanityImageUrls(artwork?.images, options)
 
   if ((options.width || options.height) && sanityImageUrls.length > 0) {
