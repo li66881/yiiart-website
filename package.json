@@ -11,6 +11,7 @@
     "test": "npm run test:unit && npm run copy:check",
     "copy:check": "node scripts/check-public-copy.mjs",
     "media:audit": "node scripts/audit-product-media.mjs",
+    "media:import": "tsx scripts/import-product-media.mts",
     "r2:upload-public": "node scripts/upload-public-assets-to-r2.mjs",
     "r2:migrate-sanity-images": "node scripts/migrate-sanity-images-to-r2.mjs",
     "media:upload-r2": "npm run r2:upload-public"
@@ -44,6 +45,7 @@
     "typescript": "^5.9.3"
   },
   "devDependencies": {
+    "sharp": "^0.34.5",
     "tsx": "^4.23.1"
   }
 }

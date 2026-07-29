@@ -4,6 +4,7 @@ node_modules/
 # Build output
 .next/
 out/
+*.tsbuildinfo
 
 # Environment files
 .env*
@@ -14,6 +15,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .codex-*.log
+reports/product-media-import-plan.json
 
 # Vercel
 .vercel/

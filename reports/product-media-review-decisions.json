@@ -1,0 +1,50 @@
+{
+  "reviewedAt": "2026-07-30",
+  "reviewedBy": "YiiArt owner",
+  "autoApproveReadyFolders": true,
+  "notes": [
+    "The owner reviewed the ambiguous and held-back mappings after the automated audit.",
+    "Folders with readyForUpload=true may use the unique high-confidence suggested match.",
+    "Explicit excluded decisions always override automated suggestions.",
+    "Approved partial folders may upload all available owned media even when one expected role is missing."
+  ],
+  "decisions": {
+    "400-400-12": {
+      "status": "approved_with_size_correction",
+      "artworkId": "OfsmPgN5lUDWsUtL2tZqvY",
+      "slug": "pink-garden-rhythm",
+      "correctedCatalogCode": "40-40-12",
+      "correctedPhysicalSize": {
+        "widthCm": 40,
+        "heightCm": 40
+      },
+      "notes": "The source folder name has an extra zero. The owner confirmed the real artwork size is 40x40 cm."
+    },
+    "40-40-9": {
+      "status": "excluded",
+      "notes": "The owner confirmed this media does not correspond to a current product. Do not upload."
+    },
+    "30-40-3": {
+      "status": "excluded",
+      "notes": "The owner confirmed this media does not correspond to a current product. Do not upload."
+    },
+    "30-40-5": {
+      "status": "approved_partial",
+      "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+      "slug": "mint-field",
+      "notes": "The owner confirmed the match. Original is missing; upload the available owned images, including distinct angle and bedroom variants."
+    },
+    "30-40-12": {
+      "status": "approved_partial",
+      "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+      "slug": "nocturne-diptych",
+      "notes": "The owner confirmed the match. Original and bedroom are missing; upload the available owned images, including both distinct detail variants."
+    },
+    "40-40-8": {
+      "status": "approved_partial",
+      "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+      "slug": "earth-song",
+      "notes": "The owner confirmed the match. Living-room scene is missing; upload the other available owned images."
+    }
+  }
+}

@@ -30,6 +30,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'assets.yiiart.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'art-media.yiiart.com',
+      },
     ],
   },
   async headers() {
@@ -89,8 +93,8 @@ const nextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://connect.facebook.net https://s.pinimg.com https://analytics.tiktok.com https://www.paypal.com https://js.stripe.com https://*.vercel-insights.com https://*.vercel.live",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
-              "img-src 'self' data: https://assets.yiiart.com https://cdn.sanity.io https://images.unsplash.com https://picsum.photos https://res.cloudinary.com https://*.public.blob.vercel-storage.com",
-              "media-src 'self' blob: https://assets.yiiart.com",
+              "img-src 'self' data: https://assets.yiiart.com https://art-media.yiiart.com https://cdn.sanity.io https://images.unsplash.com https://picsum.photos https://res.cloudinary.com https://*.public.blob.vercel-storage.com",
+              "media-src 'self' blob: https://assets.yiiart.com https://art-media.yiiart.com",
               "font-src 'self' https://fonts.gstatic.com",
               "connect-src 'self' https://*.sanity.io https://api.stripe.com https://www.paypal.com https://*.supabase.co https://www.google-analytics.com https://www.facebook.com https://ct.pinterest.com https://analytics.tiktok.com https://*.vercel-insights.com",
               "frame-src 'self' https://www.paypal.com https://js.stripe.com https://www.youtube.com",
