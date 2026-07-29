@@ -25,6 +25,7 @@ The command writes:
 
 - `reports/product-media-audit.json` for automation and detailed review.
 - `reports/product-media-audit.csv` for confirming folder-to-product matches.
+- `reports/product-media-review-*.jpg` may be added for side-by-side review of ambiguous folders and existing Sanity product images.
 
 Matching signals are applied in this order:
 
@@ -45,3 +46,15 @@ Only a unique high-confidence match is placed in `suggestedMatch`. Other candida
 - Set `approvedForStorefront` only after media ownership, product identity, alt text, and room-scene proportions are confirmed.
 - Use optimized public derivatives for the storefront and keep full-resolution originals private.
 - Product videos should have a poster image, use mobile-friendly H.264 MP4, and remain short enough for reliable playback.
+
+## Current review notes
+
+The July 29 media audit produced 41 unique high-confidence suggestions and 38 folders that pass the automated completeness gate. Visual comparison suggests the following candidates, but they remain unapproved until the CSV review fields are completed:
+
+- `30-40-5` resembles `mint-field`.
+- `30-40-12` resembles `nocturne-diptych`.
+- `40-40-8` resembles `earth-song`.
+- `40-40-9` resembles `green-rain-study`, but the recorded size appears inconsistent.
+- `30-40-3` remains ambiguous; `lime-blossom-field` is only a palette-level candidate.
+
+The folder `400-400-12` is also held back because its physical-size code is implausible and may be a naming error.
