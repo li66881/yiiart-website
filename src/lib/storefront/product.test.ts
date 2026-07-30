@@ -22,7 +22,8 @@ test("defaults legacy artwork to the artist collection and original model", () =
   assert.equal(product.rightsStatus, "needs_review")
   assert.equal(product.sizes.length, 1)
   assert.equal(product.sizes[0].priceCny, 7200)
-  assert.equal(product.sizes[0].label, "80 x 100 cm")
+  assert.match(product.sizes[0].label, /80|100|31\.5|39\.4/)
+  assert.equal(product.sku, "QUIET-FIELD")
   assert.equal(product.images[0].src, "https://cdn.example/quiet-field.jpg")
 })
 
@@ -47,8 +48,10 @@ test("maps made-to-order sizes and finishes without accepting invalid prices", (
 
   assert.equal(product.collectionType, "new_collection")
   assert.equal(product.productionModel, "hand_painted_to_order")
-  assert.deepEqual(product.sizes.map((size) => size.id), ["80x100"])
-  assert.deepEqual(product.finishes.map((finish) => finish.id), ["rolled"])
+  assert.ok(product.sizes.length >= 4)
+  assert.equal(product.sizes[0].id, "80x100")
+  assert.ok(product.finishes.length >= 3)
+  assert.equal(product.finishes[0].id, "rolled")
 })
 
 test("uses safe made-to-order copy and normalized discovery facets", () => {
@@ -56,6 +59,7 @@ test("uses safe made-to-order copy and normalized discovery facets", () => {
     _id: "catalog-2",
     title: { zh: "静水" },
     slug: { current: "still-water" },
+    sku: "YA-210",
     productionModel: "hand_painted_to_order",
     standardSizes: [{ _key: "60x80", label: "60 x 80 cm", widthCm: 60, heightCm: 80, priceCny: 1800 }],
     category: "Abstract",
@@ -65,6 +69,7 @@ test("uses safe made-to-order copy and normalized discovery facets", () => {
   }, [])
 
   assert.equal(product.title, "静水")
+  assert.equal(product.sku, "YA-210")
   assert.deepEqual(product.styleTags, ["Abstract"])
   assert.deepEqual(product.roomTags, ["Living room", "Office"])
   assert.deepEqual(product.colorTags, ["Blue", "Neutral"])

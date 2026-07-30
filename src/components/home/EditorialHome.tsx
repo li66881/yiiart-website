@@ -63,8 +63,35 @@ function toCard(artwork: any) {
 
 export default function EditorialHome({ artworks }: EditorialHomeProps) {
   const { featured, artistCollection } = buildEditorialHomeEdit(artworks)
-  const heroArtwork = featured.find(hasArtworkImage) || artworks.find(hasArtworkImage)
-  const heroImage = heroArtwork ? getArtworkImageUrl(heroArtwork, { width: 1800, height: 1200 }) : undefined
+  const withImages = artworks.filter(hasArtworkImage)
+  const heroCandidates = [
+    ...featured.filter(hasArtworkImage),
+    ...withImages,
+  ]
+  const heroSlides = Array.from(
+    new Map(
+      heroCandidates.map((artwork) => {
+        const urls = getArtworkImageUrls(artwork, { width: 1800, height: 1200 })
+        const imageUrl = urls[1] || urls[0] || getArtworkImageUrl(artwork, { width: 1800, height: 1200 })
+        return [
+          artwork._id,
+          {
+            imageUrl: imageUrl || "",
+            imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} in a styled interior`,
+            eyebrow: "Summer Sale",
+            title: "Deals still going",
+            subtitle: "Selected hand-painted canvases · Free worldwide shipping",
+            ctaHref: "/artworks",
+            ctaLabel: "Shop All Art",
+            promo: true,
+          },
+        ] as const
+      }),
+    ).values(),
+  )
+    .filter((slide) => Boolean(slide.imageUrl))
+    .slice(0, 5)
+
   const roomImages = [
     ...featured.map((artwork) => getArtworkImageUrl(artwork, { width: 1000, height: 700 })),
     ...artworks.map((artwork) => getArtworkImageUrl(artwork, { width: 1000, height: 700 })),
@@ -74,10 +101,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
 
   return (
     <main className={styles.home}>
-      <HeroSection
-        imageUrl={heroImage}
-        imageAlt={heroArtwork ? `${pickEnglish(heroArtwork.title, "YiiArt painting")} in a styled interior` : undefined}
-      />
+      <HeroSection slides={heroSlides} />
 
       <section className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>

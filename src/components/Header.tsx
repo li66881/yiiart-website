@@ -20,7 +20,7 @@ const primaryNav = [
   { href: "/about", label: "Our Story" },
 ]
 
-const styleNav: Array<{ href: string; label: string; accent?: boolean }> = [
+const styleNav: Array<{ href: string; label: string }> = [
   { href: "/artworks", label: "All Art" },
   { href: "/artworks?category=Texture", label: "Plaster & Texture" },
   { href: "/artworks?category=Minimalist", label: "Minimalist" },
@@ -29,11 +29,11 @@ const styleNav: Array<{ href: string; label: string; accent?: boolean }> = [
   { href: "/collections/bedroom-wall-art", label: "Bedroom" },
   { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
   { href: "/artworks?category=Landscape", label: "Landscape" },
-  { href: "/artworks", label: "Sale", accent: true },
 ]
 
 const trustMessages = [
   "Free Shipping & 30 Days Return",
+  "Shop now, pay later at checkout",
   "Hand-painted to order for your wall",
   "Secure checkout with major cards",
 ]
@@ -228,13 +228,19 @@ export default function Header() {
             <Link
               key={`${item.href}-${item.label}`}
               href={item.href}
-              className={`whitespace-nowrap hover:text-black ${item.accent ? "font-semibold text-[#c62828]" : ""}`}
+              className="whitespace-nowrap hover:text-black"
             >
               {item.label}
             </Link>
           ))}
         </div>
       </nav>
+
+      <div className="hidden border-t border-stone-200/70 bg-white py-1.5 text-center lg:block">
+        <Link href="/artworks?sort=newest" className="text-xs font-semibold tracking-wide text-[#c62828] hover:underline">
+          Sale
+        </Link>
+      </div>
 
       {mobileMenuOpen && (
         <div className="border-t border-stone-200 bg-white px-4 py-4 shadow-xl lg:hidden">
@@ -247,13 +253,18 @@ export default function Header() {
                 key={`m-${item.href}-${item.label}`}
                 href={item.href}
                 onClick={closeMobileMenu}
-                className={`px-3 py-2 hover:bg-stone-50 ${
-                  "accent" in item && item.accent ? "font-semibold text-[#c62828]" : "text-stone-800"
-                }`}
+                className="px-3 py-2 text-stone-800 hover:bg-stone-50"
               >
                 {item.label}
               </Link>
             ))}
+            <Link
+              href="/artworks?sort=newest"
+              onClick={closeMobileMenu}
+              className="px-3 py-2 font-semibold text-[#c62828] hover:bg-stone-50"
+            >
+              Sale
+            </Link>
             <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 text-stone-800 hover:bg-stone-50">
               {t("nav.contact")}
             </Link>

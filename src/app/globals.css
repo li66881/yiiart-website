@@ -26,8 +26,8 @@
   --ya-duration: 280ms;
   --ya-gallery-gap: 12px;
   --ya-card-gap: 24px;
-  --ya-header-offset: 11.5rem;
-  --ya-header-offset-lg: 13.5rem;
+  --ya-header-offset: 12.5rem;
+  --ya-header-offset-lg: 15rem;
 }
 
 html {

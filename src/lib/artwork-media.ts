@@ -37,14 +37,14 @@ type ProductMediaInput = {
 }
 
 const roleOrder: Record<ProductMediaRole, number> = {
-  front: 10,
-  original: 20,
-  detail: 30,
-  process: 40,
-  living_room: 50,
+  living_room: 5,
+  bedroom: 8,
+  front: 20,
+  original: 30,
+  detail: 40,
+  process: 50,
   angle: 60,
-  bedroom: 70,
-  scale: 80,
+  scale: 70,
   other: 90,
 }
 

@@ -103,8 +103,8 @@ export default function ProductPurchasePanel({
   const saved = isInWishlist(product.id)
   const saleActive =
     Boolean(saleEndsAt) && new Date(saleEndsAt as string).getTime() > Date.now()
-  const allowQty = product.productionModel === "hand_painted_to_order"
-  const lineQty = allowQty ? Math.max(1, quantity) : 1
+  const allowQty = true
+  const lineQty = Math.max(1, quantity)
   const linePriceCny = selection ? selection.priceCny * lineQty : 0
   const installmentHint = selection
     ? formatStorePrice(selection.priceCny / 4, currency)
@@ -165,6 +165,7 @@ export default function ProductPurchasePanel({
 
       <h1 id="product-title" className={styles.productTitle}>
         {product.title}
+        {product.sku ? <span className={styles.productSku}> #{product.sku}</span> : null}
       </h1>
 
       <p className={styles.socialProof}>
@@ -184,9 +185,11 @@ export default function ProductPurchasePanel({
 
       {installmentHint ? (
         <div className={styles.installmentBox}>
-          <span className={styles.installmentBrand}>Pay later</span>
+          <span className={styles.installmentBrand} aria-hidden>
+            Pay in 4
+          </span>
           <p>
-            From <strong>{installmentHint}</strong>/month with your preferred checkout plan.
+            From <strong>{installmentHint}</strong>/month or 4 interest-free payments with your preferred plan.
           </p>
         </div>
       ) : null}

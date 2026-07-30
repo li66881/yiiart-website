@@ -68,7 +68,13 @@ export default function ProductCard({ item }: Props) {
             {item.sku ? <span className={styles.productCardSku}> #{item.sku}</span> : null}
           </h3>
           <p className={styles.productCardPrice}>
-            <PriceText amountCny={item.priceCny} />
+            {item.priceCny ? (
+              <>
+                From <PriceText amountCny={item.priceCny} />
+              </>
+            ) : (
+              <PriceText amountCny={item.priceCny} />
+            )}
           </p>
         </div>
       </Link>

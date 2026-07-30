@@ -318,6 +318,11 @@
   color: #111;
 }
 
+.productSku {
+  font-weight: 500;
+  color: #111;
+}
+
 .saveButton {
   min-height: 2rem;
   min-width: 2rem;
@@ -391,16 +396,17 @@
 
 .installmentBrand {
   display: inline-flex;
-  min-height: 1.6rem;
+  min-height: 1.7rem;
+  flex-shrink: 0;
   align-items: center;
-  border-radius: 4px;
-  background: #111;
-  padding: 0 0.45rem;
-  color: #fff;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #ffb3c7 0%, #ffa8c5 45%, #ff8fb0 100%);
+  padding: 0 0.65rem;
+  color: #111;
   font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 .installmentBox p {

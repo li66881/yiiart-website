@@ -240,14 +240,28 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   })
   const galleryMedia = buildProductGalleryMedia(artwork, galleryImages, artworkImageAlt)
   const storefrontProduct = buildStorefrontProduct(
-    artwork,
-    galleryImages.map((src: string, index: number) => ({
-      src,
-      alt: index === 0 ? artworkImageAlt : `${artworkImageAlt}, detail view ${index + 1}`,
-      width: 1400,
-      height: 1750,
-      kind: index === 0 ? "artwork" as const : "detail" as const,
-    })),
+    {
+      ...artwork,
+      sku: artwork.sku || slug,
+    },
+    galleryMedia
+      .filter((item) => item.type === "image")
+      .map((item, index) => ({
+        src: item.url,
+        alt: item.alt || (index === 0 ? artworkImageAlt : `${artworkImageAlt}, detail view ${index + 1}`),
+        width: item.width || 1400,
+        height: item.height || 1750,
+        kind:
+          item.role === "living_room" || item.role === "bedroom"
+            ? ("room" as const)
+            : item.role === "detail" || item.role === "angle"
+              ? ("detail" as const)
+              : item.role === "scale"
+                ? ("scale" as const)
+                : index === 0
+                  ? ("artwork" as const)
+                  : ("detail" as const),
+      })),
   )
   const priceCny = storefrontProduct.sizes[0]?.priceCny || Number(artwork.price || 0)
   const currency = getStoreCurrency()

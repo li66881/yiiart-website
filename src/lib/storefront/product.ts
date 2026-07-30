@@ -41,6 +41,7 @@ export type StorefrontProduct = {
   id: string
   slug: string
   title: string
+  sku: string
   artistName: string
   collectionType: StorefrontCollectionType
   productionModel: StorefrontProductionModel
@@ -58,6 +59,23 @@ export type StorefrontProduct = {
   creationWindow: string
   images: StorefrontImage[]
 }
+
+/** MesonArt-adjacent made-to-order size ladder (H × W, inches + cm). */
+const DEFAULT_MTO_SIZE_LADDER = [
+  { heightIn: 20, widthIn: 24 },
+  { heightIn: 24, widthIn: 32 },
+  { heightIn: 24, widthIn: 36 },
+  { heightIn: 30, widthIn: 40 },
+  { heightIn: 32, widthIn: 48 },
+  { heightIn: 36, widthIn: 48 },
+  { heightIn: 36, widthIn: 54 },
+  { heightIn: 40, widthIn: 54 },
+  { heightIn: 40, widthIn: 60 },
+  { heightIn: 48, widthIn: 64 },
+  { heightIn: 48, widthIn: 72 },
+  { heightIn: 54, widthIn: 72 },
+  { heightIn: 60, widthIn: 80 },
+] as const
 
 type LocalizedText = string | { en?: string; zh?: string } | null
 
@@ -80,6 +98,7 @@ type StorefrontArtworkInput = {
   materials?: LocalizedText
   medium?: string | null
   category?: string | null
+  sku?: string | null
   styleTags?: unknown
   roomTypes?: unknown
   colorFamilies?: unknown
@@ -101,10 +120,14 @@ export function buildStorefrontProduct(
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
 
+  const slug = cleanString(artwork.slug?.current) || cleanString(artwork._id) || slugify(title)
+  const sku = cleanString(artwork.sku).toUpperCase() || slug.toUpperCase()
+
   return {
-    id: cleanString(artwork._id) || cleanString(artwork.slug?.current) || slugify(title),
-    slug: cleanString(artwork.slug?.current) || cleanString(artwork._id) || slugify(title),
+    id: cleanString(artwork._id) || slug,
+    slug,
     title,
+    sku,
     artistName: pickEnglish(artwork.artist?.name, "YiiArt Studio"),
     collectionType: normalizeCollectionType(artwork.collectionType),
     productionModel,
@@ -130,15 +153,17 @@ export function buildStorefrontProduct(
         ? "Production timing is confirmed before checkout."
         : "Availability and dispatch timing are confirmed before checkout.",
     ),
-    images: imageInputs
-      .filter((image) => Boolean(cleanString(image.src)))
-      .map((image, index) => ({
-        src: cleanString(image.src),
-        alt: cleanString(image.alt) || `${title}${index === 0 ? "" : ` view ${index + 1}`}`,
-        width: positiveNumber(image.width) || 1400,
-        height: positiveNumber(image.height) || 1750,
-        kind: normalizeImageKind(image.kind, index),
-      })),
+    images: preferRoomImages(
+      imageInputs
+        .filter((image) => Boolean(cleanString(image.src)))
+        .map((image, index) => ({
+          src: cleanString(image.src),
+          alt: cleanString(image.alt) || `${title}${index === 0 ? "" : ` view ${index + 1}`}`,
+          width: positiveNumber(image.width) || 1400,
+          height: positiveNumber(image.height) || 1750,
+          kind: normalizeImageKind(image.kind, index),
+        })),
+    ),
   }
 }
 
@@ -149,7 +174,7 @@ function buildSizes(
 ) {
   if (productionModel === "hand_painted_to_order") {
     const sizes = Array.isArray(artwork.standardSizes) ? artwork.standardSizes : []
-    return sizes.flatMap((value, index): StorefrontSize[] => {
+    const mapped = sizes.flatMap((value, index): StorefrontSize[] => {
       if (!value || typeof value !== "object") return []
       const size = value as Record<string, unknown>
       const priceCny = positiveNumber(size.priceCny)
@@ -157,8 +182,9 @@ function buildSizes(
 
       const widthCm = positiveNumber(size.widthCm)
       const heightCm = positiveNumber(size.heightCm)
-      const label = cleanString(size.label)
-        || (widthCm && heightCm ? `${widthCm} x ${heightCm} cm` : `Size ${index + 1}`)
+      const label = formatDualUnitLabel(widthCm, heightCm)
+        || cleanString(size.label)
+        || `Size ${index + 1}`
 
       return [{
         id: cleanString(size._key) || slugify(label),
@@ -168,18 +194,83 @@ function buildSizes(
         priceCny,
       }]
     })
+
+    if (mapped.length >= 4) return mapped
+    return expandMadeToOrderSizes(mapped, artwork)
   }
 
   const priceCny = positiveNumber(artwork.price)
   if (!priceCny) return []
 
+  const widthCm = positiveNumber(artwork.widthCm)
+  const heightCm = positiveNumber(artwork.heightCm)
+
   return [{
     id: "original",
-    label: cleanString(artwork.dimensions) || dimensions || "Original size",
-    widthCm: positiveNumber(artwork.widthCm) || undefined,
-    heightCm: positiveNumber(artwork.heightCm) || undefined,
+    label:
+      formatDualUnitLabel(widthCm, heightCm)
+      || cleanString(artwork.dimensions)
+      || dimensions
+      || "Original size",
+    widthCm: widthCm || undefined,
+    heightCm: heightCm || undefined,
     priceCny,
   }]
+}
+
+function expandMadeToOrderSizes(
+  existing: StorefrontSize[],
+  artwork: StorefrontArtworkInput,
+): StorefrontSize[] {
+  const base = existing[0]
+  const basePrice =
+    base?.priceCny
+    || positiveNumber(artwork.price)
+    || 1800
+  const baseArea =
+    (base?.widthCm || 80) * (base?.heightCm || 100)
+
+  const ladder = DEFAULT_MTO_SIZE_LADDER.map((entry) => {
+    const widthCm = Math.round(entry.widthIn * 2.54)
+    const heightCm = Math.round(entry.heightIn * 2.54)
+    const area = widthCm * heightCm
+    const priceCny = Math.max(200, Math.round((basePrice * (area / baseArea)) / 50) * 50)
+    const label = formatDualUnitLabel(widthCm, heightCm) || `${heightCm} x ${widthCm} cm`
+    return {
+      id: `${entry.heightIn}x${entry.widthIn}`,
+      label,
+      widthCm,
+      heightCm,
+      priceCny,
+    }
+  })
+
+  if (existing.length === 0) return ladder
+
+  const seen = new Set(existing.map((size) => size.id))
+  const merged = [...existing]
+  for (const size of ladder) {
+    if (seen.has(size.id)) continue
+    seen.add(size.id)
+    merged.push(size)
+  }
+  return merged
+}
+
+function formatDualUnitLabel(widthCm?: number | null, heightCm?: number | null) {
+  if (!widthCm || !heightCm) return ""
+  const widthIn = Math.round((widthCm / 2.54) * 10) / 10
+  const heightIn = Math.round((heightCm / 2.54) * 10) / 10
+  const fmtIn = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
+  return `${fmtIn(heightIn)}"H x ${fmtIn(widthIn)}"W / ${Math.round(heightCm)}H x ${Math.round(widthCm)}W CM`
+}
+
+function preferRoomImages(images: StorefrontImage[]) {
+  if (images.length < 2) return images
+  const room = images.filter((image) => image.kind === "room")
+  if (room.length === 0) return images
+  const rest = images.filter((image) => image.kind !== "room")
+  return [...room, ...rest]
 }
 
 function buildFinishes(value: unknown, productionModel: StorefrontProductionModel) {
@@ -197,13 +288,17 @@ function buildFinishes(value: unknown, productionModel: StorefrontProductionMode
     }]
   })
 
-  if (finishes.length > 0) return finishes
+  if (finishes.length >= 3) return finishes
+
+  if (productionModel !== "hand_painted_to_order" && finishes.length > 0) {
+    return finishes
+  }
 
   if (productionModel !== "hand_painted_to_order") {
     return [{ id: "as-listed", label: "As listed", priceDeltaCny: 0 }]
   }
 
-  return [
+  const defaults = [
     { id: "rolled", label: "Rolled Canvas", priceDeltaCny: 0 },
     { id: "frameless", label: "Frameless", priceDeltaCny: 0 },
     { id: "black-frame", label: "Stretch+Black Frame", priceDeltaCny: 0 },
@@ -211,6 +306,14 @@ function buildFinishes(value: unknown, productionModel: StorefrontProductionMode
     { id: "white-frame", label: "Stretch+White Frame", priceDeltaCny: 0 },
     { id: "wood-frame", label: "Stretch+Wood Frame", priceDeltaCny: 0 },
     { id: "gold-frame", label: "Stretch + Gold Frame", priceDeltaCny: 0 },
+  ]
+
+  if (finishes.length === 0) return defaults
+
+  const seen = new Set(finishes.map((finish) => finish.id))
+  return [
+    ...finishes,
+    ...defaults.filter((finish) => !seen.has(finish.id)),
   ]
 }
 

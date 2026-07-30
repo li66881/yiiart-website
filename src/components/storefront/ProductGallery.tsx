@@ -171,7 +171,7 @@ export default function ProductGallery({ media, alt }: Props) {
                 else setLightboxOpen(true)
               }}
             >
-              View in room
+              View VR Effect
             </button>
           </div>
         </div>
