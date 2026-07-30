@@ -153,7 +153,7 @@ export function buildStorefrontProduct(
         ? "Production timing is confirmed before checkout."
         : "Availability and dispatch timing are confirmed before checkout.",
     ),
-    images: preferRoomImages(
+    images: preferPrimaryProductImages(
       imageInputs
         .filter((image) => Boolean(cleanString(image.src)))
         .map((image, index) => ({
@@ -169,12 +169,11 @@ export function buildStorefrontProduct(
 
 function buildSizes(
   artwork: StorefrontArtworkInput,
-  productionModel: StorefrontProductionModel,
+  _productionModel: StorefrontProductionModel,
   dimensions: string,
 ) {
-  if (productionModel === "hand_painted_to_order") {
-    const sizes = Array.isArray(artwork.standardSizes) ? artwork.standardSizes : []
-    const mapped = sizes.flatMap((value, index): StorefrontSize[] => {
+  const fromCms = (Array.isArray(artwork.standardSizes) ? artwork.standardSizes : []).flatMap(
+    (value, index): StorefrontSize[] => {
       if (!value || typeof value !== "object") return []
       const size = value as Record<string, unknown>
       const priceCny = positiveNumber(size.priceCny)
@@ -193,29 +192,32 @@ function buildSizes(
         heightCm: heightCm || undefined,
         priceCny,
       }]
-    })
+    },
+  )
 
-    if (mapped.length >= 4) return mapped
-    return expandMadeToOrderSizes(mapped, artwork)
-  }
+  if (fromCms.length >= 4) return fromCms
 
-  const priceCny = positiveNumber(artwork.price)
-  if (!priceCny) return []
+  const seed = fromCms.length > 0
+    ? fromCms
+    : (() => {
+      const priceCny = positiveNumber(artwork.price)
+      if (!priceCny) return [] as StorefrontSize[]
+      const widthCm = positiveNumber(artwork.widthCm) || readDimension(dimensions, 0) || undefined
+      const heightCm = positiveNumber(artwork.heightCm) || readDimension(dimensions, 1) || undefined
+      return [{
+        id: "original",
+        label:
+          formatDualUnitLabel(widthCm, heightCm)
+          || cleanString(artwork.dimensions)
+          || dimensions
+          || "Original size",
+        widthCm,
+        heightCm,
+        priceCny,
+      }]
+    })()
 
-  const widthCm = positiveNumber(artwork.widthCm)
-  const heightCm = positiveNumber(artwork.heightCm)
-
-  return [{
-    id: "original",
-    label:
-      formatDualUnitLabel(widthCm, heightCm)
-      || cleanString(artwork.dimensions)
-      || dimensions
-      || "Original size",
-    widthCm: widthCm || undefined,
-    heightCm: heightCm || undefined,
-    priceCny,
-  }]
+  return expandMadeToOrderSizes(seed, artwork)
 }
 
 function expandMadeToOrderSizes(
@@ -265,15 +267,20 @@ function formatDualUnitLabel(widthCm?: number | null, heightCm?: number | null) 
   return `${fmtIn(heightIn)}"H x ${fmtIn(widthIn)}"W / ${Math.round(heightCm)}H x ${Math.round(widthCm)}W CM`
 }
 
-function preferRoomImages(images: StorefrontImage[]) {
+/** Prefer white-bg product shots; if none, fall back to room/scene images. */
+function preferPrimaryProductImages(images: StorefrontImage[]) {
   if (images.length < 2) return images
+  const whiteBg = images.filter((image) => image.kind === "artwork" || image.kind === "edge")
   const room = images.filter((image) => image.kind === "room")
-  if (room.length === 0) return images
-  const rest = images.filter((image) => image.kind !== "room")
-  return [...room, ...rest]
+  const rest = images.filter(
+    (image) => image.kind !== "artwork" && image.kind !== "edge" && image.kind !== "room",
+  )
+  if (whiteBg.length > 0) return [...whiteBg, ...room, ...rest]
+  if (room.length > 0) return [...room, ...rest]
+  return images
 }
 
-function buildFinishes(value: unknown, productionModel: StorefrontProductionModel) {
+function buildFinishes(value: unknown, _productionModel: StorefrontProductionModel) {
   const finishes = (Array.isArray(value) ? value : []).flatMap((item, index): StorefrontFinish[] => {
     if (!item || typeof item !== "object") return []
     const finish = item as Record<string, unknown>
@@ -287,16 +294,6 @@ function buildFinishes(value: unknown, productionModel: StorefrontProductionMode
       priceDeltaCny,
     }]
   })
-
-  if (finishes.length >= 3) return finishes
-
-  if (productionModel !== "hand_painted_to_order" && finishes.length > 0) {
-    return finishes
-  }
-
-  if (productionModel !== "hand_painted_to_order") {
-    return [{ id: "as-listed", label: "As listed", priceDeltaCny: 0 }]
-  }
 
   const defaults = [
     { id: "rolled", label: "Rolled Canvas", priceDeltaCny: 0 },
@@ -359,7 +356,15 @@ function normalizeOrientation(
 }
 
 function normalizeImageKind(value: unknown, index: number): StorefrontImage["kind"] {
-  if (value === "room" || value === "detail" || value === "edge" || value === "scale") return value
+  if (
+    value === "artwork"
+    || value === "room"
+    || value === "detail"
+    || value === "edge"
+    || value === "scale"
+  ) {
+    return value
+  }
   return index === 0 ? "artwork" : "detail"
 }
 

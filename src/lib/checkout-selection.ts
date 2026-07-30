@@ -1,3 +1,5 @@
+import { buildStorefrontProduct } from "@/lib/storefront/product"
+
 export class CheckoutValidationError extends Error {}
 
 export type CheckoutSelectionRequest = {
@@ -11,10 +13,14 @@ export type CheckoutSelectionArtwork = {
   _id: string
   price?: number | null
   dimensions?: string | null
+  widthCm?: number | string | null
+  heightCm?: number | string | null
   productionModel?: "hand_painted_to_order" | "original" | null
   standardSizes?: Array<{
     _key?: string
     label?: string
+    widthCm?: number | null
+    heightCm?: number | null
     priceCny?: number | null
   }> | null
   frameOptions?: Array<{
@@ -41,46 +47,37 @@ export function resolveCheckoutSelection(
   const productionModel = artwork.productionModel === "hand_painted_to_order"
     ? "hand_painted_to_order"
     : "original"
-  const quantity = normalizeQuantity(request.quantity, productionModel)
+  const quantity = normalizeQuantity(request.quantity)
+  const product = buildStorefrontProduct(
+    {
+      _id: artwork._id,
+      price: artwork.price,
+      dimensions: artwork.dimensions,
+      widthCm: artwork.widthCm,
+      heightCm: artwork.heightCm,
+      productionModel: artwork.productionModel,
+      standardSizes: artwork.standardSizes,
+      frameOptions: artwork.frameOptions,
+    },
+    [],
+  )
 
-  if (productionModel === "original") {
-    const priceCny = positiveNumber(artwork.price)
-    if (!priceCny) {
-      throw new CheckoutValidationError("One or more artworks do not have a valid price.")
-    }
-
-    return {
-      productionModel,
-      quantity,
-      sizeId: "original",
-      sizeLabel: text(artwork.dimensions) || "Original size",
-      finishId: "as-listed",
-      finishLabel: "As listed",
-      priceCny,
-    }
+  if (product.sizes.length === 0) {
+    throw new CheckoutValidationError("One or more artworks do not have a valid price.")
   }
 
-  const sizes = (artwork.standardSizes || []).filter((size) => (
-    Boolean(text(size?._key))
-    && Boolean(text(size?.label))
-    && Boolean(positiveNumber(size?.priceCny))
-  ))
-  const requestedSizeId = text(request.sizeId) || text(sizes[0]?._key)
-  const size = sizes.find((option) => text(option._key) === requestedSizeId)
+  const requestedSizeId = text(request.sizeId)
+  const size = requestedSizeId
+    ? product.sizes.find((option) => option.id === requestedSizeId)
+    : product.sizes[0]
   if (!size) {
     throw new CheckoutValidationError("The selected artwork size is no longer available.")
   }
 
-  const configuredFinishes = (artwork.frameOptions || []).filter((finish) => (
-    Boolean(text(finish?._key))
-    && Boolean(text(finish?.label))
-    && nonNegativeNumber(finish?.priceDeltaCny) !== null
-  ))
-  const finishes = configuredFinishes.length > 0
-    ? configuredFinishes
-    : [{ _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 }]
-  const requestedFinishId = text(request.finishId) || text(finishes[0]?._key)
-  const finish = finishes.find((option) => text(option._key) === requestedFinishId)
+  const requestedFinishId = text(request.finishId)
+  const finish = requestedFinishId
+    ? product.finishes.find((option) => option.id === requestedFinishId)
+    : product.finishes[0]
   if (!finish) {
     throw new CheckoutValidationError("The selected artwork finish is no longer available.")
   }
@@ -88,38 +85,25 @@ export function resolveCheckoutSelection(
   return {
     productionModel,
     quantity,
-    sizeId: text(size._key),
-    sizeLabel: text(size.label),
-    finishId: text(finish._key),
-    finishLabel: text(finish.label),
-    priceCny: positiveNumber(size.priceCny)! + nonNegativeNumber(finish.priceDeltaCny)!,
+    sizeId: size.id,
+    sizeLabel: size.label,
+    finishId: finish.id,
+    finishLabel: finish.label,
+    priceCny: size.priceCny + finish.priceDeltaCny,
   }
 }
 
-function normalizeQuantity(value: unknown, productionModel: CheckoutSelection["productionModel"]) {
+function normalizeQuantity(value: unknown) {
   const quantity = Number(value)
   if (!Number.isInteger(quantity) || quantity < 1) {
     throw new CheckoutValidationError("Invalid cart item quantity.")
   }
-  if (productionModel === "original" && quantity !== 1) {
-    throw new CheckoutValidationError("Original artwork quantity must be one.")
-  }
-  if (productionModel === "hand_painted_to_order" && quantity > 99) {
-    throw new CheckoutValidationError("Made-to-order quantity cannot exceed 99.")
+  if (quantity > 99) {
+    throw new CheckoutValidationError("Quantity cannot exceed 99.")
   }
   return quantity
 }
 
 function text(value: unknown) {
   return typeof value === "string" ? value.trim() : ""
-}
-
-function positiveNumber(value: unknown) {
-  const number = Number(value)
-  return Number.isFinite(number) && number > 0 ? number : null
-}
-
-function nonNegativeNumber(value: unknown) {
-  const number = Number(value)
-  return Number.isFinite(number) && number >= 0 ? number : null
 }

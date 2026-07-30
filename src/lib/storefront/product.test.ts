@@ -20,11 +20,41 @@ test("defaults legacy artwork to the artist collection and original model", () =
   assert.equal(product.collectionType, "artist_collection")
   assert.equal(product.productionModel, "original")
   assert.equal(product.rightsStatus, "needs_review")
-  assert.equal(product.sizes.length, 1)
+  assert.ok(product.sizes.length >= 4)
   assert.equal(product.sizes[0].priceCny, 7200)
-  assert.match(product.sizes[0].label, /80|100|31\.5|39\.4/)
+  assert.equal(product.sizes[0].id, "original")
+  assert.ok(product.finishes.length >= 3)
   assert.equal(product.sku, "QUIET-FIELD")
   assert.equal(product.images[0].src, "https://cdn.example/quiet-field.jpg")
+})
+
+test("prefers white-bg artwork images over room scenes when both exist", () => {
+  const product = buildStorefrontProduct({
+    _id: "img-1",
+    title: { en: "Field" },
+    slug: { current: "field" },
+    price: 2000,
+  }, [
+    { src: "https://cdn.example/room.jpg", kind: "room", width: 1400, height: 1000 },
+    { src: "https://cdn.example/white.jpg", kind: "artwork", width: 1400, height: 1750 },
+  ])
+
+  assert.equal(product.images[0].src, "https://cdn.example/white.jpg")
+  assert.equal(product.images[1].src, "https://cdn.example/room.jpg")
+})
+
+test("falls back to room scene when no white-bg artwork image exists", () => {
+  const product = buildStorefrontProduct({
+    _id: "img-2",
+    title: { en: "Field Room" },
+    slug: { current: "field-room" },
+    price: 2000,
+  }, [
+    { src: "https://cdn.example/detail.jpg", kind: "detail", width: 1400, height: 1000 },
+    { src: "https://cdn.example/room.jpg", kind: "room", width: 1400, height: 1000 },
+  ])
+
+  assert.equal(product.images[0].src, "https://cdn.example/room.jpg")
 })
 
 test("maps made-to-order sizes and finishes without accepting invalid prices", () => {

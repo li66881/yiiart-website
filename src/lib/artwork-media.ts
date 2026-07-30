@@ -37,16 +37,19 @@ type ProductMediaInput = {
 }
 
 const roleOrder: Record<ProductMediaRole, number> = {
-  living_room: 5,
-  bedroom: 8,
-  front: 20,
-  original: 30,
+  front: 10,
+  original: 20,
   detail: 40,
   process: 50,
-  angle: 60,
-  scale: 70,
-  other: 90,
+  living_room: 60,
+  angle: 70,
+  bedroom: 80,
+  scale: 90,
+  other: 100,
 }
+
+const WHITE_BG_ROLES: ProductMediaRole[] = ["front", "original"]
+const ROOM_ROLES: ProductMediaRole[] = ["living_room", "bedroom"]
 
 export const productMediaRoleLabels: Record<ProductMediaRole, string> = {
   front: "Front view",
@@ -63,33 +66,35 @@ export const productMediaRoleLabels: Record<ProductMediaRole, string> = {
 export function getApprovedProductMedia(artwork: { productMedia?: unknown } | null | undefined) {
   const inputs = Array.isArray(artwork?.productMedia) ? artwork.productMedia : []
 
-  return inputs
+  const media = inputs
     .flatMap((value, index): Array<ProductMediaItem & { sortOrder: number }> => {
       if (!value || typeof value !== "object") return []
-      const media = value as ProductMediaInput
-      if (media.approvedForStorefront !== true) return []
+      const item = value as ProductMediaInput
+      if (item.approvedForStorefront !== true) return []
 
-      const url = cleanMediaUrl(media.url)
+      const url = cleanMediaUrl(item.url)
       if (!url) return []
 
-      const type = normalizeMediaType(media.mediaType, media.contentType)
-      const role = normalizeMediaRole(media.role, type)
-      const explicitOrder = positiveNumber(media.sortOrder)
+      const type = normalizeMediaType(item.mediaType, item.contentType)
+      const role = normalizeMediaRole(item.role, type)
+      const explicitOrder = positiveNumber(item.sortOrder)
 
       return [{
-        id: cleanString(media._key) || `${role}-${index + 1}`,
+        id: cleanString(item._key) || `${role}-${index + 1}`,
         type,
         role,
         url,
-        posterUrl: cleanMediaUrl(media.posterUrl) || undefined,
-        alt: cleanString(media.alt) || productMediaRoleLabels[role],
-        width: positiveNumber(media.width) || undefined,
-        height: positiveNumber(media.height) || undefined,
+        posterUrl: cleanMediaUrl(item.posterUrl) || undefined,
+        alt: cleanString(item.alt) || productMediaRoleLabels[role],
+        width: positiveNumber(item.width) || undefined,
+        height: positiveNumber(item.height) || undefined,
         sortOrder: explicitOrder || roleOrder[role] + index / 100,
       }]
     })
     .sort((a, b) => a.sortOrder - b.sortOrder)
-    .map(({ sortOrder: _sortOrder, ...media }) => media)
+    .map(({ sortOrder: _sortOrder, ...item }) => item)
+
+  return preferWhiteBackgroundThenRoom(media)
 }
 
 export function buildProductGalleryMedia(
@@ -100,19 +105,39 @@ export function buildProductGalleryMedia(
   const structuredMedia = getApprovedProductMedia(artwork)
   if (structuredMedia.length > 0) return structuredMedia.slice(0, 10)
 
-  return fallbackImages.slice(0, 10).map((url, index): ProductMediaItem => ({
-    id: `legacy-image-${index + 1}`,
-    type: "image",
-    role: index === 0 ? "front" : index === 1 ? "original" : "detail",
-    url,
-    alt: index === 0 ? fallbackAlt : `${fallbackAlt}, view ${index + 1}`,
-  }))
+  return preferWhiteBackgroundThenRoom(
+    fallbackImages.slice(0, 10).map((url, index): ProductMediaItem => ({
+      id: `legacy-image-${index + 1}`,
+      type: "image",
+      // Legacy: first image treated as white-bg front; later images stay detail unless only one exists.
+      role: index === 0 ? "front" : "detail",
+      url,
+      alt: index === 0 ? fallbackAlt : `${fallbackAlt}, view ${index + 1}`,
+    })),
+  )
 }
 
 export function getApprovedProductImageUrls(artwork: { productMedia?: unknown } | null | undefined) {
   return getApprovedProductMedia(artwork)
     .filter((media) => media.type === "image")
     .map((media) => media.url)
+}
+
+/** White-bg (front/original) first; if none, room/scene first. */
+export function preferWhiteBackgroundThenRoom(media: ProductMediaItem[]) {
+  if (media.length < 2) return media
+
+  const whiteBg = media.filter((item) => item.type === "image" && WHITE_BG_ROLES.includes(item.role))
+  const room = media.filter((item) => item.type === "image" && ROOM_ROLES.includes(item.role))
+  const rest = media.filter(
+    (item) =>
+      !(item.type === "image" && WHITE_BG_ROLES.includes(item.role))
+      && !(item.type === "image" && ROOM_ROLES.includes(item.role)),
+  )
+
+  if (whiteBg.length > 0) return [...whiteBg, ...room, ...rest]
+  if (room.length > 0) return [...room, ...rest]
+  return media
 }
 
 function normalizeMediaType(value?: string, contentType?: string): ProductMediaType {
