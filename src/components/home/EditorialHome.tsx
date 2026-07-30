@@ -31,6 +31,17 @@ const orientationPaths = [
   { title: "Large scale", href: "/collections/large-canvas-art", hint: "Statement canvases" },
 ]
 
+const popularPaths = [
+  { title: "Abstract", href: "/artworks?category=Abstract", match: ["abstract"] },
+  { title: "Texture", href: "/artworks?category=Texture", match: ["texture", "plaster"] },
+  { title: "Landscape", href: "/artworks?category=Landscape", match: ["landscape"] },
+  { title: "Minimalist", href: "/artworks?category=Minimalist", match: ["minimal"] },
+  { title: "Living room", href: "/collections/abstract-art-for-living-room", match: [] },
+  { title: "Bedroom", href: "/collections/bedroom-wall-art", match: [] },
+  { title: "Large canvas", href: "/collections/large-canvas-art", match: [] },
+  { title: "Custom art", href: "/custom-painting", match: [] },
+]
+
 const styleChips = [
   { label: "Abstract", href: "/artworks?category=Abstract" },
   { label: "Texture", href: "/artworks?category=Texture" },
@@ -204,6 +215,35 @@ export default function EditorialHome({ artworks, artists = [] }: EditorialHomeP
         </div>
       </section>
 
+      <section className={`${styles.section} ${styles.featured}`}>
+        <div className={styles.shell}>
+          <SectionHeading eyebrow="Shop by popular" title="Collections collectors browse most." />
+          <div className={styles.popularGrid}>
+            {popularPaths.map((item, index) => {
+              const matched = withImages.filter((artwork) =>
+                item.match.length === 0 ? true : matchesCategory(artwork, item.match),
+              )
+              const previewArtwork = matched[index % Math.max(matched.length, 1)] || withImages[index]
+              const preview = previewArtwork
+                ? getArtworkImageUrl(previewArtwork, { width: 800, height: 1000 })
+                : resolveVisualImage(roomImages.slice(index))
+              return (
+                <Link key={item.href + item.title} href={item.href} className={styles.popularCard}>
+                  {preview ? (
+                    <Image src={preview} alt={`${item.title} collection`} fill sizes="25vw" />
+                  ) : null}
+                  <span className={styles.popularCardShade} />
+                  <span className={styles.popularCardCopy}>
+                    <strong>{item.title}</strong>
+                    <span>Shop collection</span>
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
       <section className={`${styles.section} ${styles.rooms}`}>
         <div className={styles.shell}>
           <SectionHeading eyebrow="Shop by room" title="Art for every wall" />
@@ -216,7 +256,7 @@ export default function EditorialHome({ artworks, artists = [] }: EditorialHomeP
                       src={resolveVisualImage(roomImages.slice(index)) || ""}
                       alt={`${room.title} wall art inspiration`}
                       fill
-                      sizes="120px"
+                      sizes="140px"
                     />
                   ) : null}
                 </span>

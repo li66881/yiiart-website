@@ -1,6 +1,6 @@
 .home { background: var(--yiiart-paper); color: var(--yiiart-ink); }
 .shell { width: min(100%, var(--yiiart-content)); margin: 0 auto; padding-inline: var(--yiiart-gutter); }
-.section { padding-block: clamp(48px, 6vw, 88px); }
+.section { padding-block: clamp(36px, 5vw, 72px); }
 .featured, .faq { background: #f7f5f0; }
 .eyebrow, .darkEyebrow { margin: 0 0 10px; color: #8a857c; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
 .darkEyebrow { color: #d7aa8f; }
@@ -23,28 +23,38 @@
 .priceDisclosure { margin: 28px 0 0; color: var(--yiiart-muted); font-size: .75rem; text-align: center; }
 .emptyState { grid-column: 1 / -1; padding: 64px 24px; border-block: 1px solid var(--yiiart-line); color: var(--yiiart-muted); text-align: center; }
 .rooms { background: #f7f5f0; }
-.roomCircleRow { display: flex; flex-wrap: wrap; gap: 1.25rem 1.5rem; }
-.roomCircle { display: flex; width: 104px; flex-direction: column; align-items: center; gap: 0.55rem; text-align: center; color: inherit; text-decoration: none; }
-.roomCircleMedia { position: relative; display: block; width: 104px; height: 104px; overflow: hidden; border-radius: 999px; border: 1px solid var(--yiiart-line); background: #ebe6dc; }
-.roomCircleMedia img { object-fit: cover; }
-.roomCircleLabel { display: grid; gap: 2px; font-size: 0.8rem; line-height: 1.3; }
-.roomCircleLabel em { color: var(--yiiart-muted); font-style: normal; font-size: 0.72rem; }
+.roomCircleRow { display: flex; flex-wrap: nowrap; gap: 1.1rem 1.35rem; overflow-x: auto; padding-bottom: 4px; }
+.roomCircle { display: flex; width: 124px; flex: 0 0 auto; flex-direction: column; align-items: center; gap: 0.55rem; text-align: center; color: inherit; text-decoration: none; }
+.roomCircleMedia { position: relative; display: block; width: 124px; height: 124px; overflow: hidden; border-radius: 999px; border: 1px solid var(--yiiart-line); background: #ebe6dc; }
+.roomCircleMedia img { object-fit: cover; transition: transform .35s ease; }
+.roomCircle:hover .roomCircleMedia img { transform: scale(1.05); }
+.roomCircleLabel { display: grid; gap: 2px; font-size: 0.84rem; font-weight: 550; line-height: 1.3; }
+.roomCircleLabel em { color: var(--yiiart-muted); font-style: normal; font-size: 0.74rem; font-weight: 500; }
 
-.bestSellerTabs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 22px; }
-.bestSellerTab { min-height: 36px; border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 6px 2px; color: var(--yiiart-muted); cursor: pointer; font-size: 0.88rem; }
-.bestSellerTabActive { border-bottom-color: var(--yiiart-ink); color: var(--yiiart-ink); font-weight: 600; }
+.popularGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+.popularCard { position: relative; display: block; overflow: hidden; aspect-ratio: 4 / 5; background: #ddd6cb; color: #fff; text-decoration: none; }
+.popularCard img { object-fit: cover; transition: transform .4s ease; }
+.popularCard:hover img { transform: scale(1.04); }
+.popularCardShade { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 42%, rgba(20,18,14,.72) 100%); }
+.popularCardCopy { position: absolute; left: 0; right: 0; bottom: 0; display: grid; gap: 4px; padding: 16px; }
+.popularCardCopy strong { font-size: 1.05rem; font-weight: 600; letter-spacing: -0.02em; }
+.popularCardCopy span { font-size: 0.78rem; opacity: .9; }
+
+.bestSellerTabs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 22px; border-bottom: 1px solid var(--yiiart-line); }
+.bestSellerTab { min-height: 40px; border: 0; border-bottom: 2px solid transparent; background: transparent; margin-bottom: -1px; padding: 8px 2px; color: var(--yiiart-muted); cursor: pointer; font-size: 0.9rem; }
+.bestSellerTabActive { border-bottom-color: var(--yiiart-ink); color: var(--yiiart-ink); font-weight: 650; }
 .bestSellerViewAll { margin-left: auto; color: var(--yiiart-forest); font-size: 0.85rem; font-weight: 650; text-decoration: underline; text-underline-offset: 4px; }
-.productRailScroll { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(220px, 260px); gap: 18px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+.productRailScroll { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(240px, 280px); gap: 20px; overflow-x: auto; padding-bottom: 10px; scroll-snap-type: x mandatory; }
 .productRailCard { scroll-snap-align: start; min-width: 0; }
 
 .orientation { background: var(--yiiart-paper); }
-.orientationGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-.orientationCard { display: grid; gap: 10px; color: inherit; text-decoration: none; }
-.orientationMedia { position: relative; display: block; aspect-ratio: 4 / 5; overflow: hidden; background: #ebe6dc; }
+.orientationGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.orientationCard { display: grid; gap: 12px; color: inherit; text-decoration: none; }
+.orientationMedia { position: relative; display: block; aspect-ratio: 1 / 1; overflow: hidden; border-radius: 4px; background: #ebe6dc; }
 .orientationMedia img { object-fit: cover; transition: transform .35s ease; }
-.orientationCard:hover .orientationMedia img { transform: scale(1.03); }
-.orientationCopy { display: grid; gap: 4px; }
-.orientationCopy strong { font-size: 0.95rem; font-weight: 600; }
+.orientationCard:hover .orientationMedia img { transform: scale(1.04); }
+.orientationCopy { display: grid; gap: 4px; text-align: center; }
+.orientationCopy strong { font-size: 1rem; font-weight: 600; }
 .orientationCopy span { color: var(--yiiart-muted); font-size: 0.8rem; }
 
 .featuredArtists { background: #f7f5f0; }
@@ -91,9 +101,9 @@
 .faqList p { max-width: 620px; margin: 12px 24px 2px; color: var(--yiiart-muted); line-height: 1.6; }
 @media (max-width: 920px) { .artworkGrid, .roomGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .roomCard:last-child { grid-column: 1 / -1; } .collectionLayout { grid-template-columns: 1fr; } .stickyCopy { position: static; } .customLayout { grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr); } }
 @media (max-width: 920px) {
-  .orientationGrid, .featuredArtistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .orientationGrid, .featuredArtistGrid, .popularGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
-@media (max-width: 720px) { .sectionHeading { align-items: flex-start; flex-direction: column; } .artworkGrid, .roomGrid, .trustGrid, .trustGridFour, .productCardGrid, .realHomesGrid { grid-template-columns: 1fr 1fr; } .roomCard:last-child { grid-column: auto; } .processLayout, .faqLayout, .customLayout { grid-template-columns: 1fr; } .processList { grid-template-columns: 1fr; } .processList li, .processList li:nth-child(even) { min-height: 0; padding: 24px 0 28px; border-left: 0; } .artistGrid, .productCardGridCompact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; } .sectionHeading h2, .stickyCopy h2, .customCopy h2, .faqLayout h2 { max-width: 10ch; } .styleChipRow { gap: 8px; } .advisoryHome { flex-direction: column; align-items: flex-start; } .bestSellerViewAll { width: 100%; margin-left: 0; } .productRailScroll { grid-auto-columns: minmax(180px, 72vw); } .orientationGrid, .featuredArtistGrid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 720px) { .sectionHeading { align-items: flex-start; flex-direction: column; } .artworkGrid, .roomGrid, .trustGrid, .trustGridFour, .productCardGrid, .realHomesGrid { grid-template-columns: 1fr 1fr; } .roomCard:last-child { grid-column: auto; } .processLayout, .faqLayout, .customLayout { grid-template-columns: 1fr; } .processList { grid-template-columns: 1fr; } .processList li, .processList li:nth-child(even) { min-height: 0; padding: 24px 0 28px; border-left: 0; } .artistGrid, .productCardGridCompact { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 28px 12px; } .sectionHeading h2, .stickyCopy h2, .customCopy h2, .faqLayout h2 { max-width: 10ch; } .styleChipRow { gap: 8px; } .advisoryHome { flex-direction: column; align-items: flex-start; } .bestSellerViewAll { width: 100%; margin-left: 0; } .productRailScroll { grid-auto-columns: minmax(180px, 72vw); } .orientationGrid, .featuredArtistGrid, .popularGrid { grid-template-columns: 1fr 1fr; } }
 
 .productCardGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(20px, 2.5vw, 32px); }
 .productCardGridCompact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }

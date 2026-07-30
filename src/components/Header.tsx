@@ -12,7 +12,7 @@ import AnnouncementBar from "@/components/AnnouncementBar"
 import { siteAssetUrl } from "@/lib/assets"
 import { getStudioSaleEndsAt } from "@/lib/storefront/sale"
 
-const primaryNav = [
+const primaryNav: Array<{ href: string; label: string; accent?: boolean }> = [
   { href: "/artworks", label: "Best Sellers" },
   { href: "/artworks", label: "New In" },
   { href: "/custom-painting", label: "Custom Art" },
@@ -23,7 +23,7 @@ const primaryNav = [
   { href: "/about", label: "Our Story" },
 ]
 
-const styleNav: Array<{ href: string; label: string }> = [
+const styleNav: Array<{ href: string; label: string; accent?: boolean }> = [
   { href: "/artworks", label: "All Art" },
   { href: "/artworks?category=Texture", label: "Plaster & Texture" },
   { href: "/artworks?category=Minimalist", label: "Minimalist" },
@@ -32,6 +32,7 @@ const styleNav: Array<{ href: string; label: string }> = [
   { href: "/collections/bedroom-wall-art", label: "Bedroom" },
   { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
   { href: "/artworks?category=Landscape", label: "Landscape" },
+  { href: "/artworks?sort=newest", label: "Sale", accent: true },
 ]
 
 const trustMessages = [
@@ -107,8 +108,8 @@ export default function Header() {
       <AnnouncementBar saleEndsAt={getStudioSaleEndsAt()} />
 
       <div className="hidden border-b border-stone-200/80 bg-white md:block">
-        <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-1.5 sm:px-6 lg:px-10">
-          <div className="flex items-center gap-3 text-stone-500">
+        <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-1 sm:px-6 lg:px-10">
+          <div className="flex items-center gap-2.5 text-stone-500">
             {socialLinks.map((item) => (
               <a
                 key={item.label}
@@ -116,7 +117,7 @@ export default function Header() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={item.label}
-                className="inline-flex h-6 w-6 items-center justify-center hover:text-black"
+                className="inline-flex h-5 w-5 items-center justify-center hover:text-black"
               >
                 <SocialIcon name={item.icon} />
               </a>
@@ -149,11 +150,11 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="mx-auto grid min-h-[56px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto grid min-h-[48px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:px-10">
         <div className="flex items-center gap-2">
           <button
             type="button"
-            className="flex h-9 w-9 flex-col items-center justify-center gap-1 lg:hidden"
+            className="flex h-8 w-8 flex-col items-center justify-center gap-1 lg:hidden"
             aria-label={mobileMenuOpen ? t("common.closeMenu") : t("common.openMenu")}
             aria-expanded={mobileMenuOpen}
             onClick={() => setMobileMenuOpen((open) => !open)}
@@ -165,7 +166,7 @@ export default function Header() {
         </div>
 
         <Link href="/" className="justify-self-center" onClick={closeMobileMenu} aria-label="YiiArt home">
-          <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-7 w-auto sm:h-8" />
+          <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-6 w-auto sm:h-7" />
         </Link>
 
         <div className="flex items-center justify-end gap-1 sm:gap-2">
@@ -272,7 +273,7 @@ export default function Header() {
         className="hidden border-t border-stone-200 bg-white lg:block"
         aria-label="Primary navigation"
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-7 px-4 py-2 text-sm text-stone-700">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-6 px-4 py-1.5 text-[13px] text-stone-700">
           {primaryNav.map((item) => (
             <Link key={`${item.href}-${item.label}`} href={item.href} className="hover:text-black">
               {item.label}
@@ -285,24 +286,20 @@ export default function Header() {
         className="hidden overflow-x-auto border-t border-stone-200 bg-[#f7f5f0] lg:block"
         aria-label="Style navigation"
       >
-        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-5 px-4 py-1.5 text-xs text-stone-600">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-5 px-4 py-1 text-xs text-stone-600">
           {styleNav.map((item) => (
             <Link
               key={`${item.href}-${item.label}`}
               href={item.href}
-              className="whitespace-nowrap hover:text-black"
+              className={`whitespace-nowrap hover:text-black ${
+                item.accent ? "font-semibold text-[#c62828] hover:text-[#a01f1f]" : ""
+              }`}
             >
               {item.label}
             </Link>
           ))}
         </div>
       </nav>
-
-      <div className="hidden border-t border-stone-200/70 bg-white py-1.5 text-center lg:block">
-        <Link href="/artworks?sort=newest" className="text-xs font-semibold tracking-wide text-[#c62828] hover:underline">
-          Sale
-        </Link>
-      </div>
 
       {mobileMenuOpen && (
         <div className="border-t border-stone-200 bg-white px-4 py-4 shadow-xl lg:hidden">
@@ -315,18 +312,13 @@ export default function Header() {
                 key={`m-${item.href}-${item.label}`}
                 href={item.href}
                 onClick={closeMobileMenu}
-                className="px-3 py-2 text-stone-800 hover:bg-stone-50"
+                className={`px-3 py-2 hover:bg-stone-50 ${
+                  item.accent ? "font-semibold text-[#c62828]" : "text-stone-800"
+                }`}
               >
                 {item.label}
               </Link>
             ))}
-            <Link
-              href="/artworks?sort=newest"
-              onClick={closeMobileMenu}
-              className="px-3 py-2 font-semibold text-[#c62828] hover:bg-stone-50"
-            >
-              Sale
-            </Link>
             <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 text-stone-800 hover:bg-stone-50">
               {t("nav.contact")}
             </Link>

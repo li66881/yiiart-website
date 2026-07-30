@@ -55,7 +55,7 @@ export default function AnnouncementBar({
   const totalHours = remaining ? remaining.hours + remaining.days * 24 : 0
 
   return (
-    <div className="relative border-b border-stone-200 bg-[#f3f2ed] px-4 py-2 text-[#1d1c18]">
+    <div className="relative border-b border-stone-200 bg-[#f3f2ed] px-4 py-1.5 text-[#1d1c18]">
       <div className="mx-auto flex max-w-5xl items-center justify-center gap-3 pr-8 text-center text-[12px] leading-snug sm:text-[13px]">
         <p className="tracking-[0.04em]">{message}</p>
         {showCountdown && remaining ? (
