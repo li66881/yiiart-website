@@ -1,27 +1,26 @@
 "use client"
 
 import { createContext, useContext, useState, ReactNode, useEffect } from "react"
+import {
+  addCartItem,
+  normalizeStoredCart,
+  removeCartItem,
+  updateCartQuantity,
+  type CartItem,
+  type CartItemInput,
+} from "@/lib/cart/cart"
 
-export interface CartItem {
-  id: string
-  title: string
-  titleZh?: string
-  artist: string
-  artistId?: string
-  price: number
-  image: string
-  quantity: number
-  size?: string
-}
+export type { CartItem, CartItemInput } from "@/lib/cart/cart"
 
 interface CartContextType {
   items: CartItem[]
-  addItem: (item: CartItem) => void
-  removeItem: (id: string) => void
-  updateQuantity: (id: string, quantity: number) => void
+  addItem: (item: CartItemInput) => void
+  removeItem: (key: string) => void
+  updateQuantity: (key: string, quantity: number) => void
   clearCart: () => void
   itemCount: number
   subtotal: number
+  ready: boolean
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -36,7 +35,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem("yiiart-cart")
     if (saved) {
       try {
-        setItems(JSON.parse(saved))
+        setItems(normalizeStoredCart(JSON.parse(saved)))
       } catch (e) {
         console.error("Failed to load cart", e)
       }
@@ -49,26 +48,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, mounted])
 
-  const addItem = (item: CartItem) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.id === item.id)
-      if (existing) {
-        return prev.map(i => i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i)
-      }
-      return [...prev, { ...item, quantity: 1 }]
-    })
-  }
+  const addItem = (item: CartItemInput) => setItems((current) => addCartItem(current, item))
 
-  const removeItem = (id: string) => {
-    setItems(prev => prev.filter(i => i.id !== id))
-  }
+  const removeItem = (key: string) => setItems((current) => removeCartItem(current, key))
 
-  const updateQuantity = (id: string, quantity: number) => {
-    if (quantity <= 0) {
-      removeItem(id)
-      return
-    }
-    setItems(prev => prev.map(i => i.id === id ? { ...i, quantity } : i))
+  const updateQuantity = (key: string, quantity: number) => {
+    setItems((current) => updateCartQuantity(current, key, quantity))
   }
 
   const clearCart = () => setItems([])
@@ -77,7 +62,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, ready: mounted }}>
       {children}
     </CartContext.Provider>
   )

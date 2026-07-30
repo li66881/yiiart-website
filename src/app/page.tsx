@@ -1,102 +1,90 @@
-import Link from 'next/link'
-import Header from '@/components/Header'
-import Footer from '@/components/Footer'
-import HeroSection from '@/components/HeroSection'
-import { client, urlFor } from '@/lib/sanity'
-import { getTranslations } from '@/lib/i18n'
+import Header from "@/components/Header"
+import Footer from "@/components/Footer"
+import EditorialHome from "@/components/home/EditorialHome"
+import { client } from "@/lib/sanity"
+import { pickEnglish } from "@/lib/artwork-display"
+import { getArtworkImageUrl } from "@/lib/artwork-images"
+import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+
+export const revalidate = 600
+
+const faqs = [
+  {
+    question: "Is each painting handmade?",
+    answer: "Yes. YiiArt focuses on original hand-painted canvas works, not mass-produced poster prints. If a listing ever differs, the product page should state it clearly.",
+  },
+  {
+    question: "Can I customize the size?",
+    answer: "Yes. Custom paintings can be planned around your wall size, preferred orientation, room photo, and color direction before production starts.",
+  },
+  {
+    question: "How long does shipping take?",
+    answer: "Ready-made works dispatch within 3-5 business days and arrive 5-10 business days later with insured express carriers such as DHL, FedEx, or UPS. Shipping is free worldwide and included in the price.",
+  },
+  {
+    question: "What if the artwork arrives damaged?",
+    answer: "Every shipment is insured. Keep the packaging and send photos within 48 hours; YiiArt arranges a free replacement or a full refund.",
+  },
+]
 
 async function getData() {
-  const artworks = await client.fetch(`*[_type == "artwork" && featured == true][0...6]`)
-  const artists = await client.fetch(`*[_type == "artist"][0...6]`)
-  return { artworks, artists }
+  try {
+    const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
+      ...,
+      artist->{name}
+    }`)
+
+    return { artworks }
+  } catch {
+    return { artworks: [] }
+  }
+}
+
+export async function generateMetadata() {
+  try {
+    const artwork = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && (defined(productMedia[approvedForStorefront == true && mediaType == "image"][0].url) || defined(cloudflareImages[0].url) || defined(images[0]))] | order(featured desc, _createdAt desc)[0]{
+      title,
+      cloudflareImages,
+      productMedia,
+      images
+    }`)
+    const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
+
+    return buildSeoMetadata({
+      title: "Handmade Modern Paintings & Custom Canvas Art",
+      description:
+        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
+      path: "/",
+      image,
+      imageAlt: artwork ? `${pickEnglish(artwork.title, "Original YiiArt painting")} by YiiArt` : undefined,
+    })
+  } catch {
+    return buildSeoMetadata({
+      title: "Handmade Modern Paintings & Custom Canvas Art",
+      description:
+        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
+      path: "/",
+    })
+  }
 }
 
 export default async function Home() {
-  const { artworks, artists } = await getData()
-  const t = await getTranslations("home")
+  const { artworks } = await getData()
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd([{ name: "Home", path: "/" }])) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
+      />
 
-      {/* Hero - client component for i18n */}
-      <HeroSection />
-
-      {/* Trust Badges */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <div>
-            <div className="text-3xl mb-2">🎨</div>
-            <h3 className="font-semibold">100% Original</h3>
-            <p className="text-sm text-gray-500">Signed certificate</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">📦</div>
-            <h3 className="font-semibold">Free Shipping</h3>
-            <p className="text-sm text-gray-500">Worldwide delivery</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">↩️</div>
-            <h3 className="font-semibold">30-Day Trial</h3>
-            <p className="text-sm text-gray-500">Full refund</p>
-          </div>
-          <div>
-            <div className="text-3xl mb-2">❤️</div>
-            <h3 className="font-semibold">Support Artists</h3>
-            <p className="text-sm text-gray-500">80% to creators</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Artworks */}
-      <section className="py-20 flex-1">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-light mb-8">{t["home.featuredArtworks"]}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {artworks.length > 0 ? artworks.map((artwork: any) => (
-              <Link key={artwork._id} href={`/artwork/${artwork.slug?.current || artwork._id}`}>
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden bg-gray-100 mb-4">
-                    {artwork.images?.[0] && <img src={urlFor(artwork.images[0]).width(600).url()} alt={artwork.title?.zh || 'Artwork'} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />}
-                  </div>
-                  <h3 className="font-medium">{artwork.title?.zh || artwork.title?.en || 'Untitled'}</h3>
-                  <p className="text-gray-500 text-sm">{artwork.artist?.name?.zh || artwork.artist?.name?.en}</p>
-                  <p className="mt-1">¥{artwork.price?.toLocaleString()}</p>
-                </div>
-              </Link>
-            )) : (
-              <p className="col-span-3 text-gray-500 text-center py-20">{t["home.noArtworks"]}</p>
-            )}
-          </div>
-          <div className="text-center mt-12">
-            <Link href="/artworks" className="px-8 py-3 border border-black hover:bg-black hover:text-white transition">
-              {t["home.viewAll"]}
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Artists */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-light mb-8">{t["home.ourArtists"]}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {artists.length > 0 ? artists.map((artist: any) => (
-              <Link key={artist._id} href={`/artist/${artist.slug?.current || artist._id}`}>
-                <div className="text-center group cursor-pointer">
-                  <div className="aspect-square rounded-full overflow-hidden bg-gray-200 mb-3">
-                    {artist.image ? <img src={urlFor(artist.image).width(300).height(300).url()} alt={artist.name?.zh || 'Artist'} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" /> : <div className="w-full h-full flex items-center justify-center text-gray-400">👤</div>}
-                  </div>
-                  <h3 className="font-medium">{artist.name?.zh || artist.name?.en || 'Artist'}</h3>
-                  <p className="text-sm text-gray-500">{artist.location}</p>
-                </div>
-              </Link>
-            )) : (
-              <p className="col-span-6 text-gray-500 text-center py-20">{t["home.noArtists"]}</p>
-            )}
-          </div>
-        </div>
-      </section>
+      <EditorialHome artworks={artworks} />
 
       <Footer />
     </div>

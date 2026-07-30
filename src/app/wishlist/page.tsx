@@ -1,5 +1,6 @@
-"use client"
+﻿"use client"
 
+import Image from "next/image"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
@@ -14,7 +15,7 @@ export default function WishlistPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       
-      <main className="flex-1 pt-24 pb-16">
+      <main className="flex-1 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)] pb-16">
         <div className="container mx-auto px-4">
           <h1 className="text-3xl font-light mb-8">My Wishlist</h1>
 
@@ -30,18 +31,22 @@ export default function WishlistPage() {
               {items.map((item) => (
                 <div key={item.id} className="border group">
                   <Link href={`/artwork/${item.slug}`}>
-                    <div className="aspect-[4/5] bg-gray-100 overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.title} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
-                      />
+                    <div className="relative aspect-[4/5] bg-gray-100 overflow-hidden">
+                      {item.image && (
+                        <Image
+                          src={item.image}
+                          alt={item.title}
+                          fill
+                          sizes="(min-width: 1024px) 25vw, 50vw"
+                          className="object-cover group-hover:scale-105 transition-transform duration-300"
+                        />
+                      )}
                     </div>
                   </Link>
                   <div className="p-4">
                     <h3 className="font-medium">{item.title}</h3>
                     <p className="text-sm text-gray-500">{item.artist}</p>
-                    <p className="mt-1">¥{item.price.toLocaleString()}</p>
+                    <p className="mt-1">楼{item.price.toLocaleString()}</p>
                     <div className="flex gap-2 mt-3">
                       <button 
                         onClick={() => removeFromWishlist(item.id)}

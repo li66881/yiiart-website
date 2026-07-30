@@ -1,40 +1,72 @@
+import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { contactEmail } from "@/lib/site"
+import { returnHighlights } from "@/lib/policy-content"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Returns and Refunds",
+  description:
+    "YiiArt offers a 30-day return window after delivery for eligible original artwork orders, with support for damaged shipments.",
+  path: "/returns",
+})
 
 export default function ReturnsPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen py-16 px-4">
-        <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl font-medium mb-8 text-center">Returns & Refunds</h1>
-          <div className="bg-white p-8 border space-y-6">
+      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10">
+        <div className="mx-auto max-w-[1180px]">
+          <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
-              <h2 className="text-xl font-medium mb-3">30-Day Trial</h2>
-              <p className="text-gray-600">We offer a 30-day trial period for all artworks. If you are not completely satisfied, we provide full refunds.</p>
+              <p className="mb-3 text-sm uppercase text-stone-500">Returns</p>
+              <h1 className="text-5xl font-light leading-tight">Clear return terms for original art.</h1>
             </div>
+            <p className="max-w-3xl text-base leading-8 text-stone-600">
+              Ready-made artworks can be returned within 30 days of delivery for any reason, with the refund issued
+              within 5 business days of the artwork arriving back. Custom commissions are final sale because they are
+              made for a specific request, and can be cancelled free of charge before production starts.
+            </p>
+          </section>
+
+          <section className="grid gap-5 py-14 md:grid-cols-2 lg:grid-cols-4">
+            {returnHighlights.map((item) => (
+              <Info key={item.title} title={item.title} text={item.text} />
+            ))}
+          </section>
+
+          <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
-              <h2 className="text-xl font-medium mb-3">How to Return</h2>
-              <ol className="list-decimal list-inside space-y-2 text-gray-600">
-                <li>Contact us at contact@yiiart.com within 30 days</li>
-                <li>We will provide return shipping instructions</li>
-                <li>Pack the artwork securely in original packaging if possible</li>
-                <li>Ship it back to our gallery</li>
-                <li>Refund will be processed within 5-7 business days</li>
-              </ol>
+              <p className="mb-3 text-sm uppercase text-stone-500">How to request a return</p>
+              <h2 className="text-4xl font-light leading-tight">Contact YiiArt before shipping anything back.</h2>
             </div>
-            <div>
-              <h2 className="text-xl font-medium mb-3">Conditions</h2>
-              <ul className="space-y-2 text-gray-600">
-                <li>• Artwork must be returned in original condition</li>
-                <li>• Buyer pays return shipping unless defective</li>
-                <li>• Certificate of authenticity must be included</li>
-              </ul>
-            </div>
-          </div>
+            <ol className="grid gap-4">
+              {[
+                `Contact ${contactEmail} within 30 days of delivery and include your order number and artwork title.`,
+                "Share the reason for return and photos if the artwork arrived damaged or materially different from the listing.",
+                "Wait for return packing and shipping instructions, then ship the artwork back within 14 days of approval.",
+                "Pack the artwork securely in original packaging when possible, with all documentation included. Your refund is issued within 5 business days of the artwork arriving back.",
+              ].map((item, index) => (
+                <li key={item} className="border border-stone-200 bg-white p-5 text-sm leading-6 text-stone-600">
+                  <span className="mb-2 block text-xs uppercase text-stone-400">Step 0{index + 1}</span>
+                  {item}
+                </li>
+              ))}
+            </ol>
+          </section>
         </div>
       </main>
       <Footer />
     </>
+  )
+}
+
+function Info({ title, text }: { title: string; text: string }) {
+  return (
+    <div className="border-t border-stone-300 pt-5">
+      <h2 className="font-medium">{title}</h2>
+      <p className="mt-3 text-sm leading-6 text-stone-600">{text}</p>
+    </div>
   )
 }

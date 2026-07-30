@@ -1,5 +1,14 @@
+import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import { contactEmail } from "@/lib/site"
+import { buildSeoMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = buildSeoMetadata({
+  title: "Terms of Service",
+  description: "YiiArt terms for original artwork purchases, pricing, shipping, returns, and intellectual property.",
+  path: "/terms",
+})
 
 export default function TermsPage() {
   return (
@@ -16,7 +25,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Products and Pricing</h2>
-              <p>All artworks are described accurately. Prices are listed in CNY (Chinese Yuan). We reserve the right to change prices without notice.</p>
+              <p>All artworks are described as accurately as possible. Prices are shown for international checkout, and local taxes, duties, or customs fees may be charged by the destination country. We reserve the right to correct errors or change prices before purchase.</p>
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Shipping and Delivery</h2>
@@ -32,7 +41,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Contact</h2>
-              <p>Questions? Contact us at contact@yiiart.com</p>
+              <p>Questions? Contact us at {contactEmail}</p>
             </div>
           </div>
         </div>

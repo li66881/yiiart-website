@@ -1,96 +1,130 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { client, urlFor } from '@/lib/sanity'
+import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
+import { ArtworksPageHeroCopy, CuratedPathsCopy, LivingRoomsLinkCopy } from "@/components/ArtworksPageCopy"
+import { client } from "@/lib/sanity"
+import { getArtworkImageUrl, getArtworkImageUrls, hasArtworkImage } from "@/lib/artwork-images"
+import { buildSeoMetadata } from "@/lib/seo"
+import { storefrontCollectionTiles } from "@/lib/storefront-content"
+import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
+
+export const revalidate = 600
 
 interface Props {
   searchParams: Promise<{ category?: string }>
 }
 
-async function getArtworks(category?: string) {
-  if (category) {
-    return client.fetch(
-      `*[_type == "artwork" && category == $category] | order(_createdAt desc)`,
-      { category }
-    )
+async function getArtworks() {
+  return client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc){
+    ...,
+    artist->{name}
+  }`)
+}
+
+async function getCategoryArtworks(category?: string) {
+  if (!category) return getArtworks()
+
+  const legacyCategories: Record<string, string[]> = {
+    Abstract: ["Abstract", "鎶借薄", "抽象"],
+    Landscape: ["Landscape", "鏅", "景观"],
+    Portrait: ["Portrait", "鑲栧儚", "肖像"],
+    Texture: ["Texture", "Textured Art", "鑲岀悊", "肌理"],
+    Minimalist: ["Minimalist", "鏋佺畝", "极简"],
   }
-  return client.fetch(`*[_type == "artwork"] | order(_createdAt desc)`)
+
+  return client.fetch(
+    `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc)[0...12]{
+      ...,
+      artist->{name}
+    }`,
+    { categories: legacyCategories[category] || [category] }
+  )
+}
+
+async function getSeoImage(category?: string) {
+  const artworks = await getCategoryArtworks(category).catch(() => [])
+  const artworkWithImage = artworks.find(hasArtworkImage)
+
+  if (!artworkWithImage) return undefined
+
+  return {
+    image: getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 }),
+    alt: pickEnglish(artworkWithImage.title, "Original YiiArt painting"),
+  }
+}
+
+export async function generateMetadata({ searchParams }: Props) {
+  const params = await searchParams
+  const activeCategory = normalizeCategory(params.category)
+  const seoImage = await getSeoImage(activeCategory)
+  const title = activeCategory ? `${activeCategory} Original Paintings` : "Original Paintings"
+  const description = activeCategory
+    ? `Browse ${activeCategory.toLowerCase()} original paintings from YiiArt, each hand-painted and shipped worldwide with a signed certificate.`
+    : "Browse original abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
+  const path = activeCategory ? `/artworks?category=${encodeURIComponent(activeCategory)}` : "/artworks"
+
+  return buildSeoMetadata({
+    title,
+    description,
+    path,
+    image: seoImage?.image,
+    imageAlt: seoImage?.alt,
+  })
 }
 
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = params.category
-  const artworks = await getArtworks(activeCategory)
-
-  const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi"]
+  const activeCategory = normalizeCategory(params.category)
+  const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
+  const artworkItems = artworks.map((artwork: any) => {
+    const images = getArtworkImageUrls(artwork, { width: 700 })
+    return buildArtworkDiscoveryItem(artwork, images[0], images[1] || images[0])
+  })
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
 
-      <main className="flex-1 pt-24 pb-16">
-        <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-light mb-8">
-            {activeCategory ? `${activeCategory} Artworks` : "All Artworks"}
-          </h1>
-          
-          {/* Category Filter */}
-          <div className="flex gap-4 mb-12 flex-wrap">
-            <a 
-              href="/artworks" 
-              className={`px-4 py-2 transition ${!activeCategory ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-            >
-              All
-            </a>
-            {categories.map(cat => (
-              <a 
-                key={cat}
-                href={`/artworks?category=${cat}`}
-                className={`px-4 py-2 transition ${activeCategory === cat ? "bg-black text-white" : "border hover:bg-black hover:text-white"}`}
-              >
-                {cat}
-              </a>
-            ))}
-          </div>
+      <main className="flex-1 bg-[#f7f5f0] pb-16 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
+          <ArtworksPageHeroCopy activeCategory={activeCategory} />
 
-          {/* Artworks Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            {artworks.length > 0 ? artworks.map((artwork: any) => (
-              <a key={artwork._id} href={`/artwork/${artwork.slug.current}`}>
-                <div className="group cursor-pointer">
-                  <div className="aspect-[4/5] overflow-hidden bg-gray-100 mb-4">
-                    {artwork.images?.[0] && (
-                      <img 
-                        src={urlFor(artwork.images[0]).width(600).url()} 
-                        alt={artwork.title?.zh || artwork.title?.en || "Artwork"} 
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                      />
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider">
-                    {artwork.category} · {artwork.medium}
-                  </p>
-                  <h3 className="font-medium mt-1">
-                    {artwork.title?.zh || artwork.title?.en}
-                  </h3>
-                  <p className="text-sm text-gray-500">
-                    {artwork.artist?.name?.zh || artwork.artist?.name?.en}
-                  </p>
-                  <p className="mt-1 font-semibold">
-                    ¥{artwork.price?.toLocaleString()}
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    {artwork.dimensions}
-                  </p>
-                </div>
+          <section className="mb-8 pb-2">
+            <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
+              <CuratedPathsCopy />
+              <a href="/collections/abstract-art-for-living-room" className="text-sm underline underline-offset-4">
+                <LivingRoomsLinkCopy />
               </a>
-            )) : (
-              <p className="col-span-4 text-gray-500">
-                {activeCategory 
-                  ? `No ${activeCategory} artworks yet.` 
-                  : "No artworks yet."} Add some in Sanity Studio!
-              </p>
-            )}
-          </div>
+            </div>
+            <div className="flex snap-x gap-5 overflow-x-auto pb-2">
+              {storefrontCollectionTiles.map((collection, index) => {
+                const image = artworkItems[index % Math.max(artworkItems.length, 1)]?.imageUrl
+                return (
+                  <a
+                    key={collection.href}
+                    href={collection.href}
+                    className="flex w-[92px] shrink-0 snap-start flex-col items-center gap-2 text-center"
+                  >
+                    <span className="relative block h-[92px] w-[92px] overflow-hidden rounded-full border border-stone-300 bg-[#ebe6dc]">
+                      {image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={image} alt="" className="h-full w-full object-cover" />
+                      ) : (
+                        <span className="flex h-full w-full items-center justify-center text-sm font-medium text-stone-700">
+                          {collection.title.slice(0, 1)}
+                        </span>
+                      )}
+                    </span>
+                    <span className="text-xs leading-snug text-stone-700">{collection.title}</span>
+                  </a>
+                )
+              })}
+            </div>
+          </section>
+
+          <ArtworkDiscoveryGrid items={artworkItems} />
         </div>
       </main>
 

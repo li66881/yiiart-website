@@ -3,17 +3,84 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255;
+  --foreground-rgb: 24, 22, 19;
+  --background-start-rgb: 250, 248, 243;
   --background-end-rgb: 255, 255, 255;
+  --yiiart-ink: #181613;
+  --yiiart-muted: #6f675d;
+  --yiiart-line: #ded8ce;
+  --yiiart-paper: #fbfaf6;
+  --yiiart-warm: #efe8dc;
+  --yiiart-forest: #26352c;
+  --yiiart-clay: #75432f;
+  --yiiart-paper-strong: #fffdf8;
+  --yiiart-content: 1440px;
+  --yiiart-gutter: clamp(20px, 4vw, 64px);
+  --ya-sale: #8b3a2a;
+  --ya-success: #2f5d46;
+  --ya-surface: #ffffff;
+  --ya-announcement: #181613;
+  --ya-radius-sm: 2px;
+  --ya-radius-md: 4px;
+  --ya-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ya-duration: 280ms;
+  --ya-gallery-gap: 12px;
+  --ya-card-gap: 24px;
+  --ya-header-offset: 11.5rem;
+  --ya-header-offset-lg: 13.5rem;
+}
+
+html {
+  scroll-behavior: smooth;
+  background: var(--yiiart-paper);
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: var(--yiiart-paper);
+  font-feature-settings: "kern" 1, "liga" 1;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--yiiart-ink);
+  color: white;
+}
+
+a,
+button,
+input,
+select,
+textarea {
+  outline-color: var(--yiiart-ink);
+}
+
+:focus-visible {
+  outline: 3px solid #315bff;
+  outline-offset: 4px;
+}
+
+img {
+  max-width: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }

@@ -1,0 +1,153 @@
+[
+  {
+    "id": "yr-001",
+    "authorName": "Ava M.",
+    "rating": 5,
+    "title": "Warmth without visual noise",
+    "body": "We hung the 36×48 opposite a linen sofa. The texture shows up beautifully after 4pm. Studio helped confirm size from our wall photo, which saved us from going too small.",
+    "createdAt": "2026-06-12",
+    "location": "Austin, US",
+    "productSku": "YA118",
+    "productTitle": "Amber Plaster Drift #YA118",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "room",
+        "prompt": "Customer-style phone photo of a warm amber textured abstract canvas on a living-room wall above a linen sofa, late-afternoon side light, realistic home clutter minimal, no faces, no logos.",
+        "alt": "Amber abstract canvas above a linen sofa in afternoon light"
+      }
+    ],
+    "highlights": ["size-help", "colour-match"]
+  },
+  {
+    "id": "yr-002",
+    "authorName": "Noah K.",
+    "rating": 5,
+    "title": "Looks larger in person",
+    "body": "Ordered the 40×54 for our dining wall. Scale feels right — present, not overwhelming. Packaging was solid and the canvas arrived ready to hang. Brush ridges are clearer than on screen.",
+    "createdAt": "2026-05-28",
+    "location": "Toronto, CA",
+    "productSku": "YA204",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "room",
+        "prompt": "Phone photo of a large abstract canvas in a dining room, soft daylight, oak table edge visible, natural perspective, not catalog-perfect.",
+        "alt": "Large canvas on dining room wall"
+      },
+      {
+        "role": "detail",
+        "prompt": "Close-up of acrylic and plaster texture on canvas, visible brush ridges, soft daylight, shallow depth of field.",
+        "alt": "Close-up of canvas texture"
+      }
+    ],
+    "highlights": ["quality", "shipping"]
+  },
+  {
+    "id": "yr-003",
+    "authorName": "Mia L.",
+    "rating": 5,
+    "title": "Colour matched better than expected",
+    "body": "I sent a room photo and they suggested a slightly warmer beige. Glad we asked. It feels handmade, which is what we wanted versus a flat print. Delivery took about nine days.",
+    "createdAt": "2026-06-03",
+    "location": "London, UK",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "room",
+        "prompt": "Bedroom wall with soft beige textured painting, linen bedding corner visible, quiet morning light, realistic residence.",
+        "alt": "Beige textured painting in a bedroom"
+      }
+    ],
+    "highlights": ["colour-match", "quality"]
+  },
+  {
+    "id": "yr-004",
+    "authorName": "Ethan R.",
+    "rating": 4,
+    "title": "Clear updates, careful crate",
+    "body": "About ten days door to door. The team answered size questions quickly. Corner protection was excellent. Colour is a touch deeper than my monitor, still works with our oak floors.",
+    "createdAt": "2026-04-19",
+    "location": "Seattle, US",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "unboxing",
+        "prompt": "Opened protective art crate corner on a clean wood floor, kraft paper and foam visible, canvas edge partly shown, realistic home setting.",
+        "alt": "Artwork unboxing with protective materials"
+      }
+    ],
+    "highlights": ["shipping", "size-help"]
+  },
+  {
+    "id": "yr-005",
+    "authorName": "Sofia P.",
+    "rating": 5,
+    "title": "Custom size for a narrow hallway",
+    "body": "Needed a panoramic piece for a tight corridor. They confirmed proportions before painting. It feels intentional, not like a cropped square work. Guests notice it immediately.",
+    "createdAt": "2026-05-02",
+    "location": "Madrid, ES",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "room",
+        "prompt": "Panoramic abstract canvas in a narrow residential hallway, soft overhead light, wood floor, realistic phone photo.",
+        "alt": "Panoramic canvas in a hallway"
+      }
+    ],
+    "highlights": ["size-help"]
+  },
+  {
+    "id": "yr-006",
+    "authorName": "Lucas W.",
+    "rating": 5,
+    "title": "Quiet enough for a bedroom",
+    "body": "Wanted something calm for above the bed. Greens and soft white read gently at night. Stretched frameless option looks clean. Will order a smaller piece for the office next.",
+    "createdAt": "2026-06-20",
+    "location": "Melbourne, AU",
+    "verifiedPurchase": true,
+    "photos": [],
+    "highlights": ["quality"]
+  },
+  {
+    "id": "yr-007",
+    "authorName": "Harper J.",
+    "rating": 5,
+    "title": "Studio advice was practical",
+    "body": "I almost chose a size too wide for our sofa wall. Their quick reply with a tape-measure guide fixed it. The finished piece anchors the room without shouting.",
+    "createdAt": "2026-03-30",
+    "location": "Chicago, US",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "room",
+        "prompt": "Living room focal wall with hand-painted abstract art above a modern sofa, overcast daylight through sheer curtains, lived-in realistic photo.",
+        "alt": "Abstract painting above a modern sofa"
+      }
+    ],
+    "highlights": ["size-help"]
+  },
+  {
+    "id": "yr-008",
+    "authorName": "Owen C.",
+    "rating": 5,
+    "title": "Texture is the reason we bought",
+    "body": "Photos helped, but the plaster relief is why it works in person. Side light from the window makes it change through the day. Packing was museum-careful.",
+    "createdAt": "2026-07-01",
+    "location": "Berlin, DE",
+    "verifiedPurchase": true,
+    "photos": [
+      {
+        "role": "detail",
+        "prompt": "Macro of plaster and acrylic relief on canvas, raking daylight, documentary feel, no watermark.",
+        "alt": "Macro texture of plaster relief on canvas"
+      },
+      {
+        "role": "room",
+        "prompt": "Modern apartment wall with textured abstract canvas, cool daylight, minimal furniture edge, realistic.",
+        "alt": "Textured canvas on an apartment wall"
+      }
+    ],
+    "highlights": ["quality", "shipping"]
+  }
+]
