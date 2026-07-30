@@ -10,6 +10,7 @@ import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
 import AnnouncementBar from "@/components/AnnouncementBar"
 import { siteAssetUrl } from "@/lib/assets"
+import { getStudioSaleEndsAt } from "@/lib/storefront/sale"
 
 const primaryNav = [
   { href: "/artworks", label: "Best Sellers" },
@@ -63,7 +64,7 @@ export default function Header() {
 
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-stone-200 bg-[#fbfaf7]/96 text-[#1d1c18] backdrop-blur-xl">
-      <AnnouncementBar />
+      <AnnouncementBar saleEndsAt={getStudioSaleEndsAt()} />
 
       <div className="hidden border-b border-stone-200/80 bg-white md:block">
         <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-1.5 sm:px-6 lg:px-10">

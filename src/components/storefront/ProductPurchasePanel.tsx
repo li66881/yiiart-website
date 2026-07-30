@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
@@ -77,6 +77,15 @@ function finishSwatchTone(label: string) {
   return "default"
 }
 
+function formatSaleCountdown(saleEndsAt: string) {
+  const end = new Date(saleEndsAt).getTime()
+  const diff = Math.max(0, end - Date.now())
+  const hours = Math.floor(diff / 3600000)
+  const minutes = Math.floor((diff % 3600000) / 60000)
+  const seconds = Math.floor((diff % 60000) / 1000)
+  return `${String(hours).padStart(2, "0")}H : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}S`
+}
+
 export default function ProductPurchasePanel({
   product,
   directCheckoutAvailable,
@@ -91,6 +100,9 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const [openBadge, setOpenBadge] = useState<string | null>(null)
+  const [saleCountdown, setSaleCountdown] = useState<string | null>(
+    saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
+  )
   const arrivalWindow = useMemo(() => estimateArrivalWindow(), [])
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
@@ -109,6 +121,23 @@ export default function ProductPurchasePanel({
   const installmentHint = selection
     ? formatStorePrice(selection.priceCny / 4, currency)
     : null
+
+  useEffect(() => {
+    if (!saleEndsAt) {
+      setSaleCountdown(null)
+      return
+    }
+    const tick = () => {
+      if (new Date(saleEndsAt).getTime() <= Date.now()) {
+        setSaleCountdown(null)
+        return
+      }
+      setSaleCountdown(formatSaleCountdown(saleEndsAt))
+    }
+    tick()
+    const id = window.setInterval(tick, 1000)
+    return () => window.clearInterval(id)
+  }, [saleEndsAt])
 
   const addSelection = () => {
     if (!selection || !image || !directCheckoutAvailable) return
@@ -194,11 +223,11 @@ export default function ProductPurchasePanel({
         </div>
       ) : null}
 
-      {saleActive && (
+      {saleActive && saleCountdown ? (
         <p className={styles.saleCue}>
-          Hurry up! Sale ends {new Date(saleEndsAt as string).toLocaleString()}
+          Hurry up! Sale ends in <strong>{saleCountdown}</strong>
         </p>
-      )}
+      ) : null}
 
       <div className={styles.promoBanner} aria-hidden={false}>
         <div>

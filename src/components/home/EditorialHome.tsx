@@ -64,33 +64,47 @@ function toCard(artwork: any) {
 export default function EditorialHome({ artworks }: EditorialHomeProps) {
   const { featured, artistCollection } = buildEditorialHomeEdit(artworks)
   const withImages = artworks.filter(hasArtworkImage)
-  const heroCandidates = [
-    ...featured.filter(hasArtworkImage),
-    ...withImages,
-  ]
-  const heroSlides = Array.from(
+  const heroArtworkImages = Array.from(
     new Map(
-      heroCandidates.map((artwork) => {
-        const urls = getArtworkImageUrls(artwork, { width: 1800, height: 1200 })
-        const imageUrl = urls[1] || urls[0] || getArtworkImageUrl(artwork, { width: 1800, height: 1200 })
-        return [
-          artwork._id,
-          {
-            imageUrl: imageUrl || "",
-            imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} in a styled interior`,
-            eyebrow: "Summer Sale",
-            title: "Deals still going",
-            subtitle: "Selected hand-painted canvases · Free worldwide shipping",
-            ctaHref: "/artworks",
-            ctaLabel: "Shop All Art",
-            promo: true,
-          },
-        ] as const
+      [...featured.filter(hasArtworkImage), ...withImages].map((artwork) => {
+        const urls = getArtworkImageUrls(artwork, { width: 1200, height: 900 })
+        return [artwork._id, urls[0] || getArtworkImageUrl(artwork, { width: 1200, height: 900 }) || ""] as const
       }),
     ).values(),
-  )
-    .filter((slide) => Boolean(slide.imageUrl))
-    .slice(0, 5)
+  ).filter(Boolean)
+
+  const heroSlides = [
+    {
+      imageUrl: "/hero/lifestyle-1.png",
+      imageAlt: "Modern living room styled for hand-painted wall art",
+      eyebrow: "Summer Sale",
+      title: "Deals still going",
+      subtitle: "Selected hand-painted canvases · Free worldwide shipping",
+      ctaHref: "/artworks",
+      ctaLabel: "Shop All Art",
+      promo: true,
+    },
+    {
+      imageUrl: "/hero/lifestyle-2.png",
+      imageAlt: "Bright contemporary apartment ready for original canvas art",
+      eyebrow: "Summer Sale",
+      title: "Deals still going",
+      subtitle: "Choose size and finish for your wall",
+      ctaHref: "/artworks",
+      ctaLabel: "Shop All Art",
+      promo: true,
+    },
+    ...heroArtworkImages.slice(0, 3).map((imageUrl) => ({
+      imageUrl,
+      imageAlt: "YiiArt hand-painted canvas inspiration",
+      eyebrow: "Summer Sale",
+      title: "Deals still going",
+      subtitle: "Selected hand-painted canvases · Free worldwide shipping",
+      ctaHref: "/artworks",
+      ctaLabel: "Shop All Art",
+      promo: true,
+    })),
+  ]
 
   const roomImages = [
     ...featured.map((artwork) => getArtworkImageUrl(artwork, { width: 1000, height: 700 })),

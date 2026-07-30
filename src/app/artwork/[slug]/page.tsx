@@ -29,6 +29,7 @@ import {
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
+import { getStudioSaleEndsAt } from "@/lib/storefront/sale"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
@@ -433,6 +434,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 directCheckoutAvailable={directCheckoutAvailable}
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
+                saleEndsAt={getStudioSaleEndsAt()}
               />
               </div>
 
