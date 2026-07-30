@@ -16,6 +16,8 @@ const primaryNav = [
   { href: "/artworks", label: "Best Sellers" },
   { href: "/artworks", label: "New In" },
   { href: "/custom-painting", label: "Custom Art" },
+  { href: "/contact?topic=trade", label: "Trade Program" },
+  { href: "/custom-painting?intent=gift", label: "Gift Card" },
   { href: "/reviews", label: "Reviews" },
   { href: "/artists", label: "Artist" },
   { href: "/about", label: "Our Story" },
@@ -38,6 +40,44 @@ const trustMessages = [
   "Hand-painted to order for your wall",
   "Secure checkout with major cards",
 ]
+
+const socialLinks = [
+  { label: "Facebook", href: process.env.NEXT_PUBLIC_FACEBOOK_URL || "https://www.facebook.com", icon: "facebook" },
+  { label: "Instagram", href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com", icon: "instagram" },
+  { label: "YouTube", href: process.env.NEXT_PUBLIC_YOUTUBE_URL || "https://www.youtube.com", icon: "youtube" },
+  { label: "Pinterest", href: process.env.NEXT_PUBLIC_PINTEREST_URL || "https://www.pinterest.com", icon: "pinterest" },
+]
+
+function SocialIcon({ name }: { name: string }) {
+  if (name === "facebook") {
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M14 9h3V6h-3c-1.7 0-3 1.3-3 3v2H9v3h2v7h3v-7h2.6l.4-3H14V9z" />
+      </svg>
+    )
+  }
+  if (name === "instagram") {
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect x="3.5" y="3.5" width="17" height="17" rx="4.5" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.6" />
+        <circle cx="17.2" cy="6.8" r="1" fill="currentColor" />
+      </svg>
+    )
+  }
+  if (name === "youtube") {
+    return (
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M21.6 7.2a2.7 2.7 0 0 0-1.9-1.9C17.9 5 12 5 12 5s-5.9 0-7.7.3A2.7 2.7 0 0 0 2.4 7.2 28.2 28.2 0 0 0 2 12a28.2 28.2 0 0 0 .4 4.8 2.7 2.7 0 0 0 1.9 1.9C6.1 19 12 19 12 19s5.9 0 7.7-.3a2.7 2.7 0 0 0 1.9-1.9A28.2 28.2 0 0 0 22 12a28.2 28.2 0 0 0-.4-4.8zM10 15.2V8.8L15.5 12 10 15.2z" />
+      </svg>
+    )
+  }
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+      <path d="M12 3.2c-2.2 0-3.7 1.1-4.4 2.1-.2.3 0 .6.3.7 1.1.4 1.5.8 1.7 1.4.1.5 0 1.1-.4 1.7-.7 1.1-1.8 2.6-1.8 4.5 0 2.8 2.2 5.2 5.6 5.2s5.6-2.4 5.6-5.5c0-2.1-.8-3.5-1.7-4.6-.7-.8-1.4-1.5-1.4-2.2 0-.7.5-1.2 1.1-1.8.3-.3.2-.8-.2-1C14.5 3.5 13.3 3.2 12 3.2z" />
+    </svg>
+  )
+}
 
 export default function Header() {
   const { data: session, status } = useSession()
@@ -69,19 +109,40 @@ export default function Header() {
       <div className="hidden border-b border-stone-200/80 bg-white md:block">
         <div className="mx-auto grid max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-1.5 sm:px-6 lg:px-10">
           <div className="flex items-center gap-3 text-stone-500">
-            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[11px] hover:text-black">
-              f
-            </a>
-            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[11px] hover:text-black">
-              ig
-            </a>
-            <a href="https://www.pinterest.com" target="_blank" rel="noopener noreferrer" aria-label="Pinterest" className="text-[11px] hover:text-black">
-              pin
-            </a>
+            {socialLinks.map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={item.label}
+                className="inline-flex h-6 w-6 items-center justify-center hover:text-black"
+              >
+                <SocialIcon name={item.icon} />
+              </a>
+            ))}
           </div>
-          <p className="text-center text-[11px] text-stone-500 transition-opacity duration-300">
-            {trustMessages[trustIndex]}
-          </p>
+          <div className="flex items-center justify-center gap-2 text-[11px] text-stone-500">
+            <button
+              type="button"
+              aria-label="Previous trust message"
+              className="px-1 hover:text-black"
+              onClick={() =>
+                setTrustIndex((current) => (current - 1 + trustMessages.length) % trustMessages.length)
+              }
+            >
+              ‹
+            </button>
+            <p className="min-w-[220px] text-center transition-opacity duration-300">{trustMessages[trustIndex]}</p>
+            <button
+              type="button"
+              aria-label="Next trust message"
+              className="px-1 hover:text-black"
+              onClick={() => setTrustIndex((current) => (current + 1) % trustMessages.length)}
+            >
+              ›
+            </button>
+          </div>
           <div className="justify-self-end">
             <StorefrontControls />
           </div>

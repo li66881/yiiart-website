@@ -1,7 +1,7 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import EditorialHome from "@/components/home/EditorialHome"
-import { client } from "@/lib/sanity"
+import { client, urlFor } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
@@ -30,14 +30,23 @@ const faqs = [
 
 async function getData() {
   try {
-    const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
+    const [artworks, artistsRaw] = await Promise.all([
+      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
       ...,
       artist->{name}
-    }`)
+    }`),
+      client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)[0...6]{
+        _id,
+        name,
+        location,
+        slug,
+        image
+      }`),
+    ])
 
-    return { artworks }
+    return { artworks, artistsRaw }
   } catch {
-    return { artworks: [] }
+    return { artworks: [], artistsRaw: [] }
   }
 }
 
@@ -70,7 +79,15 @@ export async function generateMetadata() {
 }
 
 export default async function Home() {
-  const { artworks } = await getData()
+  const { artworks, artistsRaw } = await getData()
+  const artists = (artistsRaw || []).map((artist: any) => ({
+    id: artist._id,
+    name: pickEnglish(artist.name, "YiiArt Artist"),
+    href: `/artist/${artist.slug?.current || artist._id}`,
+    location: artist.location || null,
+    imageUrl: artist.image ? urlFor(artist.image).width(800).height(1000).url() : null,
+    role: "Painter",
+  }))
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
@@ -84,7 +101,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
       />
 
-      <EditorialHome artworks={artworks} />
+      <EditorialHome artworks={artworks} artists={artists} />
 
       <Footer />
     </div>

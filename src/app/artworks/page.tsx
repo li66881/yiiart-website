@@ -13,7 +13,7 @@ import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 export const revalidate = 600
 
 interface Props {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<{ category?: string; orientation?: string }>
 }
 
 async function getArtworks() {
@@ -77,6 +77,7 @@ export async function generateMetadata({ searchParams }: Props) {
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
   const activeCategory = normalizeCategory(params.category)
+  const orientation = normalizeOrientationParam(params.orientation)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
     const images = getArtworkImageUrls(artwork, { width: 700 })
@@ -124,11 +125,26 @@ export default async function ArtworksPage({ searchParams }: Props) {
             </div>
           </section>
 
-          <ArtworkDiscoveryGrid items={artworkItems} />
+          <ArtworkDiscoveryGrid
+            items={artworkItems}
+            initialFilters={orientation ? { orientations: [orientation] } : undefined}
+          />
         </div>
       </main>
 
       <Footer />
     </div>
   )
+}
+
+function normalizeOrientationParam(value?: string) {
+  if (!value) return null
+  const map: Record<string, string> = {
+    Portrait: "Portrait",
+    Vertical: "Portrait",
+    Landscape: "Landscape",
+    Horizontal: "Landscape",
+    Square: "Square",
+  }
+  return map[value] || null
 }

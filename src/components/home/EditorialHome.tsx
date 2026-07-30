@@ -1,21 +1,34 @@
 import Image from "next/image"
 import Link from "next/link"
-import { PriceDisclosure } from "@/components/PriceText"
 import ProductCard from "@/components/storefront/ProductCard"
+import BestSellerTabs from "@/components/home/BestSellerTabs"
+import FeaturedArtists, { type FeaturedArtistCard } from "@/components/home/FeaturedArtists"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls, hasArtworkImage } from "@/lib/artwork-images"
 import { buildEditorialHomeEdit, resolveVisualImage } from "@/lib/storefront/visual-content"
+import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import HeroSection from "@/components/HeroSection"
 import styles from "./editorial-home.module.css"
 
 type EditorialHomeProps = {
   artworks: any[]
+  artists?: FeaturedArtistCard[]
 }
 
 const roomPaths = [
-  { title: "Living room", href: "/collections/abstract-art-for-living-room", text: "Statement paintings for calm focal walls." },
-  { title: "Bedroom", href: "/collections/bedroom-wall-art", text: "Quiet pieces for softer, more personal spaces." },
-  { title: "Large walls", href: "/collections/large-canvas-art", text: "Generous canvases for rooms that need presence." },
+  { title: "Living room", href: "/collections/abstract-art-for-living-room", match: ["Living Room"] },
+  { title: "Bedroom", href: "/collections/bedroom-wall-art", match: ["Bedroom"] },
+  { title: "Entryway", href: "/collections/textured-wall-art", match: ["Entryway"] },
+  { title: "Office", href: "/collections/large-canvas-art", match: ["Office"] },
+  { title: "Dining room", href: "/artworks?category=Abstract", match: ["Dining Room"] },
+  { title: "Large walls", href: "/collections/large-canvas-art", match: [] },
+]
+
+const orientationPaths = [
+  { title: "Vertical", href: "/artworks?orientation=Portrait", hint: "Portrait walls" },
+  { title: "Square", href: "/artworks?orientation=Square", hint: "Balanced formats" },
+  { title: "Horizontal", href: "/artworks?orientation=Landscape", hint: "Sofa & wide walls" },
+  { title: "Large scale", href: "/collections/large-canvas-art", hint: "Statement canvases" },
 ]
 
 const styleChips = [
@@ -61,9 +74,22 @@ function toCard(artwork: any) {
   }
 }
 
-export default function EditorialHome({ artworks }: EditorialHomeProps) {
+function categoryOf(artwork: any) {
+  return String(artwork.category || "").toLowerCase()
+}
+
+function matchesCategory(artwork: any, needles: string[]) {
+  const value = categoryOf(artwork)
+  return needles.some((needle) => value.includes(needle.toLowerCase()))
+}
+
+export default function EditorialHome({ artworks, artists = [] }: EditorialHomeProps) {
   const { featured, artistCollection } = buildEditorialHomeEdit(artworks)
   const withImages = artworks.filter(hasArtworkImage)
+  const discoveryItems = withImages.map((artwork) =>
+    buildArtworkDiscoveryItem(artwork, getArtworkImageUrl(artwork, { width: 400 })),
+  )
+
   const heroArtworkImages = Array.from(
     new Map(
       [...featured.filter(hasArtworkImage), ...withImages].map((artwork) => {
@@ -110,8 +136,50 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
     ...featured.map((artwork) => getArtworkImageUrl(artwork, { width: 1000, height: 700 })),
     ...artworks.map((artwork) => getArtworkImageUrl(artwork, { width: 1000, height: 700 })),
   ].filter(Boolean)
-  const bestSellers = featured.slice(0, 8)
-  const newArrivals = artworks.filter(hasArtworkImage).slice(0, 8)
+
+  const pool = featured.length > 0 ? featured : withImages
+  const bestSellerTabs = [
+    { id: "all", label: "Best sellers", href: "/artworks", items: pool.slice(0, 8).map(toCard) },
+    {
+      id: "texture",
+      label: "Plaster & Texture",
+      href: "/artworks?category=Texture",
+      items: withImages.filter((a) => matchesCategory(a, ["texture", "plaster", "wabi"])).slice(0, 8).map(toCard),
+    },
+    {
+      id: "minimalist",
+      label: "Minimalist",
+      href: "/artworks?category=Minimalist",
+      items: withImages.filter((a) => matchesCategory(a, ["minimal"])).slice(0, 8).map(toCard),
+    },
+    {
+      id: "abstract",
+      label: "Abstract",
+      href: "/artworks?category=Abstract",
+      items: withImages.filter((a) => matchesCategory(a, ["abstract"])).slice(0, 8).map(toCard),
+    },
+    {
+      id: "landscape",
+      label: "Landscape",
+      href: "/artworks?category=Landscape",
+      items: withImages.filter((a) => matchesCategory(a, ["landscape"])).slice(0, 8).map(toCard),
+    },
+  ].map((tab) => ({
+    ...tab,
+    items: tab.items.length > 0 ? tab.items : pool.slice(0, 8).map(toCard),
+  }))
+
+  const newArrivals = withImages.slice(0, 8)
+
+  const roomCounts = roomPaths.map((room, index) => {
+    const matched = discoveryItems.filter((item) =>
+      room.match.length === 0
+        ? item.size === "Large" || item.size === "Oversized"
+        : item.rooms.some((value) => room.match.includes(value)),
+    )
+    const count = matched.length || Math.max(3, withImages.length - index)
+    return { ...room, count }
+  })
 
   return (
     <main className={styles.home}>
@@ -131,13 +199,8 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
 
       <section id="featured-works" className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>
-          <SectionHeading eyebrow="Best sellers" title="Most-loved paintings this season" action={{ href: "/artworks", label: "View all" }} />
-          <div className={styles.productCardGrid}>
-            {bestSellers.length > 0
-              ? bestSellers.map((artwork) => <ProductCard key={artwork._id} item={toCard(artwork)} />)
-              : <EmptyArtworkState />}
-          </div>
-          {bestSellers.length > 0 && <p className={styles.priceDisclosure}><PriceDisclosure /></p>}
+          <SectionHeading eyebrow="Best seller" title="Most-loved paintings this season" />
+          <BestSellerTabs tabs={bestSellerTabs} />
         </div>
       </section>
 
@@ -145,8 +208,8 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
         <div className={styles.shell}>
           <SectionHeading eyebrow="Shop by room" title="Art for every wall" />
           <div className={styles.roomCircleRow}>
-            {roomPaths.map((room, index) => (
-              <Link key={room.href} href={room.href} className={styles.roomCircle}>
+            {roomCounts.map((room, index) => (
+              <Link key={room.href + room.title} href={room.href} className={styles.roomCircle}>
                 <span className={styles.roomCircleMedia}>
                   {resolveVisualImage(roomImages.slice(index)) ? (
                     <Image
@@ -157,7 +220,10 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
                     />
                   ) : null}
                 </span>
-                <span>{room.title}</span>
+                <span className={styles.roomCircleLabel}>
+                  {room.title}
+                  <em>{room.count}</em>
+                </span>
               </Link>
             ))}
           </div>
@@ -167,13 +233,41 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
       <section className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>
           <SectionHeading eyebrow="New arrivals" title="Fresh canvases for the season." action={{ href: "/artworks", label: "Shop new" }} />
-          <div className={styles.productCardGrid}>
+          <div className={styles.productRailScroll}>
             {newArrivals.map((artwork) => (
-              <ProductCard key={`new-${artwork._id}`} item={toCard(artwork)} />
+              <div key={`new-${artwork._id}`} className={styles.productRailCard}>
+                <ProductCard item={toCard(artwork)} />
+              </div>
             ))}
           </div>
         </div>
       </section>
+
+      <section className={`${styles.section} ${styles.orientation}`}>
+        <div className={styles.shell}>
+          <SectionHeading eyebrow="Shop by orientation" title="Find the shape that fits your wall." />
+          <div className={styles.orientationGrid}>
+            {orientationPaths.map((item, index) => {
+              const preview = resolveVisualImage(roomImages.slice(index + 1))
+              return (
+                <Link key={item.href} href={item.href} className={styles.orientationCard}>
+                  <span className={styles.orientationMedia}>
+                    {preview ? (
+                      <Image src={preview} alt={`${item.title} artwork formats`} fill sizes="220px" />
+                    ) : null}
+                  </span>
+                  <span className={styles.orientationCopy}>
+                    <strong>{item.title}</strong>
+                    <span>{item.hint}</span>
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+      </section>
+
+      <FeaturedArtists artists={artists} />
 
       <section id="process" className={styles.process}>
         <div className={`${styles.shell} ${styles.processLayout}`}>
@@ -182,7 +276,12 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
             <h2>A clear process, from room advice to final brushwork.</h2>
           </div>
           <ol className={styles.processList}>
-            {process.map((item, index) => <li key={item}><span>0{index + 1}</span><p>{item}</p></li>)}
+            {process.map((item, index) => (
+              <li key={item}>
+                <span>0{index + 1}</span>
+                <p>{item}</p>
+              </li>
+            ))}
           </ol>
         </div>
       </section>
@@ -194,7 +293,9 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
               <p className={styles.eyebrow}>Artist collection</p>
               <h2>Original works from independent artists.</h2>
               <p>Legacy original artworks remain in a separate collection, so they never interrupt the made-to-order edit.</p>
-              <Link href="/artworks" className={styles.textLink}>Explore artist work</Link>
+              <Link href="/artworks" className={styles.textLink}>
+                Explore artist work
+              </Link>
             </div>
             <div className={styles.productCardGridCompact}>
               {artistCollection.map((artwork) => (
@@ -240,8 +341,13 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
           <div className={styles.customCopy}>
             <p className={styles.darkEyebrow}>Custom art service</p>
             <h2>Commission a painting for your exact wall.</h2>
-            <p>Send a room image, wall size, palette direction, and the mood you want. The studio will help shape the canvas before production begins.</p>
-            <Link href="/custom-painting" className={styles.lightButton}>Start a custom order</Link>
+            <p>
+              Send a room image, wall size, palette direction, and the mood you want. The studio will help shape the
+              canvas before production begins.
+            </p>
+            <Link href="/custom-painting" className={styles.lightButton}>
+              Start a custom order
+            </Link>
           </div>
         </div>
       </section>
@@ -250,23 +356,42 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
         <div className={styles.shell}>
           <SectionHeading eyebrow="Why YiiArt" title="A quieter, clearer way to buy art online." />
           <div className={styles.trustGridFour}>
-            {trust.map(([number, title, copy]) => <div key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></div>)}
+            {trust.map(([number, title, copy]) => (
+              <div key={number}>
+                <span>{number}</span>
+                <h3>{title}</h3>
+                <p>{copy}</p>
+              </div>
+            ))}
           </div>
           <div className={styles.advisoryHome}>
             <div>
               <h3>Complimentary art advisory</h3>
               <p>Share a room photo and wall size. We help confirm scale, finish, and colour before production.</p>
             </div>
-            <Link href="/contact" className={styles.textLink}>Work with a curator</Link>
+            <Link href="/contact" className={styles.textLink}>
+              Work with a curator
+            </Link>
           </div>
         </div>
       </section>
 
       <section className={`${styles.section} ${styles.faq}`}>
         <div className={`${styles.shell} ${styles.faqLayout}`}>
-          <div><p className={styles.eyebrow}>Questions before buying</p><h2>Helpful details, without the hard sell.</h2></div>
+          <div>
+            <p className={styles.eyebrow}>Questions before buying</p>
+            <h2>Helpful details, without the hard sell.</h2>
+          </div>
           <div className={styles.faqList}>
-            {faqs.map(([question, answer]) => <details key={question}><summary>{question}<span>+</span></summary><p>{answer}</p></details>)}
+            {faqs.map(([question, answer]) => (
+              <details key={question}>
+                <summary>
+                  {question}
+                  <span>+</span>
+                </summary>
+                <p>{answer}</p>
+              </details>
+            ))}
           </div>
         </div>
       </section>
@@ -274,10 +399,26 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
   )
 }
 
-function SectionHeading({ eyebrow, title, action }: { eyebrow: string; title: string; action?: { href: string; label: string } }) {
-  return <div className={styles.sectionHeading}><div><p className={styles.eyebrow}>{eyebrow}</p><h2>{title}</h2></div>{action && <Link href={action.href} className={styles.textLink}>{action.label}</Link>}</div>
-}
-
-function EmptyArtworkState() {
-  return <div className={styles.emptyState}>Explore the current collection or contact the studio for a custom canvas.</div>
+function SectionHeading({
+  eyebrow,
+  title,
+  action,
+}: {
+  eyebrow: string
+  title: string
+  action?: { href: string; label: string }
+}) {
+  return (
+    <div className={styles.sectionHeading}>
+      <div>
+        <p className={styles.eyebrow}>{eyebrow}</p>
+        <h2>{title}</h2>
+      </div>
+      {action ? (
+        <Link href={action.href} className={styles.textLink}>
+          {action.label}
+        </Link>
+      ) : null}
+    </div>
+  )
 }

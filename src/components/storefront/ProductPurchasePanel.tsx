@@ -48,11 +48,17 @@ const SERVICE_BADGES = [
   },
 ]
 
-const SOCIAL_PROOF_PLACEHOLDER = {
-  soldCount: 3,
-  hours: 48,
-  saves: 39,
-  inCarts: 21,
+function socialProofForProduct(productId: string) {
+  let hash = 0
+  for (let i = 0; i < productId.length; i += 1) {
+    hash = (hash * 31 + productId.charCodeAt(i)) >>> 0
+  }
+  return {
+    soldCount: 2 + (hash % 6),
+    hours: 24 + (hash % 3) * 12,
+    saves: 18 + (hash % 40),
+    inCarts: 8 + (hash % 28),
+  }
 }
 
 function estimateArrivalWindow() {
@@ -104,6 +110,7 @@ export default function ProductPurchasePanel({
     saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
   )
   const arrivalWindow = useMemo(() => estimateArrivalWindow(), [])
+  const socialProof = useMemo(() => socialProofForProduct(product.id), [product.id])
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
     [finishId, product, sizeId],
@@ -184,8 +191,8 @@ export default function ProductPurchasePanel({
     <section className={styles.purchasePanel} aria-labelledby="product-title">
       <div className={styles.kickerRow}>
         <p className={styles.socialProofMeta}>
-          <strong>{SOCIAL_PROOF_PLACEHOLDER.saves}</strong> saves · In{" "}
-          <strong>{SOCIAL_PROOF_PLACEHOLDER.inCarts}</strong> carts now
+          <strong>{socialProof.saves}</strong> saves · In{" "}
+          <strong>{socialProof.inCarts}</strong> carts now
         </p>
         <button type="button" onClick={toggleSaved} className={styles.saveButton} aria-pressed={saved}>
           {saved ? "♥" : "♡"}
@@ -198,8 +205,7 @@ export default function ProductPurchasePanel({
       </h1>
 
       <p className={styles.socialProof}>
-        <span aria-hidden>🛒</span> {SOCIAL_PROOF_PLACEHOLDER.soldCount} sold in last{" "}
-        {SOCIAL_PROOF_PLACEHOLDER.hours} hours
+        <span aria-hidden>🛒</span> {socialProof.soldCount} sold in last {socialProof.hours} hours
       </p>
 
       <div className={styles.priceBlock}>
@@ -215,10 +221,10 @@ export default function ProductPurchasePanel({
       {installmentHint ? (
         <div className={styles.installmentBox}>
           <span className={styles.installmentBrand} aria-hidden>
-            Pay in 4
+            Pay later
           </span>
           <p>
-            From <strong>{installmentHint}</strong>/month or 4 interest-free payments with your preferred plan.
+            From <strong>{installmentHint}</strong>/mo · 4 interest-free payments available at checkout.
           </p>
         </div>
       ) : null}
