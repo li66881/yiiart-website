@@ -17,6 +17,10 @@ const SCENE_SRC = {
   bedroom: "/scenes/bedroom.png",
 } as const
 
+const ZOOM_MIN = 1
+const ZOOM_MAX = 4
+const ZOOM_STEP = 0.18
+
 function SlideVisual({
   slide,
   alt,
@@ -168,10 +172,6 @@ function ThumbVisual({ slide }: { slide: GallerySlide }) {
   return <Image src={slide.url} alt="" fill sizes="88px" />
 }
 
-const ZOOM_MIN = 1
-const ZOOM_MAX = 4
-const ZOOM_STEP = 0.18
-
 function LightboxViewer({
   slide,
   alt,
@@ -191,14 +191,36 @@ function LightboxViewer({
 }) {
   const [zoom, setZoom] = useState(1)
   const [offset, setOffset] = useState({ x: 0, y: 0 })
-  const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const zoomRef = useRef(1)
+  const offsetRef = useRef({ x: 0, y: 0 })
+  const dragRef = useRef<{ pointerId: number; x: number; y: number; ox: number; oy: number } | null>(null)
   const viewportRef = useRef<HTMLDivElement | null>(null)
   const src = slide.sourceUrl || slide.url
   const label = slide.alt || alt
 
+  const applyZoom = useCallback((next: number) => {
+    const clamped = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next))
+    zoomRef.current = clamped
+    setZoom(clamped)
+    if (clamped <= ZOOM_MIN) {
+      offsetRef.current = { x: 0, y: 0 }
+      setOffset({ x: 0, y: 0 })
+    }
+  }, [])
+
+  const applyOffset = useCallback((next: { x: number; y: number }) => {
+    offsetRef.current = next
+    setOffset(next)
+  }, [])
+
   useEffect(() => {
+    zoomRef.current = 1
+    offsetRef.current = { x: 0, y: 0 }
     setZoom(1)
     setOffset({ x: 0, y: 0 })
+    setDragging(false)
+    dragRef.current = null
   }, [slide.id])
 
   useEffect(() => {
@@ -208,27 +230,16 @@ function LightboxViewer({
       if (event.key === "Escape") onClose()
       if (event.key === "ArrowLeft") onPrev()
       if (event.key === "ArrowRight") onNext()
-      if (event.key === "+" || event.key === "=") {
-        setZoom((value) => Math.min(ZOOM_MAX, value + ZOOM_STEP))
-      }
-      if (event.key === "-" || event.key === "_") {
-        setZoom((value) => {
-          const next = Math.max(ZOOM_MIN, value - ZOOM_STEP)
-          if (next <= ZOOM_MIN) setOffset({ x: 0, y: 0 })
-          return next
-        })
-      }
-      if (event.key === "0") {
-        setZoom(1)
-        setOffset({ x: 0, y: 0 })
-      }
+      if (event.key === "+" || event.key === "=") applyZoom(zoomRef.current + ZOOM_STEP)
+      if (event.key === "-" || event.key === "_") applyZoom(zoomRef.current - ZOOM_STEP)
+      if (event.key === "0") applyZoom(1)
     }
     window.addEventListener("keydown", onKey)
     return () => {
       document.body.style.overflow = previous
       window.removeEventListener("keydown", onKey)
     }
-  }, [onClose, onNext, onPrev])
+  }, [applyZoom, onClose, onNext, onPrev])
 
   useEffect(() => {
     const node = viewportRef.current
@@ -236,31 +247,58 @@ function LightboxViewer({
     const onWheel = (event: WheelEvent) => {
       event.preventDefault()
       const direction = event.deltaY < 0 ? 1 : -1
-      setZoom((value) => {
-        const next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, value + direction * ZOOM_STEP))
-        if (next <= ZOOM_MIN) setOffset({ x: 0, y: 0 })
-        return next
-      })
+      applyZoom(zoomRef.current + direction * ZOOM_STEP)
     }
     node.addEventListener("wheel", onWheel, { passive: false })
     return () => node.removeEventListener("wheel", onWheel)
-  }, [])
+  }, [applyZoom])
 
-  const onPointerDown = (event: React.PointerEvent) => {
-    if (zoom <= ZOOM_MIN) return
-    dragRef.current = { x: event.clientX, y: event.clientY, ox: offset.x, oy: offset.y }
-    ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
-  }
+  useEffect(() => {
+    const onPointerMove = (event: PointerEvent) => {
+      const drag = dragRef.current
+      if (!drag || event.pointerId !== drag.pointerId) return
+      event.preventDefault()
+      applyOffset({
+        x: drag.ox + (event.clientX - drag.x),
+        y: drag.oy + (event.clientY - drag.y),
+      })
+    }
 
-  const onPointerMove = (event: React.PointerEvent) => {
-    if (!dragRef.current || zoom <= ZOOM_MIN) return
-    const dx = event.clientX - dragRef.current.x
-    const dy = event.clientY - dragRef.current.y
-    setOffset({ x: dragRef.current.ox + dx, y: dragRef.current.oy + dy })
-  }
+    const endDrag = (event: PointerEvent) => {
+      const drag = dragRef.current
+      if (!drag || event.pointerId !== drag.pointerId) return
+      dragRef.current = null
+      setDragging(false)
+    }
 
-  const onPointerUp = () => {
-    dragRef.current = null
+    window.addEventListener("pointermove", onPointerMove, { passive: false })
+    window.addEventListener("pointerup", endDrag)
+    window.addEventListener("pointercancel", endDrag)
+    return () => {
+      window.removeEventListener("pointermove", onPointerMove)
+      window.removeEventListener("pointerup", endDrag)
+      window.removeEventListener("pointercancel", endDrag)
+    }
+  }, [applyOffset])
+
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0) return
+    if (zoomRef.current <= ZOOM_MIN) return
+    event.preventDefault()
+    event.stopPropagation()
+    dragRef.current = {
+      pointerId: event.pointerId,
+      x: event.clientX,
+      y: event.clientY,
+      ox: offsetRef.current.x,
+      oy: offsetRef.current.y,
+    }
+    setDragging(true)
+    try {
+      event.currentTarget.setPointerCapture(event.pointerId)
+    } catch {
+      // Window listeners still handle pan if capture is rejected.
+    }
   }
 
   return (
@@ -272,27 +310,19 @@ function LightboxViewer({
         <div
           ref={viewportRef}
           className={styles.lightboxViewport}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) onClose()
+          onPointerDown={onPointerDown}
+          onDoubleClick={(event) => {
+            event.preventDefault()
+            if (zoomRef.current > ZOOM_MIN) applyZoom(1)
+            else applyZoom(2)
           }}
         >
           <div
             className={styles.lightboxZoomLayer}
+            data-dragging={dragging ? "true" : "false"}
             style={{
-              transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
-              cursor: zoom > ZOOM_MIN ? "grab" : "zoom-in",
-            }}
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
-            onDoubleClick={() => {
-              if (zoom > ZOOM_MIN) {
-                setZoom(1)
-                setOffset({ x: 0, y: 0 })
-              } else {
-                setZoom(2)
-              }
+              transform: `translate3d(${offset.x}px, ${offset.y}px, 0) scale(${zoom})`,
+              cursor: zoom > ZOOM_MIN ? (dragging ? "grabbing" : "grab") : "zoom-in",
             }}
           >
             {slide.viewMode === "room" ? (
@@ -302,10 +332,20 @@ function LightboxViewer({
                   alt=""
                   fill
                   sizes="90vw"
+                  draggable={false}
                   className={styles.lightboxRoomPlate}
+                  onDragStart={(event) => event.preventDefault()}
                 />
                 <span className={styles.lightboxRoomArt}>
-                  <Image src={src} alt={label} fill sizes="40vw" className={styles.lightboxContainImage} />
+                  <Image
+                    src={src}
+                    alt={label}
+                    fill
+                    sizes="40vw"
+                    draggable={false}
+                    className={styles.lightboxContainImage}
+                    onDragStart={(event) => event.preventDefault()}
+                  />
                 </span>
               </div>
             ) : (
@@ -315,8 +355,10 @@ function LightboxViewer({
                   alt={label}
                   fill
                   sizes="90vw"
+                  draggable={false}
                   className={styles.lightboxContainImage}
                   priority
+                  onDragStart={(event) => event.preventDefault()}
                 />
               </div>
             )}
