@@ -155,7 +155,7 @@
 }
 
 .whiteBgImage {
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .roomStage {
@@ -239,6 +239,75 @@
   width: min(92vw, 920px);
   aspect-ratio: 1 / 1;
   border-radius: 10px;
+}
+
+.lightboxViewport {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: min(96vw, 1200px);
+  height: min(78vh, 920px);
+  overflow: hidden;
+  border-radius: 10px;
+  background: #1a1916;
+  touch-action: none;
+}
+
+.lightboxZoomLayer {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  transition: transform 0.05s linear;
+  will-change: transform;
+  user-select: none;
+}
+
+.lightboxHint {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+}
+
+.lightboxImageFrame {
+  position: relative;
+  width: min(92vw, 1100px);
+  height: min(72vh, 820px);
+}
+
+.lightboxRoomFrame {
+  position: relative;
+  width: min(92vw, 1100px);
+  height: min(72vh, 820px);
+  overflow: hidden;
+  background: #1a1916;
+}
+
+.lightboxRoomPlate {
+  object-fit: contain !important;
+}
+
+.lightboxRoomArt {
+  position: absolute;
+  left: 50%;
+  top: 16%;
+  width: min(34%, 260px);
+  aspect-ratio: 1 / 1;
+  transform: translateX(-50%);
+  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+}
+
+.lightboxRoomFrame[data-scene="bedroom"] .lightboxRoomArt {
+  top: 14%;
+  width: min(30%, 230px);
+}
+
+.lightboxContainImage {
+  object-fit: contain !important;
 }
 
 .thumbnailRailDesktop {
@@ -355,7 +424,7 @@
   z-index: 80;
   display: grid;
   place-items: center;
-  background: rgba(24, 22, 19, 0.88);
+  background: rgba(24, 22, 19, 0.92);
   padding: 1.5rem;
 }
 
@@ -363,6 +432,7 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
+  z-index: 2;
   border: 0;
   background: transparent;
   color: #fff;
@@ -372,16 +442,16 @@
 
 .lightboxInner {
   display: grid;
-  gap: 1rem;
+  gap: 0.75rem;
   justify-items: center;
-  max-width: min(96vw, 1100px);
+  max-width: min(96vw, 1200px);
 }
 
 .lightboxImage {
-  width: auto;
-  max-width: 100%;
-  height: auto;
-  max-height: 80vh;
+  width: auto !important;
+  height: auto !important;
+  max-width: min(92vw, 1100px);
+  max-height: min(72vh, 820px);
   object-fit: contain;
 }
 

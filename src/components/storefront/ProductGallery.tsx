@@ -168,6 +168,179 @@ function ThumbVisual({ slide }: { slide: GallerySlide }) {
   return <Image src={slide.url} alt="" fill sizes="88px" />
 }
 
+const ZOOM_MIN = 1
+const ZOOM_MAX = 4
+const ZOOM_STEP = 0.18
+
+function LightboxViewer({
+  slide,
+  alt,
+  onClose,
+  onPrev,
+  onNext,
+  index,
+  total,
+}: {
+  slide: GallerySlide
+  alt: string
+  onClose: () => void
+  onPrev: () => void
+  onNext: () => void
+  index: number
+  total: number
+}) {
+  const [zoom, setZoom] = useState(1)
+  const [offset, setOffset] = useState({ x: 0, y: 0 })
+  const dragRef = useRef<{ x: number; y: number; ox: number; oy: number } | null>(null)
+  const viewportRef = useRef<HTMLDivElement | null>(null)
+  const src = slide.sourceUrl || slide.url
+  const label = slide.alt || alt
+
+  useEffect(() => {
+    setZoom(1)
+    setOffset({ x: 0, y: 0 })
+  }, [slide.id])
+
+  useEffect(() => {
+    const previous = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === "Escape") onClose()
+      if (event.key === "ArrowLeft") onPrev()
+      if (event.key === "ArrowRight") onNext()
+      if (event.key === "+" || event.key === "=") {
+        setZoom((value) => Math.min(ZOOM_MAX, value + ZOOM_STEP))
+      }
+      if (event.key === "-" || event.key === "_") {
+        setZoom((value) => {
+          const next = Math.max(ZOOM_MIN, value - ZOOM_STEP)
+          if (next <= ZOOM_MIN) setOffset({ x: 0, y: 0 })
+          return next
+        })
+      }
+      if (event.key === "0") {
+        setZoom(1)
+        setOffset({ x: 0, y: 0 })
+      }
+    }
+    window.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = previous
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [onClose, onNext, onPrev])
+
+  useEffect(() => {
+    const node = viewportRef.current
+    if (!node) return
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      const direction = event.deltaY < 0 ? 1 : -1
+      setZoom((value) => {
+        const next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, value + direction * ZOOM_STEP))
+        if (next <= ZOOM_MIN) setOffset({ x: 0, y: 0 })
+        return next
+      })
+    }
+    node.addEventListener("wheel", onWheel, { passive: false })
+    return () => node.removeEventListener("wheel", onWheel)
+  }, [])
+
+  const onPointerDown = (event: React.PointerEvent) => {
+    if (zoom <= ZOOM_MIN) return
+    dragRef.current = { x: event.clientX, y: event.clientY, ox: offset.x, oy: offset.y }
+    ;(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId)
+  }
+
+  const onPointerMove = (event: React.PointerEvent) => {
+    if (!dragRef.current || zoom <= ZOOM_MIN) return
+    const dx = event.clientX - dragRef.current.x
+    const dy = event.clientY - dragRef.current.y
+    setOffset({ x: dragRef.current.ox + dx, y: dragRef.current.oy + dy })
+  }
+
+  const onPointerUp = () => {
+    dragRef.current = null
+  }
+
+  return (
+    <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label="Artwork lightbox">
+      <button type="button" className={styles.lightboxClose} aria-label="Close" onClick={onClose}>
+        ×
+      </button>
+      <div className={styles.lightboxInner}>
+        <div
+          ref={viewportRef}
+          className={styles.lightboxViewport}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) onClose()
+          }}
+        >
+          <div
+            className={styles.lightboxZoomLayer}
+            style={{
+              transform: `translate(${offset.x}px, ${offset.y}px) scale(${zoom})`,
+              cursor: zoom > ZOOM_MIN ? "grab" : "zoom-in",
+            }}
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
+            onDoubleClick={() => {
+              if (zoom > ZOOM_MIN) {
+                setZoom(1)
+                setOffset({ x: 0, y: 0 })
+              } else {
+                setZoom(2)
+              }
+            }}
+          >
+            {slide.viewMode === "room" ? (
+              <div className={styles.lightboxRoomFrame} data-scene={slide.scene || "living"}>
+                <Image
+                  src={SCENE_SRC[slide.scene === "bedroom" ? "bedroom" : "living"]}
+                  alt=""
+                  fill
+                  sizes="90vw"
+                  className={styles.lightboxRoomPlate}
+                />
+                <span className={styles.lightboxRoomArt}>
+                  <Image src={src} alt={label} fill sizes="40vw" className={styles.lightboxContainImage} />
+                </span>
+              </div>
+            ) : (
+              <div className={styles.lightboxImageFrame}>
+                <Image
+                  src={src}
+                  alt={label}
+                  fill
+                  sizes="90vw"
+                  className={styles.lightboxContainImage}
+                  priority
+                />
+              </div>
+            )}
+          </div>
+        </div>
+        <p className={styles.lightboxHint}>Scroll to zoom · Drag to pan · Esc to close</p>
+        {total > 1 && (
+          <div className={styles.lightboxControls}>
+            <button type="button" onClick={onPrev} aria-label="Previous image">
+              ‹
+            </button>
+            <span>
+              {index + 1} / {total}
+            </span>
+            <button type="button" onClick={onNext} aria-label="Next image">
+              ›
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
 export default function ProductGallery({ media, alt }: Props) {
   const slides = useMemo(() => buildGallerySlides(media, alt), [alt, media])
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -320,42 +493,17 @@ export default function ProductGallery({ media, alt }: Props) {
         {slides.length > 1 ? <div className={styles.thumbnailRailMobile}>{thumbs}</div> : null}
       </figure>
 
-      {lightboxOpen && selectedMedia.type !== "video" && (
-        <div
-          className={styles.lightbox}
-          role="dialog"
-          aria-modal="true"
-          aria-label="Artwork lightbox"
-          onClick={() => setLightboxOpen(false)}
-        >
-          <button
-            type="button"
-            className={styles.lightboxClose}
-            aria-label="Close"
-            onClick={() => setLightboxOpen(false)}
-          >
-            ×
-          </button>
-          <div className={styles.lightboxInner} onClick={(event) => event.stopPropagation()}>
-            <div className={styles.lightboxStage}>
-              <SlideVisual slide={selectedMedia} alt={alt} sizes="90vw" />
-            </div>
-            {slides.length > 1 && (
-              <div className={styles.lightboxControls}>
-                <button type="button" onClick={goPrev} aria-label="Previous image">
-                  ‹
-                </button>
-                <span>
-                  {selectedIndex + 1} / {slides.length}
-                </span>
-                <button type="button" onClick={goNext} aria-label="Next image">
-                  ›
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+      {lightboxOpen && selectedMedia.type !== "video" ? (
+        <LightboxViewer
+          slide={selectedMedia}
+          alt={alt}
+          index={selectedIndex}
+          total={slides.length}
+          onClose={() => setLightboxOpen(false)}
+          onPrev={goPrev}
+          onNext={goNext}
+        />
+      ) : null}
     </>
   )
 }
