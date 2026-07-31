@@ -69,16 +69,29 @@ test("increments a repeated made-to-order selection and caps quantity", () => {
   assert.equal(capped[0].quantity, 99)
 })
 
-test("never increments original artwork above one", () => {
+test("never increments unique original artwork above one when no size is selected", () => {
   const original: CartItem = {
     ...small,
     key: "original-1",
     id: "original-1",
     productionModel: "original",
+    sizeId: undefined,
+    finishId: undefined,
   }
 
   assert.equal(addCartItem([original], original)[0].quantity, 1)
   assert.equal(updateCartQuantity([original], original.key, 3)[0].quantity, 1)
+})
+
+test("allows quantity for original catalog items that have a size selection", () => {
+  const sizedOriginal: CartItem = {
+    ...small,
+    key: "art-1:60x80:rolled",
+    productionModel: "original",
+  }
+
+  assert.equal(addCartItem([sizedOriginal], sizedOriginal)[0].quantity, 2)
+  assert.equal(updateCartQuantity([sizedOriginal], sizedOriginal.key, 4)[0].quantity, 4)
 })
 
 test("removes a line by its variant key", () => {

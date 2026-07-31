@@ -1,6 +1,8 @@
 "use client"
 
+import Image from "next/image"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
@@ -71,16 +73,14 @@ function estimateArrivalWindow() {
   return `${fmt(start)}-${fmt(end)}`
 }
 
-function finishSwatchTone(label: string) {
-  const value = label.toLowerCase()
+function finishIconKey(id: string, label: string) {
+  const value = `${id} ${label}`.toLowerCase()
   if (value.includes("rolled")) return "rolled"
   if (value.includes("frameless") || value.includes("gallery")) return "frameless"
-  if (value.includes("gold")) return "gold"
-  if (value.includes("silver")) return "silver"
-  if (value.includes("white")) return "white"
   if (value.includes("wood") || value.includes("oak") || value.includes("natural")) return "wood"
+  if (value.includes("white")) return "white"
   if (value.includes("black")) return "black"
-  return "default"
+  return "frameless"
 }
 
 function formatSaleCountdown(saleEndsAt: string) {
@@ -99,6 +99,7 @@ export default function ProductPurchasePanel({
   whatsappUrl,
   saleEndsAt = null,
 }: Props) {
+  const router = useRouter()
   const initialSize = product.sizes[0]?.id || ""
   const initialFinish = product.finishes[0]?.id || ""
   const [sizeId, setSizeId] = useState(initialSize)
@@ -122,7 +123,6 @@ export default function ProductPurchasePanel({
   const saved = isInWishlist(product.id)
   const saleActive =
     Boolean(saleEndsAt) && new Date(saleEndsAt as string).getTime() > Date.now()
-  const allowQty = true
   const lineQty = Math.max(1, quantity)
   const linePriceCny = selection ? selection.priceCny * lineQty : 0
   const installmentHint = selection
@@ -147,7 +147,7 @@ export default function ProductPurchasePanel({
   }, [saleEndsAt])
 
   const addSelection = () => {
-    if (!selection || !image || !directCheckoutAvailable) return
+    if (!selection || !image || !directCheckoutAvailable) return false
 
     addItem({
       id: product.id,
@@ -157,7 +157,8 @@ export default function ProductPurchasePanel({
       price: selection.priceCny,
       image: image.src,
       quantity: lineQty,
-      productionModel: product.productionModel,
+      // Catalog size picks are made-to-order lines even when CMS still says "original".
+      productionModel: product.sizes.length > 0 ? "hand_painted_to_order" : product.productionModel,
       sizeId: selection.size.id,
       sizeLabel: selection.size.label,
       finishId: selection.finish.id,
@@ -173,6 +174,12 @@ export default function ProductPurchasePanel({
       finish: selection.finish.id,
     })
     setConfirmation(`${product.title} was added to your cart.`)
+    return true
+  }
+
+  const buyNow = () => {
+    if (!addSelection()) return
+    router.push("/checkout")
   }
 
   const toggleSaved = () => {
@@ -270,27 +277,38 @@ export default function ProductPurchasePanel({
       {product.finishes.length > 0 && (
         <div className={styles.optionBlock}>
           <p className={styles.optionLabel}>
-            Rolled Canvas/Frameless/Framed:{" "}
-            <strong>{selection?.finish.label || product.finishes[0]?.label}</strong>
+            Framing: <strong>{selection?.finish.label || product.finishes[0]?.label}</strong>
           </p>
-          <div className={styles.finishSwatches}>
-            {product.finishes.map((finish) => (
-              <label
-                key={finish.id}
-                className={styles.finishSwatch}
-                title={finish.label}
-                data-active={selection?.finish.id === finish.id}
-                data-finish={finishSwatchTone(finish.label)}
-              >
-                <input
-                  type="radio"
-                  name="product-finish"
-                  checked={selection?.finish.id === finish.id}
-                  onChange={() => setFinishId(finish.id)}
-                />
-                <span className={styles.finishSwatchFace} aria-hidden />
-              </label>
-            ))}
+          <div className={styles.finishOptions} role="radiogroup" aria-label="Framing options">
+            {product.finishes.map((finish) => {
+              const icon = finishIconKey(finish.id, finish.label)
+              const active = selection?.finish.id === finish.id
+              return (
+                <label
+                  key={finish.id}
+                  className={styles.finishOption}
+                  data-active={active}
+                  title={finish.label}
+                >
+                  <input
+                    type="radio"
+                    name="product-finish"
+                    checked={active}
+                    onChange={() => setFinishId(finish.id)}
+                  />
+                  <span className={styles.finishOptionIcon}>
+                    <Image
+                      src={`/finishes/${icon}.webp`}
+                      alt=""
+                      width={64}
+                      height={64}
+                      className={styles.finishOptionImage}
+                    />
+                  </span>
+                  <span className={styles.finishOptionLabel}>{finish.label}</span>
+                </label>
+              )
+            })}
           </div>
         </div>
       )}
@@ -302,25 +320,23 @@ export default function ProductPurchasePanel({
 
       {directCheckoutAvailable && selection ? (
         <div className={styles.cartRow}>
-          {allowQty ? (
-            <div className={styles.qtyControl}>
-              <button
-                type="button"
-                aria-label="Decrease quantity"
-                onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-              >
-                -
-              </button>
-              <span>{quantity}</span>
-              <button
-                type="button"
-                aria-label="Increase quantity"
-                onClick={() => setQuantity((value) => Math.min(99, value + 1))}
-              >
-                +
-              </button>
-            </div>
-          ) : null}
+          <div className={styles.qtyControl}>
+            <button
+              type="button"
+              aria-label="Decrease quantity"
+              onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+            >
+              -
+            </button>
+            <span>{quantity}</span>
+            <button
+              type="button"
+              aria-label="Increase quantity"
+              onClick={() => setQuantity((value) => Math.min(99, value + 1))}
+            >
+              +
+            </button>
+          </div>
           <button className={styles.primaryAction} type="button" onClick={addSelection}>
             Add To Cart — <PriceText amountCny={linePriceCny} />
           </button>
@@ -332,8 +348,16 @@ export default function ProductPurchasePanel({
       )}
 
       <div className={styles.secondaryActions}>
-        <a className={styles.buyNow} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Buy It Now
+        {directCheckoutAvailable && selection ? (
+          <button className={styles.buyNow} type="button" onClick={buyNow}>
+            Buy It Now
+          </button>
+        ) : null}
+        <a className={styles.whatsappAction} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+          <span className={styles.whatsappIcon} aria-hidden>
+            WhatsApp
+          </span>
+          Chat on WhatsApp
         </a>
         <Link className={styles.sizeHelpLink} href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
           Need help with size?

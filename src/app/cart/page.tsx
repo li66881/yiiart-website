@@ -52,9 +52,11 @@ export default function CartPage() {
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-2">
                             <span className="border border-black/15 bg-[#fffdf8] px-3 py-1 text-sm">
-                              {item.productionModel === "hand_painted_to_order" ? "Hand-painted to order" : "One original artwork"}
+                              {item.productionModel === "hand_painted_to_order" || item.sizeId
+                                ? "Hand-painted to order"
+                                : "One original artwork"}
                             </span>
-                            {item.productionModel === "hand_painted_to_order" && (
+                            {(item.productionModel === "hand_painted_to_order" || item.sizeId) && (
                               <label className="flex items-center gap-2 text-sm">
                                 Qty
                                 <input

@@ -280,38 +280,49 @@ function preferPrimaryProductImages(images: StorefrontImage[]) {
   return images
 }
 
+/** Simplified MesonArt-style framing set with concrete icon keys. */
+const SIMPLIFIED_FINISHES: StorefrontFinish[] = [
+  { id: "rolled", label: "Rolled Canvas", priceDeltaCny: 0 },
+  { id: "frameless", label: "Frameless / Gallery Wrap", priceDeltaCny: 0 },
+  { id: "black-frame", label: "Black Frame", priceDeltaCny: 0 },
+  { id: "wood-frame", label: "Wood Frame", priceDeltaCny: 0 },
+  { id: "white-frame", label: "White Frame", priceDeltaCny: 0 },
+]
+
+function finishCatalogKey(id: string, label: string) {
+  const value = `${id} ${label}`.toLowerCase()
+  if (value.includes("rolled")) return "rolled"
+  if (value.includes("frameless") || value.includes("gallery")) return "frameless"
+  if (value.includes("wood") || value.includes("oak") || value.includes("natural")) return "wood"
+  if (value.includes("white")) return "white"
+  if (value.includes("black")) return "black"
+  return ""
+}
+
 function buildFinishes(value: unknown, _productionModel: StorefrontProductionModel) {
-  const finishes = (Array.isArray(value) ? value : []).flatMap((item, index): StorefrontFinish[] => {
+  const fromCms = (Array.isArray(value) ? value : []).flatMap((item, index): StorefrontFinish[] => {
     if (!item || typeof item !== "object") return []
     const finish = item as Record<string, unknown>
     const priceDeltaCny = finiteNumber(finish.priceDeltaCny)
     if (priceDeltaCny === null || priceDeltaCny < 0) return []
     const label = cleanString(finish.label) || `Finish ${index + 1}`
+    const id = cleanString(finish._key) || slugify(label)
+    if (!finishCatalogKey(id, label)) return []
 
-    return [{
-      id: cleanString(finish._key) || slugify(label),
-      label,
-      priceDeltaCny,
-    }]
+    return [{ id, label, priceDeltaCny }]
   })
 
-  const defaults = [
-    { id: "rolled", label: "Rolled Canvas", priceDeltaCny: 0 },
-    { id: "frameless", label: "Frameless", priceDeltaCny: 0 },
-    { id: "black-frame", label: "Stretch+Black Frame", priceDeltaCny: 0 },
-    { id: "silver-frame", label: "Stretch+Silver Frame", priceDeltaCny: 0 },
-    { id: "white-frame", label: "Stretch+White Frame", priceDeltaCny: 0 },
-    { id: "wood-frame", label: "Stretch+Wood Frame", priceDeltaCny: 0 },
-    { id: "gold-frame", label: "Stretch + Gold Frame", priceDeltaCny: 0 },
-  ]
-
-  if (finishes.length === 0) return defaults
-
-  const seen = new Set(finishes.map((finish) => finish.id))
-  return [
-    ...finishes,
-    ...defaults.filter((finish) => !seen.has(finish.id)),
-  ]
+  return SIMPLIFIED_FINISHES.map((finish) => {
+    const catalogKey = finishCatalogKey(finish.id, finish.label)
+    const match = fromCms.find((option) => finishCatalogKey(option.id, option.label) === catalogKey)
+    return match
+      ? {
+          id: match.id,
+          label: match.label || finish.label,
+          priceDeltaCny: match.priceDeltaCny,
+        }
+      : finish
+  })
 }
 
 function normalizeCollectionType(value?: string | null): StorefrontCollectionType {

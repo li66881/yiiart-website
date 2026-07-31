@@ -37,6 +37,11 @@ export function normalizeStoredCart(value: unknown): CartItem[] {
   })
 }
 
+/** Size/finish selections are made-to-order lines and may have qty > 1. */
+export function cartAllowsQuantity(item: Pick<CartItem, "productionModel" | "sizeId">) {
+  return item.productionModel === "hand_painted_to_order" || Boolean(item.sizeId)
+}
+
 export function addCartItem(items: CartItem[], input: CartItemInput) {
   const next = normalizeCartItem(input)
   if (!next) return items
@@ -48,9 +53,9 @@ export function addCartItem(items: CartItem[], input: CartItemInput) {
     ? {
         ...item,
         ...next,
-        quantity: item.productionModel === "original"
-          ? 1
-          : clampQuantity(item.quantity + next.quantity),
+        quantity: cartAllowsQuantity(item)
+          ? clampQuantity(item.quantity + next.quantity)
+          : 1,
       }
     : item)
 }
@@ -62,7 +67,10 @@ export function removeCartItem(items: CartItem[], key: string) {
 export function updateCartQuantity(items: CartItem[], key: string, quantity: number) {
   if (!Number.isFinite(quantity) || quantity <= 0) return removeCartItem(items, key)
   return items.map((item) => item.key === key
-    ? { ...item, quantity: item.productionModel === "original" ? 1 : clampQuantity(quantity) }
+    ? {
+        ...item,
+        quantity: cartAllowsQuantity(item) ? clampQuantity(quantity) : 1,
+      }
     : item)
 }
 
@@ -80,6 +88,10 @@ function normalizeCartItem(value: unknown): CartItem | null {
   const sizeId = text(item.sizeId) || undefined
   const finishId = text(item.finishId) || undefined
   const sizeLabel = text(item.sizeLabel) || text(item.size) || undefined
+  const allowsQty = cartAllowsQuantity({ productionModel, sizeId })
+  const quantity = allowsQty
+    ? clampQuantity(number(item.quantity) || 1)
+    : 1
   const input: CartItemInput = {
     id,
     slug: text(item.slug) || undefined,
@@ -89,7 +101,7 @@ function normalizeCartItem(value: unknown): CartItem | null {
     artistId: text(item.artistId) || undefined,
     price,
     image: text(item.image),
-    quantity: productionModel === "original" ? 1 : clampQuantity(number(item.quantity) || 1),
+    quantity,
     productionModel,
     sizeId,
     sizeLabel,
