@@ -497,9 +497,12 @@
 }
 
 .purchasePanel {
+  position: relative;
+  z-index: 1;
   border: 0;
-  background: transparent;
-  padding: 0;
+  background: #f7f5f0;
+  padding: 0 0 0.25rem;
+  isolation: isolate;
 }
 
 .kickerRow {
@@ -761,10 +764,13 @@
 }
 
 .cartRow {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.65rem;
   margin-top: 1rem;
+  background: #f7f5f0;
 }
 
 .cartRow:has(.qtyControl) {
@@ -824,7 +830,10 @@
 .secondaryActions {
   display: grid;
   gap: 0.55rem;
-  margin-top: 0.55rem;
+  margin-top: 0.7rem;
+  position: relative;
+  z-index: 1;
+  background: #f7f5f0;
 }
 
 .buyNow {

@@ -422,13 +422,13 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             <span className="text-black">{title}</span>
           </nav>
 
-          <div className="mt-2 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(380px,0.8fr)] lg:gap-14">
+          <div className="mt-2 grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(380px,0.8fr)] lg:items-start lg:gap-x-14 lg:gap-y-10">
             <div>
               <ProductGallery media={galleryMedia} alt={artworkImageAlt} />
             </div>
 
-            <div className="space-y-6">
-              <div className="lg:sticky lg:top-[calc(var(--ya-header-offset-lg)+0.75rem)] lg:z-10 lg:self-start">
+            {/* Sticky buy box only — keep accordion out of this stacking context so text never slides under CTAs. */}
+            <div className="lg:sticky lg:top-[calc(var(--ya-header-offset-lg)+0.75rem)] lg:z-10 lg:row-span-2 lg:self-start lg:bg-[#f7f5f0] lg:pb-4">
               <ProductPurchasePanel
                 product={storefrontProduct}
                 directCheckoutAvailable={directCheckoutAvailable}
@@ -436,180 +436,179 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 whatsappUrl={whatsappUrl}
                 saleEndsAt={getStudioSaleEndsAt()}
               />
+            </div>
+
+            <div className="border-t border-stone-200 pt-6 lg:pt-2">
+              <div className="mb-3 text-sm text-stone-600">
+                {reviewStats.count > 0 ? (
+                  <div className="flex flex-wrap items-center gap-2">
+                    <ReviewStars rating={reviewStats.overall} size="sm" />
+                    <span>
+                      {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count}{" "}
+                      <TranslatedText k={reviewStats.count === 1 ? "product.verifiedReview" : "product.verifiedReviews"} />
+                    </span>
+                  </div>
+                ) : (
+                  <span><TranslatedText k="product.noReviews" /></span>
+                )}
               </div>
 
-              <div className="border-t border-stone-200 pt-2">
-                <div className="mb-3 text-sm text-stone-600">
-                  {reviewStats.count > 0 ? (
-                    <div className="flex flex-wrap items-center gap-2">
-                      <ReviewStars rating={reviewStats.overall} size="sm" />
-                      <span>
-                        {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count}{" "}
-                        <TranslatedText k={reviewStats.count === 1 ? "product.verifiedReview" : "product.verifiedReviews"} />
-                      </span>
-                    </div>
-                  ) : (
-                    <span><TranslatedText k="product.noReviews" /></span>
-                  )}
-                </div>
-
-                <ProductAccordion
-                  defaultOpenId="about"
-                  items={[
-                    {
-                      id: "about",
-                      title: "About the Artwork",
-                      content: (
-                        <>
-                          <p className="whitespace-pre-line">
-                            {description || <TranslatedTemplate k="product.aboutFallback" values={{ title }} />}
-                          </p>
-                          <dl className={storefrontStyles.accordionFields}>
-                            {category ? (
-                              <div className={storefrontStyles.accordionField}>
-                                <dt>Style</dt>
-                                <dd><TranslatedOption value={category} /></dd>
-                              </div>
-                            ) : null}
-                            {roomTypes.length > 0 ? (
-                              <div className={storefrontStyles.accordionField}>
-                                <dt>Subject / Rooms</dt>
-                                <dd><TranslatedOptionList values={roomTypes} /></dd>
-                              </div>
-                            ) : null}
-                            {medium ? (
-                              <div className={storefrontStyles.accordionField}>
-                                <dt>Mediums</dt>
-                                <dd><TranslatedOption value={medium} /></dd>
-                              </div>
-                            ) : null}
-                          </dl>
-                        </>
-                      ),
-                    },
-                    {
-                      id: "details",
-                      title: "Details and Customization",
-                      content: (
+              <ProductAccordion
+                defaultOpenId="about"
+                items={[
+                  {
+                    id: "about",
+                    title: "About the Artwork",
+                    content: (
+                      <>
+                        <p className="whitespace-pre-line">
+                          {description || <TranslatedTemplate k="product.aboutFallback" values={{ title }} />}
+                        </p>
                         <dl className={storefrontStyles.accordionFields}>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Availability</dt>
-                            <dd>
-                              {storefrontProduct.productionModel === "hand_painted_to_order"
-                                ? "Made to order, 100% hand-painted by a studio artist"
-                                : "Artist collection original"}
-                            </dd>
-                          </div>
-                          {dimensions ? (
+                          {category ? (
                             <div className={storefrontStyles.accordionField}>
-                              <dt>Size</dt>
-                              <dd>{dimensions}</dd>
+                              <dt>Style</dt>
+                              <dd><TranslatedOption value={category} /></dd>
                             </div>
                           ) : null}
-                          {orientation ? (
+                          {roomTypes.length > 0 ? (
                             <div className={storefrontStyles.accordionField}>
-                              <dt>Orientation</dt>
-                              <dd><TranslatedOption value={orientation} /></dd>
+                              <dt>Subject / Rooms</dt>
+                              <dd><TranslatedOptionList values={roomTypes} /></dd>
                             </div>
                           ) : null}
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Creation time</dt>
-                            <dd>{storefrontProduct.creationWindow || "1-2 weeks"}</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Ready to hang</dt>
-                            <dd>Yes, when stretched or framed options are selected</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Frame</dt>
-                            <dd>{framingNotes || "Multiple frame finishes available"}</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Authenticity</dt>
-                            <dd><TranslatedText k="product.detail.authenticityValue" /></dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Certificate</dt>
-                            <dd><TranslatedText k="product.detail.certificateValue" /></dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Customization</dt>
-                            <dd>Custom sizes and colour direction available on request</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Outdoor safe</dt>
-                            <dd>No</dd>
-                          </div>
+                          {medium ? (
+                            <div className={storefrontStyles.accordionField}>
+                              <dt>Mediums</dt>
+                              <dd><TranslatedOption value={medium} /></dd>
+                            </div>
+                          ) : null}
                         </dl>
-                      ),
-                    },
-                    {
-                      id: "shipping",
-                      title: "Shipping and Returns",
-                      content: (
-                        <dl className={storefrontStyles.accordionFields}>
+                      </>
+                    ),
+                  },
+                  {
+                    id: "details",
+                    title: "Details and Customization",
+                    content: (
+                      <dl className={storefrontStyles.accordionFields}>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Availability</dt>
+                          <dd>
+                            {storefrontProduct.productionModel === "hand_painted_to_order"
+                              ? "Made to order, 100% hand-painted by a studio artist"
+                              : "Artist collection original"}
+                          </dd>
+                        </div>
+                        {dimensions ? (
                           <div className={storefrontStyles.accordionField}>
-                            <dt>Delivery cost</dt>
-                            <dd>Shipping is included in price for most destinations*</dd>
+                            <dt>Size</dt>
+                            <dd>{dimensions}</dd>
                           </div>
+                        ) : null}
+                        {orientation ? (
                           <div className={storefrontStyles.accordionField}>
-                            <dt>Delivery time</dt>
-                            <dd>
-                              {shippingProfile || "Typically 5-10 business days after dispatch"}
-                            </dd>
+                            <dt>Orientation</dt>
+                            <dd><TranslatedOption value={orientation} /></dd>
                           </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Returns</dt>
-                            <dd>30-day return policy for eligible works. See Shipping & Returns.</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Handling</dt>
-                            <dd>
-                              Rolled canvases ship in protective tubes. Stretched and framed works use reinforced cartons or crates by size.
-                            </dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Carrier</dt>
-                            <dd>DHL / UPS / FedEx depending on route</dd>
-                          </div>
-                          <div className={storefrontStyles.accordionField}>
-                            <dt>Delivery area</dt>
-                            <dd>Worldwide where carriers operate</dd>
-                          </div>
-                        </dl>
-                      ),
-                    },
-                    {
-                      id: "reviews",
-                      title: "Reviews",
-                      content: (
-                        <>
-                          {reviews[0] ? (
-                            <blockquote className="border-l-2 border-stone-300 pl-4 italic text-stone-600">
-                              &ldquo;{reviews[0].reviewText || reviews[0].reviewTitle}&rdquo;
-                              <footer className="mt-2 not-italic text-sm text-stone-500">
-                                — {reviews[0].customerName || "Collector"}
-                              </footer>
-                            </blockquote>
-                          ) : (
-                            <p>Collector reviews will appear here after purchase verification.</p>
-                          )}
-                          <p className="mt-3 text-sm">
-                            <a href="#artwork-reviews" className="underline underline-offset-4">
-                              Read all reviews
-                            </a>
-                          </p>
-                        </>
-                      ),
-                    },
-                  ]}
-                />
+                        ) : null}
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Creation time</dt>
+                          <dd>{storefrontProduct.creationWindow || "1-2 weeks"}</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Ready to hang</dt>
+                          <dd>Yes, when stretched or framed options are selected</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Frame</dt>
+                          <dd>{framingNotes || "Multiple frame finishes available"}</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Authenticity</dt>
+                          <dd><TranslatedText k="product.detail.authenticityValue" /></dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Certificate</dt>
+                          <dd><TranslatedText k="product.detail.certificateValue" /></dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Customization</dt>
+                          <dd>Custom sizes and colour direction available on request</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Outdoor safe</dt>
+                          <dd>No</dd>
+                        </div>
+                      </dl>
+                    ),
+                  },
+                  {
+                    id: "shipping",
+                    title: "Shipping and Returns",
+                    content: (
+                      <dl className={storefrontStyles.accordionFields}>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Delivery cost</dt>
+                          <dd>Shipping is included in price for most destinations*</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Delivery time</dt>
+                          <dd>
+                            {shippingProfile || "Typically 5-10 business days after dispatch"}
+                          </dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Returns</dt>
+                          <dd>30-day return policy for eligible works. See Shipping & Returns.</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Handling</dt>
+                          <dd>
+                            Rolled canvases ship in protective tubes. Stretched and framed works use reinforced cartons or crates by size.
+                          </dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Carrier</dt>
+                          <dd>DHL / UPS / FedEx depending on route</dd>
+                        </div>
+                        <div className={storefrontStyles.accordionField}>
+                          <dt>Delivery area</dt>
+                          <dd>Worldwide where carriers operate</dd>
+                        </div>
+                      </dl>
+                    ),
+                  },
+                  {
+                    id: "reviews",
+                    title: "Reviews",
+                    content: (
+                      <>
+                        {reviews[0] ? (
+                          <blockquote className="border-l-2 border-stone-300 pl-4 italic text-stone-600">
+                            &ldquo;{reviews[0].reviewText || reviews[0].reviewTitle}&rdquo;
+                            <footer className="mt-2 not-italic text-sm text-stone-500">
+                              — {reviews[0].customerName || "Collector"}
+                            </footer>
+                          </blockquote>
+                        ) : (
+                          <p>Collector reviews will appear here after purchase verification.</p>
+                        )}
+                        <p className="mt-3 text-sm">
+                          <a href="#artwork-reviews" className="underline underline-offset-4">
+                            Read all reviews
+                          </a>
+                        </p>
+                      </>
+                    ),
+                  },
+                ]}
+              />
 
-                <div className="mt-6">
-                  <SocialShare title={title} image={imageUrl} />
-                </div>
-                <ProductDisclosure productionModel={storefrontProduct.productionModel} />
+              <div className="mt-6">
+                <SocialShare title={title} image={imageUrl} />
               </div>
+              <ProductDisclosure productionModel={storefrontProduct.productionModel} />
             </div>
           </div>
 
