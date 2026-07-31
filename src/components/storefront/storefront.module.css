@@ -538,6 +538,22 @@
   font-size: 1.15rem;
 }
 
+.reviewSummaryLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.4rem;
+  color: #555;
+  font-size: 0.84rem;
+  text-decoration: none;
+}
+
+.reviewSummaryLink:hover {
+  color: #111;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .socialProof {
   margin: 0.45rem 0 0;
   color: #444;
@@ -561,10 +577,49 @@
   border: 0;
 }
 
+.priceRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem 0.65rem;
+  margin: 0;
+}
+
+.saleBadge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0 0.4rem;
+  border-radius: 3px;
+  background: #c62828;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .price {
   color: #d32f2f;
   font-size: 1.65rem;
   font-weight: 700;
+}
+
+.compareAt {
+  color: #9a9a9a;
+  font-size: 1rem;
+  text-decoration: line-through;
+}
+
+.multiBuyCue {
+  margin: 0.55rem 0 0;
+  color: #2f5d46;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.qtyRow {
+  margin-top: 1rem;
+  margin-bottom: 0.65rem;
 }
 
 .shippingNote {
@@ -690,66 +745,59 @@
   font-size: 0.9rem;
 }
 
-.finishOptions {
+.finishChips {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 0.45rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
-.finishOption {
+.finishChip {
   position: relative;
-  display: grid;
-  gap: 0.35rem;
-  justify-items: center;
-  padding: 0.4rem 0.25rem 0.5rem;
-  border: 1px solid #d5cfc4;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 3rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid #d8d2c7;
+  border-radius: 8px;
   background: #fff;
   cursor: pointer;
-  text-align: center;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.finishOption input {
+.finishChip input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.finishOption[data-active="true"] {
+.finishChip[data-active="true"] {
   border-color: #111;
   box-shadow: 0 0 0 1px #111;
 }
 
-.finishOptionIcon {
+.finishChipIcon {
   display: grid;
-  width: 100%;
-  aspect-ratio: 1;
-  max-width: 4.25rem;
+  flex: 0 0 2.1rem;
+  width: 2.1rem;
+  height: 2.1rem;
   place-items: center;
   overflow: hidden;
-  border-radius: 8px;
-  background: #f4f1ea;
+  border-radius: 999px;
+  background: #f0ebe3;
 }
 
-.finishOptionImage {
+.finishChipImage {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.finishOptionLabel {
-  display: block;
+.finishChipLabel {
   color: #222;
-  font-size: 0.68rem;
+  font-size: 0.8rem;
   line-height: 1.25;
   font-weight: 500;
-}
-
-@media (max-width: 640px) {
-  .finishOptions {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 .arrivalLine {
@@ -817,8 +865,9 @@
   color: #fff;
   cursor: pointer;
   text-decoration: none;
-  font-size: 0.92rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   transition: background 180ms ease, transform 180ms ease;
 }
 
@@ -856,36 +905,16 @@
   background: #f7f5f0;
 }
 
-.whatsappAction {
-  display: flex;
-  min-height: 3.15rem;
+.whatsappLink {
+  display: inline-flex;
+  min-height: 2.2rem;
   align-items: center;
   justify-content: center;
-  gap: 0.45rem;
-  width: 100%;
-  border: 1px solid #1f9e53;
-  border-radius: 999px;
-  background: #25d366;
-  color: #fff;
-  font-size: 0.92rem;
+  color: #1f9e53;
+  font-size: 0.86rem;
   font-weight: 600;
-  text-decoration: none;
-}
-
-.whatsappAction:hover {
-  background: #1fbe5a;
-}
-
-.whatsappIcon {
-  display: inline-flex;
-  min-width: 4.6rem;
-  justify-content: center;
-  padding: 0.15rem 0.4rem;
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.12);
-  font-size: 0.72rem;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .sizeHelpLink {
@@ -899,84 +928,35 @@
   text-underline-offset: 3px;
 }
 
-.serviceBadges {
+.trustIconRow {
   display: grid;
-  gap: 0.15rem;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.45rem;
   margin: 1.15rem 0 0;
-  padding: 0;
+  padding: 0.85rem 0 0;
+  border-top: 1px solid #ebe7df;
   list-style: none;
 }
 
-.serviceBadges li {
+.trustIconRow li {
   display: grid;
-  gap: 0.25rem;
-  border: 0;
-  border-bottom: 1px solid #ebe7df;
-  padding: 0.65rem 0;
-  background: transparent;
-}
-
-.serviceBadgeButton {
-  display: grid;
-  grid-template-columns: 1.5rem 1fr;
-  gap: 0.65rem;
-  width: 100%;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  text-align: left;
-  cursor: pointer;
-}
-
-.serviceIcon {
-  display: grid;
-  width: 1.5rem;
-  height: 1.5rem;
-  place-items: center;
-  color: #111;
-  font-size: 0.85rem;
-}
-
-.serviceCopy {
-  display: grid;
-  gap: 0.12rem;
-}
-
-.serviceBadges strong {
-  display: inline-flex;
-  align-items: center;
+  justify-items: center;
   gap: 0.35rem;
-  font-size: 0.86rem;
-  line-height: 1.35;
+  text-align: center;
+  color: #444;
+  font-size: 0.68rem;
+  line-height: 1.25;
 }
 
-.infoMark {
-  display: inline-grid;
-  width: 0.95rem;
-  height: 0.95rem;
+.trustIconGlyph {
+  display: grid;
+  width: 2.2rem;
+  height: 2.2rem;
   place-items: center;
-  border: 1px solid #bbb;
+  border: 1px solid #ddd6cb;
   border-radius: 999px;
-  color: #888;
-  font-size: 0.62rem;
-  font-weight: 500;
-}
-
-.serviceBadges span {
-  color: #777;
-  font-size: 0.78rem;
-  line-height: 1.4;
-}
-
-.serviceCopy span {
-  color: #777;
-}
-
-.serviceBadgeDetail {
-  margin: 0;
-  color: #555;
-  font-size: 0.78rem;
-  line-height: 1.5;
+  background: #fff;
+  font-size: 0.95rem;
 }
 
 .confirmation {
@@ -985,8 +965,80 @@
   font-size: 0.78rem;
 }
 
-.mobilePurchaseBar {
-  display: none;
+.stickyPurchaseBar {
+  position: fixed;
+  z-index: 45;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.75rem;
+  align-items: center;
+  border-top: 1px solid #d6d3d1;
+  background: rgba(255, 255, 255, 0.98);
+  padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom));
+  backdrop-filter: blur(12px);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.stickyPurchaseMeta {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.stickyPurchaseThumb {
+  position: relative;
+  display: block;
+  flex: 0 0 3rem;
+  width: 3rem;
+  height: 3rem;
+  overflow: hidden;
+  border: 1px solid #e7e2d8;
+  border-radius: 6px;
+  background: #f4f1ea;
+}
+
+.stickyPurchaseThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stickyPurchaseCopy {
+  display: grid;
+  min-width: 0;
+  gap: 0.1rem;
+}
+
+.stickyPurchaseCopy strong {
+  overflow: hidden;
+  color: #111;
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.stickyPurchaseCopy span {
+  color: #d32f2f;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.stickyPurchaseBar button {
+  min-height: 2.75rem;
+  border: 0;
+  border-radius: 999px;
+  background: #111;
+  padding: 0 1.15rem;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
 }
 
 @media (max-width: 760px) {
@@ -998,40 +1050,12 @@
     opacity: 1;
   }
 
-  .mobilePurchaseBar {
-    position: fixed;
-    z-index: 45;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 0.75rem;
-    align-items: center;
-    border-top: 1px solid #d6d3d1;
-    background: rgba(255, 255, 255, 0.98);
-    padding: 0.75rem 1rem calc(0.75rem + env(safe-area-inset-bottom));
-    backdrop-filter: blur(12px);
+  .finishChips {
+    grid-template-columns: 1fr;
   }
 
-  .mobilePurchaseBar span {
-    display: grid;
-    color: #777;
-    font-size: 0.7rem;
-  }
-
-  .mobilePurchaseBar strong {
-    color: #111;
-    font-size: 1rem;
-  }
-
-  .mobilePurchaseBar button {
-    min-height: 2.9rem;
-    border: 0;
-    border-radius: 999px;
-    background: #111;
-    padding: 0 1.2rem;
-    color: #fff;
+  .stickyPurchaseCopy strong {
+    max-width: 42vw;
   }
 }
 

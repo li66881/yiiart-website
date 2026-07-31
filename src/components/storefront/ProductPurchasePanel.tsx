@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useEffect, useMemo, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import ReviewStars from "@/components/ReviewStars"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
 import { useWishlist } from "@/context/WishlistContext"
@@ -20,35 +21,16 @@ type Props = {
   invoiceUrl: string
   whatsappUrl: string
   saleEndsAt?: string | null
+  reviewRating?: number
+  reviewCount?: number
 }
 
-const SERVICE_BADGES = [
-  {
-    title: "Ship After You Are Satisfied",
-    text: "Each piece is made just for you!",
-    detail:
-      "While your canvas is being painted, the studio can share progress photos. We dispatch after you are happy with the final look.",
-    icon: "✦",
-  },
-  {
-    title: "Free Shipping on All Orders",
-    text: "5-7 days fast free shipping worldwide.",
-    detail: "Insured express carriers such as DHL, UPS, or FedEx depending on destination. Shipping is included for most routes.",
-    icon: "✈",
-  },
-  {
-    title: "30 Days Easy Returns",
-    text: "Learn more.",
-    detail: "Ready-made works can be returned within 30 days. Made-to-order pieces follow the studio return guidance on the policy page.",
-    icon: "↺",
-  },
-  {
-    title: "Safe Payment Options",
-    text: "100% money back guarantee.",
-    detail: "Checkout uses encrypted payment providers. YiiArt does not store full card details on its servers.",
-    icon: "◎",
-  },
-]
+const TRUST_ICONS = [
+  { title: "Global Shipping", icon: "◎" },
+  { title: "Cotton Canvas", icon: "▣" },
+  { title: "30-Day Returns", icon: "↺" },
+  { title: "Hand Painted", icon: "✦" },
+] as const
 
 function socialProofForProduct(productId: string) {
   let hash = 0
@@ -98,6 +80,8 @@ export default function ProductPurchasePanel({
   invoiceUrl,
   whatsappUrl,
   saleEndsAt = null,
+  reviewRating = 0,
+  reviewCount = 0,
 }: Props) {
   const router = useRouter()
   const initialSize = product.sizes[0]?.id || ""
@@ -106,7 +90,6 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
-  const [openBadge, setOpenBadge] = useState<string | null>(null)
   const [saleCountdown, setSaleCountdown] = useState<string | null>(
     saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
   )
@@ -124,7 +107,9 @@ export default function ProductPurchasePanel({
   const saleActive =
     Boolean(saleEndsAt) && new Date(saleEndsAt as string).getTime() > Date.now()
   const lineQty = Math.max(1, quantity)
-  const linePriceCny = selection ? selection.priceCny * lineQty : 0
+  const unitPriceCny = selection?.priceCny || 0
+  const compareAtCny = saleActive && unitPriceCny > 0 ? unitPriceCny / 0.6 : null
+  const linePriceCny = unitPriceCny * lineQty
   const installmentHint = selection
     ? formatStorePrice(selection.priceCny / 4, currency)
     : null
@@ -157,7 +142,6 @@ export default function ProductPurchasePanel({
       price: selection.priceCny,
       image: image.src,
       quantity: lineQty,
-      // Catalog size picks are made-to-order lines even when CMS still says "original".
       productionModel: product.sizes.length > 0 ? "hand_painted_to_order" : product.productionModel,
       sizeId: selection.size.id,
       sizeLabel: selection.size.label,
@@ -211,13 +195,31 @@ export default function ProductPurchasePanel({
         {product.sku ? <span className={styles.productSku}> #{product.sku}</span> : null}
       </h1>
 
+      {reviewCount > 0 ? (
+        <a className={styles.reviewSummaryLink} href="#artwork-reviews">
+          <ReviewStars rating={reviewRating} size="sm" />
+          <span>
+            {reviewRating.toFixed(1)} · {reviewCount}{" "}
+            {reviewCount === 1 ? "review" : "reviews"}
+          </span>
+        </a>
+      ) : null}
+
       <p className={styles.socialProof}>
         <span aria-hidden>🛒</span> {socialProof.soldCount} sold in last {socialProof.hours} hours
       </p>
 
       <div className={styles.priceBlock}>
-        <p className={styles.price}>
-          <PriceText amountCny={selection?.priceCny} />
+        <p className={styles.priceRow}>
+          {saleActive ? <span className={styles.saleBadge}>SALE</span> : null}
+          <span className={styles.price}>
+            <PriceText amountCny={unitPriceCny || undefined} />
+          </span>
+          {compareAtCny ? (
+            <span className={styles.compareAt}>
+              <PriceText amountCny={compareAtCny} />
+            </span>
+          ) : null}
         </p>
         <p className={styles.shippingNote}>Shipping and tariffs included for international delivery*</p>
         <p className={styles.disclosure}>
@@ -242,19 +244,52 @@ export default function ProductPurchasePanel({
         </p>
       ) : null}
 
-      <div className={styles.promoBanner} aria-hidden={false}>
-        <div>
-          <p className={styles.promoEyebrow}>Studio offer</p>
-          <p className={styles.promoTitle}>Selected canvases up to 40% off</p>
-          <p className={styles.promoText}>Hand-painted to order · Free worldwide shipping</p>
+      <p className={styles.multiBuyCue}>Free worldwide shipping · Hand-painted to order</p>
+
+      {product.finishes.length > 0 && (
+        <div className={styles.optionBlock}>
+          <p className={styles.optionLabel}>
+            Floating Frame:{" "}
+            <strong>{selection?.finish.label || product.finishes[0]?.label}</strong>
+          </p>
+          <div className={styles.finishChips} role="radiogroup" aria-label="Framing options">
+            {product.finishes.map((finish) => {
+              const icon = finishIconKey(finish.id, finish.label)
+              const active = selection?.finish.id === finish.id
+              return (
+                <label
+                  key={finish.id}
+                  className={styles.finishChip}
+                  data-active={active}
+                  title={finish.label}
+                >
+                  <input
+                    type="radio"
+                    name="product-finish"
+                    checked={active}
+                    onChange={() => setFinishId(finish.id)}
+                  />
+                  <span className={styles.finishChipIcon}>
+                    <Image
+                      src={`/finishes/${icon}.webp`}
+                      alt=""
+                      width={40}
+                      height={40}
+                      className={styles.finishChipImage}
+                    />
+                  </span>
+                  <span className={styles.finishChipLabel}>{finish.label}</span>
+                </label>
+              )
+            })}
+          </div>
         </div>
-        <span className={styles.promoBadge}>40% OFF</span>
-      </div>
+      )}
 
       {product.sizes.length > 0 && (
         <div className={styles.optionBlock}>
           <label className={styles.optionLabel} htmlFor="product-size-select">
-            Size
+            Canvas Size:
           </label>
           <select
             id="product-size-select"
@@ -274,73 +309,36 @@ export default function ProductPurchasePanel({
         </div>
       )}
 
-      {product.finishes.length > 0 && (
-        <div className={styles.optionBlock}>
-          <p className={styles.optionLabel}>
-            Framing: <strong>{selection?.finish.label || product.finishes[0]?.label}</strong>
-          </p>
-          <div className={styles.finishOptions} role="radiogroup" aria-label="Framing options">
-            {product.finishes.map((finish) => {
-              const icon = finishIconKey(finish.id, finish.label)
-              const active = selection?.finish.id === finish.id
-              return (
-                <label
-                  key={finish.id}
-                  className={styles.finishOption}
-                  data-active={active}
-                  title={finish.label}
-                >
-                  <input
-                    type="radio"
-                    name="product-finish"
-                    checked={active}
-                    onChange={() => setFinishId(finish.id)}
-                  />
-                  <span className={styles.finishOptionIcon}>
-                    <Image
-                      src={`/finishes/${icon}.webp`}
-                      alt=""
-                      width={64}
-                      height={64}
-                      className={styles.finishOptionImage}
-                    />
-                  </span>
-                  <span className={styles.finishOptionLabel}>{finish.label}</span>
-                </label>
-              )
-            })}
-          </div>
-        </div>
-      )}
-
       <p className={styles.arrivalLine}>
         <span aria-hidden>✓</span> Arrives soon! Get it by <strong>{arrivalWindow}</strong> if you order
         today
       </p>
 
       {directCheckoutAvailable && selection ? (
-        <div className={styles.cartRow}>
-          <div className={styles.qtyControl}>
-            <button
-              type="button"
-              aria-label="Decrease quantity"
-              onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-            >
-              -
-            </button>
-            <span>{quantity}</span>
-            <button
-              type="button"
-              aria-label="Increase quantity"
-              onClick={() => setQuantity((value) => Math.min(99, value + 1))}
-            >
-              +
-            </button>
+        <>
+          <div className={styles.qtyRow}>
+            <div className={styles.qtyControl}>
+              <button
+                type="button"
+                aria-label="Decrease quantity"
+                onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+              >
+                -
+              </button>
+              <span>{quantity}</span>
+              <button
+                type="button"
+                aria-label="Increase quantity"
+                onClick={() => setQuantity((value) => Math.min(99, value + 1))}
+              >
+                +
+              </button>
+            </div>
           </div>
           <button className={styles.primaryAction} type="button" onClick={addSelection}>
-            Add To Cart — <PriceText amountCny={linePriceCny} />
+            ADD TO CART
           </button>
-        </div>
+        </>
       ) : (
         <a className={styles.primaryAction} href={invoiceUrl} target="_blank" rel="noopener noreferrer">
           Request invoice
@@ -350,13 +348,10 @@ export default function ProductPurchasePanel({
       <div className={styles.secondaryActions}>
         {directCheckoutAvailable && selection ? (
           <button className={styles.buyNow} type="button" onClick={buyNow}>
-            Buy It Now
+            BUY IT NOW
           </button>
         ) : null}
-        <a className={styles.whatsappAction} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          <span className={styles.whatsappIcon} aria-hidden>
-            WhatsApp
-          </span>
+        <a className={styles.whatsappLink} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
           Chat on WhatsApp
         </a>
         <Link className={styles.sizeHelpLink} href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
@@ -364,50 +359,39 @@ export default function ProductPurchasePanel({
         </Link>
       </div>
 
-      <ul className={styles.serviceBadges}>
-        {SERVICE_BADGES.map((badge) => {
-          const isOpen = openBadge === badge.title
-          return (
-            <li key={badge.title}>
-              <button
-                type="button"
-                className={styles.serviceBadgeButton}
-                aria-expanded={isOpen}
-                onClick={() => setOpenBadge(isOpen ? null : badge.title)}
-              >
-                <span className={styles.serviceIcon} aria-hidden>
-                  {badge.icon}
-                </span>
-                <span className={styles.serviceCopy}>
-                  <strong>
-                    {badge.title} <span className={styles.infoMark}>?</span>
-                  </strong>
-                  <span>{badge.text}</span>
-                </span>
-              </button>
-              {isOpen ? <p className={styles.serviceBadgeDetail}>{badge.detail}</p> : null}
-            </li>
-          )
-        })}
+      <ul className={styles.trustIconRow}>
+        {TRUST_ICONS.map((item) => (
+          <li key={item.title}>
+            <span className={styles.trustIconGlyph} aria-hidden>
+              {item.icon}
+            </span>
+            <span>{item.title}</span>
+          </li>
+        ))}
       </ul>
 
       <p className={styles.confirmation} role="status" aria-live="polite">
         {confirmation}
       </p>
 
-      {directCheckoutAvailable && selection && (
-        <div className={styles.mobilePurchaseBar}>
-          <span>
-            Selected price
-            <strong>
-              <PriceText amountCny={linePriceCny} />
-            </strong>
-          </span>
+      {directCheckoutAvailable && selection && image ? (
+        <div className={styles.stickyPurchaseBar}>
+          <div className={styles.stickyPurchaseMeta}>
+            <span className={styles.stickyPurchaseThumb}>
+              <Image src={image.src} alt="" width={48} height={48} />
+            </span>
+            <span className={styles.stickyPurchaseCopy}>
+              <strong>{product.title}</strong>
+              <span>
+                <PriceText amountCny={linePriceCny} />
+              </span>
+            </span>
+          </div>
           <button type="button" onClick={addSelection}>
-            Add to cart
+            ADD TO CART
           </button>
         </div>
-      )}
+      ) : null}
     </section>
   )
 }

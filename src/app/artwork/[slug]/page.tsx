@@ -404,7 +404,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         category={category}
       />
 
-      <main className="flex-1 bg-[#f7f5f0] pb-28 pt-[var(--ya-header-offset)] lg:pb-16 lg:pt-[var(--ya-header-offset-lg)]">
+      <main className="flex-1 bg-[#f7f5f0] pb-28 pt-[var(--ya-header-offset)] lg:pb-24 lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-10">
           <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-stone-500" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
@@ -435,6 +435,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
                 saleEndsAt={getStudioSaleEndsAt()}
+                reviewRating={reviewStats.overall}
+                reviewCount={reviewStats.count}
               />
             </div>
 
