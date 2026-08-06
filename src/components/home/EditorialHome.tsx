@@ -3,16 +3,20 @@ import Link from "next/link"
 import ProductCard from "@/components/storefront/ProductCard"
 import BestSellerTabs from "@/components/home/BestSellerTabs"
 import FeaturedArtists, { type FeaturedArtistCard } from "@/components/home/FeaturedArtists"
+import FeaturedReviews from "@/components/FeaturedReviews"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls, hasArtworkImage } from "@/lib/artwork-images"
 import { buildEditorialHomeEdit, resolveVisualImage } from "@/lib/storefront/visual-content"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { isStudioSaleActive } from "@/lib/storefront/sale"
+import type { PublicReview } from "@/lib/reviews"
 import HeroSection from "@/components/HeroSection"
 import styles from "./editorial-home.module.css"
 
 type EditorialHomeProps = {
   artworks: any[]
   artists?: FeaturedArtistCard[]
+  reviews?: PublicReview[]
 }
 
 const roomPaths = [
@@ -73,15 +77,22 @@ const faqs = [
 
 function toCard(artwork: any) {
   const images = getArtworkImageUrls(artwork, { width: 900 })
+  const sale = isStudioSaleActive()
   return {
     id: artwork._id,
     href: `/artwork/${artwork.slug?.current || artwork._id}`,
     title: pickEnglish(artwork.title, "Untitled artwork"),
     priceCny: artwork.price,
+    compareAtPriceCny: Number(artwork.compareAtPriceCny) > 0 ? Number(artwork.compareAtPriceCny) : null,
     image: images[0] || getArtworkImageUrl(artwork, { width: 900 }),
     hoverImage: images[1] || images[0] || null,
     sku: artwork.sku || artwork.slug?.current?.toUpperCase?.() || null,
-    badge: artwork.collectionType === "new_collection" || artwork.featured ? "Gallery Quality" : null,
+    badge: sale
+      ? null
+      : artwork.collectionType === "new_collection" || artwork.featured
+        ? "Gallery Quality"
+        : null,
+    showSalePricing: sale,
   }
 }
 
@@ -94,7 +105,7 @@ function matchesCategory(artwork: any, needles: string[]) {
   return needles.some((needle) => value.includes(needle.toLowerCase()))
 }
 
-export default function EditorialHome({ artworks, artists = [] }: EditorialHomeProps) {
+export default function EditorialHome({ artworks, artists = [], reviews = [] }: EditorialHomeProps) {
   const { featured, artistCollection } = buildEditorialHomeEdit(artworks)
   const withImages = artworks.filter(hasArtworkImage)
   const discoveryItems = withImages.map((artwork) =>
@@ -391,6 +402,8 @@ export default function EditorialHome({ artworks, artists = [] }: EditorialHomeP
           </div>
         </div>
       </section>
+
+      {reviews.length > 0 ? <FeaturedReviews reviews={reviews} compact /> : null}
 
       <section className={`${styles.section} ${styles.trust}`}>
         <div className={styles.shell}>

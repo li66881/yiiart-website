@@ -6,6 +6,8 @@ import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { getFeaturedReviews } from "@/lib/reviews"
+import { curatedSampleReviews } from "@/lib/sample-reviews"
 
 export const revalidate = 600
 
@@ -124,6 +126,9 @@ export default async function Home() {
     .sort((a, b) => Number(Boolean(b.imageUrl)) - Number(Boolean(a.imageUrl)))
     .slice(0, 3)
 
+  const featuredReviews = await getFeaturedReviews(3).catch(() => [])
+  const reviews = featuredReviews.length > 0 ? featuredReviews : curatedSampleReviews.slice(0, 3)
+
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
@@ -136,7 +141,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
       />
 
-      <EditorialHome artworks={artworks} artists={artists} />
+      <EditorialHome artworks={artworks} artists={artists} reviews={reviews} />
 
       <Footer />
     </div>

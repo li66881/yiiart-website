@@ -512,6 +512,81 @@
   gap: 0.75rem;
 }
 
+.collectionKicker {
+  margin: 0;
+  color: #6f675d;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.sizeChips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.sizeChip {
+  position: relative;
+  display: inline-flex;
+  min-height: 2.55rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d8d2c7;
+  border-radius: 8px;
+  background: #fff;
+  padding: 0.35rem 0.7rem;
+  color: #222;
+  font-size: 0.78rem;
+  line-height: 1.25;
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.sizeChip input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sizeChip[data-active="true"] {
+  border-color: #111;
+  box-shadow: inset 0 0 0 1px #111;
+}
+
+.shareRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.9rem;
+  margin-top: 1rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid #ebe7df;
+  color: #555;
+  font-size: 0.8rem;
+}
+
+.shareLabel {
+  font-weight: 600;
+  color: #222;
+}
+
+.shareRow button,
+.shareRow a {
+  color: #333;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.shareStatus {
+  color: #2f5d46;
+}
+
 .productTitle {
   margin: 0.45rem 0 0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;

@@ -6,7 +6,7 @@ import {
   pickEnglish,
 } from "@/lib/artwork-display"
 
-export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
+export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations" | "prices"
 export type ArtworkCollectionTab = "all" | "new_collection" | "artist_collection"
 
 export type ArtworkFilterState = Record<ArtworkFilterKey, string[]>
@@ -69,6 +69,11 @@ export const artworkFilterGroups: ArtworkFilterGroup[] = [
     label: "Orientation",
     options: ["Portrait", "Landscape", "Square"],
   },
+  {
+    key: "prices",
+    label: "Price",
+    options: ["Under $500", "$500–$1,000", "$1,000–$2,000", "$2,000+"],
+  },
 ]
 
 export const emptyArtworkFilters: ArtworkFilterState = {
@@ -77,6 +82,7 @@ export const emptyArtworkFilters: ArtworkFilterState = {
   colors: [],
   sizes: [],
   orientations: [],
+  prices: [],
 }
 
 export function normalizeArtworkFilters(initial?: Partial<ArtworkFilterState>): ArtworkFilterState {
@@ -86,6 +92,7 @@ export function normalizeArtworkFilters(initial?: Partial<ArtworkFilterState>): 
     colors: unique(initial?.colors || []),
     sizes: unique(initial?.sizes || []),
     orientations: unique(initial?.orientations || []),
+    prices: unique(initial?.prices || []),
   }
 }
 
@@ -146,6 +153,7 @@ export function artworkMatchesFilters(item: ArtworkDiscoveryItem, filters: Artwo
     && matchesAny(item.colors, filters.colors)
     && matchesAny([item.size], filters.sizes)
     && matchesAny([item.orientation], filters.orientations)
+    && matchesPrice(item.price, filters.prices)
   )
 }
 
@@ -182,6 +190,19 @@ export function parseDimensionsCm(dimensions?: string | null) {
 function matchesAny(values: string[], active: string[]) {
   if (active.length === 0) return true
   return active.some((value) => values.includes(value))
+}
+
+/** Approximate USD band from CNY list price for discovery filters. */
+function matchesPrice(priceCny: number | null | undefined, active: string[]) {
+  if (active.length === 0) return true
+  const usd = Number(priceCny || 0) / 7
+  return active.some((band) => {
+    if (band === "Under $500") return usd > 0 && usd < 500
+    if (band === "$500–$1,000") return usd >= 500 && usd < 1000
+    if (band === "$1,000–$2,000") return usd >= 1000 && usd < 2000
+    if (band === "$2,000+") return usd >= 2000
+    return false
+  })
 }
 
 function normalizeList(value: unknown) {

@@ -27,10 +27,10 @@ type Props = {
 }
 
 const TRUST_ICONS = [
-  { title: "Global Shipping", icon: "◎" },
-  { title: "Cotton Canvas", icon: "▣" },
-  { title: "30-Day Returns", icon: "↺" },
-  { title: "Hand Painted", icon: "✦" },
+  { title: "Ship when you're happy", icon: "◎" },
+  { title: "Free shipping on all orders", icon: "▣" },
+  { title: "30-day easy returns", icon: "↺" },
+  { title: "Safe payment options", icon: "✦" },
 ] as const
 
 function socialProofForProduct(productId: string) {
@@ -89,6 +89,7 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
+  const [shareStatus, setShareStatus] = useState("")
   const [stickyVisible, setStickyVisible] = useState(false)
   const [saleCountdown, setSaleCountdown] = useState<string | null>(
     saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
@@ -196,17 +197,34 @@ export default function ProductPurchasePanel({
     })
   }
 
+  const shareUrl = `https://www.yiiart.com/artwork/${product.slug}`
+
+  const copyShareLink = async () => {
+    const url = typeof window !== "undefined" ? window.location.href : shareUrl
+    try {
+      await navigator.clipboard.writeText(url)
+      setShareStatus("Link copied")
+    } catch {
+      setShareStatus("Copy failed")
+    }
+    window.setTimeout(() => setShareStatus(""), 2000)
+  }
+
+  const styleKicker = product.styleTags.filter(Boolean).slice(0, 2).join(" · ") || "Hand-painted canvas"
+
   return (
     <section className={styles.purchasePanel} aria-labelledby="product-title">
       <div className={styles.kickerRow}>
-        <p className={styles.socialProofMeta}>
-          <strong>{socialProof.saves}</strong> people saved this ·{" "}
-          <strong>{socialProof.inCarts}</strong> in carts
-        </p>
+        <p className={styles.collectionKicker}>{styleKicker}</p>
         <button type="button" onClick={toggleSaved} className={styles.saveButton} aria-pressed={saved}>
           {saved ? "♥" : "♡"}
         </button>
       </div>
+
+      <p className={styles.socialProofMeta}>
+        <strong>{socialProof.saves}</strong> people saved this ·{" "}
+        <strong>{socialProof.inCarts}</strong> in carts
+      </p>
 
       <h1 id="product-title" className={styles.productTitle}>
         {product.title}
@@ -266,6 +284,30 @@ export default function ProductPurchasePanel({
 
       <p className={styles.multiBuyCue}>Free worldwide shipping · Hand-painted to order</p>
 
+      {product.sizes.length > 0 && (
+        <div className={styles.optionBlock}>
+          <p className={styles.optionLabel}>
+            Canvas Size: <strong>{selection?.size.label || "Select a size"}</strong>
+          </p>
+          <div className={styles.sizeChips} role="radiogroup" aria-label="Canvas sizes">
+            {product.sizes.map((size) => {
+              const active = selection?.size.id === size.id
+              return (
+                <label key={size.id} className={styles.sizeChip} data-active={active} title={size.label}>
+                  <input
+                    type="radio"
+                    name="product-size"
+                    checked={active}
+                    onChange={() => setSizeId(size.id)}
+                  />
+                  <span>{size.label}</span>
+                </label>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
       {product.finishes.length > 0 && (
         <div className={styles.optionBlock}>
           <p className={styles.optionLabel}>
@@ -306,32 +348,8 @@ export default function ProductPurchasePanel({
         </div>
       )}
 
-      {product.sizes.length > 0 && (
-        <div className={styles.optionBlock}>
-          <label className={styles.optionLabel} htmlFor="product-size-select">
-            Canvas Size:
-          </label>
-          <select
-            id="product-size-select"
-            className={styles.sizeSelect}
-            value={sizeId}
-            onChange={(event) => setSizeId(event.target.value)}
-          >
-            <option value="" disabled>
-              Select a Size
-            </option>
-            {product.sizes.map((size) => (
-              <option key={size.id} value={size.id}>
-                {size.label}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
-
       <p className={styles.arrivalLine}>
-        <span aria-hidden>✓</span> Arrives soon! Get it by <strong>{arrivalWindow}</strong> if you order
-        today
+        <span aria-hidden>✓</span> Order today, get it by <strong>{arrivalWindow}</strong>
       </p>
 
       {directCheckoutAvailable && selection ? (
@@ -389,6 +407,24 @@ export default function ProductPurchasePanel({
           </li>
         ))}
       </ul>
+
+      <div className={styles.shareRow}>
+        <span className={styles.shareLabel}>Share</span>
+        <button type="button" onClick={copyShareLink}>
+          Copy link
+        </button>
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`${product.title} ${shareUrl}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          WhatsApp
+        </a>
+        <a href={`mailto:?subject=${encodeURIComponent(product.title)}&body=${encodeURIComponent(shareUrl)}`}>
+          Email
+        </a>
+        {shareStatus ? <span className={styles.shareStatus}>{shareStatus}</span> : null}
+      </div>
 
       <p className={styles.confirmation} role="status" aria-live="polite">
         {confirmation}

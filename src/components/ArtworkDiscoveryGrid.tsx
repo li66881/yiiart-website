@@ -390,6 +390,7 @@ function buildOptionCounts(items: ArtworkDiscoveryItem[]) {
     colors: new Map(),
     sizes: new Map(),
     orientations: new Map(),
+    prices: new Map(),
   }
 
   for (const item of items) {
@@ -398,6 +399,7 @@ function buildOptionCounts(items: ArtworkDiscoveryItem[]) {
     bump(counts.colors, item.colors)
     bump(counts.sizes, [item.size])
     bump(counts.orientations, [item.orientation])
+    bump(counts.prices, priceBandsFor(item.price))
   }
 
   return counts
@@ -407,6 +409,15 @@ function bump(map: Map<string, number>, values: string[]) {
   for (const value of values.filter(Boolean)) {
     map.set(value, (map.get(value) || 0) + 1)
   }
+}
+
+function priceBandsFor(priceCny?: number | null) {
+  const usd = Number(priceCny || 0) / 7
+  if (!(usd > 0)) return []
+  if (usd < 500) return ["Under $500"]
+  if (usd < 1000) return ["$500–$1,000"]
+  if (usd < 2000) return ["$1,000–$2,000"]
+  return ["$2,000+"]
 }
 
 function sortArtworkItems(a: ArtworkDiscoveryItem, b: ArtworkDiscoveryItem, sortMode: SortMode) {
