@@ -622,6 +622,11 @@
   margin-bottom: 0.65rem;
 }
 
+.buyActions {
+  display: grid;
+  gap: 0;
+}
+
 .shippingNote {
   margin-top: 0.35rem;
   color: #7a7a7a;
@@ -980,6 +985,16 @@
   padding: 0.65rem 1rem calc(0.65rem + env(safe-area-inset-bottom));
   backdrop-filter: blur(12px);
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.04);
+  transform: translateY(110%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 220ms ease, opacity 220ms ease;
+}
+
+.stickyPurchaseBar[data-visible="true"] {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .stickyPurchaseMeta {
@@ -1202,6 +1217,12 @@
   font-size: 0.68rem;
   letter-spacing: 0.02em;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.08);
+}
+
+.productCardBadge[data-accent="sale"] {
+  background: #c62828;
+  color: #fff;
+  box-shadow: none;
 }
 
 .chooseOptions {

@@ -57,7 +57,14 @@ export default function ProductCard({ item }: Props) {
           ) : (
             <div className={styles.productCardEmpty}>Image on request</div>
           )}
-          {item.badge ? <span className={styles.productCardBadge}>{item.badge}</span> : null}
+          {item.badge ? (
+            <span
+              className={styles.productCardBadge}
+              data-accent={/off|sale/i.test(item.badge) ? "sale" : undefined}
+            >
+              {item.badge}
+            </span>
+          ) : null}
           <span className={`${styles.chooseOptions} ${hovered ? styles.chooseOptionsVisible : ""}`}>
             Choose options
           </span>

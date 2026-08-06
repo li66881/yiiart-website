@@ -23,17 +23,21 @@ type SortMode = "featured" | "newest" | "price-asc" | "price-desc" | "large-firs
 type ArtworkDiscoveryGridProps = {
   items: ArtworkDiscoveryItem[]
   initialFilters?: Partial<ArtworkFilterState>
+  initialSortMode?: SortMode
+  cardBadge?: string | null
   emptyText?: string
 }
 
 export default function ArtworkDiscoveryGrid({
   items,
   initialFilters,
+  initialSortMode = "featured",
+  cardBadge = null,
   emptyText,
 }: ArtworkDiscoveryGridProps) {
   const { t } = useLanguage()
   const [filters, setFilters] = useState<ArtworkFilterState>(() => normalizeArtworkFilters(initialFilters))
-  const [sortMode, setSortMode] = useState<SortMode>("featured")
+  const [sortMode, setSortMode] = useState<SortMode>(initialSortMode)
   const [collection, setCollection] = useState<ArtworkCollectionTab>("all")
   const [filtersVisible, setFiltersVisible] = useState(true)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -238,7 +242,7 @@ export default function ArtworkDiscoveryGrid({
                     image: artwork.imageUrl,
                     hoverImage: artwork.hoverImageUrl || artwork.imageUrl,
                     sku: artwork.sku,
-                    badge: artwork.collectionType === "new_collection" ? "Gallery Quality" : null,
+                    badge: cardBadge || (artwork.collectionType === "new_collection" ? "Gallery Quality" : null),
                   }}
                 />
               ))

@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import ReviewStars from "@/components/ReviewStars"
 import { useCart } from "@/context/CartContext"
@@ -12,6 +12,7 @@ import { useWishlist } from "@/context/WishlistContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount, formatStorePrice } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
+import { formatSaleCountdown } from "@/lib/storefront/sale"
 import { getProductSelection } from "@/lib/storefront/selection"
 import styles from "./storefront.module.css"
 
@@ -65,15 +66,6 @@ function finishIconKey(id: string, label: string) {
   return "frameless"
 }
 
-function formatSaleCountdown(saleEndsAt: string) {
-  const end = new Date(saleEndsAt).getTime()
-  const diff = Math.max(0, end - Date.now())
-  const hours = Math.floor(diff / 3600000)
-  const minutes = Math.floor((diff % 3600000) / 60000)
-  const seconds = Math.floor((diff % 60000) / 1000)
-  return `${String(hours).padStart(2, "0")}H : ${String(minutes).padStart(2, "0")}M : ${String(seconds).padStart(2, "0")}S`
-}
-
 export default function ProductPurchasePanel({
   product,
   directCheckoutAvailable,
@@ -84,12 +76,14 @@ export default function ProductPurchasePanel({
   reviewCount = 0,
 }: Props) {
   const router = useRouter()
+  const buyActionsRef = useRef<HTMLDivElement>(null)
   const initialSize = product.sizes[0]?.id || ""
   const initialFinish = product.finishes[0]?.id || ""
   const [sizeId, setSizeId] = useState(initialSize)
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
+  const [stickyVisible, setStickyVisible] = useState(false)
   const [saleCountdown, setSaleCountdown] = useState<string | null>(
     saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
   )
@@ -120,16 +114,33 @@ export default function ProductPurchasePanel({
       return
     }
     const tick = () => {
-      if (new Date(saleEndsAt).getTime() <= Date.now()) {
-        setSaleCountdown(null)
-        return
-      }
       setSaleCountdown(formatSaleCountdown(saleEndsAt))
     }
     tick()
     const id = window.setInterval(tick, 1000)
     return () => window.clearInterval(id)
   }, [saleEndsAt])
+
+  useEffect(() => {
+    const target = buyActionsRef.current
+    if (!target || !directCheckoutAvailable) {
+      setStickyVisible(false)
+      return
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setStickyVisible(!entry.isIntersecting)
+      },
+      {
+        root: null,
+        threshold: 0,
+        rootMargin: "-72px 0px 0px 0px",
+      },
+    )
+    observer.observe(target)
+    return () => observer.disconnect()
+  }, [directCheckoutAvailable, selection?.size.id, selection?.finish.id])
 
   const addSelection = () => {
     if (!selection || !image || !directCheckoutAvailable) return false
@@ -315,7 +326,7 @@ export default function ProductPurchasePanel({
       </p>
 
       {directCheckoutAvailable && selection ? (
-        <>
+        <div ref={buyActionsRef} className={styles.buyActions}>
           <div className={styles.qtyRow}>
             <div className={styles.qtyControl}>
               <button
@@ -338,7 +349,7 @@ export default function ProductPurchasePanel({
           <button className={styles.primaryAction} type="button" onClick={addSelection}>
             ADD TO CART
           </button>
-        </>
+        </div>
       ) : (
         <a className={styles.primaryAction} href={invoiceUrl} target="_blank" rel="noopener noreferrer">
           Request invoice
@@ -375,7 +386,7 @@ export default function ProductPurchasePanel({
       </p>
 
       {directCheckoutAvailable && selection && image ? (
-        <div className={styles.stickyPurchaseBar}>
+        <div className={styles.stickyPurchaseBar} data-visible={stickyVisible}>
           <div className={styles.stickyPurchaseMeta}>
             <span className={styles.stickyPurchaseThumb}>
               <Image src={image.src} alt="" width={48} height={48} />

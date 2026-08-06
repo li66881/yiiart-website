@@ -32,7 +32,7 @@ const styleNav: Array<{ href: string; label: string; accent?: boolean }> = [
   { href: "/collections/bedroom-wall-art", label: "Bedroom" },
   { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
   { href: "/artworks?category=Landscape", label: "Landscape" },
-  { href: "/artworks?sort=newest", label: "Sale", accent: true },
+  { href: "/artworks?promo=sale", label: "Sale", accent: true },
 ]
 
 const trustMessages = [
