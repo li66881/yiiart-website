@@ -199,8 +199,8 @@ export default function ProductPurchasePanel({
     <section className={styles.purchasePanel} aria-labelledby="product-title">
       <div className={styles.kickerRow}>
         <p className={styles.socialProofMeta}>
-          <strong>{socialProof.saves}</strong> saves · In{" "}
-          <strong>{socialProof.inCarts}</strong> carts now
+          <strong>{socialProof.saves}</strong> people saved this ·{" "}
+          <strong>{socialProof.inCarts}</strong> in carts
         </p>
         <button type="button" onClick={toggleSaved} className={styles.saveButton} aria-pressed={saved}>
           {saved ? "♥" : "♡"}
@@ -223,7 +223,7 @@ export default function ProductPurchasePanel({
       ) : null}
 
       <p className={styles.socialProof}>
-        <span aria-hidden>🛒</span> {socialProof.soldCount} sold in last {socialProof.hours} hours
+        {socialProof.soldCount} sold in last {socialProof.hours} hours
       </p>
 
       <div className={styles.priceBlock}>

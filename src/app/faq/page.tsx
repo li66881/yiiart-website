@@ -28,12 +28,12 @@ export default function FAQPage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqItems)) }}
       />
-      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
+      <main className="min-h-screen bg-[#f7f5f0] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1180px]">
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Help center</p>
-              <h1 className="text-5xl font-light leading-tight">Artwork buying FAQ</h1>
+              <p className="mb-3 text-sm uppercase tracking-[0.12em] text-stone-500">Help center</p>
+              <h1 className="text-4xl font-medium tracking-[-0.03em] md:text-5xl">Artwork buying FAQ</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
               Clear answers for buying original handmade paintings, custom canvas art, shipping, returns, and room-size advice.

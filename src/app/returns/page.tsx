@@ -16,12 +16,12 @@ export default function ReturnsPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10">
+      <main className="min-h-screen bg-[#f7f5f0] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1180px]">
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Returns</p>
-              <h1 className="text-5xl font-light leading-tight">Clear return terms for original art.</h1>
+              <h1 className="text-4xl font-medium tracking-[-0.03em] md:text-5xl">Clear return terms for original art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
               Ready-made artworks can be returned within 30 days of delivery for any reason, with the refund issued

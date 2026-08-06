@@ -26,12 +26,12 @@ export default async function AboutPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
+      <main className="min-h-screen bg-[#f7f5f0] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1180px]">
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">About YiiArt</p>
-              <h1 className="text-5xl font-light leading-tight">Original art should be within reach.</h1>
+              <h1 className="text-4xl font-medium tracking-[-0.03em] md:text-5xl">Original art should be within reach.</h1>
             </div>
             <div className="space-y-5 text-base leading-8 text-stone-600">
               <p>

@@ -33,9 +33,9 @@ async function getData() {
     const [artworks, artistsRaw] = await Promise.all([
       client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
       ...,
-      artist->{name}
+      artist->{_id, name, location, slug, image}
     }`),
-      client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)[0...6]{
+      client.fetch(`*[_type == "artist"] | order(name.en asc, name.zh asc)[0...12]{
         _id,
         name,
         location,
@@ -89,25 +89,38 @@ export default async function Home() {
     role: string
   }
 
-  const artists = (
-    Array.from(
-      new Map(
-        (artistsRaw || []).map((artist: any) => {
-          const name = pickEnglish(artist.name, "YiiArt Artist")
-          const dedupeKey = name.trim().toLowerCase()
-          const card: FeaturedHomeArtist = {
-            id: String(artist._id),
-            name,
-            href: `/artist/${artist.slug?.current || artist._id}`,
-            location: artist.location || null,
-            imageUrl: artist.image ? urlFor(artist.image).width(800).height(1000).url() : null,
-            role: "Painter",
-          }
-          return [dedupeKey, card] as const
-        }),
-      ).values(),
-    ) as FeaturedHomeArtist[]
-  )
+  const artistsFromArtworks = (artworks || [])
+    .map((artwork: any) => artwork?.artist)
+    .filter(Boolean)
+
+  const artistPool = [...(artistsRaw || []), ...artistsFromArtworks]
+  const artistMap = new Map<string, FeaturedHomeArtist>()
+
+  for (const artist of artistPool) {
+    const name = pickEnglish(artist.name, "YiiArt Artist")
+    if (!name || name === "YiiArt Artist") continue
+    const dedupeKey = String(artist._id || name).trim().toLowerCase()
+    const portrait = artist.image ? urlFor(artist.image).width(800).height(1000).url() : null
+    const artworkFallback = (() => {
+      const match = (artworks || []).find((a: any) => a?.artist?._id === artist._id || pickEnglish(a?.artist?.name, "") === name)
+      return match ? getArtworkImageUrl(match, { width: 800, height: 1000 }) : null
+    })()
+    const imageUrl = portrait || artworkFallback || null
+    const next: FeaturedHomeArtist = {
+      id: String(artist._id || dedupeKey),
+      name,
+      href: `/artist/${artist.slug?.current || artist._id}`,
+      location: artist.location || null,
+      imageUrl,
+      role: "Painter",
+    }
+    const prev = artistMap.get(dedupeKey)
+    if (!prev || (!prev.imageUrl && next.imageUrl) || (next.location && !prev.location)) {
+      artistMap.set(dedupeKey, { ...prev, ...next, imageUrl: next.imageUrl || prev?.imageUrl || null, location: next.location || prev?.location || null })
+    }
+  }
+
+  const artists = Array.from(artistMap.values())
     .sort((a, b) => Number(Boolean(b.imageUrl)) - Number(Boolean(a.imageUrl)))
     .slice(0, 3)
 

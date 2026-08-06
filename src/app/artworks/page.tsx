@@ -117,7 +117,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
     : sortMode || "featured"
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
+    <div className="flex min-h-screen flex-col bg-[#f7f5f0] text-stone-950">
       <Header />
 
       <main className="flex-1 bg-[#f7f5f0] pb-16 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">

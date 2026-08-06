@@ -23,25 +23,27 @@ export default async function ReviewsPage() {
     : getReviewStats(reviews)
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex min-h-screen flex-col bg-[#f7f5f0] text-[#181613]">
       <Header />
-      <main className="flex-1 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)] pb-16">
-        <section className="border-b py-14">
-          <div className="container mx-auto px-4">
-            <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">Real Reviews from Real Collectors</p>
-            <h1 className="text-4xl font-light md:text-5xl">Customer Reviews</h1>
-            <p className="mt-5 max-w-3xl text-gray-600">
+      <main className="flex-1 pb-20 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">
+        <section className="border-b border-stone-200 pb-12">
+          <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-10">
+            <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">
+              Real reviews from collectors
+            </p>
+            <h1 className="text-4xl font-medium tracking-[-0.03em] md:text-5xl">Customer Reviews</h1>
+            <p className="mt-5 max-w-3xl text-stone-600">
               Honest feedback from collectors who chose YiiArt original artworks for their homes and spaces.
             </p>
-            <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-600">
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-stone-500">
               We only publish reviews connected to real collector experiences. Reviews may include feedback about artwork
               quality, color accuracy, texture, packaging, delivery, customer support, and how the artwork feels in the room.
             </p>
           </div>
         </section>
 
-        <section className="py-12">
-          <div className="container mx-auto grid gap-8 px-4 lg:grid-cols-[320px_1fr]">
+        <section className="pt-12">
+          <div className="mx-auto grid max-w-[1180px] gap-8 px-4 sm:px-6 lg:grid-cols-[320px_1fr] lg:px-10">
             <div className="space-y-5">
               <ReviewSummary stats={stats} />
               <ReviewTrustBadge />

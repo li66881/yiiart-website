@@ -1,4 +1,4 @@
-﻿"use client"
+"use client"
 
 import Image from "next/image"
 import { FormEvent, useEffect, useRef, useState } from "react"
@@ -159,26 +159,26 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#f4f0e8] text-[#181613]">
+    <div className="min-h-screen flex flex-col bg-[#f7f5f0] text-[#181613]">
       <Header />
 
       <main className="flex-1 pb-20 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-10">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-[#75432f]">Secure studio checkout</p>
-          <h1 className="mb-10 text-5xl font-light leading-[.98] tracking-[-0.055em]">Checkout</h1>
+          <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">Secure studio checkout</p>
+          <h1 className="mb-10 text-4xl font-medium tracking-[-0.03em] md:text-5xl">Checkout</h1>
 
           <div className="mb-8 flex flex-wrap items-center justify-center gap-3 text-sm">
             <StepIndicator active={step === "shipping"} complete={step !== "shipping"} label="Shipping" number="1" />
-            <span className="h-px w-10 bg-gray-300" />
+            <span className="h-px w-10 bg-stone-300" />
             <StepIndicator active={step === "payment"} complete={step === "confirm"} label="Payment" number="2" />
-            <span className="h-px w-10 bg-gray-300" />
+            <span className="h-px w-10 bg-stone-300" />
             <StepIndicator active={step === "confirm"} complete={false} label="Confirm" number="3" />
           </div>
 
           <div className="grid gap-8 lg:grid-cols-3">
             <div className="lg:col-span-2">
               {step === "shipping" && (
-                <form onSubmit={handleShippingSubmit} className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
+                <form onSubmit={handleShippingSubmit} className="border border-stone-200 bg-white p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Shipping information</h2>
                   <div className="grid gap-4 md:grid-cols-2">
                     <TextField
@@ -244,17 +244,17 @@ export default function CheckoutPage() {
                       />
                     </div>
                   </div>
-                  <button type="submit" className="mt-6 w-full bg-[#26352c] py-4 text-white transition-colors hover:bg-[#1e2520]">
+                  <button type="submit" className="mt-6 w-full min-h-12 rounded-full bg-[#111] py-3 text-sm font-semibold tracking-[0.04em] text-white transition hover:bg-[#2a2a2a]">
                     Continue to payment
                   </button>
                 </form>
               )}
 
               {step === "payment" && (
-                <form onSubmit={handlePaymentSubmit} className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
+                <form onSubmit={handlePaymentSubmit} className="border border-stone-200 bg-white p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Payment method</h2>
                   {configLoading && (
-                    <div className="mb-4 border bg-gray-50 p-4 text-sm text-gray-600">
+                    <div className="mb-4 border bg-stone-50 p-4 text-sm text-stone-600">
                       Checking available payment methods...
                     </div>
                   )}
@@ -288,7 +288,7 @@ export default function CheckoutPage() {
                     )}
                   </div>
                   {!checkoutConfig.paypal.enabled && (
-                    <div className="mt-4 border bg-gray-50 p-4 text-sm leading-6 text-gray-600">
+                    <div className="mt-4 border bg-stone-50 p-4 text-sm leading-6 text-stone-600">
                       Secure invoice checkout is available for this order. YiiArt will confirm artwork availability, packing, shipping, and the safest payment method before payment.
                     </div>
                   )}
@@ -296,10 +296,10 @@ export default function CheckoutPage() {
                     <PaymentBadges />
                   </div>
                   <div className="mt-6 flex gap-4">
-                    <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
+                    <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-stone-50">
                       Back
                     </button>
-                    <button type="submit" className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520]">
+                    <button type="submit" className="flex-1 min-h-12 rounded-full bg-[#111] py-3 text-sm font-semibold tracking-[0.04em] text-white transition hover:bg-[#2a2a2a]">
                       Review order
                     </button>
                   </div>
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
               )}
 
               {step === "confirm" && (
-                <div className="border border-black/15 bg-[#fffdf8] p-6 md:p-8">
+                <div className="border border-stone-200 bg-white p-6 md:p-8">
                   <h2 className="text-xl font-medium mb-6">Review your order</h2>
 
                   <section className="border-b pb-4">
@@ -317,7 +317,7 @@ export default function CheckoutPage() {
                     <p>{shippingAddress.address}</p>
                     <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
                     <p>{shippingAddress.country}</p>
-                    {shippingAddress.notes && <p className="mt-2 text-sm text-gray-500">{shippingAddress.notes}</p>}
+                    {shippingAddress.notes && <p className="mt-2 text-sm text-stone-500">{shippingAddress.notes}</p>}
                   </section>
 
                   <section className="border-b py-4">
@@ -329,14 +329,14 @@ export default function CheckoutPage() {
                     <h3 className="font-medium">Items</h3>
                     {items.map((item) => (
                       <div key={item.key} className="flex items-center gap-4">
-                        <div className="relative h-16 w-16 bg-gray-100">
+                        <div className="relative h-16 w-16 bg-[#ebe6dc]">
                           {item.image && <Image src={item.image} alt={item.title} fill sizes="64px" className="object-cover" />}
                         </div>
                         <div className="flex-1">
                           <p className="font-medium">{item.title}</p>
-                          <p className="text-sm text-gray-500">by {item.artist}</p>
-                          {item.sizeLabel && <p className="text-xs text-gray-500">{item.sizeLabel}</p>}
-                          {item.finishLabel && <p className="text-xs text-gray-500">{item.finishLabel}</p>}
+                          <p className="text-sm text-stone-500">by {item.artist}</p>
+                          {item.sizeLabel && <p className="text-xs text-stone-500">{item.sizeLabel}</p>}
+                          {item.finishLabel && <p className="text-xs text-stone-500">{item.finishLabel}</p>}
                         </div>
                         <p className="text-sm"><PriceText amountCny={item.price} /> x {item.quantity}</p>
                       </div>
@@ -346,13 +346,13 @@ export default function CheckoutPage() {
                   {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
 
                   <div className="flex gap-4">
-                    <button onClick={() => setStep("payment")} className="flex-1 border py-3 hover:bg-gray-50">
+                    <button onClick={() => setStep("payment")} className="flex-1 border py-3 hover:bg-stone-50">
                       Back
                     </button>
                     <button
                       onClick={handlePlaceOrder}
                       disabled={loading}
-                      className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520] disabled:opacity-50"
+                      className="flex-1 min-h-12 rounded-full bg-[#111] py-3 text-sm font-semibold tracking-[0.04em] text-white transition hover:bg-[#2a2a2a] disabled:opacity-50"
                     >
                       {loading ? "Redirecting..." : paymentMethod === "invoice" ? "Request invoice" : "Place order"}
                     </button>
@@ -362,19 +362,19 @@ export default function CheckoutPage() {
             </div>
 
             <aside className="lg:col-span-1">
-              <div className="sticky top-28 border border-black/15 bg-[#fffdf8] p-6">
+              <div className="sticky top-[calc(var(--ya-header-offset-lg)+0.75rem)] border border-stone-200 bg-white p-6">
                 <h2 className="text-xl font-medium mb-6">Order summary</h2>
                 <div className="space-y-3 mb-6">
                   {items.map((item) => (
                     <div key={item.key} className="flex gap-3">
-                      <div className="relative h-16 w-16 flex-shrink-0 bg-gray-100">
+                      <div className="relative h-16 w-16 flex-shrink-0 bg-[#ebe6dc]">
                         {item.image && <Image src={item.image} alt={item.title} fill sizes="64px" className="object-cover" />}
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="truncate text-sm font-medium">{item.title}</p>
-                        {item.sizeLabel && <p className="truncate text-xs text-gray-500">{item.sizeLabel}</p>}
-                        {item.finishLabel && <p className="truncate text-xs text-gray-500">{item.finishLabel}</p>}
-                        <p className="text-xs text-gray-500">x {item.quantity}</p>
+                        {item.sizeLabel && <p className="truncate text-xs text-stone-500">{item.sizeLabel}</p>}
+                        {item.finishLabel && <p className="truncate text-xs text-stone-500">{item.finishLabel}</p>}
+                        <p className="text-xs text-stone-500">x {item.quantity}</p>
                       </div>
                       <p className="text-sm"><PriceText amountCny={item.price * item.quantity} /></p>
                     </div>
@@ -387,14 +387,14 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
-                    <span className="text-green-600">Free</span>
+                    <span className="font-medium text-[#2f5d46]">Free</span>
                   </div>
                   <div className="flex justify-between border-t pt-2 text-lg font-medium">
                     <span>Total</span>
                     <span><PriceText amountCny={subtotal} /></span>
                   </div>
                 </div>
-                <p className="mt-4 text-xs text-gray-500"><PriceDisclosure /></p>
+                <p className="mt-4 text-xs text-stone-500"><PriceDisclosure /></p>
               </div>
             </aside>
           </div>
@@ -418,8 +418,8 @@ function StepIndicator({
   number: string
 }) {
   return (
-    <div className={`flex items-center gap-2 ${active || complete ? "text-black" : "text-gray-400"}`}>
-      <span className={`flex h-8 w-8 items-center justify-center rounded-full ${active || complete ? "bg-black text-white" : "bg-gray-200"}`}>
+    <div className={`flex items-center gap-2 ${active || complete ? "text-black" : "text-stone-400"}`}>
+      <span className={`flex h-8 w-8 items-center justify-center rounded-full ${active || complete ? "bg-black text-white" : "bg-stone-200"}`}>
         {number}
       </span>
       <span>{label}</span>
@@ -470,14 +470,14 @@ function PaymentOption({
   onSelect: () => void
 }) {
   return (
-    <label className={`flex cursor-pointer items-center gap-3 border p-4 hover:bg-gray-50 ${checked ? "border-black" : ""}`}>
+    <label className={`flex cursor-pointer items-center gap-3 border p-4 hover:bg-stone-50 ${checked ? "border-black" : ""}`}>
       <input type="radio" name="payment" checked={checked} onChange={onSelect} />
       <span className="h-10 w-10 border flex items-center justify-center text-xs font-medium">
         {badge}
       </span>
       <span>
         <span className="block font-medium">{label}</span>
-        <span className="block text-sm text-gray-500">{description}</span>
+        <span className="block text-sm text-stone-500">{description}</span>
       </span>
     </label>
   )
@@ -528,7 +528,7 @@ function buildClientInvoiceMessage({
       item.sizeLabel ? `size ${item.sizeLabel}` : "",
       item.finishLabel ? `finish ${item.finishLabel}` : "",
       `x ${item.quantity}`,
-    ].filter(Boolean).join(" 路 ")),
+    ].filter(Boolean).join(" · ")),
     `Cart total before final confirmation: ${currency} ${convertCnyToStoreAmount(subtotal, currency).toFixed(2)}`,
     "",
     `Name: ${shippingAddress.name}`,

@@ -46,14 +46,14 @@ export default async function ContactPage({ searchParams }: Props) {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-[#fbfaf6] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
+      <main className="min-h-screen bg-[#f7f5f0] px-4 pb-20 pt-[var(--ya-header-offset)] sm:px-6 lg:px-10 lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1180px]">
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.75fr_1fr] lg:items-end">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">
+              <p className="mb-3 text-sm uppercase tracking-[0.12em] text-stone-500">
                 {isTrade ? "Trade Program" : "Contact YiiArt"}
               </p>
-              <h1 className="text-5xl font-light leading-tight">
+              <h1 className="text-4xl font-medium tracking-[-0.03em] md:text-5xl">
                 {isTrade
                   ? "Trade pricing and project support for interiors."
                   : "Get artwork advice before you buy."}

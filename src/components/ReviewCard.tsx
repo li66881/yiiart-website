@@ -12,8 +12,9 @@ type ReviewCardProps = {
 }
 
 export default function ReviewCard({ review, compact = false }: ReviewCardProps) {
-  const artworkTitle = pickEnglish(review.artwork?.title, "YiiArt artwork")
-  const artistName = pickEnglish(review.artist?.name, "YiiArt")
+  const artworkTitle = pickEnglish(review.artwork?.title, "")
+  const artistName = pickEnglish(review.artist?.name, "")
+  const hasArtworkTitle = Boolean(artworkTitle && artworkTitle !== "YiiArt artwork")
   const location = reviewLocation(review)
   const artworkHref = review.artwork?.slug?.current ? `/artwork/${review.artwork.slug.current}` : "/artworks"
   const photo = getPermittedReviewPhotos(review)[0]
@@ -25,7 +26,7 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
         {photoUrl ? (
           <Image
             src={photoUrl}
-            alt={photo.alt || `${artworkTitle} in ${review.roomType || "a collector space"}`}
+            alt={photo.alt || `${artworkTitle || "YiiArt painting"} in ${review.roomType || "a collector space"}`}
             width={160}
             height={160}
             className="h-20 w-20 flex-shrink-0 object-cover"
@@ -56,13 +57,22 @@ export default function ReviewCard({ review, compact = false }: ReviewCardProps)
         </p>
         {!compact && (
           <>
-            <p>
-              <TranslatedText k="reviews.purchased" />:{" "}
-              <Link href={artworkHref} className="text-black underline underline-offset-4">
-                {artworkTitle}
-              </Link>
-              {artistName ? <> <TranslatedText k="reviews.by" /> {artistName}</> : ""}
-            </p>
+            {hasArtworkTitle ? (
+              <p>
+                <TranslatedText k="reviews.purchased" />:{" "}
+                <Link href={artworkHref} className="text-black underline underline-offset-4">
+                  {artworkTitle}
+                </Link>
+                {artistName ? <> <TranslatedText k="reviews.by" /> {artistName}</> : ""}
+              </p>
+            ) : (
+              <p>
+                <TranslatedText k="reviews.purchased" />:{" "}
+                <Link href="/artworks" className="text-black underline underline-offset-4">
+                  Hand-painted canvas
+                </Link>
+              </p>
+            )}
             {review.artwork?.dimensions && <p><TranslatedText k="reviews.size" />: {formatDimensions(review.artwork.dimensions)}</p>}
             {review.roomType && <p><TranslatedText k="reviews.room" />: <TranslatedOption value={review.roomType} /></p>}
           </>
