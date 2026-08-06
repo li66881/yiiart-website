@@ -90,6 +90,7 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const [shareStatus, setShareStatus] = useState("")
+  const [showAllSizes, setShowAllSizes] = useState(false)
   const [stickyVisible, setStickyVisible] = useState(false)
   const [saleCountdown, setSaleCountdown] = useState<string | null>(
     saleEndsAt ? formatSaleCountdown(saleEndsAt) : null,
@@ -211,6 +212,15 @@ export default function ProductPurchasePanel({
   }
 
   const styleKicker = product.styleTags.filter(Boolean).slice(0, 2).join(" · ") || "Hand-painted canvas"
+  const SIZE_PREVIEW_COUNT = 6
+  const visibleSizes = useMemo(() => {
+    if (showAllSizes || product.sizes.length <= SIZE_PREVIEW_COUNT) return product.sizes
+    const preview = product.sizes.slice(0, SIZE_PREVIEW_COUNT)
+    if (selection?.size.id && !preview.some((size) => size.id === selection.size.id)) {
+      return [...preview.slice(0, SIZE_PREVIEW_COUNT - 1), selection.size]
+    }
+    return preview
+  }, [product.sizes, selection?.size, showAllSizes])
 
   return (
     <section className={styles.purchasePanel} aria-labelledby="product-title">
@@ -290,7 +300,7 @@ export default function ProductPurchasePanel({
             Canvas Size: <strong>{selection?.size.label || "Select a size"}</strong>
           </p>
           <div className={styles.sizeChips} role="radiogroup" aria-label="Canvas sizes">
-            {product.sizes.map((size) => {
+            {visibleSizes.map((size) => {
               const active = selection?.size.id === size.id
               return (
                 <label key={size.id} className={styles.sizeChip} data-active={active} title={size.label}>
@@ -305,6 +315,15 @@ export default function ProductPurchasePanel({
               )
             })}
           </div>
+          {product.sizes.length > SIZE_PREVIEW_COUNT ? (
+            <button
+              type="button"
+              className={styles.sizeMoreButton}
+              onClick={() => setShowAllSizes((open) => !open)}
+            >
+              {showAllSizes ? "Show fewer sizes" : `Show all sizes (${product.sizes.length})`}
+            </button>
+          ) : null}
         </div>
       )}
 

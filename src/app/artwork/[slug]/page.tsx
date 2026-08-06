@@ -29,7 +29,7 @@ import {
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
-import { getStudioSaleEndsAt } from "@/lib/storefront/sale"
+import { getStudioSaleEndsAt, isStudioSaleActive } from "@/lib/storefront/sale"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
@@ -615,11 +615,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           </div>
 
           <ProductRail
-            title="Visually similar artworks"
+            title="Visually Similar"
             subtitle="Compare palette, texture, and scale before you decide."
             items={toProductCards(relatedArtworks.slice(0, 8))}
             viewAllHref="/artworks"
-            viewAllLabel="View all artworks"
+            viewAllLabel="View all"
           />
 
           <ArtistSpotlight
@@ -632,11 +632,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           />
 
           <ProductRail
-            title="More to love"
+            title="More to Love"
             subtitle="Other hand-painted canvases collectors are browsing now."
             items={toProductCards(relatedArtworks.slice().reverse())}
             viewAllHref="/artworks?sort=newest"
-            viewAllLabel="Browse more"
+            viewAllLabel="View all"
           />
 
           <div className={storefrontStyles.whyBlock} aria-label="Why YiiArt">
@@ -719,6 +719,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 }
 
 function toProductCards(artworks: any[]) {
+  const sale = isStudioSaleActive()
   return artworks.map((artwork) => {
     const images = getArtworkImageUrls(artwork, { width: 800 })
     return {
@@ -726,9 +727,11 @@ function toProductCards(artworks: any[]) {
       href: `/artwork/${artwork.slug?.current || artwork._id}`,
       title: pickEnglish(artwork.title, "Untitled artwork"),
       priceCny: artwork.price,
+      compareAtPriceCny: Number(artwork.compareAtPriceCny) > 0 ? Number(artwork.compareAtPriceCny) : null,
       image: images[0] || null,
       hoverImage: images[1] || images[0] || null,
       sku: artwork.sku || artwork.slug?.current?.toUpperCase?.() || null,
+      showSalePricing: sale,
     }
   })
 }

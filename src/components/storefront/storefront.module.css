@@ -554,6 +554,18 @@
   box-shadow: inset 0 0 0 1px #111;
 }
 
+.sizeMoreButton {
+  margin-top: 0.55rem;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #333;
+  font-size: 0.82rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
 .shareRow {
   display: flex;
   flex-wrap: wrap;
@@ -827,21 +839,24 @@
 
 .finishChips {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.45rem;
 }
 
 .finishChip {
   position: relative;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 0.55rem;
-  min-height: 3rem;
-  padding: 0.4rem 0.65rem;
+  justify-content: center;
+  gap: 0.25rem;
+  min-height: 4.4rem;
+  padding: 0.4rem 0.35rem;
   border: 1px solid #d8d2c7;
   border-radius: 8px;
   background: #fff;
   cursor: pointer;
+  text-align: center;
   transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
@@ -875,8 +890,8 @@
 
 .finishChipLabel {
   color: #222;
-  font-size: 0.8rem;
-  line-height: 1.25;
+  font-size: 0.68rem;
+  line-height: 1.2;
   font-weight: 500;
 }
 
@@ -1141,7 +1156,7 @@
   }
 
   .finishChips {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .stickyPurchaseCopy strong {

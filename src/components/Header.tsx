@@ -17,7 +17,7 @@ const primaryNav: Array<{ href: string; label: string; accent?: boolean }> = [
   { href: "/artworks?sort=newest", label: "New In" },
   { href: "/custom-painting", label: "Custom Art" },
   { href: "/contact?topic=trade", label: "Trade Program" },
-  { href: "/custom-painting?intent=gift", label: "Gift Card" },
+  { href: "/custom-painting?intent=gift", label: "Gift" },
   { href: "/reviews", label: "Reviews" },
   { href: "/artists", label: "Artist" },
   { href: "/about", label: "Our Story" },

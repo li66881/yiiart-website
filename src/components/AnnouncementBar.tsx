@@ -40,12 +40,12 @@ export default function AnnouncementBar({
   if (dismissed) return null
 
   return (
-    <div className="relative border-b border-[#2a2925] bg-[#181613] px-4 py-1.5 text-white">
+    <div className="relative border-b border-[#d5d2c3] bg-[#e4e2d4] px-4 py-1.5 text-[#1d1c18]">
       <div className="mx-auto flex max-w-5xl items-center justify-center gap-3 pr-8 text-center text-[12px] leading-snug sm:text-[13px]">
-        <p className="tracking-[0.04em] text-white/95">{message}</p>
+        <p className="tracking-[0.04em]">{message}</p>
         {countdown ? (
-          <span className="inline-flex shrink-0 items-center gap-1.5 font-semibold tracking-wide text-white">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-white/70">
+          <span className="inline-flex shrink-0 items-center gap-1.5 font-semibold tracking-wide">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden className="text-[#5c584e]">
               <circle cx="12" cy="12" r="8.25" stroke="currentColor" strokeWidth="1.6" />
               <path d="M12 8.5V12l2.4 1.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
@@ -56,7 +56,7 @@ export default function AnnouncementBar({
       <button
         type="button"
         aria-label="Dismiss announcement"
-        className="absolute right-3 top-1/2 -translate-y-1/2 px-1 text-white/60 hover:text-white"
+        className="absolute right-3 top-1/2 -translate-y-1/2 px-1 text-[#6f675d] hover:text-[#1d1c18]"
         onClick={() => {
           sessionStorage.setItem(STORAGE_KEY, "1")
           setDismissed(true)
