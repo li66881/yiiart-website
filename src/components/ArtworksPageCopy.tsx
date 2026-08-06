@@ -5,22 +5,31 @@ import { useLanguage } from "@/context/LanguageContext"
 type ArtworksPageCopyProps = {
   activeCategory?: string
   promo?: string | null
+  sort?: string | null
 }
 
-export function ArtworksPageHeroCopy({ activeCategory, promo }: ArtworksPageCopyProps) {
+export function ArtworksPageHeroCopy({ activeCategory, promo, sort }: ArtworksPageCopyProps) {
   const { t } = useLanguage()
   const isSale = promo === "sale"
   const title = isSale
     ? "Studio Sale"
-    : activeCategory
-      ? `${translateDiscoveryOption(t, activeCategory)} ${t("common.artworks")}`
-      : "New Arrivals"
+    : sort === "newest"
+      ? "New Arrivals"
+      : sort === "featured"
+        ? "Best Sellers"
+        : activeCategory
+          ? `${translateDiscoveryOption(t, activeCategory)} ${t("common.artworks")}`
+          : "New Arrivals"
 
   const description = isSale
     ? "Selected hand-painted canvases up to 40% off. Choose your size and finish — free worldwide shipping while the studio sale is live."
-    : activeCategory
-      ? t("artworksPage.description")
-      : "Browse the latest hand-painted canvases, choose your size and finish, and ship worldwide with studio packing."
+    : sort === "newest"
+      ? "The latest studio releases, sorted newest first. Choose size and finish for worldwide delivery."
+      : sort === "featured"
+        ? "Collector favorites and most-browsed canvases. Start with a size that fits your wall."
+        : activeCategory
+          ? t("artworksPage.description")
+          : "Browse the latest hand-painted canvases, choose your size and finish, and ship worldwide with studio packing."
 
   return (
     <div className="-mx-4 mb-8 bg-[#d8d9c4] px-4 py-10 sm:-mx-6 sm:px-6 lg:-mx-10 lg:px-10">

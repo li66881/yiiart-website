@@ -13,7 +13,7 @@ import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 export const revalidate = 600
 
 interface Props {
-  searchParams: Promise<{ category?: string; orientation?: string; promo?: string }>
+  searchParams: Promise<{ category?: string; orientation?: string; promo?: string; sort?: string }>
 }
 
 async function getArtworks() {
@@ -59,22 +59,33 @@ export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
   const activeCategory = normalizeCategory(params.category)
   const isSale = params.promo === "sale"
+  const sortMode = normalizeSortParam(params.sort)
   const seoImage = await getSeoImage(activeCategory)
   const title = isSale
     ? "Studio Sale — Up to 40% Off"
-    : activeCategory
-      ? `${activeCategory} Original Paintings`
-      : "Original Paintings"
+    : sortMode === "newest"
+      ? "New Arrivals"
+      : sortMode === "featured"
+        ? "Best Sellers"
+        : activeCategory
+          ? `${activeCategory} Original Paintings`
+          : "Original Paintings"
   const description = isSale
     ? "Browse the YiiArt studio sale: selected hand-painted canvases up to 40% off, with free worldwide shipping."
-    : activeCategory
-      ? `Browse ${activeCategory.toLowerCase()} original paintings from YiiArt, each hand-painted and shipped worldwide with a signed certificate.`
-      : "Browse original abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
+    : sortMode === "newest"
+      ? "Browse the newest hand-painted canvases from YiiArt, ready to size and ship worldwide."
+      : sortMode === "featured"
+        ? "Browse YiiArt best sellers — collector favorites across texture, landscape, abstract, and more."
+        : activeCategory
+          ? `Browse ${activeCategory.toLowerCase()} original paintings from YiiArt, each hand-painted and shipped worldwide with a signed certificate.`
+          : "Browse original abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
   const path = isSale
     ? "/artworks?promo=sale"
-    : activeCategory
-      ? `/artworks?category=${encodeURIComponent(activeCategory)}`
-      : "/artworks"
+    : sortMode
+      ? `/artworks?sort=${sortMode}`
+      : activeCategory
+        ? `/artworks?category=${encodeURIComponent(activeCategory)}`
+        : "/artworks"
 
   return buildSeoMetadata({
     title,
@@ -90,12 +101,20 @@ export default async function ArtworksPage({ searchParams }: Props) {
   const activeCategory = normalizeCategory(params.category)
   const orientation = normalizeOrientationParam(params.orientation)
   const isSale = params.promo === "sale"
-  // Sale uses the full public catalog; category pages keep their focused set.
-  const artworks = await (isSale ? getArtworks() : getCategoryArtworks(activeCategory)).catch(() => [])
+  const sortMode = normalizeSortParam(params.sort)
+  // Sale / sorted nav uses the full public catalog; category pages keep their focused set.
+  const artworks = await (
+    isSale || sortMode || !activeCategory
+      ? getArtworks()
+      : getCategoryArtworks(activeCategory)
+  ).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
     const images = getArtworkImageUrls(artwork, { width: 700 })
     return buildArtworkDiscoveryItem(artwork, images[0], images[1] || images[0])
   })
+  const initialSortMode = isSale
+    ? "price-asc"
+    : sortMode || "featured"
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
@@ -103,7 +122,11 @@ export default async function ArtworksPage({ searchParams }: Props) {
 
       <main className="flex-1 bg-[#f7f5f0] pb-16 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
-          <ArtworksPageHeroCopy activeCategory={activeCategory} promo={isSale ? "sale" : null} />
+          <ArtworksPageHeroCopy
+            activeCategory={activeCategory}
+            promo={isSale ? "sale" : null}
+            sort={sortMode}
+          />
 
           <section className="mb-8 pb-2">
             <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
@@ -141,8 +164,8 @@ export default async function ArtworksPage({ searchParams }: Props) {
           <ArtworkDiscoveryGrid
             items={artworkItems}
             initialFilters={orientation ? { orientations: [orientation] } : undefined}
-            initialSortMode={isSale ? "price-asc" : "featured"}
-            cardBadge={isSale ? "40% OFF" : null}
+            initialSortMode={initialSortMode}
+            cardBadge={isSale ? "40% OFF" : sortMode === "featured" ? "Best Seller" : null}
           />
         </div>
       </main>
@@ -162,4 +185,11 @@ function normalizeOrientationParam(value?: string) {
     Square: "Square",
   }
   return map[value] || null
+}
+
+function normalizeSortParam(value?: string) {
+  if (value === "newest" || value === "featured" || value === "price-asc" || value === "price-desc" || value === "large-first") {
+    return value
+  }
+  return null
 }

@@ -5,12 +5,21 @@ import CustomPaintingRequestForm from "@/components/CustomPaintingRequestForm"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
 
-export const metadata: Metadata = buildSeoMetadata({
-  title: "Custom Painting Made for Your Space",
-  description:
-    "Request a handmade custom painting from YiiArt. Choose size, color palette, orientation, frame direction, and room style for a canvas artwork made for your space.",
-  path: "/custom-painting",
-})
+type Props = {
+  searchParams: Promise<{ intent?: string; artwork?: string }>
+}
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const params = await searchParams
+  const isGift = params.intent === "gift"
+  return buildSeoMetadata({
+    title: isGift ? "Art Gift Concierge | YiiArt" : "Custom Painting Made for Your Space",
+    description: isGift
+      ? "Commission a hand-painted gift canvas with YiiArt. Share size, palette, and recipient notes — we help plan a piece ready to ship worldwide."
+      : "Request a handmade custom painting from YiiArt. Choose size, color palette, orientation, frame direction, and room style for a canvas artwork made for your space.",
+    path: isGift ? "/custom-painting?intent=gift" : "/custom-painting",
+  })
+}
 
 const steps = [
   {
@@ -78,9 +87,13 @@ const faqs = [
   },
 ]
 
-export default function CustomPaintingPage() {
+export default async function CustomPaintingPage({ searchParams }: Props) {
+  const params = await searchParams
+  const isGift = params.intent === "gift"
   const whatsappUrl = getWhatsAppUrl(
-    "Hello YiiArt, I would like to start a custom painting request. I can share my room size, photos, and preferred colors."
+    isGift
+      ? "Hello YiiArt, I would like help commissioning a gift painting. I can share size, palette, and delivery date."
+      : "Hello YiiArt, I would like to start a custom painting request. I can share my room size, photos, and preferred colors.",
   )
 
   return (
@@ -90,18 +103,34 @@ export default function CustomPaintingPage() {
         <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Custom Painting Service</p>
-              <h1 className="text-5xl font-light leading-tight md:text-6xl">Custom Painting Made for Your Space</h1>
+              <p className="mb-3 text-sm uppercase text-stone-500">
+                {isGift ? "Gift Concierge" : "Custom Painting Service"}
+              </p>
+              <h1 className="text-5xl font-light leading-tight md:text-6xl">
+                {isGift
+                  ? "Commission a hand-painted gift canvas"
+                  : "Custom Painting Made for Your Space"}
+              </h1>
             </div>
             <div>
               <p className="max-w-3xl text-base leading-8 text-stone-600">
-                Choose your size, color palette, and style. Our studio creates a handmade artwork tailored to your room.
+                {isGift
+                  ? "Share the occasion, wall size, palette, and delivery date. YiiArt helps plan a handmade canvas gift — with worldwide insured shipping."
+                  : "Choose your size, color palette, and style. Our studio creates a handmade artwork tailored to your room."}
               </p>
               <a
                 href="#custom-request"
                 className="mt-8 inline-flex bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800"
               >
-                Start Custom Request
+                {isGift ? "Start a gift request" : "Start Custom Request"}
+              </a>
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 ml-0 inline-flex border border-stone-300 px-6 py-4 text-sm font-medium transition hover:border-black sm:ml-3"
+              >
+                Chat on WhatsApp
               </a>
             </div>
           </div>

@@ -66,6 +66,12 @@ function finishIconKey(id: string, label: string) {
   return "frameless"
 }
 
+function finishSectionLabel(label: string) {
+  const key = finishIconKey("", label)
+  if (key === "rolled" || key === "frameless") return "Finish"
+  return "Floating Frame"
+}
+
 export default function ProductPurchasePanel({
   product,
   directCheckoutAvailable,
@@ -260,7 +266,7 @@ export default function ProductPurchasePanel({
       {product.finishes.length > 0 && (
         <div className={styles.optionBlock}>
           <p className={styles.optionLabel}>
-            Floating Frame:{" "}
+            {finishSectionLabel(selection?.finish.label || product.finishes[0]?.label || "")}:{" "}
             <strong>{selection?.finish.label || product.finishes[0]?.label}</strong>
           </p>
           <div className={styles.finishChips} role="radiogroup" aria-label="Framing options">

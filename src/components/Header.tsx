@@ -13,8 +13,8 @@ import { siteAssetUrl } from "@/lib/assets"
 import { getStudioSaleEndsAt } from "@/lib/storefront/sale"
 
 const primaryNav: Array<{ href: string; label: string; accent?: boolean }> = [
-  { href: "/artworks", label: "Best Sellers" },
-  { href: "/artworks", label: "New In" },
+  { href: "/artworks?sort=featured", label: "Best Sellers" },
+  { href: "/artworks?sort=newest", label: "New In" },
   { href: "/custom-painting", label: "Custom Art" },
   { href: "/contact?topic=trade", label: "Trade Program" },
   { href: "/custom-painting?intent=gift", label: "Gift Card" },

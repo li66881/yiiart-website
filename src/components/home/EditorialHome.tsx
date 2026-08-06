@@ -150,7 +150,7 @@ export default function EditorialHome({ artworks, artists = [] }: EditorialHomeP
 
   const pool = featured.length > 0 ? featured : withImages
   const bestSellerTabs = [
-    { id: "all", label: "Best sellers", href: "/artworks", items: pool.slice(0, 8).map(toCard) },
+    { id: "all", label: "Best sellers", href: "/artworks?sort=featured", items: pool.slice(0, 8).map(toCard) },
     {
       id: "texture",
       label: "Plaster & Texture",
@@ -272,7 +272,7 @@ export default function EditorialHome({ artworks, artists = [] }: EditorialHomeP
 
       <section className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>
-          <SectionHeading eyebrow="New arrivals" title="Fresh canvases for the season." action={{ href: "/artworks", label: "Shop new" }} />
+          <SectionHeading eyebrow="New arrivals" title="Fresh canvases for the season." action={{ href: "/artworks?sort=newest", label: "Shop new" }} />
           <div className={styles.productRailScroll}>
             {newArrivals.map((artwork) => (
               <div key={`new-${artwork._id}`} className={styles.productRailCard}>

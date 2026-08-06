@@ -80,31 +80,36 @@ export async function generateMetadata() {
 
 export default async function Home() {
   const { artworks, artistsRaw } = await getData()
-  const artists = Array.from(
-    new Map(
-      (artistsRaw || []).map((artist: any) => {
-        const id = String(artist._id)
-        return [
-          id,
-          {
-            id,
-            name: pickEnglish(artist.name, "YiiArt Artist"),
-            href: `/artist/${artist.slug?.current || artist._id}`,
-            location: artist.location || null,
-            imageUrl: artist.image ? urlFor(artist.image).width(800).height(1000).url() : null,
-            role: "Painter",
-          },
-        ] as const
-      }),
-    ).values(),
-  ).slice(0, 3) as Array<{
+  type FeaturedHomeArtist = {
     id: string
     name: string
     href: string
     location: string | null
     imageUrl: string | null
     role: string
-  }>
+  }
+
+  const artists = (
+    Array.from(
+      new Map(
+        (artistsRaw || []).map((artist: any) => {
+          const name = pickEnglish(artist.name, "YiiArt Artist")
+          const dedupeKey = name.trim().toLowerCase()
+          const card: FeaturedHomeArtist = {
+            id: String(artist._id),
+            name,
+            href: `/artist/${artist.slug?.current || artist._id}`,
+            location: artist.location || null,
+            imageUrl: artist.image ? urlFor(artist.image).width(800).height(1000).url() : null,
+            role: "Painter",
+          }
+          return [dedupeKey, card] as const
+        }),
+      ).values(),
+    ) as FeaturedHomeArtist[]
+  )
+    .sort((a, b) => Number(Boolean(b.imageUrl)) - Number(Boolean(a.imageUrl)))
+    .slice(0, 3)
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
