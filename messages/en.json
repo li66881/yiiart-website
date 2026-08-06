@@ -453,7 +453,8 @@
       "rooms": "Room",
       "colors": "Color",
       "sizes": "Size",
-      "orientations": "Orientation"
+      "orientations": "Orientation",
+      "prices": "Price"
     },
     "option": {
       "Abstract": "Abstract",
