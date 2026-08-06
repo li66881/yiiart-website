@@ -1270,6 +1270,16 @@
   margin: 0.35rem 0 0;
   color: var(--yiiart-ink);
   font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.productCardCompareAt {
+  color: #8a847a;
+  font-size: 0.82rem;
+  text-decoration: line-through;
 }
 
 .productRail {

@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next"
+import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import PaymentBadges from "@/components/PaymentBadges"
@@ -58,7 +58,7 @@ export default async function AboutPage() {
           <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Mission</p>
-              <h2 className="text-4xl font-light leading-tight">A fairer path from studio to home.</h2>
+              <h2 className="text-3xl font-medium tracking-[-0.02em] md:text-4xl">A fairer path from studio to home.</h2>
             </div>
             <div className="space-y-5 text-base leading-8 text-stone-600">
               <p>
@@ -76,7 +76,7 @@ export default async function AboutPage() {
           <section className="grid gap-10 border-b border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">What you can count on</p>
-              <h2 className="text-4xl font-light leading-tight">Concrete promises, not slogans.</h2>
+              <h2 className="text-3xl font-medium tracking-[-0.02em] md:text-4xl">Concrete promises, not slogans.</h2>
             </div>
             <div className="space-y-6">
               <ul className="grid gap-4 text-sm leading-6 text-stone-600 sm:grid-cols-2">
@@ -103,7 +103,7 @@ export default async function AboutPage() {
 
           <section className="mt-14">
             <div className="mb-8 max-w-3xl">
-              <h2 className="text-3xl font-light">Trusted by Collectors</h2>
+              <h2 className="text-3xl font-medium tracking-[-0.02em]">Trusted by Collectors</h2>
               <p className="mt-3 text-sm leading-6 text-stone-600">
                 Every YiiArt review comes from a real collector experience. We welcome honest feedback about artwork
                 quality, color accuracy, texture, packaging, delivery, and how the artwork feels in the space.

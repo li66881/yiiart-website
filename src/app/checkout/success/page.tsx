@@ -55,7 +55,7 @@ function CheckoutSuccessContent() {
 
     let cancelled = false
     fetch(`/api/orders?${params}`)
-      .then((response) => response.ok ? response.json() : null)
+      .then((response) => (response.ok ? response.json() : null))
       .then((data) => {
         if (cancelled) return
         const loadedOrder = data?.order || null
@@ -77,58 +77,61 @@ function CheckoutSuccessContent() {
   }, [paypalOrderId, sessionId])
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="flex min-h-screen flex-col bg-[#f7f5f0] text-[#181613]">
       <Header />
 
-      <main className="flex-1 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)] pb-16">
-        <div className="container mx-auto px-4 max-w-2xl text-center">
-          <div className="bg-white p-8 border">
-            <h1 className="text-3xl font-light mb-4">Order confirmed</h1>
-            <p className="text-gray-600 mb-6">
+      <main className="flex-1 pb-20 pt-[var(--ya-header-offset)] lg:pt-[var(--ya-header-offset-lg)]">
+        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+          <div className="border border-stone-200 bg-white p-8 md:p-10">
+            <p className="mb-2 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">Checkout</p>
+            <h1 className="mb-4 text-4xl font-medium tracking-[-0.03em]">Order confirmed</h1>
+            <p className="mb-8 text-stone-600">
               Thank you for your purchase. Your order has been received and will be prepared after payment confirmation.
             </p>
 
             {orderLoading && (
-              <div className="bg-gray-50 p-4 mb-6 text-left text-sm text-gray-600">
+              <div className="mb-6 border border-stone-200 bg-[#f7f5f0] p-4 text-left text-sm text-stone-600">
                 Loading order confirmation...
               </div>
             )}
 
             {order && (
-              <div className="bg-gray-50 p-4 mb-6 text-left">
-                <p className="text-sm text-gray-500">YiiArt order number</p>
+              <div className="mb-6 border border-stone-200 bg-[#f7f5f0] p-4 text-left">
+                <p className="text-sm text-stone-500">YiiArt order number</p>
                 <p className="font-mono text-sm">{order.orderNumber}</p>
-                <p className="mt-3 text-sm text-gray-500">Payment status</p>
+                <p className="mt-3 text-sm text-stone-500">Payment status</p>
                 <p className="text-sm font-medium">{formatStatus(order.status)}</p>
-                <p className="mt-3 text-sm text-gray-500">Total</p>
+                <p className="mt-3 text-sm text-stone-500">Total</p>
                 <p className="text-sm font-medium">{formatMoney(order.totalAmount, order.currency)}</p>
               </div>
             )}
 
             {sessionId && (
-              <div className="bg-gray-50 p-4 mb-6 text-left">
-                <p className="text-sm text-gray-500">Stripe order reference</p>
-                <p className="font-mono text-sm break-all">{sessionId}</p>
+              <div className="mb-6 border border-stone-200 bg-[#f7f5f0] p-4 text-left">
+                <p className="text-sm text-stone-500">Stripe order reference</p>
+                <p className="break-all font-mono text-sm">{sessionId}</p>
               </div>
             )}
 
             {paypalOrderId && (
-              <div className="bg-gray-50 p-4 mb-6 text-left">
-                <p className="text-sm text-gray-500">PayPal order reference</p>
-                <p className="font-mono text-sm break-all">{paypalOrderId}</p>
+              <div className="mb-6 border border-stone-200 bg-[#f7f5f0] p-4 text-left">
+                <p className="text-sm text-stone-500">PayPal order reference</p>
+                <p className="break-all font-mono text-sm">{paypalOrderId}</p>
               </div>
             )}
 
             <div className="space-y-3">
               <button
+                type="button"
                 onClick={() => router.push("/orders")}
-                className="w-full py-3 bg-black text-white hover:bg-gray-800"
+                className="flex min-h-12 w-full items-center justify-center rounded-full bg-[#111] text-sm font-semibold tracking-[0.04em] text-white transition hover:bg-[#2a2a2a]"
               >
                 View my orders
               </button>
               <button
+                type="button"
                 onClick={() => router.push("/artworks")}
-                className="w-full py-3 border hover:bg-gray-50"
+                className="flex min-h-12 w-full items-center justify-center border border-stone-300 text-sm transition hover:border-black"
               >
                 Continue shopping
               </button>
@@ -145,7 +148,7 @@ function CheckoutSuccessContent() {
 function readStoredCartItems() {
   try {
     const savedCart = localStorage.getItem("yiiart-cart")
-    return savedCart ? JSON.parse(savedCart) as Array<{ price: number; quantity: number }> : []
+    return savedCart ? (JSON.parse(savedCart) as Array<{ price: number; quantity: number }>) : []
   } catch {
     return []
   }
@@ -172,11 +175,11 @@ type SuccessOrder = {
 
 export default function CheckoutSuccessPage() {
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-500">Loading...</div>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-[#f7f5f0] text-stone-500">Loading...</div>
+      }
+    >
       <CheckoutSuccessContent />
     </Suspense>
   )

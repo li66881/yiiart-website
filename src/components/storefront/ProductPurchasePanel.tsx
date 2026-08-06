@@ -12,7 +12,7 @@ import { useWishlist } from "@/context/WishlistContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount, formatStorePrice } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
-import { formatSaleCountdown } from "@/lib/storefront/sale"
+import { formatSaleCountdown, resolveCompareAtCny, saleOffPercent } from "@/lib/storefront/sale"
 import { getProductSelection } from "@/lib/storefront/selection"
 import styles from "./storefront.module.css"
 
@@ -108,8 +108,9 @@ export default function ProductPurchasePanel({
     Boolean(saleEndsAt) && new Date(saleEndsAt as string).getTime() > Date.now()
   const lineQty = Math.max(1, quantity)
   const unitPriceCny = selection?.priceCny || 0
-  const compareAtCny = saleActive && unitPriceCny > 0 ? unitPriceCny / 0.6 : null
+  const compareAtCny = resolveCompareAtCny(unitPriceCny, product.compareAtPriceCny, saleActive)
   const linePriceCny = unitPriceCny * lineQty
+  const offPercent = compareAtCny ? saleOffPercent(unitPriceCny, compareAtCny) : null
   const installmentHint = selection
     ? formatStorePrice(selection.priceCny / 4, currency)
     : null
@@ -228,7 +229,9 @@ export default function ProductPurchasePanel({
 
       <div className={styles.priceBlock}>
         <p className={styles.priceRow}>
-          {saleActive ? <span className={styles.saleBadge}>SALE</span> : null}
+          {saleActive ? (
+            <span className={styles.saleBadge}>{offPercent ? `${offPercent}% OFF` : "SALE"}</span>
+          ) : null}
           <span className={styles.price}>
             <PriceText amountCny={unitPriceCny || undefined} />
           </span>

@@ -9,6 +9,7 @@ import { storefrontCollectionTiles } from "@/lib/storefront-content"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
+import { isStudioSaleActive } from "@/lib/storefront/sale"
 
 export const revalidate = 600
 
@@ -166,6 +167,7 @@ export default async function ArtworksPage({ searchParams }: Props) {
             initialFilters={orientation ? { orientations: [orientation] } : undefined}
             initialSortMode={initialSortMode}
             cardBadge={isSale ? "40% OFF" : sortMode === "featured" ? "Best Seller" : null}
+            showSalePricing={isSale || isStudioSaleActive()}
           />
         </div>
       </main>

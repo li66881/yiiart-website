@@ -1,6 +1,7 @@
 "use client"
 
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react"
+import { usePathname, useRouter } from "next/navigation"
 import { PriceDisclosure } from "@/components/PriceText"
 import ProductCard from "@/components/storefront/ProductCard"
 import { useLanguage } from "@/context/LanguageContext"
@@ -25,7 +26,23 @@ type ArtworkDiscoveryGridProps = {
   initialFilters?: Partial<ArtworkFilterState>
   initialSortMode?: SortMode
   cardBadge?: string | null
+  showSalePricing?: boolean
   emptyText?: string
+}
+
+const COLOR_SWATCHES: Record<string, string> = {
+  Neutral: "#d9d2c5",
+  White: "#f5f5f2",
+  Black: "#1c1b19",
+  Gray: "#9a958c",
+  Blue: "#5b7ea8",
+  Green: "#6f8f6a",
+  Red: "#b04a3c",
+  Pink: "#d28aa0",
+  Yellow: "#d4b35c",
+  Orange: "#d4894a",
+  "Earth Tone": "#8b6b4a",
+  Multicolor: "linear-gradient(135deg,#b04a3c,#5b7ea8,#6f8f6a,#d4b35c)",
 }
 
 export default function ArtworkDiscoveryGrid({
@@ -33,9 +50,12 @@ export default function ArtworkDiscoveryGrid({
   initialFilters,
   initialSortMode = "featured",
   cardBadge = null,
+  showSalePricing = false,
   emptyText,
 }: ArtworkDiscoveryGridProps) {
   const { t } = useLanguage()
+  const router = useRouter()
+  const pathname = usePathname()
   const [filters, setFilters] = useState<ArtworkFilterState>(() => normalizeArtworkFilters(initialFilters))
   const [sortMode, setSortMode] = useState<SortMode>(initialSortMode)
   const [collection, setCollection] = useState<ArtworkCollectionTab>("all")
@@ -45,6 +65,25 @@ export default function ArtworkDiscoveryGrid({
     Object.fromEntries(artworkFilterGroups.map((group, index) => [group.key, index < 3])),
   )
   const activeCount = countActiveArtworkFilters(filters)
+
+  useEffect(() => {
+    if (typeof window === "undefined") return
+    const params = new URLSearchParams(window.location.search)
+    if (sortMode && sortMode !== "featured") params.set("sort", sortMode)
+    else params.delete("sort")
+
+    for (const group of artworkFilterGroups) {
+      const values = filters[group.key]
+      if (values.length > 0) params.set(group.key, values.join(","))
+      else params.delete(group.key)
+    }
+
+    const next = params.toString()
+    const current = window.location.search.replace(/^\?/, "")
+    if (next !== current) {
+      router.replace(next ? `${pathname}?${next}` : pathname, { scroll: false })
+    }
+  }, [filters, pathname, router, sortMode])
 
   const collectionItems = useMemo(
     () => items.filter((item) => artworkMatchesCollection(item, collection)),
@@ -116,6 +155,7 @@ export default function ArtworkDiscoveryGrid({
                 {visibleFilterOptions(group.options, optionCounts[group.key], filters[group.key]).map((option) => {
                   const checked = filters[group.key].includes(option)
                   const count = optionCounts[group.key].get(option) || 0
+                  const swatch = group.key === "colors" ? COLOR_SWATCHES[option] : null
                   return (
                     <label
                       key={option}
@@ -128,6 +168,13 @@ export default function ArtworkDiscoveryGrid({
                           onChange={() => toggleFilter(group.key, option, setFilters)}
                           className="h-3.5 w-3.5 accent-[#181613]"
                         />
+                        {swatch ? (
+                          <span
+                            aria-hidden
+                            className="inline-block h-3.5 w-3.5 rounded-full border border-stone-300"
+                            style={{ background: swatch }}
+                          />
+                        ) : null}
                         <span>
                           {translateOption(option)}
                           <span className="text-stone-400">({count})</span>
@@ -215,10 +262,16 @@ export default function ArtworkDiscoveryGrid({
 
       {activeCount > 0 ? (
         <div className="mb-5 flex flex-wrap gap-2">
-          {activeFilterLabels(filters, t, translateOption).map((label) => (
-            <span key={label} className="border border-stone-300 bg-white px-3 py-1 text-xs text-stone-600">
-              {label}
-            </span>
+          {activeFilterChips(filters, t, translateOption).map((chip) => (
+            <button
+              key={`${chip.key}-${chip.option}`}
+              type="button"
+              onClick={() => toggleFilter(chip.key, chip.option, setFilters)}
+              className="inline-flex items-center gap-1.5 border border-stone-300 bg-white px-3 py-1 text-xs text-stone-600 transition hover:border-black hover:text-black"
+            >
+              {chip.label}
+              <span aria-hidden>×</span>
+            </button>
           ))}
         </div>
       ) : null}
@@ -239,10 +292,12 @@ export default function ArtworkDiscoveryGrid({
                     href: artwork.href,
                     title: artwork.title,
                     priceCny: artwork.price,
+                    compareAtPriceCny: artwork.compareAtPriceCny,
                     image: artwork.imageUrl,
                     hoverImage: artwork.hoverImageUrl || artwork.imageUrl,
                     sku: artwork.sku,
                     badge: cardBadge || (artwork.collectionType === "new_collection" ? "Gallery Quality" : null),
+                    showSalePricing,
                   }}
                 />
               ))
@@ -276,7 +331,7 @@ export default function ArtworkDiscoveryGrid({
             aria-label="Close filters"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="absolute inset-y-0 right-0 flex w-[min(100vw,360px)] flex-col bg-[#fbfaf6] shadow-2xl">
+          <div className="absolute inset-y-0 right-0 flex w-[min(100vw,360px)] flex-col bg-[#f7f5f0] shadow-2xl">
             <div className="flex items-center justify-between border-b border-stone-200 px-4 py-3">
               <p className="text-sm font-medium">Filter and sort</p>
               <button type="button" className="px-2 text-2xl leading-none" onClick={() => setMobileFiltersOpen(false)}>
@@ -287,7 +342,7 @@ export default function ArtworkDiscoveryGrid({
             <div className="border-t border-stone-200 p-4">
               <button
                 type="button"
-                className="flex min-h-11 w-full items-center justify-center bg-[#181613] text-sm text-white"
+                className="flex min-h-11 w-full items-center justify-center rounded-full bg-[#111] text-sm font-semibold text-white"
                 onClick={() => setMobileFiltersOpen(false)}
               >
                 Show {filteredItems.length} products
@@ -314,13 +369,17 @@ function toggleFilter(
   })
 }
 
-function activeFilterLabels(
+function activeFilterChips(
   filters: ArtworkFilterState,
   t: (key: string) => string,
   translateOption: (option: string) => string,
 ) {
   return artworkFilterGroups.flatMap((group) =>
-    filters[group.key].map((option) => `${t(`discovery.group.${group.key}`)}: ${translateOption(option)}`),
+    filters[group.key].map((option) => ({
+      key: group.key,
+      option,
+      label: `${t(`discovery.group.${group.key}`)}: ${translateOption(option)}`,
+    })),
   )
 }
 

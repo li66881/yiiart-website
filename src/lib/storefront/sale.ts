@@ -1,3 +1,6 @@
+/** Display price is ~60% of compare-at during studio sale (≈40% OFF). */
+export const STUDIO_SALE_PRICE_RATIO = 0.6
+
 /**
  * Studio summer sale end (ISO). Override with NEXT_PUBLIC_SALE_ENDS_AT.
  * Countdown only renders while this timestamp is in the future.
@@ -48,4 +51,33 @@ export function formatSaleCountdown(saleEndsAt: string, now = Date.now()) {
     return `${parts.days}D : ${hh}H : ${mm}M`
   }
   return `${hh}H : ${mm}M : ${ss}S`
+}
+
+/**
+ * Prefer CMS compare-at when it is higher than the selling price.
+ * During an active studio sale, fall back to a synthetic compare-at from the sale ratio.
+ */
+export function resolveCompareAtCny(
+  sellingPriceCny: number,
+  compareAtFromCms?: number | null,
+  saleActive = isStudioSaleActive(),
+): number | null {
+  const price = Number(sellingPriceCny)
+  if (!Number.isFinite(price) || price <= 0) return null
+
+  const fromCms = Number(compareAtFromCms)
+  if (Number.isFinite(fromCms) && fromCms > price * 1.01) {
+    return Math.round(fromCms)
+  }
+
+  if (saleActive) {
+    return Math.round(price / STUDIO_SALE_PRICE_RATIO)
+  }
+
+  return null
+}
+
+export function saleOffPercent(sellingPriceCny: number, compareAtCny: number) {
+  if (!(sellingPriceCny > 0) || !(compareAtCny > sellingPriceCny)) return null
+  return Math.max(1, Math.round((1 - sellingPriceCny / compareAtCny) * 100))
 }

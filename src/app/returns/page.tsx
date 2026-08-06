@@ -39,7 +39,7 @@ export default function ReturnsPage() {
           <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">How to request a return</p>
-              <h2 className="text-4xl font-light leading-tight">Contact YiiArt before shipping anything back.</h2>
+              <h2 className="text-3xl font-medium tracking-[-0.02em] md:text-4xl">Contact YiiArt before shipping anything back.</h2>
             </div>
             <ol className="grid gap-4">
               {[

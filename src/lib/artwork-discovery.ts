@@ -21,6 +21,7 @@ export type ArtworkDiscoveryItem = {
   category: string
   medium: string
   price?: number | null
+  compareAtPriceCny?: number | null
   dimensions: string
   rawDimensions?: string | null
   createdAt?: string
@@ -117,6 +118,7 @@ export function buildArtworkDiscoveryItem(
     category,
     medium,
     price: productionModel === "hand_painted_to_order" ? standardSize?.priceCny : artwork.price,
+    compareAtPriceCny: Number(artwork.compareAtPriceCny) > 0 ? Number(artwork.compareAtPriceCny) : null,
     dimensions,
     rawDimensions: artwork.dimensions,
     createdAt: artwork._createdAt,

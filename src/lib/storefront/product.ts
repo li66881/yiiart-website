@@ -57,6 +57,8 @@ export type StorefrontProduct = {
   sizes: StorefrontSize[]
   finishes: StorefrontFinish[]
   creationWindow: string
+  /** Optional CMS compare-at (CNY). Display logic may synthesize during studio sale. */
+  compareAtPriceCny: number | null
   images: StorefrontImage[]
 }
 
@@ -85,6 +87,7 @@ type StorefrontArtworkInput = {
   slug?: { current?: string }
   artist?: { name?: LocalizedText }
   price?: number | string | null
+  compareAtPriceCny?: number | string | null
   dimensions?: string | null
   widthCm?: number | string | null
   heightCm?: number | string | null
@@ -153,6 +156,7 @@ export function buildStorefrontProduct(
         ? "Production timing is confirmed before checkout."
         : "Availability and dispatch timing are confirmed before checkout.",
     ),
+    compareAtPriceCny: positiveNumber(artwork.compareAtPriceCny) || null,
     images: preferPrimaryProductImages(
       imageInputs
         .filter((image) => Boolean(cleanString(image.src)))

@@ -37,7 +37,7 @@ export default function ShippingPage() {
           <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Timeline</p>
-              <h2 className="text-4xl font-light leading-tight">Preparation first, then carrier transit.</h2>
+              <h2 className="text-3xl font-medium tracking-[-0.02em] md:text-4xl">Preparation first, then carrier transit.</h2>
             </div>
             <div className="grid gap-4">
               <Timeline title="Artwork preparation: 3-5 business days" text="Ready-made works are inspected, photographed before packing, documented, and handed to the carrier within 3-5 business days of your order." />

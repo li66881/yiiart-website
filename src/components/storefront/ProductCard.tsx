@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import { PriceText } from "@/components/PriceText"
+import { resolveCompareAtCny, saleOffPercent } from "@/lib/storefront/sale"
 import styles from "./storefront.module.css"
 
 export type ProductCardItem = {
@@ -11,10 +12,12 @@ export type ProductCardItem = {
   href: string
   title: string
   priceCny?: number | null
+  compareAtPriceCny?: number | null
   image?: string | null
   hoverImage?: string | null
   sku?: string | null
   badge?: string | null
+  showSalePricing?: boolean
 }
 
 type Props = {
@@ -24,6 +27,17 @@ type Props = {
 export default function ProductCard({ item }: Props) {
   const [hovered, setHovered] = useState(false)
   const showHover = Boolean(item.hoverImage && hovered)
+  const priceCny = item.priceCny || 0
+  const compareAtCny = resolveCompareAtCny(
+    priceCny,
+    item.compareAtPriceCny,
+    Boolean(item.showSalePricing),
+  )
+  const offPercent = compareAtCny ? saleOffPercent(priceCny, compareAtCny) : null
+  const badge =
+    item.showSalePricing && offPercent
+      ? `${offPercent}% OFF`
+      : item.badge
 
   return (
     <article
@@ -57,12 +71,12 @@ export default function ProductCard({ item }: Props) {
           ) : (
             <div className={styles.productCardEmpty}>Image on request</div>
           )}
-          {item.badge ? (
+          {badge ? (
             <span
               className={styles.productCardBadge}
-              data-accent={/off|sale/i.test(item.badge) ? "sale" : undefined}
+              data-accent={/off|sale/i.test(badge) ? "sale" : undefined}
             >
-              {item.badge}
+              {badge}
             </span>
           ) : null}
           <span className={`${styles.chooseOptions} ${hovered ? styles.chooseOptionsVisible : ""}`}>
@@ -75,9 +89,16 @@ export default function ProductCard({ item }: Props) {
             {item.sku ? <span className={styles.productCardSku}> #{item.sku}</span> : null}
           </h3>
           <p className={styles.productCardPrice}>
-            {item.priceCny ? (
+            {priceCny > 0 ? (
               <>
-                From <PriceText amountCny={item.priceCny} />
+                <span>
+                  From <PriceText amountCny={priceCny} />
+                </span>
+                {compareAtCny ? (
+                  <span className={styles.productCardCompareAt}>
+                    <PriceText amountCny={compareAtCny} />
+                  </span>
+                ) : null}
               </>
             ) : (
               <PriceText amountCny={item.priceCny} />

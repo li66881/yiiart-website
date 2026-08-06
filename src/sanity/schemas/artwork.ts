@@ -37,6 +37,8 @@ export default {
         { title: 'Archive', value: 'archive' },
       ] }},
     { name: 'price', title: 'Base price (CNY)', type: 'number'},
+    { name: 'compareAtPriceCny', title: 'Compare-at price (CNY)', type: 'number',
+      description: 'Optional original / list price shown as strikethrough when higher than the selling price. Used for sale displays.'},
     { name: 'allowCheckout', title: 'Allow direct checkout', type: 'boolean', initialValue: true,
       description: 'Turn off for price-on-request, oversized, reserved, or manually quoted works.'},
     { name: 'availability', title: 'Availability', type: 'string', initialValue: 'available',
