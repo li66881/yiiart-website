@@ -16,6 +16,8 @@ yarn-debug.log*
 yarn-error.log*
 .codex-*.log
 reports/product-media-import-plan.json
+reports/catalog-migration/
+reports/catalog-migration-backups/
 
 # Vercel
 .vercel/
