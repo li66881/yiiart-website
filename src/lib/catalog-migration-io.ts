@@ -1,14 +1,16 @@
 import { randomUUID } from "node:crypto"
 import {
+  link,
   lstat,
   mkdir,
+  open,
   readFile,
   realpath,
-  rename,
   rm,
-  writeFile,
+  unlink,
 } from "node:fs/promises"
 import path from "node:path"
+import { fileURLToPath } from "node:url"
 import type {
   MigrationDecision,
   MigrationSkipReason,
@@ -100,7 +102,26 @@ export type ApplyResult = {
   appliedIds: string[]
   skippedIds: string[]
   pendingIds: string[]
+  uncertain: Array<{ artworkId: string; message: string }>
   errors: Array<{ artworkId: string; message: string }>
+}
+
+export type ArtifactOwner = {
+  projectId: string
+  dataset: string
+  runId: string
+}
+
+type DurableHandle = {
+  writeFile: (data: string) => Promise<unknown>
+  sync: () => Promise<unknown>
+  close: () => Promise<unknown>
+}
+
+type DurableWriteIo = {
+  open: (filePath: string, flags: "wx" | "r" | "r+") => Promise<DurableHandle>
+  link: (existingPath: string, newPath: string) => Promise<unknown>
+  unlink: (filePath: string) => Promise<unknown>
 }
 
 type BackupIo = {
@@ -124,6 +145,10 @@ type ApplyDependencies = {
     patch: Extract<PlannedArtworkMigration, { status: "ready" }>["patch"]
   }) => Promise<void>
   persistResult: (result: ApplyResult) => Promise<void>
+}
+
+export class UncertainMutationError extends Error {
+  override name = "UncertainMutationError"
 }
 
 function readArgumentValue(argument: string, name: "--decisions" | "--report-dir") {
@@ -310,9 +335,13 @@ export async function prepareContainedOutputDirectory(repositoryRoot: string, re
   const requested = path.isAbsolute(requestedPath)
     ? path.resolve(requestedPath)
     : path.resolve(repository, requestedPath)
+  const allowedRoots = fixedArtifactRoots(repository)
 
   if (!isContainedPath(reportsRoot, requested)) {
     throw new Error("Output directory must stay within the repository reports directory")
+  }
+  if (!allowedRoots.includes(requested)) {
+    throw new Error("Output directory must be a fixed catalog migration reports directory")
   }
 
   await mkdir(reportsRoot, { recursive: true })
@@ -323,17 +352,23 @@ export async function prepareContainedOutputDirectory(repositoryRoot: string, re
   }
 
   const ancestor = await nearestExistingAncestor(requested)
+  await assertNoSymlinkComponents(repository, ancestor)
   const ancestorReal = await realpath(ancestor)
   if (!isContainedPath(reportsReal, ancestorReal)) {
     throw new Error("Output directory resolves outside the repository reports directory")
   }
 
   await mkdir(requested, { recursive: true })
+  await assertNoSymlinkComponents(repository, requested)
   const requestedReal = await realpath(requested)
   if (!isContainedPath(reportsReal, requestedReal)) {
     throw new Error("Output directory resolves outside the repository reports directory")
   }
   return requested
+}
+
+export function repositoryRootFromScriptUrl(scriptUrl: string) {
+  return path.resolve(path.dirname(fileURLToPath(scriptUrl)), "..")
 }
 
 function isContainedPath(root: string, candidate: string) {
@@ -356,60 +391,276 @@ async function nearestExistingAncestor(candidate: string) {
   }
 }
 
-export async function writeJsonAtomic(
+function fixedArtifactRoots(repositoryRoot: string) {
+  return [
+    path.join(repositoryRoot, "reports", "catalog-migration"),
+    path.join(repositoryRoot, "reports", "catalog-migration-backups"),
+  ]
+}
+
+function artifactRootForTarget(repositoryRoot: string, target: string) {
+  const resolvedTarget = path.resolve(target)
+  return fixedArtifactRoots(path.resolve(repositoryRoot)).find((root) => isContainedPath(root, resolvedTarget))
+}
+
+async function assertNoSymlinkComponents(repositoryRoot: string, candidate: string) {
+  const relative = path.relative(repositoryRoot, candidate)
+  let current = repositoryRoot
+  for (const component of relative.split(path.sep).filter(Boolean)) {
+    current = path.join(current, component)
+    const metadata = await lstat(current)
+    if (metadata.isSymbolicLink()) throw new Error(`Output path contains a symbolic link: ${current}`)
+  }
+}
+
+async function prepareArtifactParent(repositoryRoot: string, filePath: string) {
+  const repository = path.resolve(repositoryRoot)
+  const target = path.resolve(filePath)
+  const artifactRoot = artifactRootForTarget(repository, target)
+  if (!artifactRoot) throw new Error("Artifact must stay within a fixed catalog migration reports directory")
+
+  const reportsRoot = path.join(repository, "reports")
+  const parent = path.dirname(target)
+  await mkdir(reportsRoot, { recursive: true })
+  const existingAncestor = await nearestExistingAncestor(parent)
+  const repositoryReal = await realpath(repository)
+  await assertNoSymlinkComponents(repository, existingAncestor)
+  const ancestorReal = await realpath(existingAncestor)
+  if (!isContainedPath(repositoryReal, ancestorReal)) {
+    throw new Error("Artifact output resolves outside the repository")
+  }
+
+  await mkdir(parent, { recursive: true })
+  await assertNoSymlinkComponents(repository, parent)
+  const reportsReal = await realpath(reportsRoot)
+  const artifactRootReal = await realpath(artifactRoot)
+  const parentReal = await realpath(parent)
+  if (!isContainedPath(repositoryReal, reportsReal)
+    || !isContainedPath(reportsReal, artifactRootReal)
+    || !isContainedPath(artifactRootReal, parentReal)) {
+    throw new Error("Artifact output resolves outside the fixed repository reports tree")
+  }
+
+  const metadata = await lstat(parent)
+  return { repository, target, parent, parentReal, device: metadata.dev, inode: metadata.ino }
+}
+
+const defaultDurableIo: DurableWriteIo = {
+  open: async (filePath, flags) => {
+    const handle = await open(filePath, flags)
+    return {
+      writeFile: (data) => handle.writeFile(data, "utf8"),
+      sync: () => handle.sync(),
+      close: () => handle.close(),
+    }
+  },
+  link,
+  unlink,
+}
+
+export async function writeJsonCrashDurableOnce(
   filePath: string,
   value: unknown,
-  options: { canReplaceExisting?: (existing: unknown) => boolean } = {},
+  {
+    repositoryRoot,
+    io = defaultDurableIo,
+    beforePublish,
+  }: {
+    repositoryRoot: string
+    io?: DurableWriteIo
+    beforePublish?: () => Promise<unknown> | unknown
+  },
 ) {
-  await mkdir(path.dirname(filePath), { recursive: true })
-  let existing: unknown
-  let exists = false
-
+  const boundary = await prepareArtifactParent(repositoryRoot, filePath)
+  await assertPathAbsent(boundary.target, `Artifact already exists: ${boundary.target}`)
+  const temporaryPath = path.join(boundary.parent, `.${path.basename(filePath)}.${process.pid}-${randomUUID()}.tmp`)
+  let published = false
   try {
-    const metadata = await lstat(filePath)
-    if (metadata.isSymbolicLink()) throw new Error(`Refusing to replace a symlink: ${filePath}`)
-    existing = JSON.parse(await readFile(filePath, "utf8"))
-    exists = true
-  } catch (error) {
-    if (!isErrorCode(error, "ENOENT")) {
-      if (error instanceof SyntaxError) {
-        throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`)
-      }
-      throw error
+    const temporaryHandle = await io.open(temporaryPath, "wx")
+    try {
+      await temporaryHandle.writeFile(`${JSON.stringify(value, null, 2)}\n`)
+      await temporaryHandle.sync()
+    } finally {
+      await temporaryHandle.close()
     }
-  }
 
-  if (exists && !options.canReplaceExisting?.(existing)) {
-    throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`)
+    await beforePublish?.()
+    await revalidateArtifactParent(boundary)
+    await assertPathAbsent(boundary.target, `Artifact destination appeared during publication: ${boundary.target}`)
+    await io.link(temporaryPath, boundary.target)
+    published = true
+    await syncPublishedEntry(io, boundary.parent, boundary.target)
+  } finally {
+    await io.unlink(temporaryPath).catch(() => undefined)
+    if (!published) await rm(temporaryPath, { force: true }).catch(() => undefined)
   }
+}
 
-  const temporaryPath = `${filePath}.${process.pid}-${randomUUID()}.tmp`
+async function revalidateArtifactParent(boundary: Awaited<ReturnType<typeof prepareArtifactParent>>) {
+  await assertNoSymlinkComponents(boundary.repository, boundary.parent)
+  const currentReal = await realpath(boundary.parent)
+  const metadata = await lstat(boundary.parent)
+  if (currentReal !== boundary.parentReal || metadata.dev !== boundary.device || metadata.ino !== boundary.inode) {
+    throw new Error("Output directory changed during publication")
+  }
+}
+
+async function assertPathAbsent(filePath: string, message: string) {
   try {
-    await writeFile(temporaryPath, `${JSON.stringify(value, null, 2)}\n`, {
-      encoding: "utf8",
-      flag: "wx",
-    })
-    await rename(temporaryPath, filePath)
+    await lstat(filePath)
+    throw new Error(message)
   } catch (error) {
-    await rm(temporaryPath, { force: true }).catch(() => undefined)
+    if (isErrorCode(error, "ENOENT")) return
     throw error
   }
 }
 
-export function createApplyResultPersister(filePath: string, runId: string) {
-  let initialized = false
+async function syncPublishedEntry(io: DurableWriteIo, directory: string, destination: string) {
+  let directoryHandle: DurableHandle | undefined
+  try {
+    directoryHandle = await io.open(directory, "r")
+    await directoryHandle.sync()
+    return
+  } catch (error) {
+    if (!isUnsupportedDirectorySync(error)) throw error
+  } finally {
+    await directoryHandle?.close().catch(() => undefined)
+  }
+
+  // Windows may reject directory fsync; syncing the published destination is the safe fallback.
+  const destinationHandle = await io.open(destination, "r+")
+  try {
+    await destinationHandle.sync()
+  } finally {
+    await destinationHandle.close()
+  }
+}
+
+function isUnsupportedDirectorySync(error: unknown) {
+  return ["EPERM", "EINVAL", "EISDIR", "EBADF", "ENOTSUP"].some((code) => isErrorCode(error, code))
+}
+
+function validateOwner(owner: ArtifactOwner) {
+  for (const field of ["projectId", "dataset", "runId"] as const) {
+    if (!owner[field].trim()) throw new Error(`Artifact owner ${field} must be non-empty`)
+  }
+  if (!/^[A-Za-z0-9._-]+$/.test(owner.runId)) {
+    throw new Error("Artifact owner runId contains unsupported path characters")
+  }
+}
+
+export async function writeDryRunReportOnce({
+  repositoryRoot,
+  reportDirectory,
+  owner,
+  report,
+}: {
+  repositoryRoot: string
+  reportDirectory: string
+  owner: ArtifactOwner
+  report: unknown
+}) {
+  validateOwner(owner)
+  return writeJsonCrashDurableOnce(path.join(reportDirectory, "dry-run.json"), {
+    ...(isRecord(report) ? report : { report }),
+    format: "yiiart-catalog-migration-dry-run",
+    version: 2,
+    owner,
+  }, { repositoryRoot })
+}
+
+export function createApplyResultPersister({
+  repositoryRoot,
+  reportDirectory,
+  owner,
+}: {
+  repositoryRoot: string
+  reportDirectory: string
+  owner: ArtifactOwner
+}) {
+  validateOwner(owner)
+  let sequence = 0
   return async (result: ApplyResult) => {
-    await writeJsonAtomic(filePath, {
-      format: "yiiart-catalog-migration-apply-result-v1",
-      runId,
-      ...result,
-    }, {
-      canReplaceExisting: (existing) => initialized
-        && isRecord(existing)
-        && existing.format === "yiiart-catalog-migration-apply-result-v1"
-        && existing.runId === runId,
-    })
-    initialized = true
+    const filePath = sequence === 0
+      ? path.join(reportDirectory, "apply-result.json")
+      : path.join(
+        reportDirectory,
+        "apply-runs",
+        owner.runId,
+        "checkpoints",
+        `${String(sequence).padStart(6, "0")}.json`,
+      )
+    try {
+      await writeJsonCrashDurableOnce(filePath, {
+        ...result,
+        format: "yiiart-catalog-migration-apply-result",
+        version: 2,
+        owner,
+        sequence,
+      }, { repositoryRoot })
+    } catch (error) {
+      if (sequence === 0 && isExistingArtifactError(error)) {
+        throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`, { cause: error })
+      }
+      throw error
+    }
+    sequence += 1
+  }
+}
+
+function isExistingArtifactError(error: unknown) {
+  return isErrorCode(error, "EEXIST")
+    || (error instanceof Error && /already exists|destination appeared/.test(error.message))
+}
+
+export async function acquireApplyLease({
+  repositoryRoot,
+  reportDirectory,
+  owner,
+  createdAt,
+}: {
+  repositoryRoot: string
+  reportDirectory: string
+  owner: ArtifactOwner
+  createdAt: string
+}) {
+  validateOwner(owner)
+  const lockPath = path.join(reportDirectory, "apply.lock")
+  const lockValue = {
+    format: "yiiart-catalog-migration-apply-lock",
+    version: 2,
+    owner,
+    createdAt,
+    pid: process.pid,
+  }
+  try {
+    await writeJsonCrashDurableOnce(lockPath, lockValue, { repositoryRoot })
+  } catch (error) {
+    if (isExistingArtifactError(error)) {
+      throw new Error("Apply lock already exists; concurrent or stale lock requires deliberate operator recovery", {
+        cause: error,
+      })
+    }
+    throw error
+  }
+
+  const lockHandle = await open(lockPath, "r")
+  const lockIdentity = await lockHandle.stat()
+  let released = false
+  return {
+    lockPath,
+    async release() {
+      if (released) return
+      const current = await lstat(lockPath)
+      const parsed: unknown = JSON.parse(await readFile(lockPath, "utf8"))
+      if (current.dev !== lockIdentity.dev || current.ino !== lockIdentity.ino
+        || !isRecord(parsed) || JSON.stringify(parsed.owner) !== JSON.stringify(owner)) {
+        throw new Error("Apply lock ownership changed; refusing automatic release")
+      }
+      await lockHandle.close()
+      await unlink(lockPath)
+      released = true
+    },
   }
 }
 
@@ -418,10 +669,12 @@ export async function writeAndVerifyBackup(
   {
     backupRoot,
     now,
-    io = { mkdir, writeFile, readFile },
+    repositoryRoot,
+    io,
   }: {
     backupRoot: string
     now: Date
+    repositoryRoot?: string
     io?: BackupIo
   },
 ) {
@@ -435,10 +688,15 @@ export async function writeAndVerifyBackup(
   const backupPath = path.join(backupDirectory, filename)
   const serialized = `${JSON.stringify(sources, null, 2)}\n`
 
-  await io.mkdir(backupDirectory, { recursive: true })
-  await io.writeFile(backupPath, serialized, { encoding: "utf8", flag: "wx" })
+  if (io) {
+    await io.mkdir(backupDirectory, { recursive: true })
+    await io.writeFile(backupPath, serialized, { encoding: "utf8", flag: "wx" })
+  } else {
+    if (!repositoryRoot) throw new Error("Crash-durable backup writes require repositoryRoot")
+    await writeJsonCrashDurableOnce(backupPath, sources, { repositoryRoot })
+  }
 
-  const verified: unknown = JSON.parse(await io.readFile(backupPath, "utf8"))
+  const verified: unknown = JSON.parse(await (io?.readFile(backupPath, "utf8") ?? readFile(backupPath, "utf8")))
   if (!Array.isArray(verified) || verified.length !== EXPECTED_SOURCE_COUNT) {
     throw new Error(`Backup verification requires ${EXPECTED_SOURCE_COUNT} parsed records`)
   }
@@ -452,19 +710,26 @@ export async function writeAndVerifyBackup(
 export async function runApplyMigration({
   token,
   writeBackup,
+  acquireLease,
   ...dependencies
 }: ApplyDependencies & {
   token: string | undefined
   writeBackup: (sources: MigrationSourceRecord[]) => Promise<string>
+  acquireLease: () => Promise<{ release: () => Promise<void> }>
 }) {
   if (dependencies.sources.length !== EXPECTED_SOURCE_COUNT) {
     throw new Error(`Apply requires exactly ${EXPECTED_SOURCE_COUNT} source records; received ${dependencies.sources.length}`)
   }
   if (!token) throw new Error("Apply requires SANITY_WRITE_TOKEN or SANITY_API_WRITE_TOKEN")
 
-  const backupPath = await writeBackup(dependencies.sources)
-  const result = await applyPlansSequentially(dependencies)
-  return { backupPath, result }
+  const lease = await acquireLease()
+  try {
+    const backupPath = await writeBackup(dependencies.sources)
+    const result = await applyPlansSequentially(dependencies)
+    return { backupPath, result }
+  } finally {
+    await lease.release()
+  }
 }
 
 export async function applyPlansSequentially({
@@ -486,6 +751,7 @@ export async function applyPlansSequentially({
     appliedIds: [],
     skippedIds: [],
     pendingIds: [],
+    uncertain: [],
     errors: [],
   }
   await persistResult(snapshotApplyResult(result))
@@ -541,10 +807,16 @@ export async function applyPlansSequentially({
       commitError = toError(error, "Unknown apply error")
     }
 
-    result.pendingIds = result.pendingIds.filter((id) => id !== source._id)
     if (commitError) {
+      if (commitError instanceof UncertainMutationError) {
+        result.uncertain.push({ artworkId: source._id, message: commitError.message })
+        await persistResult(snapshotApplyResult(result))
+        return result
+      }
+      result.pendingIds = result.pendingIds.filter((id) => id !== source._id)
       result.errors.push({ artworkId: source._id, message: commitError.message })
     } else {
+      result.pendingIds = result.pendingIds.filter((id) => id !== source._id)
       result.appliedIds.push(source._id)
     }
     await persistResult(snapshotApplyResult(result))
@@ -558,6 +830,7 @@ function snapshotApplyResult(result: ApplyResult): ApplyResult {
     appliedIds: [...result.appliedIds],
     skippedIds: [...result.skippedIds],
     pendingIds: [...result.pendingIds],
+    uncertain: result.uncertain.map((item) => ({ ...item })),
     errors: result.errors.map((error) => ({ ...error })),
   }
 }

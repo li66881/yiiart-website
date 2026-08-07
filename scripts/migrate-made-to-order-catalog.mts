@@ -8,19 +8,20 @@ import {
   type MigrationDecision,
 } from "../src/lib/catalog-migration"
 import {
+  acquireApplyLease,
   indexMigrationDecisions,
   createApplyResultPersister,
   parseCatalogMigrationArgs,
   parseMigrationDecisions,
   prepareContainedOutputDirectory,
+  repositoryRootFromScriptUrl,
   runApplyMigration,
   summarizeMigrationPlans,
+  UncertainMutationError,
   writeAndVerifyBackup,
-  writeJsonAtomic,
+  writeDryRunReportOnce,
   type MigrationSourceRecord,
 } from "../src/lib/catalog-migration-io"
-
-const DRY_RUN_FORMAT = "yiiart-catalog-migration-dry-run-v1"
 
 const ARTWORK_QUERY = `*[_type == "artwork"] | order(_id asc){
   _id,
@@ -50,14 +51,18 @@ const ARTWORK_QUERY = `*[_type == "artwork"] | order(_id asc){
 }`
 
 async function main() {
-  loadEnvFile(path.resolve(".env.local"))
+  const repositoryRoot = repositoryRootFromScriptUrl(import.meta.url)
+  loadEnvFile(path.join(repositoryRoot, ".env.local"))
   const args = parseCatalogMigrationArgs(process.argv.slice(2))
-  const repositoryRoot = process.cwd()
   const reportDirectory = await prepareContainedOutputDirectory(repositoryRoot, args.reportDir)
   const token = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_WRITE_TOKEN
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i"
+  const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production"
+  const runId = randomUUID()
+  const owner = { projectId, dataset, runId }
   const sanity = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i",
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || "production",
+    projectId,
+    dataset,
     apiVersion: "2024-01-01",
     token,
     useCdn: false,
@@ -65,7 +70,7 @@ async function main() {
 
   const sources = validateSources(await sanity.fetch<unknown>(ARTWORK_QUERY))
   const decisions = args.decisions
-    ? await readDecisions(path.resolve(args.decisions))
+    ? await readDecisions(path.resolve(repositoryRoot, args.decisions))
     : []
   const decisionsByArtworkId = indexMigrationDecisions(decisions, sources)
   const plans = sources.map((source) => planArtworkMigration(
@@ -75,14 +80,16 @@ async function main() {
   const summary = summarizeMigrationPlans(plans)
   const dryRunPath = path.join(reportDirectory, "dry-run.json")
 
-  await writeJsonAtomic(dryRunPath, {
-    format: DRY_RUN_FORMAT,
-    sourceCount: sources.length,
-    decisionCount: decisions.length,
-    summary,
-    plans,
-  }, {
-    canReplaceExisting: isOwnedDryRunReport,
+  await writeDryRunReportOnce({
+    repositoryRoot,
+    reportDirectory,
+    owner,
+    report: {
+      sourceCount: sources.length,
+      decisionCount: decisions.length,
+      summary,
+      plans,
+    },
   })
 
   printSummary(summary)
@@ -94,20 +101,26 @@ async function main() {
   }
 
   const applyResultPath = path.join(reportDirectory, "apply-result.json")
-  const applyRunId = randomUUID()
-  const persistResult = createApplyResultPersister(applyResultPath, applyRunId)
+  const persistResult = createApplyResultPersister({ repositoryRoot, reportDirectory, owner })
 
   const { backupPath, result } = await runApplyMigration({
     token,
     sources,
     plans,
     decisionsByArtworkId,
+    acquireLease: () => acquireApplyLease({
+      repositoryRoot,
+      reportDirectory,
+      owner,
+      createdAt: new Date().toISOString(),
+    }),
     writeBackup: async (records) => {
       const backupRoot = await prepareContainedOutputDirectory(
         repositoryRoot,
         path.join("reports", "catalog-migration-backups"),
       )
       const verifiedPath = await writeAndVerifyBackup(records, {
+        repositoryRoot,
         backupRoot,
         now: new Date(),
       })
@@ -118,17 +131,26 @@ async function main() {
       { id: artworkId },
     ),
     commitPatch: async ({ artworkId, revisionId, patch }) => {
-      await sanity
+      const mutation = sanity
         .patch(artworkId)
         .ifRevisionId(revisionId)
         .set(patch)
-        .commit()
+      try {
+        await mutation.commit()
+      } catch (error) {
+        throw new UncertainMutationError(
+          error instanceof Error ? error.message : "Sanity commit outcome is unknown",
+        )
+      }
     },
     persistResult,
   })
 
   console.log(`verified backup: ${backupPath}`)
   console.log(`apply result: ${applyResultPath}`)
+  if (result.uncertain.length > 0) {
+    throw new Error(`Apply stopped with an uncertain mutation for ${result.uncertain[0].artworkId}; operator reconciliation is required`)
+  }
   if (result.errors.length > 0) {
     throw new Error(`Apply completed with ${result.errors.length} error(s); first failed artwork: ${result.errors[0].artworkId}`)
   }
@@ -154,16 +176,6 @@ function validateSources(value: unknown): MigrationSourceRecord[] {
 async function readDecisions(filePath: string): Promise<MigrationDecision[]> {
   const parsed: unknown = JSON.parse(await readFile(filePath, "utf8"))
   return parseMigrationDecisions(parsed)
-}
-
-function isOwnedDryRunReport(value: unknown) {
-  if (!isRecord(value)) return false
-  if (value.format === DRY_RUN_FORMAT) return true
-
-  return typeof value.sourceCount === "number"
-    && typeof value.decisionCount === "number"
-    && isRecord(value.summary)
-    && Array.isArray(value.plans)
 }
 
 function printSummary(summary: ReturnType<typeof summarizeMigrationPlans>) {
