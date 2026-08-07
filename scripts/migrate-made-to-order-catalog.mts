@@ -117,6 +117,7 @@ async function main() {
       owner,
       createdAt: new Date().toISOString(),
     }),
+    preflightTerminalResult: resultJournal.preflightTerminal,
     writeBackup: async (records) => {
       const backupRoot = await prepareContainedOutputDirectory(
         repositoryRoot,

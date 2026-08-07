@@ -363,36 +363,64 @@ test("write boundary rejects an ancestor swapped after the temporary file sync",
   assert.equal(await readFile(filePath, "utf8").catch(() => null), null)
 })
 
-test("post-publication verification removes only its inode after an ancestor swap", async (context) => {
+test("post-publication mismatch never unlinks a destination pathname", async (context) => {
   const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-post-link-race-"))
   context.after(() => rm(repository, { recursive: true, force: true }))
   const reportDirectory = path.join(repository, "reports", "catalog-migration")
   const movedDirectory = path.join(repository, "reports", "catalog-migration-moved")
   await mkdir(reportDirectory, { recursive: true })
   const filePath = path.join(reportDirectory, "dry-run.json")
+  const displacedPublication = path.join(movedDirectory, "displaced-publication.json")
+  let destinationUnlinkAttempted = false
 
   await assert.rejects(writeJsonCrashDurableOnce(filePath, { owned: true }, {
     repositoryRoot: repository,
+    io: {
+      open: async (target, flags) => {
+        const handle = await open(target, flags)
+        return {
+          writeFile: (data: string) => handle.writeFile(data, "utf8"),
+          sync: () => handle.sync(),
+          close: () => handle.close(),
+        }
+      },
+      link,
+      unlink: async (target) => {
+        if (target === filePath) {
+          destinationUnlinkAttempted = true
+          await rename(target, displacedPublication)
+          await writeFile(target, "unrelated replacement\n", "utf8")
+        }
+        await unlink(target)
+      },
+    },
     afterPublish: async () => {
       await rename(reportDirectory, movedDirectory)
       await symlink(movedDirectory, reportDirectory, "junction")
     },
   }), /Output directory changed after publication/)
 
-  assert.equal(await readFile(path.join(movedDirectory, "dry-run.json"), "utf8").catch(() => null), null)
-  assert.equal(
-    (await readdir(movedDirectory)).filter((name) => name.endsWith(".tmp")).length,
-    0,
+  assert.equal(destinationUnlinkAttempted, false)
+  assert.deepEqual(
+    JSON.parse(await readFile(path.join(movedDirectory, "dry-run.json"), "utf8")),
+    { owned: true },
+  )
+  const recoveryArtifacts = (await readdir(movedDirectory)).filter((name) => name.endsWith(".tmp"))
+  assert.equal(recoveryArtifacts.length, 1)
+  assert.deepEqual(
+    JSON.parse(await readFile(path.join(movedDirectory, recoveryArtifacts[0]), "utf8")),
+    { owned: true },
   )
 })
 
-test("post-publication rollback never removes an unrelated replacement", async (context) => {
+test("post-publication mismatch preserves an unrelated replacement and recovery artifact", async (context) => {
   const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-post-link-replacement-"))
   context.after(() => rm(repository, { recursive: true, force: true }))
   const reportDirectory = path.join(repository, "reports", "catalog-migration")
   await mkdir(reportDirectory, { recursive: true })
   const filePath = path.join(reportDirectory, "dry-run.json")
   const movedPublication = path.join(reportDirectory, "created-inode.json")
+  let failureMessage = ""
 
   await assert.rejects(writeJsonCrashDurableOnce(filePath, { owned: true }, {
     repositoryRoot: repository,
@@ -400,9 +428,21 @@ test("post-publication rollback never removes an unrelated replacement", async (
       await rename(filePath, movedPublication)
       await writeFile(filePath, "unrelated replacement\n", "utf8")
     },
-  }), /Output directory changed after publication/)
+  }), (error: unknown) => {
+    if (!(error instanceof Error)) return false
+    failureMessage = error.message
+    return /manual reconciliation is required/.test(error.message)
+  })
 
   assert.equal(await readFile(filePath, "utf8"), "unrelated replacement\n")
+  assert.deepEqual(JSON.parse(await readFile(movedPublication, "utf8")), { owned: true })
+  const recoveryArtifacts = (await readdir(reportDirectory)).filter((name) => name.endsWith(".tmp"))
+  assert.equal(recoveryArtifacts.length, 1)
+  assert.ok(failureMessage.includes(path.join(reportDirectory, recoveryArtifacts[0])))
+  assert.deepEqual(
+    JSON.parse(await readFile(path.join(reportDirectory, recoveryArtifacts[0]), "utf8")),
+    { owned: true },
+  )
 })
 
 test("dry-run handoff has exact ownership and never replaces same-shape JSON", async (context) => {
@@ -526,6 +566,7 @@ test("apply result persister keeps checkpoints immutable and writes canonical re
     appliedIds: [], skippedIds: [], pendingIds: [], uncertain: [], errors: [],
   }
 
+  await journal.preflightTerminal()
   await journal.persistCheckpoint(initial)
   await journal.persistCheckpoint({ ...initial, pendingIds: ["art-1"] })
   const final = { ...initial, appliedIds: ["art-1"] }
@@ -574,10 +615,9 @@ test("apply result persister keeps checkpoints immutable and writes canonical re
     reportDirectory,
     owner: { projectId: "project-a", dataset: "production", runId: "run-2" },
   })
-  await nextRun.persistCheckpoint(initial)
   await assert.rejects(
-    nextRun.persistTerminal(initial),
-    /Refusing to replace an unrelated or previous-run file/,
+    nextRun.preflightTerminal(),
+    /Canonical apply result already exists before backup or mutation.*manual reconciliation is required/,
   )
   assert.equal(
     JSON.parse(await readFile(path.join(reportDirectory, "apply-result.json"), "utf8")).owner.runId,
@@ -620,6 +660,7 @@ test("partial-error and uncertain terminal summaries are canonical write-once fi
       owner: { projectId: "project-a", dataset: "production", runId: testCase.runId },
     })
 
+    await journal.preflightTerminal()
     await journal.persistCheckpoint(testCase.result)
     const resultPath = await journal.persistTerminal(testCase.result)
     const canonical = JSON.parse(await readFile(resultPath, "utf8"))
@@ -636,6 +677,157 @@ test("partial-error and uncertain terminal summaries are canonical write-once fi
     )
     await assert.rejects(journal.persistTerminal(testCase.result), /already exists|previous-run file/)
   }
+})
+
+test("pre-existing canonical result aborts before backup, identity read, or patch", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-canonical-preflight-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  await mkdir(reportDirectory, { recursive: true })
+  const canonicalPath = path.join(reportDirectory, "apply-result.json")
+  const existingCanonical = {
+    format: "yiiart-catalog-migration-apply-result",
+    version: 3,
+    owner: { projectId: "project-a", dataset: "production", runId: "previous-run" },
+  }
+  await writeFile(canonicalPath, `${JSON.stringify(existingCanonical)}\n`, "utf8")
+
+  const sources = Array.from({ length: 63 }, (_, index) => sourceRecord(`art-${index}`))
+  const plans: PlannedArtworkMigration[] = sources.map((source, index) => index === 0
+    ? readyPlan(source)
+    : { status: "skipped", artworkId: source._id, reason: "missing_review_decision" })
+  const journal = createApplyResultPersister({
+    repositoryRoot: repository,
+    reportDirectory,
+    owner: { projectId: "project-a", dataset: "production", runId: "current-run" },
+  })
+  const events: string[] = []
+
+  await assert.rejects(runApplyMigration({
+    token: "configured",
+    sources,
+    plans,
+    decisionsByArtworkId: new Map([[sources[0]._id, decisionFor(sources[0])]]),
+    acquireLease: async () => {
+      events.push("lease:acquire")
+      return {
+        release: async () => { events.push("lease:release") },
+        retain: async () => { events.push("lease:retain") },
+      }
+    },
+    preflightTerminalResult: async () => {
+      events.push("canonical:preflight")
+      await journal.preflightTerminal()
+    },
+    writeBackup: async () => {
+      events.push("backup")
+      return "backup.json"
+    },
+    readCurrentIdentity: async (artworkId) => {
+      events.push(`identity:${artworkId}`)
+      const source = sources[0]
+      return { _id: source._id, _rev: source._rev, slug: source.slug }
+    },
+    commitPatch: async ({ artworkId }) => { events.push(`patch:${artworkId}`) },
+    persistResult: journal.persistCheckpoint,
+    persistTerminalResult: journal.persistTerminal,
+  }), /Canonical apply result already exists before backup or mutation.*manual reconciliation is required/)
+
+  assert.deepEqual(events, ["lease:acquire", "canonical:preflight", "lease:release"])
+  assert.deepEqual(JSON.parse(await readFile(canonicalPath, "utf8")), existingCanonical)
+  assert.equal(
+    await readFile(path.join(reportDirectory, "apply-runs", "current-run", "checkpoints", "000000.json"), "utf8")
+      .catch(() => null),
+    null,
+  )
+})
+
+test("canonical appearance race preserves terminal recovery and retains the lease", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-canonical-race-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  await mkdir(reportDirectory, { recursive: true })
+  const canonicalPath = path.join(reportDirectory, "apply-result.json")
+  const raceWinner = "unrelated canonical race winner\n"
+  const sources = Array.from({ length: 63 }, (_, index) => sourceRecord(`art-${index}`))
+  const plans = sources.map((source) => readyPlan(source))
+  const owner = { projectId: "project-a", dataset: "production", runId: "race-run" }
+  const journal = createApplyResultPersister({ repositoryRoot: repository, reportDirectory, owner })
+  const events: string[] = []
+
+  await assert.rejects(runApplyMigration({
+    token: "configured",
+    sources,
+    plans,
+    decisionsByArtworkId: new Map(sources.map((source) => [source._id, decisionFor(source)])),
+    acquireLease: async () => {
+      events.push("lease:acquire")
+      const lease = await acquireApplyLease({
+        repositoryRoot: repository,
+        reportDirectory,
+        owner,
+        createdAt: "2026-08-08T02:03:04.000Z",
+      })
+      return {
+        release: async () => {
+          events.push("lease:release")
+          await lease.release()
+        },
+        retain: async () => {
+          events.push("lease:retain")
+          await lease.retain()
+        },
+      }
+    },
+    preflightTerminalResult: async () => {
+      events.push("canonical:preflight")
+      await journal.preflightTerminal()
+    },
+    writeBackup: async () => {
+      events.push("backup")
+      return "backup.json"
+    },
+    readCurrentIdentity: async (artworkId) => {
+      events.push(`identity:${artworkId}`)
+      const source = sources.find((item) => item._id === artworkId)!
+      return { _id: source._id, _rev: source._rev, slug: source.slug }
+    },
+    commitPatch: async ({ artworkId }) => {
+      events.push(`patch:${artworkId}`)
+      await writeFile(canonicalPath, raceWinner, { encoding: "utf8", flag: "wx" })
+      throw new UncertainMutationError("remote response was lost after dispatch")
+    },
+    persistResult: journal.persistCheckpoint,
+    persistTerminalResult: journal.persistTerminal,
+  }), /durable run-specific terminal recovery.*manual reconciliation is required/)
+
+  assert.deepEqual(events, [
+    "lease:acquire",
+    "canonical:preflight",
+    "backup",
+    "identity:art-0",
+    "patch:art-0",
+    "lease:retain",
+  ])
+  assert.equal(await readFile(canonicalPath, "utf8"), raceWinner)
+  const retainedLock = JSON.parse(await readFile(path.join(reportDirectory, "apply.lock"), "utf8"))
+  assert.deepEqual(retainedLock.owner, owner)
+  const recoveryPath = path.join(reportDirectory, "apply-runs", owner.runId, "terminal.json")
+  const recovery = JSON.parse(await readFile(recoveryPath, "utf8"))
+  assert.deepEqual({
+    appliedIds: recovery.appliedIds,
+    skippedIds: recovery.skippedIds,
+    pendingIds: recovery.pendingIds,
+    uncertain: recovery.uncertain,
+    errors: recovery.errors,
+  }, {
+    appliedIds: [],
+    skippedIds: [],
+    pendingIds: ["art-0"],
+    uncertain: [{ artworkId: "art-0", message: "remote response was lost after dispatch" }],
+    errors: [],
+  })
+  assert.equal(recovery.latestCheckpoint, "apply-runs/race-run/checkpoints/000002.json")
 })
 
 test("derives repository root from the script module URL instead of cwd", () => {
@@ -726,8 +918,12 @@ test("apply orchestration stops before mutation when backup verification fails",
     decisionsByArtworkId: decisions,
     acquireLease: async () => {
       events.push("lease:acquire")
-      return { release: async () => { events.push("lease:release") } }
+      return {
+        release: async () => { events.push("lease:release") },
+        retain: async () => { events.push("lease:retain") },
+      }
     },
+    preflightTerminalResult: async () => { events.push("canonical:preflight") },
     writeBackup: async () => {
       events.push("backup")
       throw new Error("backup verification failed")
@@ -744,7 +940,7 @@ test("apply orchestration stops before mutation when backup verification fails",
     },
   }), /backup verification failed/)
 
-  assert.deepEqual(events, ["lease:acquire", "backup", "lease:release"])
+  assert.deepEqual(events, ["lease:acquire", "canonical:preflight", "backup", "lease:release"])
 })
 
 test("apply orchestration retains the exact source count and token gates", async () => {
@@ -764,9 +960,10 @@ test("apply orchestration retains the exact source count and token gates", async
     commitPatch: async () => undefined,
     persistResult: async () => undefined,
     persistTerminalResult: async () => "apply-result.json",
+    preflightTerminalResult: async () => undefined,
     acquireLease: async () => {
       leaseAttempts += 1
-      return { release: async () => undefined }
+      return { release: async () => undefined, retain: async () => undefined }
     },
   }
 
@@ -798,7 +995,11 @@ test("apply orchestration writes successful, partial-error, and uncertain termin
       sources,
       plans: skippedPlans,
       decisionsByArtworkId: new Map([[sources[0]._id, decisionFor(sources[0])]]),
-      acquireLease: async () => ({ release: async () => undefined }),
+      acquireLease: async () => ({
+        release: async () => undefined,
+        retain: async () => undefined,
+      }),
+      preflightTerminalResult: async () => undefined,
       writeBackup: async () => "backup.json",
       readCurrentIdentity: async (id) => {
         const source = sources.find((item) => item._id === id)!

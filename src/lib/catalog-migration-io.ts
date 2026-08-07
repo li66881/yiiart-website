@@ -485,6 +485,7 @@ export async function writeJsonCrashDurableOnce(
   await assertPathAbsent(boundary.target, `Artifact already exists: ${boundary.target}`)
   const temporaryPath = path.join(boundary.parent, `.${path.basename(filePath)}.${process.pid}-${randomUUID()}.tmp`)
   let published = false
+  let preserveTemporary = false
   try {
     const temporaryHandle = await io.open(temporaryPath, "wx")
     try {
@@ -500,24 +501,23 @@ export async function writeJsonCrashDurableOnce(
     await assertPathAbsent(boundary.target, `Artifact destination appeared during publication: ${boundary.target}`)
     await io.link(temporaryPath, boundary.target)
     published = true
-    // Invariant: link() never replaces a destination. A post-link root move is detected;
-    // rollback unlinks the destination only when it still names this publication inode.
+    // link() never replaces a destination. Post-link mismatches fail closed because Node
+    // cannot tie pathname deletion atomically to the inode verified by lstat().
     try {
       await afterPublish?.()
       await verifyPublishedArtifact(boundary, publishedIdentity)
     } catch (error) {
-      const rolledBack = await rollbackPublishedInode(boundary.target, publishedIdentity, io)
-      const outcome = rolledBack
-        ? "the matching publication inode was removed"
-        : "the destination no longer named the publication inode and was left untouched"
-      throw new Error(`Output directory changed after publication; ${outcome}`, {
-        cause: error,
-      })
+      preserveTemporary = true
+      throw new Error(
+        `Output directory changed after publication; no destination pathname was deleted; `
+        + `synced recovery artifact retained at ${temporaryPath}; manual reconciliation is required`,
+        { cause: error },
+      )
     }
     await syncPublishedEntry(io, boundary.parent, boundary.target)
   } finally {
-    await io.unlink(temporaryPath).catch(() => undefined)
-    if (!published) await rm(temporaryPath, { force: true }).catch(() => undefined)
+    if (!preserveTemporary) await io.unlink(temporaryPath).catch(() => undefined)
+    if (!published && !preserveTemporary) await rm(temporaryPath, { force: true }).catch(() => undefined)
   }
 }
 
@@ -540,24 +540,6 @@ async function verifyPublishedArtifact(
   if (!isContainedPath(artifactRootReal, targetReal)) {
     throw new Error("Published destination resolves outside the fixed artifact root")
   }
-}
-
-async function rollbackPublishedInode(
-  target: string,
-  publishedIdentity: Awaited<ReturnType<typeof lstat>>,
-  io: DurableWriteIo,
-) {
-  try {
-    const targetIdentity = await lstat(target)
-    if (targetIdentity.dev === publishedIdentity.dev && targetIdentity.ino === publishedIdentity.ino) {
-      await io.unlink(target)
-      return true
-    }
-  } catch (error) {
-    if (isErrorCode(error, "ENOENT")) return false
-    throw error
-  }
-  return false
 }
 
 async function revalidateArtifactParent(boundary: Awaited<ReturnType<typeof prepareArtifactParent>>) {
@@ -715,8 +697,34 @@ export function createApplyResultPersister({
   let sequence = 0
   let latestCheckpoint: string | undefined
   let latestResult: ApplyResult | undefined
+  let terminalPreflightComplete = false
   return {
+    async preflightTerminal() {
+      if (sequence !== 0) {
+        throw new Error("Canonical apply result must be preflighted before checkpoint persistence")
+      }
+      const filePath = path.join(reportDirectory, "apply-result.json")
+      const boundary = await prepareArtifactParent(repositoryRoot, filePath)
+      await revalidateArtifactParent(boundary)
+      try {
+        await assertPathAbsent(filePath, `Canonical apply result already exists: ${filePath}`)
+      } catch (error) {
+        if (isExistingArtifactError(error)) {
+          throw new Error(
+            `Canonical apply result already exists before backup or mutation; `
+            + `existing ownership must not be assumed and manual reconciliation is required: ${filePath}`,
+            { cause: error },
+          )
+        }
+        throw error
+      }
+      terminalPreflightComplete = true
+      return filePath
+    },
     async persistCheckpoint(result: ApplyResult) {
+      if (!terminalPreflightComplete) {
+        throw new Error("Cannot persist apply checkpoints before canonical result preflight")
+      }
       const relativePath = path.posix.join(
         "apply-runs",
         owner.runId,
@@ -736,6 +744,9 @@ export function createApplyResultPersister({
       sequence += 1
     },
     async persistTerminal(result: ApplyResult) {
+      if (!terminalPreflightComplete) {
+        throw new Error("Cannot write a terminal apply result before canonical result preflight")
+      }
       if (!latestCheckpoint || !latestResult) {
         throw new Error("Cannot write a terminal apply result without a durable checkpoint")
       }
@@ -743,20 +754,26 @@ export function createApplyResultPersister({
         throw new Error("Terminal apply result must match the latest durable checkpoint")
       }
 
+      const terminalValue = {
+        ...result,
+        format: "yiiart-catalog-migration-apply-result",
+        version: 3,
+        owner,
+        latestCheckpoint,
+      }
+      const recoveryRelativePath = path.posix.join("apply-runs", owner.runId, "terminal.json")
+      const recoveryPath = path.join(reportDirectory, ...recoveryRelativePath.split("/"))
+      await writeJsonCrashDurableOnce(recoveryPath, terminalValue, { repositoryRoot })
+
       const filePath = path.join(reportDirectory, "apply-result.json")
       try {
-        await writeJsonCrashDurableOnce(filePath, {
-          ...result,
-          format: "yiiart-catalog-migration-apply-result",
-          version: 3,
-          owner,
-          latestCheckpoint,
-        }, { repositoryRoot })
+        await writeJsonCrashDurableOnce(filePath, terminalValue, { repositoryRoot })
       } catch (error) {
-        if (isExistingArtifactError(error)) {
-          throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`, { cause: error })
-        }
-        throw error
+        throw new Error(
+          `Canonical apply result publication failed; durable run-specific terminal recovery `
+          + `is retained at ${recoveryPath}; manual reconciliation is required`,
+          { cause: error },
+        )
       }
       return filePath
     },
@@ -801,11 +818,11 @@ export async function acquireApplyLease({
 
   const lockHandle = await open(lockPath, "r")
   const lockIdentity = await lockHandle.stat()
-  let released = false
+  let finalized = false
   return {
     lockPath,
     async release() {
-      if (released) return
+      if (finalized) return
       const current = await lstat(lockPath)
       const parsed: unknown = JSON.parse(await readFile(lockPath, "utf8"))
       if (current.dev !== lockIdentity.dev || current.ino !== lockIdentity.ino
@@ -814,7 +831,12 @@ export async function acquireApplyLease({
       }
       await lockHandle.close()
       await unlink(lockPath)
-      released = true
+      finalized = true
+    },
+    async retain() {
+      if (finalized) return
+      await lockHandle.close()
+      finalized = true
     },
   }
 }
@@ -866,12 +888,17 @@ export async function runApplyMigration({
   token,
   writeBackup,
   acquireLease,
+  preflightTerminalResult,
   persistTerminalResult,
   ...dependencies
 }: ApplyDependencies & {
   token: string | undefined
   writeBackup: (sources: MigrationSourceRecord[]) => Promise<string>
-  acquireLease: () => Promise<{ release: () => Promise<void> }>
+  acquireLease: () => Promise<{
+    release: () => Promise<void>
+    retain: () => Promise<void>
+  }>
+  preflightTerminalResult: () => Promise<unknown>
   persistTerminalResult: (result: ApplyResult) => Promise<string>
 }) {
   if (dependencies.sources.length !== EXPECTED_SOURCE_COUNT) {
@@ -880,13 +907,26 @@ export async function runApplyMigration({
   if (!token) throw new Error("Apply requires SANITY_WRITE_TOKEN or SANITY_API_WRITE_TOKEN")
 
   const lease = await acquireLease()
+  let retainLease = false
   try {
+    await preflightTerminalResult()
     const backupPath = await writeBackup(dependencies.sources)
     const result = await applyPlansSequentially(dependencies)
-    const resultPath = await persistTerminalResult(result)
+    let resultPath: string
+    try {
+      resultPath = await persistTerminalResult(result)
+    } catch (error) {
+      retainLease = true
+      throw new Error(
+        `${toError(error, "Unknown terminal result persistence error").message}; `
+        + "apply lease retained for manual reconciliation",
+        { cause: error },
+      )
+    }
     return { backupPath, result, resultPath }
   } finally {
-    await lease.release()
+    if (retainLease) await lease.retain()
+    else await lease.release()
   }
 }
 
