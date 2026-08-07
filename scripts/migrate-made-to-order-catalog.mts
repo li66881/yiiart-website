@@ -9,17 +9,19 @@ import {
 } from "../src/lib/catalog-migration"
 import {
   acquireApplyLease,
-  indexMigrationDecisions,
+  createDryRunReport,
   createApplyResultPersister,
+  indexMigrationDecisions,
   parseCatalogMigrationArgs,
   parseMigrationDecisions,
   prepareContainedOutputDirectory,
   repositoryRootFromScriptUrl,
   runApplyMigration,
-  summarizeMigrationPlans,
   UncertainMutationError,
+  verifyDryRunReportForApply,
   writeAndVerifyBackup,
   writeDryRunReportOnce,
+  type MigrationPlanSummary,
   type MigrationSourceRecord,
 } from "../src/lib/catalog-migration-io"
 
@@ -58,8 +60,6 @@ async function main() {
   const token = process.env.SANITY_WRITE_TOKEN || process.env.SANITY_API_WRITE_TOKEN
   const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || "zlh03v8i"
   const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || "production"
-  const runId = randomUUID()
-  const owner = { projectId, dataset, runId }
   const sanity = createClient({
     projectId,
     dataset,
@@ -77,33 +77,36 @@ async function main() {
     source,
     decisionsByArtworkId.get(source._id),
   ))
-  const summary = summarizeMigrationPlans(plans)
+  const dryRunReport = createDryRunReport({ sources, decisions, plans })
+  const summary = dryRunReport.summary
   const dryRunPath = path.join(reportDirectory, "dry-run.json")
 
-  await writeDryRunReportOnce({
-    repositoryRoot,
-    reportDirectory,
-    owner,
-    report: {
-      sourceCount: sources.length,
-      decisionCount: decisions.length,
-      summary,
-      plans,
-    },
-  })
-
   printSummary(summary)
-  console.log(`dry-run report: ${dryRunPath}`)
-
   if (!args.apply) {
+    const owner = { projectId, dataset, runId: randomUUID() }
+    await writeDryRunReportOnce({
+      repositoryRoot,
+      reportDirectory,
+      owner,
+      report: dryRunReport,
+    })
+    console.log(`dry-run report: ${dryRunPath}`)
     console.log("dry-run only: no backup created and no mutation attempted")
     return
   }
 
-  const applyResultPath = path.join(reportDirectory, "apply-result.json")
-  const persistResult = createApplyResultPersister({ repositoryRoot, reportDirectory, owner })
+  const owner = await verifyDryRunReportForApply({
+    repositoryRoot,
+    reportDirectory,
+    projectId,
+    dataset,
+    expectedReport: dryRunReport,
+  })
+  console.log(`verified dry-run report: ${dryRunPath}`)
 
-  const { backupPath, result } = await runApplyMigration({
+  const resultJournal = createApplyResultPersister({ repositoryRoot, reportDirectory, owner })
+
+  const { backupPath, result, resultPath } = await runApplyMigration({
     token,
     sources,
     plans,
@@ -143,11 +146,12 @@ async function main() {
         )
       }
     },
-    persistResult,
+    persistResult: resultJournal.persistCheckpoint,
+    persistTerminalResult: resultJournal.persistTerminal,
   })
 
   console.log(`verified backup: ${backupPath}`)
-  console.log(`apply result: ${applyResultPath}`)
+  console.log(`apply result: ${resultPath}`)
   if (result.uncertain.length > 0) {
     throw new Error(`Apply stopped with an uncertain mutation for ${result.uncertain[0].artworkId}; operator reconciliation is required`)
   }
@@ -178,7 +182,7 @@ async function readDecisions(filePath: string): Promise<MigrationDecision[]> {
   return parseMigrationDecisions(parsed)
 }
 
-function printSummary(summary: ReturnType<typeof summarizeMigrationPlans>) {
+function printSummary(summary: MigrationPlanSummary) {
   console.log(`total: ${summary.total}`)
   console.log(`ready: ${summary.ready}`)
   console.log(`skipped: ${summary.skipped}`)

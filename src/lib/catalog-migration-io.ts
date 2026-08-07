@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto"
+import { createHash, randomUUID } from "node:crypto"
 import {
   link,
   lstat,
@@ -110,6 +110,14 @@ export type ArtifactOwner = {
   projectId: string
   dataset: string
   runId: string
+}
+
+export type DryRunReport = {
+  sourceCount: number
+  decisionCount: number
+  summary: MigrationPlanSummary
+  plans: PlannedArtworkMigration[]
+  fingerprint: string
 }
 
 type DurableHandle = {
@@ -465,10 +473,12 @@ export async function writeJsonCrashDurableOnce(
     repositoryRoot,
     io = defaultDurableIo,
     beforePublish,
+    afterPublish,
   }: {
     repositoryRoot: string
     io?: DurableWriteIo
     beforePublish?: () => Promise<unknown> | unknown
+    afterPublish?: () => Promise<unknown> | unknown
   },
 ) {
   const boundary = await prepareArtifactParent(repositoryRoot, filePath)
@@ -483,17 +493,71 @@ export async function writeJsonCrashDurableOnce(
     } finally {
       await temporaryHandle.close()
     }
+    const publishedIdentity = await lstat(temporaryPath)
 
     await beforePublish?.()
     await revalidateArtifactParent(boundary)
     await assertPathAbsent(boundary.target, `Artifact destination appeared during publication: ${boundary.target}`)
     await io.link(temporaryPath, boundary.target)
     published = true
+    // Invariant: link() never replaces a destination. A post-link root move is detected;
+    // rollback unlinks the destination only when it still names this publication inode.
+    try {
+      await afterPublish?.()
+      await verifyPublishedArtifact(boundary, publishedIdentity)
+    } catch (error) {
+      const rolledBack = await rollbackPublishedInode(boundary.target, publishedIdentity, io)
+      const outcome = rolledBack
+        ? "the matching publication inode was removed"
+        : "the destination no longer named the publication inode and was left untouched"
+      throw new Error(`Output directory changed after publication; ${outcome}`, {
+        cause: error,
+      })
+    }
     await syncPublishedEntry(io, boundary.parent, boundary.target)
   } finally {
     await io.unlink(temporaryPath).catch(() => undefined)
     if (!published) await rm(temporaryPath, { force: true }).catch(() => undefined)
   }
+}
+
+async function verifyPublishedArtifact(
+  boundary: Awaited<ReturnType<typeof prepareArtifactParent>>,
+  publishedIdentity: Awaited<ReturnType<typeof lstat>>,
+) {
+  await revalidateArtifactParent(boundary)
+  const targetIdentity = await lstat(boundary.target)
+  if (targetIdentity.isSymbolicLink()
+    || targetIdentity.dev !== publishedIdentity.dev
+    || targetIdentity.ino !== publishedIdentity.ino) {
+    throw new Error("Published destination inode does not match the write-once source inode")
+  }
+
+  const artifactRoot = artifactRootForTarget(boundary.repository, boundary.target)
+  if (!artifactRoot) throw new Error("Published destination left the fixed artifact roots")
+  const targetReal = await realpath(boundary.target)
+  const artifactRootReal = await realpath(artifactRoot)
+  if (!isContainedPath(artifactRootReal, targetReal)) {
+    throw new Error("Published destination resolves outside the fixed artifact root")
+  }
+}
+
+async function rollbackPublishedInode(
+  target: string,
+  publishedIdentity: Awaited<ReturnType<typeof lstat>>,
+  io: DurableWriteIo,
+) {
+  try {
+    const targetIdentity = await lstat(target)
+    if (targetIdentity.dev === publishedIdentity.dev && targetIdentity.ino === publishedIdentity.ino) {
+      await io.unlink(target)
+      return true
+    }
+  } catch (error) {
+    if (isErrorCode(error, "ENOENT")) return false
+    throw error
+  }
+  return false
 }
 
 async function revalidateArtifactParent(boundary: Awaited<ReturnType<typeof prepareArtifactParent>>) {
@@ -542,7 +606,9 @@ function isUnsupportedDirectorySync(error: unknown) {
 
 function validateOwner(owner: ArtifactOwner) {
   for (const field of ["projectId", "dataset", "runId"] as const) {
-    if (!owner[field].trim()) throw new Error(`Artifact owner ${field} must be non-empty`)
+    if (typeof owner[field] !== "string" || !owner[field].trim()) {
+      throw new Error(`Artifact owner ${field} must be non-empty`)
+    }
   }
   if (!/^[A-Za-z0-9._-]+$/.test(owner.runId)) {
     throw new Error("Artifact owner runId contains unsupported path characters")
@@ -569,6 +635,73 @@ export async function writeDryRunReportOnce({
   }, { repositoryRoot })
 }
 
+export function createDryRunReport({
+  sources,
+  decisions,
+  plans,
+}: {
+  sources: MigrationSourceRecord[]
+  decisions: MigrationDecision[]
+  plans: PlannedArtworkMigration[]
+}): DryRunReport {
+  return {
+    sourceCount: sources.length,
+    decisionCount: decisions.length,
+    summary: summarizeMigrationPlans(plans),
+    plans,
+    fingerprint: createHash("sha256")
+      .update(JSON.stringify({ sources, decisions, plans }))
+      .digest("hex"),
+  }
+}
+
+export async function verifyDryRunReportForApply({
+  repositoryRoot,
+  reportDirectory,
+  projectId,
+  dataset,
+  expectedReport,
+}: {
+  repositoryRoot: string
+  reportDirectory: string
+  projectId: string
+  dataset: string
+  expectedReport: DryRunReport
+}): Promise<ArtifactOwner> {
+  const filePath = path.join(reportDirectory, "dry-run.json")
+  const boundary = await prepareArtifactParent(repositoryRoot, filePath)
+  await revalidateArtifactParent(boundary)
+  const metadata = await lstat(filePath)
+  if (metadata.isSymbolicLink()) throw new Error("Dry-run handoff must not be a symbolic link")
+
+  const parsed: unknown = JSON.parse(await readFile(filePath, "utf8"))
+  await revalidateArtifactParent(boundary)
+  if (!isRecord(parsed)
+    || parsed.format !== "yiiart-catalog-migration-dry-run"
+    || parsed.version !== 2
+    || !isRecord(parsed.owner)) {
+    throw new Error("Dry-run handoff has an unsupported format, version, or owner")
+  }
+
+  const owner = parsed.owner as ArtifactOwner
+  validateOwner(owner)
+  if (owner.projectId !== projectId || owner.dataset !== dataset) {
+    throw new Error("Dry-run handoff belongs to a different Sanity project or dataset")
+  }
+
+  const actualReport = {
+    sourceCount: parsed.sourceCount,
+    decisionCount: parsed.decisionCount,
+    summary: parsed.summary,
+    plans: parsed.plans,
+    fingerprint: parsed.fingerprint,
+  }
+  if (JSON.stringify(actualReport) !== JSON.stringify(expectedReport)) {
+    throw new Error("Dry-run handoff does not match the current source, decisions, and plans")
+  }
+  return { ...owner }
+}
+
 export function createApplyResultPersister({
   repositoryRoot,
   reportDirectory,
@@ -580,17 +713,17 @@ export function createApplyResultPersister({
 }) {
   validateOwner(owner)
   let sequence = 0
-  return async (result: ApplyResult) => {
-    const filePath = sequence === 0
-      ? path.join(reportDirectory, "apply-result.json")
-      : path.join(
-        reportDirectory,
+  let latestCheckpoint: string | undefined
+  let latestResult: ApplyResult | undefined
+  return {
+    async persistCheckpoint(result: ApplyResult) {
+      const relativePath = path.posix.join(
         "apply-runs",
         owner.runId,
         "checkpoints",
         `${String(sequence).padStart(6, "0")}.json`,
       )
-    try {
+      const filePath = path.join(reportDirectory, ...relativePath.split("/"))
       await writeJsonCrashDurableOnce(filePath, {
         ...result,
         format: "yiiart-catalog-migration-apply-result",
@@ -598,13 +731,35 @@ export function createApplyResultPersister({
         owner,
         sequence,
       }, { repositoryRoot })
-    } catch (error) {
-      if (sequence === 0 && isExistingArtifactError(error)) {
-        throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`, { cause: error })
+      latestCheckpoint = relativePath
+      latestResult = snapshotApplyResult(result)
+      sequence += 1
+    },
+    async persistTerminal(result: ApplyResult) {
+      if (!latestCheckpoint || !latestResult) {
+        throw new Error("Cannot write a terminal apply result without a durable checkpoint")
       }
-      throw error
-    }
-    sequence += 1
+      if (JSON.stringify(latestResult) !== JSON.stringify(result)) {
+        throw new Error("Terminal apply result must match the latest durable checkpoint")
+      }
+
+      const filePath = path.join(reportDirectory, "apply-result.json")
+      try {
+        await writeJsonCrashDurableOnce(filePath, {
+          ...result,
+          format: "yiiart-catalog-migration-apply-result",
+          version: 3,
+          owner,
+          latestCheckpoint,
+        }, { repositoryRoot })
+      } catch (error) {
+        if (isExistingArtifactError(error)) {
+          throw new Error(`Refusing to replace an unrelated or previous-run file: ${filePath}`, { cause: error })
+        }
+        throw error
+      }
+      return filePath
+    },
   }
 }
 
@@ -711,11 +866,13 @@ export async function runApplyMigration({
   token,
   writeBackup,
   acquireLease,
+  persistTerminalResult,
   ...dependencies
 }: ApplyDependencies & {
   token: string | undefined
   writeBackup: (sources: MigrationSourceRecord[]) => Promise<string>
   acquireLease: () => Promise<{ release: () => Promise<void> }>
+  persistTerminalResult: (result: ApplyResult) => Promise<string>
 }) {
   if (dependencies.sources.length !== EXPECTED_SOURCE_COUNT) {
     throw new Error(`Apply requires exactly ${EXPECTED_SOURCE_COUNT} source records; received ${dependencies.sources.length}`)
@@ -726,7 +883,8 @@ export async function runApplyMigration({
   try {
     const backupPath = await writeBackup(dependencies.sources)
     const result = await applyPlansSequentially(dependencies)
-    return { backupPath, result }
+    const resultPath = await persistTerminalResult(result)
+    return { backupPath, result, resultPath }
   } finally {
     await lease.release()
   }

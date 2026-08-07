@@ -5,6 +5,7 @@ import {
   mkdtemp,
   open,
   readFile,
+  readdir,
   rename,
   rm,
   symlink,
@@ -20,6 +21,7 @@ import {
   applyPlansSequentially,
   buildBackupFilename,
   createApplyResultPersister,
+  createDryRunReport,
   indexMigrationDecisions,
   parseCatalogMigrationArgs,
   parseMigrationDecisions,
@@ -28,6 +30,7 @@ import {
   runApplyMigration,
   summarizeMigrationPlans,
   UncertainMutationError,
+  verifyDryRunReportForApply,
   writeAndVerifyBackup,
   writeDryRunReportOnce,
   writeJsonCrashDurableOnce,
@@ -360,6 +363,48 @@ test("write boundary rejects an ancestor swapped after the temporary file sync",
   assert.equal(await readFile(filePath, "utf8").catch(() => null), null)
 })
 
+test("post-publication verification removes only its inode after an ancestor swap", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-post-link-race-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  const movedDirectory = path.join(repository, "reports", "catalog-migration-moved")
+  await mkdir(reportDirectory, { recursive: true })
+  const filePath = path.join(reportDirectory, "dry-run.json")
+
+  await assert.rejects(writeJsonCrashDurableOnce(filePath, { owned: true }, {
+    repositoryRoot: repository,
+    afterPublish: async () => {
+      await rename(reportDirectory, movedDirectory)
+      await symlink(movedDirectory, reportDirectory, "junction")
+    },
+  }), /Output directory changed after publication/)
+
+  assert.equal(await readFile(path.join(movedDirectory, "dry-run.json"), "utf8").catch(() => null), null)
+  assert.equal(
+    (await readdir(movedDirectory)).filter((name) => name.endsWith(".tmp")).length,
+    0,
+  )
+})
+
+test("post-publication rollback never removes an unrelated replacement", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-post-link-replacement-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  await mkdir(reportDirectory, { recursive: true })
+  const filePath = path.join(reportDirectory, "dry-run.json")
+  const movedPublication = path.join(reportDirectory, "created-inode.json")
+
+  await assert.rejects(writeJsonCrashDurableOnce(filePath, { owned: true }, {
+    repositoryRoot: repository,
+    afterPublish: async () => {
+      await rename(filePath, movedPublication)
+      await writeFile(filePath, "unrelated replacement\n", "utf8")
+    },
+  }), /Output directory changed after publication/)
+
+  assert.equal(await readFile(filePath, "utf8"), "unrelated replacement\n")
+})
+
 test("dry-run handoff has exact ownership and never replaces same-shape JSON", async (context) => {
   const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-dry-run-"))
   context.after(() => rm(repository, { recursive: true, force: true }))
@@ -403,12 +448,76 @@ test("dry-run handoff has exact ownership and never replaces same-shape JSON", a
   assert.deepEqual(owned.owner, { projectId: "project-a", dataset: "production", runId: "run-1" })
 })
 
-test("apply result persister uses exact-owner write-once checkpoints", async (context) => {
+test("dry-run then apply verifies an identical fingerprint without overwriting the handoff", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-handoff-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  await mkdir(reportDirectory, { recursive: true })
+  const sources = [sourceRecord("art-1")]
+  const decisions = [decisionFor(sources[0])]
+  const plans = [readyPlan(sources[0])]
+  const report = createDryRunReport({ sources, decisions, plans })
+  const owner = { projectId: "project-a", dataset: "production", runId: "run-1" }
+
+  await writeDryRunReportOnce({ repositoryRoot: repository, reportDirectory, owner, report })
+  const filePath = path.join(reportDirectory, "dry-run.json")
+  const before = await readFile(filePath, "utf8")
+  const verifiedOwner = await verifyDryRunReportForApply({
+    repositoryRoot: repository,
+    reportDirectory,
+    projectId: owner.projectId,
+    dataset: owner.dataset,
+    expectedReport: createDryRunReport({ sources, decisions, plans }),
+  })
+
+  assert.deepEqual(verifiedOwner, owner)
+  assert.equal(await readFile(filePath, "utf8"), before)
+})
+
+test("apply handoff rejects stale sources and different decisions", async (context) => {
+  const repository = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-stale-handoff-"))
+  context.after(() => rm(repository, { recursive: true, force: true }))
+  const reportDirectory = path.join(repository, "reports", "catalog-migration")
+  await mkdir(reportDirectory, { recursive: true })
+  const sources = [sourceRecord("art-1")]
+  const decisions = [decisionFor(sources[0])]
+  const plans = [readyPlan(sources[0])]
+  const report = createDryRunReport({ sources, decisions, plans })
+  await writeDryRunReportOnce({
+    repositoryRoot: repository,
+    reportDirectory,
+    owner: { projectId: "project-a", dataset: "production", runId: "run-1" },
+    report,
+  })
+
+  const staleSources = [sourceRecord("art-1", "rev-changed")]
+  await assert.rejects(verifyDryRunReportForApply({
+    repositoryRoot: repository,
+    reportDirectory,
+    projectId: "project-a",
+    dataset: "production",
+    expectedReport: createDryRunReport({ sources: staleSources, decisions, plans }),
+  }), /does not match the current source, decisions, and plans/)
+
+  await assert.rejects(verifyDryRunReportForApply({
+    repositoryRoot: repository,
+    reportDirectory,
+    projectId: "project-a",
+    dataset: "production",
+    expectedReport: createDryRunReport({
+      sources,
+      decisions: [{ ...decisions[0], rightsApproved: true }],
+      plans,
+    }),
+  }), /does not match the current source, decisions, and plans/)
+})
+
+test("apply result persister keeps checkpoints immutable and writes canonical result only at terminal", async (context) => {
   const directory = await mkdtemp(path.join(os.tmpdir(), "catalog-migration-result-"))
   context.after(() => rm(directory, { recursive: true, force: true }))
   const reportDirectory = path.join(directory, "reports", "catalog-migration")
   await mkdir(reportDirectory, { recursive: true })
-  const persist = createApplyResultPersister({
+  const journal = createApplyResultPersister({
     repositoryRoot: directory,
     reportDirectory,
     owner: { projectId: "project-a", dataset: "production", runId: "run-1" },
@@ -417,9 +526,10 @@ test("apply result persister uses exact-owner write-once checkpoints", async (co
     appliedIds: [], skippedIds: [], pendingIds: [], uncertain: [], errors: [],
   }
 
-  await persist(initial)
-  await persist({ ...initial, pendingIds: ["art-1"] })
-  await persist({ ...initial, appliedIds: ["art-1"] })
+  await journal.persistCheckpoint(initial)
+  await journal.persistCheckpoint({ ...initial, pendingIds: ["art-1"] })
+  const final = { ...initial, appliedIds: ["art-1"] }
+  await journal.persistCheckpoint(final)
 
   const finalCheckpoint = path.join(
     reportDirectory,
@@ -440,16 +550,92 @@ test("apply result persister uses exact-owner write-once checkpoints", async (co
     errors: [],
   })
 
+  assert.equal(
+    await readFile(path.join(reportDirectory, "apply-result.json"), "utf8").catch(() => null),
+    null,
+  )
+
+  const canonicalPath = await journal.persistTerminal(final)
+  assert.equal(canonicalPath, path.join(reportDirectory, "apply-result.json"))
+  assert.deepEqual(JSON.parse(await readFile(canonicalPath, "utf8")), {
+    format: "yiiart-catalog-migration-apply-result",
+    version: 3,
+    owner: { projectId: "project-a", dataset: "production", runId: "run-1" },
+    latestCheckpoint: "apply-runs/run-1/checkpoints/000002.json",
+    appliedIds: ["art-1"],
+    skippedIds: [],
+    pendingIds: [],
+    uncertain: [],
+    errors: [],
+  })
+
   const nextRun = createApplyResultPersister({
     repositoryRoot: directory,
     reportDirectory,
     owner: { projectId: "project-a", dataset: "production", runId: "run-2" },
   })
-  await assert.rejects(nextRun(initial), /Refusing to replace an unrelated or previous-run file/)
+  await nextRun.persistCheckpoint(initial)
+  await assert.rejects(
+    nextRun.persistTerminal(initial),
+    /Refusing to replace an unrelated or previous-run file/,
+  )
   assert.equal(
     JSON.parse(await readFile(path.join(reportDirectory, "apply-result.json"), "utf8")).owner.runId,
     "run-1",
   )
+})
+
+test("partial-error and uncertain terminal summaries are canonical write-once files", async (context) => {
+  const cases: Array<{ runId: string; result: ApplyResult }> = [
+    {
+      runId: "partial-run",
+      result: {
+        appliedIds: ["art-1"],
+        skippedIds: ["art-3"],
+        pendingIds: [],
+        uncertain: [],
+        errors: [{ artworkId: "art-2", message: "commit rejected" }],
+      },
+    },
+    {
+      runId: "uncertain-run",
+      result: {
+        appliedIds: [],
+        skippedIds: [],
+        pendingIds: ["art-1"],
+        uncertain: [{ artworkId: "art-1", message: "response lost" }],
+        errors: [],
+      },
+    },
+  ]
+
+  for (const testCase of cases) {
+    const repository = await mkdtemp(path.join(os.tmpdir(), `catalog-migration-${testCase.runId}-`))
+    context.after(() => rm(repository, { recursive: true, force: true }))
+    const reportDirectory = path.join(repository, "reports", "catalog-migration")
+    await mkdir(reportDirectory, { recursive: true })
+    const journal = createApplyResultPersister({
+      repositoryRoot: repository,
+      reportDirectory,
+      owner: { projectId: "project-a", dataset: "production", runId: testCase.runId },
+    })
+
+    await journal.persistCheckpoint(testCase.result)
+    const resultPath = await journal.persistTerminal(testCase.result)
+    const canonical = JSON.parse(await readFile(resultPath, "utf8"))
+    assert.deepEqual({
+      appliedIds: canonical.appliedIds,
+      skippedIds: canonical.skippedIds,
+      pendingIds: canonical.pendingIds,
+      uncertain: canonical.uncertain,
+      errors: canonical.errors,
+    }, testCase.result)
+    assert.equal(
+      canonical.latestCheckpoint,
+      `apply-runs/${testCase.runId}/checkpoints/000000.json`,
+    )
+    await assert.rejects(journal.persistTerminal(testCase.result), /already exists|previous-run file/)
+  }
 })
 
 test("derives repository root from the script module URL instead of cwd", () => {
@@ -552,6 +738,10 @@ test("apply orchestration stops before mutation when backup verification fails",
     },
     commitPatch: async () => { events.push("commit") },
     persistResult: async () => { events.push("persist") },
+    persistTerminalResult: async () => {
+      events.push("terminal")
+      return "apply-result.json"
+    },
   }), /backup verification failed/)
 
   assert.deepEqual(events, ["lease:acquire", "backup", "lease:release"])
@@ -573,6 +763,7 @@ test("apply orchestration retains the exact source count and token gates", async
     readCurrentIdentity: async () => null,
     commitPatch: async () => undefined,
     persistResult: async () => undefined,
+    persistTerminalResult: async () => "apply-result.json",
     acquireLease: async () => {
       leaseAttempts += 1
       return { release: async () => undefined }
@@ -592,6 +783,54 @@ test("apply orchestration retains the exact source count and token gates", async
   }), /Apply requires SANITY_WRITE_TOKEN or SANITY_API_WRITE_TOKEN/)
   assert.equal(backupAttempts, 0)
   assert.equal(leaseAttempts, 0)
+})
+
+test("apply orchestration writes successful, partial-error, and uncertain terminal summaries", async () => {
+  const sources = Array.from({ length: 63 }, (_, index) => sourceRecord(`art-${index}`))
+  const skippedPlans: PlannedArtworkMigration[] = sources.map((source, index) => index === 0
+    ? readyPlan(source)
+    : { status: "skipped", artworkId: source._id, reason: "missing_review_decision" })
+
+  for (const mode of ["success", "partial-error", "uncertain"] as const) {
+    const terminal: ApplyResult[] = []
+    const { result, resultPath } = await runApplyMigration({
+      token: "configured",
+      sources,
+      plans: skippedPlans,
+      decisionsByArtworkId: new Map([[sources[0]._id, decisionFor(sources[0])]]),
+      acquireLease: async () => ({ release: async () => undefined }),
+      writeBackup: async () => "backup.json",
+      readCurrentIdentity: async (id) => {
+        const source = sources.find((item) => item._id === id)!
+        return { _id: id, _rev: source._rev, slug: source.slug }
+      },
+      commitPatch: async () => {
+        if (mode === "partial-error") throw new Error("commit rejected")
+        if (mode === "uncertain") throw new UncertainMutationError("response lost")
+      },
+      persistResult: async () => undefined,
+      persistTerminalResult: async (value) => {
+        terminal.push(cloneResult(value))
+        return `canonical-${mode}.json`
+      },
+    })
+
+    assert.equal(resultPath, `canonical-${mode}.json`)
+    assert.deepEqual(terminal, [result])
+    if (mode === "success") {
+      assert.deepEqual(result.appliedIds, ["art-0"])
+      assert.equal(result.skippedIds.length, 62)
+      assert.deepEqual(result.errors, [])
+    } else if (mode === "partial-error") {
+      assert.deepEqual(result.pendingIds, [])
+      assert.deepEqual(result.errors, [{ artworkId: "art-0", message: "commit rejected" }])
+      assert.equal(result.skippedIds.length, 62)
+    } else {
+      assert.deepEqual(result.pendingIds, ["art-0"])
+      assert.deepEqual(result.uncertain, [{ artworkId: "art-0", message: "response lost" }])
+      assert.deepEqual(result.skippedIds, [])
+    }
+  }
 })
 
 test("empty ready patches are durably skipped without identity reads", async () => {
