@@ -1,8 +1,9 @@
 import { unstable_cache } from "next/cache"
 import { getMarketingCollection, marketingCollections, type MarketingCollection } from "@/lib/collections"
-import { formatArtworkDimensions, normalizeCategory } from "@/lib/artwork-display"
+import { normalizeCategory } from "@/lib/artwork-display"
 import { inferArtworkSize } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { parsePhysicalDimensions, readPhysicalDimensions } from "@/lib/physical-dimensions"
 import { client } from "@/lib/sanity"
 
 export type CollectionArtwork = {
@@ -44,7 +45,11 @@ export function matchesMarketingCollection(artwork: CollectionArtwork, collectio
   if (collection.seriesSlug) return artwork.seriesSlug === collection.seriesSlug
   if (collection.categories?.length) return collection.categories.includes(normalizeCategory(artwork.category))
   if (collection.slug === "large-canvas-art") {
-    const size = inferArtworkSize(formatArtworkDimensions(artwork))
+    const dimensions = readPhysicalDimensions(artwork.widthCm, artwork.heightCm)
+      || parsePhysicalDimensions(artwork.dimensions)
+    if (!dimensions) return false
+
+    const size = inferArtworkSize(`${dimensions.widthCm} x ${dimensions.heightCm} cm`)
     return size === "Large" || size === "Oversized"
   }
   return false

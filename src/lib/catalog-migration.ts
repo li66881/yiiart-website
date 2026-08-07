@@ -4,6 +4,14 @@ import {
   partitionRolledSizesForCheckout,
   type SizeProfileId,
 } from "./storefront/catalog-config"
+import {
+  isPhysicalDimensions,
+  parsePhysicalDimensions,
+  readPhysicalDimensions,
+  type PhysicalDimensions,
+} from "./physical-dimensions"
+
+export { parsePhysicalDimensions } from "./physical-dimensions"
 
 export type SourceArtwork = {
   _id: string
@@ -92,40 +100,11 @@ export type PlannedArtworkMigration =
   | { status: "ready"; artworkId: string; patch: Partial<PlannedArtworkPatch> }
   | { status: "skipped"; artworkId: string; reason: MigrationSkipReason }
 
-type PhysicalDimensions = { widthCm: number; heightCm: number }
-
-function isPhysicalDimensions(value: PhysicalDimensions | undefined | null): value is PhysicalDimensions {
-  return Boolean(
-    value
-    && Number.isFinite(value.widthCm)
-    && Number.isFinite(value.heightCm)
-    && value.widthCm > 0
-    && value.heightCm > 0,
-  )
-}
-
-export function parsePhysicalDimensions(value: unknown): PhysicalDimensions | null {
-  if (typeof value !== "string") return null
-
-  const normalized = value.trim().toLowerCase()
-  if (!normalized.includes("cm")
-    || /\b(?:px|pixels?)\b/.test(normalized)
-    || /[-\u2010-\u2015\u2212\uFE63\uFF0D]\s*\d/.test(normalized)) return null
-
-  const match = normalized.match(/(^|[^-\d.])(\d+(?:\.\d+)?)\s*[x\u00d7\u8133]\s*(\d+(?:\.\d+)?)\s*cm\b/)
-  if (!match) return null
-
-  const dimensions = { widthCm: Number(match[2]), heightCm: Number(match[3]) }
-  return isPhysicalDimensions(dimensions) ? dimensions : null
-}
-
 function resolvePhysicalDimensions(source: SourceArtwork, decision: MigrationDecision): PhysicalDimensions | null {
   if (decision.physicalSize) return isPhysicalDimensions(decision.physicalSize) ? decision.physicalSize : null
 
-  const reviewedSourceDimensions = { widthCm: source.widthCm ?? Number.NaN, heightCm: source.heightCm ?? Number.NaN }
-  return isPhysicalDimensions(reviewedSourceDimensions)
-    ? reviewedSourceDimensions
-    : parsePhysicalDimensions(source.dimensions)
+  return readPhysicalDimensions(source.widthCm, source.heightCm)
+    || parsePhysicalDimensions(source.dimensions)
 }
 
 function orientationFor({ widthCm, heightCm }: PhysicalDimensions): PlannedArtworkPatch["orientation"] {

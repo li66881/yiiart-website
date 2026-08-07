@@ -27,6 +27,12 @@ test("matches large art from physical dimensions", () => {
   assert.equal(matchesMarketingCollection({ dimensions: "40 x 40 cm" }, collection), false)
 })
 
+test("never treats image pixels as physical large-art dimensions", () => {
+  const collection = { slug: "large-canvas-art" } as any
+  assert.equal(matchesMarketingCollection({ dimensions: "120 x 180 pixels" }, collection), false)
+  assert.equal(matchesMarketingCollection({ dimensions: "120 x 180 px" }, collection), false)
+})
+
 test("filters only catalog links and keeps support links", () => {
   const links = [
     { href: "/collections/large-canvas-art", label: "Large Wall Art" },
