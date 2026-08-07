@@ -346,7 +346,7 @@
       "surface": "Surface",
       "authenticity": "Authenticity",
       "authenticityValue": "Physical hand-painted artwork, not a printed reproduction",
-      "certificate": "Certificate",
+      "certificate": "Production guidance",
       "certificateValue": "Production timing is confirmed before the order is finalized",
       "dispatch": "Dispatch",
       "dispatchFallback": "Confirm safest format before dispatch"
