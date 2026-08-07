@@ -52,7 +52,7 @@ async function getSeoImage(category?: string) {
 
   return {
     image: getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 }),
-    alt: pickEnglish(artworkWithImage.title, "Original YiiArt painting"),
+    alt: pickEnglish(artworkWithImage.title, "Hand-painted YiiArt painting"),
   }
 }
 
@@ -60,10 +60,10 @@ export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
   const activeCategory = normalizeCategory(params.category)
   const seoImage = await getSeoImage(activeCategory)
-  const title = activeCategory ? `${activeCategory} Original Paintings` : "Original Paintings"
+  const title = activeCategory ? `${activeCategory} Hand-Painted Paintings` : "Hand-Painted Paintings"
   const description = activeCategory
-    ? `Browse ${activeCategory.toLowerCase()} original paintings from YiiArt, each hand-painted and shipped worldwide with a signed certificate.`
-    : "Browse original abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
+    ? `Browse ${activeCategory.toLowerCase()} hand-painted paintings from YiiArt, with size, palette, and delivery guidance confirmed before ordering.`
+    : "Browse abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
   const path = activeCategory ? `/artworks?category=${encodeURIComponent(activeCategory)}` : "/artworks"
 
   return buildSeoMetadata({

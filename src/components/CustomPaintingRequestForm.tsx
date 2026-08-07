@@ -65,7 +65,7 @@ export default function CustomPaintingRequestForm({
 
       if (response.ok) {
         setSubmitted(true)
-        setStatus("Request received. YiiArt will reply by email within 12 hours with sizing, palette, and pricing guidance.")
+        setStatus("Request received. YiiArt replies as soon as practical with sizing, palette, and pricing guidance.")
         formElement.reset()
         setPhotoNames([])
         return

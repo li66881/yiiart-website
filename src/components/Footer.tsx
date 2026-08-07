@@ -17,10 +17,10 @@ export default function Footer() {
     <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
       <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10">
         <div className="mb-14 grid grid-cols-2 gap-6 border-b border-white/15 pb-10 lg:grid-cols-4">
-          <GuaranteeItem title="Free insured shipping" text="Included worldwide, door to door" />
-          <GuaranteeItem title="Hand-painted originals" text="Signed certificate of authenticity" />
-          <GuaranteeItem title="30-day returns" text="Refund within 5 business days" />
-          <GuaranteeItem title="Secure payment" text="PayPal and major cards over SSL" />
+          <GuaranteeItem title="Worldwide delivery options" text="Confirmed by destination and carrier route" />
+          <GuaranteeItem title="Hand-painted to order" text="Natural variations in brushwork and color" />
+          <GuaranteeItem title="Return conditions" text="Standard and custom orders may differ" />
+          <GuaranteeItem title="Secure payment" text="Encrypted provider processing" />
         </div>
 
         <div className="grid gap-12 border-b border-white/15 pb-14 lg:grid-cols-[1.1fr_2fr_0.9fr]">

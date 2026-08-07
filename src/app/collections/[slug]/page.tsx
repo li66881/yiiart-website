@@ -224,10 +224,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
         <section className="border-y border-stone-200 bg-white py-12">
           <div className="mx-auto grid max-w-[1440px] gap-6 px-4 sm:px-6 md:grid-cols-4 lg:px-10">
-            <Info title="Original" text="No prints or editions in the main collection." />
-            <Info title="Documented" text="Artist details and signed certificate included." />
-            <Info title="Delivered" text="Tracked worldwide shipping with careful packaging." />
-            <Info title="Supported" text="30-day return window after delivery." />
+            <Info title="Hand-painted" text="Physical hand-painted artwork, not a printed reproduction." />
+            <Info title="Production" text="Production timing is confirmed before the order is finalized." />
+            <Info title="Delivered" text="Tracking information is shared when the selected carrier service provides it." />
+            <Info title="Supported" text="Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." />
           </div>
         </section>
 

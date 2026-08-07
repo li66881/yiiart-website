@@ -5,7 +5,7 @@ export const siteName = "YiiArt"
 export const siteUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
 
 export const defaultSeoDescription =
-  "Discover original, hand-painted artworks by independent Chinese artists. One-of-a-kind oil, acrylic, and mixed-media paintings shipped worldwide with signed certificates."
+  "Discover hand-painted artworks by studio artists, with size, palette, production, and worldwide delivery guidance confirmed before ordering."
 
 export const defaultOgImage =
   process.env.NEXT_PUBLIC_DEFAULT_OG_IMAGE ||

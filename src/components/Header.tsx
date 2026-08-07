@@ -39,7 +39,7 @@ export default function Header() {
   return (
     <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/15 bg-[#1d1c18]/95 text-[#fffdf8] backdrop-blur-xl">
       <div className="bg-[#75432f] px-4 py-2 text-center text-xs text-[#fffdf8] sm:text-sm">
-        Handmade modern paintings, custom canvas art, free worldwide shipping, and 30-day returns.
+        Hand-painted modern art, custom sizes, and worldwide delivery options.
       </div>
       <div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
         <div className="flex min-w-0 items-center gap-8">

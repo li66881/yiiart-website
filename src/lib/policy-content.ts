@@ -1,118 +1,118 @@
 export const trustPrinciples = [
   {
-    title: "Hand-painted originals",
-    text: "YiiArt sells physical paintings by independent artists. Every ready-made work ships with a signed certificate of authenticity, not as a mass-produced print.",
+    title: "Hand-painted to order",
+    text: "Each listed design is recreated by studio artists, with natural variations in brushwork and color.",
   },
   {
-    title: "Confirm before payment",
-    text: "Ask for daylight photos, close-up texture details, room-size advice, framing guidance, or a short video on WhatsApp before completing a purchase.",
+    title: "Confirm details before production",
+    text: "Ask for size, palette, framing, room-fit, or current production guidance before the order is confirmed.",
   },
   {
-    title: "Insured worldwide delivery",
-    text: "Shipping is free and included in the price. Every shipment is insured from the studio to your door and tracked from dispatch.",
+    title: "Worldwide delivery options",
+    text: "Available delivery methods depend on destination, artwork size, finish, carrier route, and customs requirements.",
   },
   {
-    title: "30-day returns",
-    text: "Ready-made works can be returned within 30 days of delivery for any reason. Custom commissions have separate terms confirmed before production.",
+    title: "Damage support",
+    text: "Keep the artwork and all packaging, then send photos so YiiArt can review the issue and the available carrier process.",
   },
 ]
 
 export const shippingHighlights = [
   {
-    title: "Free worldwide shipping",
-    text: "Shipping is included in the price for every destination we serve. There are no separate shipping fees at checkout.",
+    title: "Processing confirmed per order",
+    text: "Preparation and production timing depends on the selected size, finish, surface, and current studio workload.",
   },
   {
-    title: "Clear timelines",
-    text: "Ready-made works are inspected, documented, and packed within 3-5 business days. Custom paintings need 2-4 weeks of production before dispatch.",
+    title: "Worldwide delivery options",
+    text: "Delivery availability and format are confirmed for the destination before dispatch.",
   },
   {
-    title: "Tracked express carriers",
-    text: "Artwork travels with express carriers such as DHL, FedEx, or UPS, typically arriving 5-10 business days after dispatch. Tracking is emailed the day your artwork ships.",
+    title: "Tracking when available",
+    text: "Tracking details are shared when the selected carrier service provides them.",
   },
   {
-    title: "Insured door to door",
-    text: "Every shipment is fully insured by YiiArt from the studio to your address. If anything happens in transit, you are covered.",
+    title: "Careful packaging",
+    text: "Packaging is selected for the artwork size, finish, texture, and carrier route.",
   },
 ]
 
 export const returnHighlights = [
   {
-    title: "30 days, any reason",
-    text: "Ready-made artworks can be returned within 30 days of delivery for any reason. Contact YiiArt first, then ship the artwork back within 14 days of approval.",
+    title: "Eligibility reviewed by order",
+    text: "Return conditions depend on whether the work is standard, custom, already produced, or personalized.",
   },
   {
-    title: "Fast refunds",
-    text: "Refunds are issued to the original payment method within 5 business days after the returned artwork is received in original condition.",
+    title: "Contact YiiArt first",
+    text: "Include the order reference, artwork title, reason, and current condition so the available next step can be confirmed.",
   },
   {
-    title: "Return shipping costs",
-    text: "For change-of-mind returns the buyer covers return shipping. If the artwork arrived damaged or materially different from the listing, YiiArt covers all costs.",
+    title: "Custom work has separate conditions",
+    text: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
   },
   {
-    title: "Damage support",
-    text: "If a shipment arrives damaged, send photos of the artwork, box, and label within 48 hours. YiiArt will arrange a free replacement or a full refund.",
+    title: "Damage review",
+    text: "Keep the artwork, box, inner packaging, and shipping label and provide clear photos for review.",
   },
 ]
 
 export const paymentHighlights = [
   {
     title: "Secure checkout",
-    text: "Payments are processed over encrypted SSL connections by PCI-compliant providers. YiiArt never stores your card details.",
+    text: "Payments are processed through encrypted payment providers. YiiArt does not store raw card details.",
   },
   {
-    title: "Ways to pay",
-    text: "Pay with PayPal or major cards including Visa, Mastercard, and American Express. Bank transfer is available on request for larger commissions.",
+    title: "Payment options at checkout",
+    text: "Available payment methods are shown at checkout when the selected provider is configured.",
   },
   {
-    title: "Buyer protection",
-    text: "Card and PayPal payments carry the provider's buyer protection in addition to YiiArt's own 30-day return policy and insured delivery.",
+    title: "Provider processing",
+    text: "PayPal and card payment options are processed by their configured providers.",
   },
 ]
 
 export const faqItems = [
   {
-    question: "Are YiiArt artworks original paintings?",
-    answer: "Yes. YiiArt sells original hand-painted works, each shipped with a signed certificate of authenticity. Product pages should be read as physical paintings unless a listing clearly says otherwise.",
+    question: "Is this a print or a hand-painted artwork?",
+    answer: "Physical hand-painted artwork, not a printed reproduction. Each listed design is recreated by studio artists, with natural variations in brushwork and color.",
   },
   {
-    question: "Can I ask for more photos before buying?",
-    answer: "Yes. You can request daylight photos, close-up texture details, edge photos, or a short video on WhatsApp before checkout. We usually reply within 12 hours.",
+    question: "Can I ask for more details before ordering?",
+    answer: "Yes. YiiArt replies as soon as practical with sizing, palette, and pricing guidance.",
   },
   {
     question: "What payment methods do you accept?",
-    answer: "You can pay with PayPal or major cards including Visa, Mastercard, and American Express. Checkout runs over an encrypted SSL connection with PCI-compliant providers, and bank transfer is available on request for larger orders.",
+    answer: "Available payment methods are shown at checkout when the selected provider is configured. Payments are processed through encrypted payment providers, and YiiArt does not store raw card details.",
   },
   {
-    question: "How much does shipping cost, and how long does it take?",
-    answer: "Shipping is free worldwide and included in the price. Ready-made works dispatch within 3-5 business days, custom paintings after 2-4 weeks of production. Transit with DHL, FedEx, or UPS usually takes 5-10 business days, and every shipment is insured and tracked.",
+    question: "How does shipping work?",
+    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route. Tracking information is shared when the selected carrier service provides it.",
   },
   {
     question: "Will I have to pay customs duties or taxes?",
-    answer: "For international orders, import duties, VAT, and local taxes are set by the destination country and collected by the carrier at delivery, typically 0-10% of the artwork value depending on your country. They are the buyer's responsibility unless stated otherwise at checkout.",
+    answer: "Import duties, VAT, and local taxes depend on the destination and carrier process. Confirm the current destination guidance before the order is finalized.",
   },
   {
     question: "How is artwork packaged?",
-    answer: "Packaging depends on size and surface. Oversized canvas works ship rolled in a rigid tube for safety; smaller or ready-to-hang works ship flat in reinforced boxes or wooden crates. Every shipment is insured in transit.",
+    answer: "Packaging is selected for the artwork size, finish, texture, and carrier route.",
   },
   {
     question: "What if the artwork arrives damaged?",
-    answer: "Keep the artwork, box, inner packaging, and shipping label, and contact YiiArt within 48 hours with photos. Because every shipment is insured, we will arrange a free replacement or a full refund.",
+    answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
   {
     question: "What is the return policy?",
-    answer: "Ready-made artworks can be returned within 30 days of delivery for any reason. After approval you have 14 days to ship the work back in original condition; the refund is issued within 5 business days of it arriving. Change-of-mind return shipping is paid by the buyer; damaged or not-as-described returns are fully covered by YiiArt.",
+    answer: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.",
   },
   {
     question: "Are custom paintings returnable?",
-    answer: "Custom commissions are made for your specific size, palette, and room, so they are final sale once production is complete. You can cancel free of charge before production starts, and damage in transit is always covered by a replacement or full refund.",
+    answer: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
   },
   {
     question: "Can I commission a custom artwork?",
-    answer: "Yes. Share wall measurements, room photos, preferred palette, style direction, and delivery country. YiiArt confirms the scope, price, and a 2-4 week production timeline before any payment is taken.",
+    answer: "Share wall measurements, room photos, preferred palette, style direction, and delivery country. Production timing is confirmed before the order is finalized.",
   },
   {
     question: "How should I care for a hand-painted canvas?",
-    answer: "Hang the work away from direct sunlight, heaters, and humid rooms. Dust gently with a dry, soft cloth; never use water or cleaning sprays on the painted surface. Rolled canvases should be professionally stretched within a few weeks of arrival.",
+    answer: "Keep the painted surface away from direct sunlight, heat, moisture, water, and cleaning sprays. Dust gently with a dry, soft cloth.",
   },
 ]

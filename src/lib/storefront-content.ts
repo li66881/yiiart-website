@@ -27,7 +27,7 @@ export const storefrontCollectionTiles: StorefrontCollectionTile[] = [
   {
     title: "Large Canvas Art",
     eyebrow: "Scale",
-    description: "Large originals for feature walls, offices, hospitality spaces, and collector homes.",
+    description: "Large hand-painted artworks for feature walls, offices, hospitality spaces, and collector homes.",
     href: "/collections/large-canvas-art",
     meta: "Oversized / Feature wall",
   },
@@ -72,26 +72,26 @@ export const collectorJourney = [
   },
   {
     title: "Receive documented art",
-    text: "Original works ship with careful packaging and collector documentation.",
+    text: "Hand-painted artworks are prepared with careful packaging and order-specific guidance.",
   },
 ]
 
 export const productConfidenceItems = [
   {
-    title: "Original artwork",
-    text: "One physical work, not a print edition.",
+    title: "Hand-painted artwork",
+    text: "Physical hand-painted artwork, not a printed reproduction.",
   },
   {
-    title: "Signed certificate",
-    text: "Collector documentation is included when available for the artwork.",
+    title: "Production guidance",
+    text: "Production timing is confirmed before the order is finalized.",
   },
   {
     title: "Tracked delivery",
     text: "Packaging format is selected according to artwork size and shipping safety.",
   },
   {
-    title: "30-day return window",
-    text: "Return requests can be opened after delivery according to YiiArt policy.",
+    title: "Return conditions",
+    text: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.",
   },
 ]
 
@@ -142,8 +142,8 @@ export const productPackagingItems = [
 
 export const productFaqItems = [
   {
-    question: "Is this a print or an original painting?",
-    answer: "YiiArt focuses on original hand-painted works. Product pages should be read as physical paintings unless a listing clearly says otherwise.",
+    question: "Is this a print or a hand-painted artwork?",
+    answer: "Physical hand-painted artwork, not a printed reproduction. Each listed design is recreated by studio artists, with natural variations in brushwork and color.",
   },
   {
     question: "Can I request more photos before buying?",

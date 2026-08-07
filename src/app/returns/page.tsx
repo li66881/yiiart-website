@@ -8,7 +8,7 @@ import { buildSeoMetadata } from "@/lib/seo"
 export const metadata: Metadata = buildSeoMetadata({
   title: "Returns and Refunds",
   description:
-    "YiiArt offers a 30-day return window after delivery for eligible original artwork orders, with support for damaged shipments.",
+    "YiiArt reviews return conditions by order and provides damage support for hand-painted artwork.",
   path: "/returns",
 })
 
@@ -21,12 +21,11 @@ export default function ReturnsPage() {
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Returns</p>
-              <h1 className="text-5xl font-light leading-tight">Clear return terms for original art.</h1>
+              <h1 className="text-5xl font-light leading-tight">Clear return conditions for hand-painted art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              Ready-made artworks can be returned within 30 days of delivery for any reason, with the refund issued
-              within 5 business days of the artwork arriving back. Custom commissions are final sale because they are
-              made for a specific request, and can be cancelled free of charge before production starts.
+              Standard and custom orders may have different conditions; contact YiiArt with the order details before
+              returning artwork. Production timing and custom conditions are confirmed before the order is finalized.
             </p>
           </section>
 
@@ -43,10 +42,10 @@ export default function ReturnsPage() {
             </div>
             <ol className="grid gap-4">
               {[
-                `Contact ${contactEmail} within 30 days of delivery and include your order number and artwork title.`,
-                "Share the reason for return and photos if the artwork arrived damaged or materially different from the listing.",
-                "Wait for return packing and shipping instructions, then ship the artwork back within 14 days of approval.",
-                "Pack the artwork securely in original packaging when possible, with all documentation included. Your refund is issued within 5 business days of the artwork arriving back.",
+                `Contact ${contactEmail} and include your order reference, artwork title, reason, and current condition.`,
+                "Share clear photos if the artwork arrived damaged or materially different from the listing.",
+                "Wait for the available next step and packing guidance before sending artwork back.",
+                "Keep the artwork, box, inner packaging, and shipping label and provide clear photos for review.",
               ].map((item, index) => (
                 <li key={item} className="border border-stone-200 bg-white p-5 text-sm leading-6 text-stone-600">
                   <span className="mb-2 block text-xs uppercase text-stone-400">Step 0{index + 1}</span>
