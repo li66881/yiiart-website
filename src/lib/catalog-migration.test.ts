@@ -1,6 +1,34 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { parsePhysicalDimensions, planArtworkMigration } from "./catalog-migration"
+import { parsePhysicalDimensions, planArtworkMigration, type SourceArtwork } from "./catalog-migration"
+
+type Equal<Left, Right> = (
+  <Value>() => Value extends Left ? 1 : 2
+) extends (
+  <Value>() => Value extends Right ? 1 : 2
+) ? true : false
+type Assert<Condition extends true> = Condition
+type ExpectedSourceArtworkKeys =
+  | "_id"
+  | "slug"
+  | "dimensions"
+  | "widthCm"
+  | "heightCm"
+  | "orientation"
+  | "category"
+  | "roomTypes"
+  | "colorFamilies"
+  | "styleTags"
+  | "collectionType"
+  | "productionModel"
+  | "rightsStatus"
+  | "migrationStatus"
+  | "allowCheckout"
+  | "shippingProfile"
+  | "productMedia"
+type SourceArtworkKeepsItsPublicContract = Assert<Equal<keyof SourceArtwork, ExpectedSourceArtworkKeys>>
+
+void (null as unknown as SourceArtworkKeepsItsPublicContract)
 
 const reviewedDecision = {
   artworkId: "art-1",
@@ -36,6 +64,13 @@ test("rejects negative physical dimensions instead of matching their absolute va
 
   assert.equal(parsePhysicalDimensions("-80 x 120 cm"), null)
   assert.equal(parsePhysicalDimensions("- 80 x 120 cm"), null)
+  assert.equal(parsePhysicalDimensions("\u221280 x 120 cm"), null)
+  assert.equal(parsePhysicalDimensions("\u201080 x 120 cm"), null)
+  assert.equal(parsePhysicalDimensions("\uff0d80 x 120 cm"), null)
+  assert.deepEqual(
+    planArtworkMigration({ ...reviewedSource, dimensions: "\u221280 x 120 cm" }, reviewedDecision),
+    { status: "skipped", artworkId: "art-1", reason: "missing_physical_dimensions" },
+  )
   assert.deepEqual(result, { status: "skipped", artworkId: "art-1", reason: "missing_physical_dimensions" })
 })
 
@@ -105,6 +140,9 @@ test("skips runtime-incomplete or malformed review decisions", () => {
     { ...reviewedDecision, contentReady: "true" },
     { ...reviewedDecision, enableRolledCheckout: undefined },
     { ...reviewedDecision, enableRolledCheckout: "false" },
+    { ...reviewedDecision, seriesRank: "1" },
+    { ...reviewedDecision, seriesRank: Number.NaN },
+    { ...reviewedDecision, seriesRank: Number.POSITIVE_INFINITY },
   ]
 
   for (const decision of invalidDecisions) {
@@ -113,6 +151,14 @@ test("skips runtime-incomplete or malformed review decisions", () => {
       artworkId: "art-1",
       reason: "invalid_review_decision",
     })
+  }
+})
+
+test("accepts any finite optional series rank allowed by the public contract", () => {
+  for (const seriesRank of [-1, 0, 1.5]) {
+    const result = planArtworkMigration(reviewedSource, { ...reviewedDecision, seriesRank })
+    assert.equal(result.status, "ready")
+    if (result.status === "ready") assert.equal(result.patch.seriesRank, seriesRank)
   }
 })
 

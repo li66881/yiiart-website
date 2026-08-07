@@ -23,23 +23,6 @@ export type SourceArtwork = {
   allowCheckout?: boolean | null
   shippingProfile?: string | null
   productMedia?: unknown[] | null
-  sizeProfile?: SizeProfileId | null
-  standardSizes?: Array<{
-    _key: string
-    _type: "standardSize"
-    label: string
-    widthCm: number
-    heightCm: number
-    priceCny: number
-  }> | null
-  frameOptions?: Array<{
-    _key: "rolled"
-    _type: "frameOption"
-    label: "Rolled canvas"
-    priceDeltaCny: 0
-  }> | null
-  seriesSlug?: string | null
-  seriesRank?: number | null
 }
 
 export type MigrationDecision = {
@@ -90,6 +73,14 @@ export type PlannedArtworkPatch = {
   seriesRank?: number
 }
 
+type ComparableSourceArtwork = SourceArtwork & {
+  sizeProfile?: SizeProfileId | null
+  standardSizes?: PlannedArtworkPatch["standardSizes"] | null
+  frameOptions?: PlannedArtworkPatch["frameOptions"] | null
+  seriesSlug?: string | null
+  seriesRank?: number | null
+}
+
 export type MigrationSkipReason =
   | "missing_review_decision"
   | "invalid_review_decision"
@@ -117,7 +108,9 @@ export function parsePhysicalDimensions(value: unknown): PhysicalDimensions | nu
   if (typeof value !== "string") return null
 
   const normalized = value.trim().toLowerCase()
-  if (!normalized.includes("cm") || /\b(?:px|pixels?)\b/.test(normalized) || /-\s*\d/.test(normalized)) return null
+  if (!normalized.includes("cm")
+    || /\b(?:px|pixels?)\b/.test(normalized)
+    || /[-\u2010-\u2015\u2212\uFE63\uFF0D]\s*\d/.test(normalized)) return null
 
   const match = normalized.match(/(^|[^-\d.])(\d+(?:\.\d+)?)\s*[x\u00d7\u8133]\s*(\d+(?:\.\d+)?)\s*cm\b/)
   if (!match) return null
@@ -145,7 +138,7 @@ function hasSameValues(values: readonly string[] | null | undefined, nextValues:
 }
 
 function hasSameStandardSizes(
-  values: SourceArtwork["standardSizes"],
+  values: ComparableSourceArtwork["standardSizes"],
   nextValues: PlannedArtworkPatch["standardSizes"],
 ) {
   return values?.length === nextValues.length && values.every((value, index) => {
@@ -160,7 +153,7 @@ function hasSameStandardSizes(
 }
 
 function hasSameFrameOptions(
-  values: SourceArtwork["frameOptions"],
+  values: ComparableSourceArtwork["frameOptions"],
   nextValues: PlannedArtworkPatch["frameOptions"],
 ) {
   return values?.length === nextValues.length && values.every((value, index) => {
@@ -194,7 +187,7 @@ function isMigrationDecision(value: unknown): value is MigrationDecision {
     && (decision.styleTags === undefined || isStringArray(decision.styleTags))
     && (decision.seriesSlug === undefined || typeof decision.seriesSlug === "string")
     && (decision.seriesRank === undefined || (typeof decision.seriesRank === "number"
-      && Number.isInteger(decision.seriesRank) && decision.seriesRank >= 1))
+      && Number.isFinite(decision.seriesRank)))
 }
 
 function addReviewedTags(
@@ -233,6 +226,7 @@ export function planArtworkMigration(
     && decision.enableRolledCheckout
     && source.shippingProfile === "Ships rolled"
     && directSizes.length > 0
+  const comparableSource = source as ComparableSourceArtwork
   const patch: Partial<PlannedArtworkPatch> = {}
 
   if (source.productionModel !== "hand_painted_to_order") patch.productionModel = "hand_painted_to_order"
@@ -240,7 +234,7 @@ export function planArtworkMigration(
   if (source.widthCm !== dimensions.widthCm) patch.widthCm = dimensions.widthCm
   if (source.heightCm !== dimensions.heightCm) patch.heightCm = dimensions.heightCm
   if (source.orientation !== orientation) patch.orientation = orientation
-  if (source.sizeProfile !== decision.sizeProfile) patch.sizeProfile = decision.sizeProfile
+  if (comparableSource.sizeProfile !== decision.sizeProfile) patch.sizeProfile = decision.sizeProfile
   const standardSizes: PlannedArtworkPatch["standardSizes"] = directSizes.map((size) => ({
     _key: `rolled-${size.widthCm}x${size.heightCm}`,
     _type: "standardSize",
@@ -249,14 +243,14 @@ export function planArtworkMigration(
     heightCm: size.heightCm,
     priceCny: calculateRolledPriceCny(size.widthCm, size.heightCm)!,
   }))
-  if (!hasSameStandardSizes(source.standardSizes, standardSizes)) patch.standardSizes = standardSizes
+  if (!hasSameStandardSizes(comparableSource.standardSizes, standardSizes)) patch.standardSizes = standardSizes
   const frameOptions: PlannedArtworkPatch["frameOptions"] = [{
     _key: "rolled",
     _type: "frameOption",
     label: "Rolled canvas",
     priceDeltaCny: 0,
   }]
-  if (!hasSameFrameOptions(source.frameOptions, frameOptions)) patch.frameOptions = frameOptions
+  if (!hasSameFrameOptions(comparableSource.frameOptions, frameOptions)) patch.frameOptions = frameOptions
 
   if (mayPublish && source.collectionType !== "new_collection") patch.collectionType = "new_collection"
   if (decision.rightsApproved && source.rightsStatus !== "approved") patch.rightsStatus = "approved"
@@ -268,8 +262,8 @@ export function planArtworkMigration(
   addReviewedTags(patch, "roomTypes", source.roomTypes, decision.roomTypes)
   addReviewedTags(patch, "colorFamilies", source.colorFamilies, decision.colorFamilies)
   addReviewedTags(patch, "styleTags", source.styleTags, decision.styleTags)
-  if (decision.seriesSlug !== undefined && source.seriesSlug !== decision.seriesSlug) patch.seriesSlug = decision.seriesSlug
-  if (decision.seriesRank !== undefined && source.seriesRank !== decision.seriesRank) patch.seriesRank = decision.seriesRank
+  if (decision.seriesSlug !== undefined && comparableSource.seriesSlug !== decision.seriesSlug) patch.seriesSlug = decision.seriesSlug
+  if (decision.seriesRank !== undefined && comparableSource.seriesRank !== decision.seriesRank) patch.seriesRank = decision.seriesRank
 
   return { status: "ready", artworkId: source._id, patch }
 }
