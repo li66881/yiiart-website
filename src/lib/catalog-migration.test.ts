@@ -28,6 +28,17 @@ test("parses physical centimeters without reading image dimensions", () => {
   assert.equal(parsePhysicalDimensions("0 x 120 cm"), null)
 })
 
+test("rejects negative physical dimensions instead of matching their absolute values", () => {
+  const result = planArtworkMigration(
+    { ...reviewedSource, dimensions: "-80 x 120 cm" },
+    reviewedDecision,
+  )
+
+  assert.equal(parsePhysicalDimensions("-80 x 120 cm"), null)
+  assert.equal(parsePhysicalDimensions("- 80 x 120 cm"), null)
+  assert.deepEqual(result, { status: "skipped", artworkId: "art-1", reason: "missing_physical_dimensions" })
+})
+
 test("plans made-to-order rolled options with deterministic keys", () => {
   const result = planArtworkMigration(reviewedSource, reviewedDecision)
 
@@ -78,6 +89,31 @@ test("skips missing or mismatched review decisions with explicit reasons", () =>
     artworkId: "art-1",
     reason: "slug_mismatch",
   })
+})
+
+test("skips runtime-incomplete or malformed review decisions", () => {
+  const invalidDecisions = [
+    { ...reviewedDecision, artworkId: undefined },
+    { ...reviewedDecision, artworkId: 1 },
+    { ...reviewedDecision, expectedSlug: undefined },
+    { ...reviewedDecision, expectedSlug: 1 },
+    { ...reviewedDecision, sizeProfile: undefined },
+    { ...reviewedDecision, sizeProfile: "unreviewed" },
+    { ...reviewedDecision, rightsApproved: undefined },
+    { ...reviewedDecision, rightsApproved: "true" },
+    { ...reviewedDecision, contentReady: undefined },
+    { ...reviewedDecision, contentReady: "true" },
+    { ...reviewedDecision, enableRolledCheckout: undefined },
+    { ...reviewedDecision, enableRolledCheckout: "false" },
+  ]
+
+  for (const decision of invalidDecisions) {
+    assert.deepEqual(planArtworkMigration(reviewedSource, decision as any), {
+      status: "skipped",
+      artworkId: "art-1",
+      reason: "invalid_review_decision",
+    })
+  }
 })
 
 test("uses reviewed centimeter dimensions and derives orientation from them", () => {
@@ -159,10 +195,25 @@ test("returns an idempotent patch without unchanged values", () => {
     rightsStatus: "approved",
     migrationStatus: "ready",
     allowCheckout: true,
+    sizeProfile: "three-four" as const,
+    standardSizes: [
+      { _key: "rolled-45x60", _type: "standardSize" as const, label: "45 x 60 cm", widthCm: 45, heightCm: 60, priceCny: 1300 },
+      { _key: "rolled-60x80", _type: "standardSize" as const, label: "60 x 80 cm", widthCm: 60, heightCm: 80, priceCny: 2300 },
+      { _key: "rolled-75x100", _type: "standardSize" as const, label: "75 x 100 cm", widthCm: 75, heightCm: 100, priceCny: 3600 },
+      { _key: "rolled-90x120", _type: "standardSize" as const, label: "90 x 120 cm", widthCm: 90, heightCm: 120, priceCny: 5180 },
+      { _key: "rolled-105x140", _type: "standardSize" as const, label: "105 x 140 cm", widthCm: 105, heightCm: 140, priceCny: 7060 },
+      { _key: "rolled-120x160", _type: "standardSize" as const, label: "120 x 160 cm", widthCm: 120, heightCm: 160, priceCny: 9220 },
+      { _key: "rolled-135x180", _type: "standardSize" as const, label: "135 x 180 cm", widthCm: 135, heightCm: 180, priceCny: 11660 },
+      { _key: "rolled-150x200", _type: "standardSize" as const, label: "150 x 200 cm", widthCm: 150, heightCm: 200, priceCny: 14400 },
+    ],
+    frameOptions: [{ _key: "rolled" as const, _type: "frameOption" as const, label: "Rolled canvas" as const, priceDeltaCny: 0 as const }],
+    seriesSlug: "ink-garden",
+    seriesRank: 2,
   }
 
-  const first = planArtworkMigration(source, reviewedDecision)
-  const second = planArtworkMigration(source, reviewedDecision)
+  const decision = { ...reviewedDecision, seriesSlug: "ink-garden", seriesRank: 2 }
+  const first = planArtworkMigration(source, decision)
+  const second = planArtworkMigration(source, decision)
 
   assert.deepEqual(first, second)
   assert.equal(first.status, "ready")
@@ -175,5 +226,10 @@ test("returns an idempotent patch without unchanged values", () => {
     assert.equal("widthCm" in first.patch, false)
     assert.equal("heightCm" in first.patch, false)
     assert.equal("orientation" in first.patch, false)
+    assert.equal("sizeProfile" in first.patch, false)
+    assert.equal("standardSizes" in first.patch, false)
+    assert.equal("frameOptions" in first.patch, false)
+    assert.equal("seriesSlug" in first.patch, false)
+    assert.equal("seriesRank" in first.patch, false)
   }
 })

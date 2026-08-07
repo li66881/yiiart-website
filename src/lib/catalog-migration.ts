@@ -23,6 +23,23 @@ export type SourceArtwork = {
   allowCheckout?: boolean | null
   shippingProfile?: string | null
   productMedia?: unknown[] | null
+  sizeProfile?: SizeProfileId | null
+  standardSizes?: Array<{
+    _key: string
+    _type: "standardSize"
+    label: string
+    widthCm: number
+    heightCm: number
+    priceCny: number
+  }> | null
+  frameOptions?: Array<{
+    _key: "rolled"
+    _type: "frameOption"
+    label: "Rolled canvas"
+    priceDeltaCny: 0
+  }> | null
+  seriesSlug?: string | null
+  seriesRank?: number | null
 }
 
 export type MigrationDecision = {
@@ -75,6 +92,7 @@ export type PlannedArtworkPatch = {
 
 export type MigrationSkipReason =
   | "missing_review_decision"
+  | "invalid_review_decision"
   | "artwork_id_mismatch"
   | "slug_mismatch"
   | "missing_physical_dimensions"
@@ -99,12 +117,12 @@ export function parsePhysicalDimensions(value: unknown): PhysicalDimensions | nu
   if (typeof value !== "string") return null
 
   const normalized = value.trim().toLowerCase()
-  if (!normalized.includes("cm") || /\b(?:px|pixels?)\b/.test(normalized)) return null
+  if (!normalized.includes("cm") || /\b(?:px|pixels?)\b/.test(normalized) || /-\s*\d/.test(normalized)) return null
 
-  const match = normalized.match(/(\d+(?:\.\d+)?)\s*[x\u00d7\u8133]\s*(\d+(?:\.\d+)?)\s*cm\b/)
+  const match = normalized.match(/(^|[^-\d.])(\d+(?:\.\d+)?)\s*[x\u00d7\u8133]\s*(\d+(?:\.\d+)?)\s*cm\b/)
   if (!match) return null
 
-  const dimensions = { widthCm: Number(match[1]), heightCm: Number(match[2]) }
+  const dimensions = { widthCm: Number(match[2]), heightCm: Number(match[3]) }
   return isPhysicalDimensions(dimensions) ? dimensions : null
 }
 
@@ -124,6 +142,59 @@ function orientationFor({ widthCm, heightCm }: PhysicalDimensions): PlannedArtwo
 
 function hasSameValues(values: readonly string[] | null | undefined, nextValues: readonly string[]) {
   return values?.length === nextValues.length && values.every((value, index) => value === nextValues[index])
+}
+
+function hasSameStandardSizes(
+  values: SourceArtwork["standardSizes"],
+  nextValues: PlannedArtworkPatch["standardSizes"],
+) {
+  return values?.length === nextValues.length && values.every((value, index) => {
+    const next = nextValues[index]
+    return value._key === next._key
+      && value._type === next._type
+      && value.label === next.label
+      && value.widthCm === next.widthCm
+      && value.heightCm === next.heightCm
+      && value.priceCny === next.priceCny
+  })
+}
+
+function hasSameFrameOptions(
+  values: SourceArtwork["frameOptions"],
+  nextValues: PlannedArtworkPatch["frameOptions"],
+) {
+  return values?.length === nextValues.length && values.every((value, index) => {
+    const next = nextValues[index]
+    return value._key === next._key
+      && value._type === next._type
+      && value.label === next.label
+      && value.priceDeltaCny === next.priceDeltaCny
+  })
+}
+
+function isStringArray(value: unknown): value is string[] {
+  return Array.isArray(value) && value.every((item) => typeof item === "string")
+}
+
+function isMigrationDecision(value: unknown): value is MigrationDecision {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return false
+
+  const decision = value as Record<string, unknown>
+  const sizeProfiles: SizeProfileId[] = ["square", "two-three", "three-four", "near-square", "panoramic"]
+  return typeof decision.artworkId === "string"
+    && typeof decision.expectedSlug === "string"
+    && sizeProfiles.includes(decision.sizeProfile as SizeProfileId)
+    && typeof decision.rightsApproved === "boolean"
+    && typeof decision.contentReady === "boolean"
+    && typeof decision.enableRolledCheckout === "boolean"
+    && (decision.physicalSize === undefined || isPhysicalDimensions(decision.physicalSize as PhysicalDimensions))
+    && (decision.category === undefined || typeof decision.category === "string")
+    && (decision.roomTypes === undefined || isStringArray(decision.roomTypes))
+    && (decision.colorFamilies === undefined || isStringArray(decision.colorFamilies))
+    && (decision.styleTags === undefined || isStringArray(decision.styleTags))
+    && (decision.seriesSlug === undefined || typeof decision.seriesSlug === "string")
+    && (decision.seriesRank === undefined || (typeof decision.seriesRank === "number"
+      && Number.isInteger(decision.seriesRank) && decision.seriesRank >= 1))
 }
 
 function addReviewedTags(
@@ -146,6 +217,7 @@ export function planArtworkMigration(
   decision: MigrationDecision | undefined,
 ): PlannedArtworkMigration {
   if (!decision) return { status: "skipped", artworkId: source._id, reason: "missing_review_decision" }
+  if (!isMigrationDecision(decision)) return { status: "skipped", artworkId: source._id, reason: "invalid_review_decision" }
   if (decision.artworkId !== source._id) return { status: "skipped", artworkId: source._id, reason: "artwork_id_mismatch" }
   if (decision.expectedSlug !== source.slug?.current) return { status: "skipped", artworkId: source._id, reason: "slug_mismatch" }
 
@@ -168,8 +240,8 @@ export function planArtworkMigration(
   if (source.widthCm !== dimensions.widthCm) patch.widthCm = dimensions.widthCm
   if (source.heightCm !== dimensions.heightCm) patch.heightCm = dimensions.heightCm
   if (source.orientation !== orientation) patch.orientation = orientation
-  patch.sizeProfile = decision.sizeProfile
-  patch.standardSizes = directSizes.map((size) => ({
+  if (source.sizeProfile !== decision.sizeProfile) patch.sizeProfile = decision.sizeProfile
+  const standardSizes: PlannedArtworkPatch["standardSizes"] = directSizes.map((size) => ({
     _key: `rolled-${size.widthCm}x${size.heightCm}`,
     _type: "standardSize",
     label: size.label,
@@ -177,12 +249,14 @@ export function planArtworkMigration(
     heightCm: size.heightCm,
     priceCny: calculateRolledPriceCny(size.widthCm, size.heightCm)!,
   }))
-  patch.frameOptions = [{
+  if (!hasSameStandardSizes(source.standardSizes, standardSizes)) patch.standardSizes = standardSizes
+  const frameOptions: PlannedArtworkPatch["frameOptions"] = [{
     _key: "rolled",
     _type: "frameOption",
     label: "Rolled canvas",
     priceDeltaCny: 0,
   }]
+  if (!hasSameFrameOptions(source.frameOptions, frameOptions)) patch.frameOptions = frameOptions
 
   if (mayPublish && source.collectionType !== "new_collection") patch.collectionType = "new_collection"
   if (decision.rightsApproved && source.rightsStatus !== "approved") patch.rightsStatus = "approved"
@@ -194,8 +268,8 @@ export function planArtworkMigration(
   addReviewedTags(patch, "roomTypes", source.roomTypes, decision.roomTypes)
   addReviewedTags(patch, "colorFamilies", source.colorFamilies, decision.colorFamilies)
   addReviewedTags(patch, "styleTags", source.styleTags, decision.styleTags)
-  if (decision.seriesSlug !== undefined) patch.seriesSlug = decision.seriesSlug
-  if (decision.seriesRank !== undefined) patch.seriesRank = decision.seriesRank
+  if (decision.seriesSlug !== undefined && source.seriesSlug !== decision.seriesSlug) patch.seriesSlug = decision.seriesSlug
+  if (decision.seriesRank !== undefined && source.seriesRank !== decision.seriesRank) patch.seriesRank = decision.seriesRank
 
   return { status: "ready", artworkId: source._id, patch }
 }
