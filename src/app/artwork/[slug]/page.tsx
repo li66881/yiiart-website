@@ -9,7 +9,6 @@ import ProductAccordion from "@/components/storefront/ProductAccordion"
 import ProductRail from "@/components/storefront/ProductRail"
 import ArtistSpotlight from "@/components/storefront/ArtistSpotlight"
 import storefrontStyles from "@/components/storefront/storefront.module.css"
-import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
@@ -607,9 +606,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 ]}
               />
 
-              <div className="mt-6">
-                <SocialShare title={title} image={imageUrl} />
-              </div>
               <ProductDisclosure productionModel={storefrontProduct.productionModel} />
             </div>
           </div>

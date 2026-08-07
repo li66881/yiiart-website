@@ -28,10 +28,10 @@ export default function ChatWidget() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const defaultUrl = useMemo(() => getWhatsAppUrl(), [])
-  // Keep clear of the sticky ATC bar on PDP (~72–90px tall).
+  // On PDP, raise only on mobile where sticky ATC may appear.
   const onArtworkPage = shouldShowFloatingChatOnMobile(pathname)
   const anchorPosition = onArtworkPage
-    ? "bottom-28 right-4 md:bottom-32 md:right-6"
+    ? "bottom-28 right-4 md:bottom-8 md:right-6"
     : "bottom-8 right-4 md:bottom-10 md:right-6"
   const mobileVisibility = onArtworkPage ? "flex" : "hidden md:flex"
   const mobilePanelVisibility = onArtworkPage ? "block" : "hidden md:block"

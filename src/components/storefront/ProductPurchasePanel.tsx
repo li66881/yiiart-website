@@ -27,10 +27,26 @@ type Props = {
 }
 
 const TRUST_ICONS = [
-  { title: "Ship when you're happy", icon: "◎" },
-  { title: "Free shipping on all orders", icon: "▣" },
-  { title: "30-day easy returns", icon: "↺" },
-  { title: "Safe payment options", icon: "✦" },
+  {
+    title: "Ship after you are satisfied",
+    detail: "Each piece is made just for you",
+    icon: "◎",
+  },
+  {
+    title: "Free shipping on all orders",
+    detail: "Insured express worldwide",
+    icon: "▣",
+  },
+  {
+    title: "30-day easy returns",
+    detail: "Simple exchanges if size or tone is off",
+    icon: "↺",
+  },
+  {
+    title: "Safe payment options",
+    detail: "Secure checkout with buyer protection",
+    icon: "✦",
+  },
 ] as const
 
 function socialProofForProduct(productId: string) {
@@ -70,6 +86,32 @@ function finishSectionLabel(label: string) {
   const key = finishIconKey("", label)
   if (key === "rolled" || key === "frameless") return "Finish"
   return "Floating Frame"
+}
+
+function HeartIcon({ filled }: { filled: boolean }) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
+      <path
+        d="M12 20.4s-6.7-4.2-9.1-8.1C1.1 9.5 2.2 6.2 5.4 5.3c1.8-.5 3.5.2 4.6 1.6 1.1-1.4 2.8-2.1 4.6-1.6 3.2.9 4.3 4.2 2.5 7 0 0-2.4 3.9-5.1 6.1Z"
+        fill={filled ? "#c62828" : "none"}
+        stroke={filled ? "#c62828" : "currentColor"}
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function compactSizeChipLabel(size: { label: string; widthCm?: number; heightCm?: number }) {
+  if (size.widthCm && size.heightCm) {
+    const widthIn = Math.round((size.widthCm / 2.54) * 10) / 10
+    const heightIn = Math.round((size.heightCm / 2.54) * 10) / 10
+    const fmt = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
+    return `${fmt(heightIn)}" × ${fmt(widthIn)}"`
+  }
+  const match = size.label.match(/^([\d.]+)"H\s*x\s*([\d.]+)"W/i)
+  if (match) return `${match[1]}" × ${match[2]}"`
+  return size.label
 }
 
 export default function ProductPurchasePanel({
@@ -137,18 +179,33 @@ export default function ProductPurchasePanel({
       return
     }
 
+    // Desktop buy box is already sticky; bottom bar is mobile-only.
+    const media = window.matchMedia("(min-width: 1024px)")
+    const syncDesktop = () => {
+      if (media.matches) setStickyVisible(false)
+    }
+    syncDesktop()
+    media.addEventListener("change", syncDesktop)
+
     const observer = new IntersectionObserver(
       ([entry]) => {
+        if (media.matches) {
+          setStickyVisible(false)
+          return
+        }
         setStickyVisible(!entry.isIntersecting)
       },
       {
         root: null,
-        threshold: 0,
-        rootMargin: "-72px 0px 0px 0px",
+        threshold: 0.15,
+        rootMargin: "0px 0px -8% 0px",
       },
     )
     observer.observe(target)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      media.removeEventListener("change", syncDesktop)
+    }
   }, [directCheckoutAvailable, selection?.size.id, selection?.finish.id])
 
   const addSelection = () => {
@@ -227,7 +284,7 @@ export default function ProductPurchasePanel({
       <div className={styles.kickerRow}>
         <p className={styles.collectionKicker}>{styleKicker}</p>
         <button type="button" onClick={toggleSaved} className={styles.saveButton} aria-pressed={saved}>
-          {saved ? "♥" : "♡"}
+          <HeartIcon filled={saved} />
         </button>
       </div>
 
@@ -310,7 +367,12 @@ export default function ProductPurchasePanel({
                     checked={active}
                     onChange={() => setSizeId(size.id)}
                   />
-                  <span>{size.label}</span>
+                  <span className={styles.sizeChipPrimary}>{compactSizeChipLabel(size)}</span>
+                  {size.widthCm && size.heightCm ? (
+                    <span className={styles.sizeChipSecondary}>
+                      {Math.round(size.heightCm)} × {Math.round(size.widthCm)} cm
+                    </span>
+                  ) : null}
                 </label>
               )
             })}
@@ -393,7 +455,13 @@ export default function ProductPurchasePanel({
             </div>
           </div>
           <button className={styles.primaryAction} type="button" onClick={addSelection}>
-            ADD TO CART
+            Add To Cart
+            {linePriceCny > 0 ? (
+              <span className={styles.primaryActionPrice}>
+                {" — "}
+                <PriceText amountCny={linePriceCny} />
+              </span>
+            ) : null}
           </button>
         </div>
       ) : (
@@ -405,24 +473,27 @@ export default function ProductPurchasePanel({
       <div className={styles.secondaryActions}>
         {directCheckoutAvailable && selection ? (
           <button className={styles.buyNow} type="button" onClick={buyNow}>
-            BUY IT NOW
+            Buy It Now
           </button>
         ) : null}
         <a className={styles.whatsappLink} href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Chat on WhatsApp
+          Ask about this piece
         </a>
         <Link className={styles.sizeHelpLink} href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
           Need help with size?
         </Link>
       </div>
 
-      <ul className={styles.trustIconRow}>
+      <ul className={styles.trustList}>
         {TRUST_ICONS.map((item) => (
           <li key={item.title}>
             <span className={styles.trustIconGlyph} aria-hidden>
               {item.icon}
             </span>
-            <span>{item.title}</span>
+            <span className={styles.trustCopy}>
+              <strong>{item.title}</strong>
+              <span>{item.detail}</span>
+            </span>
           </li>
         ))}
       </ul>
@@ -433,11 +504,18 @@ export default function ProductPurchasePanel({
           Copy link
         </button>
         <a
-          href={`https://wa.me/?text=${encodeURIComponent(`${product.title} ${shareUrl}`)}`}
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
           target="_blank"
           rel="noopener noreferrer"
         >
-          WhatsApp
+          Facebook
+        </a>
+        <a
+          href={`https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(image?.src || "")}&description=${encodeURIComponent(product.title)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Pinterest
         </a>
         <a href={`mailto:?subject=${encodeURIComponent(product.title)}&body=${encodeURIComponent(shareUrl)}`}>
           Email
@@ -463,7 +541,7 @@ export default function ProductPurchasePanel({
             </span>
           </div>
           <button type="button" onClick={addSelection}>
-            ADD TO CART
+            Add To Cart
           </button>
         </div>
       ) : null}
