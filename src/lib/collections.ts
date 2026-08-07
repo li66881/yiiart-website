@@ -5,6 +5,7 @@ export type MarketingCollection = {
   description: string
   intro: string
   categories?: string[]
+  seriesSlug?: string
   keywords: string[]
   rooms: string[]
   buyerGuide: string[]
