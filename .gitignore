@@ -31,5 +31,6 @@ Thumbs.db
 # Sanity
 .sanity/
 .superpowers/
+.worktrees/
 
 .vercel
