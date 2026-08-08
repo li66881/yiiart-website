@@ -9,7 +9,7 @@ import { useCart } from "@/context/CartContext"
 import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
-import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/collection-catalog"
+import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
 import { headerNavigationGroups } from "@/lib/storefront/editorial-presentation"
 
 const primaryNav = [

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict"
 import test from "node:test"
 import {
-  filterCatalogLinks,
   matchesMarketingCollection,
   visibleCollectionSlugs,
-} from "./collection-catalog"
+} from "./catalog-rules"
+import { filterCatalogLinks } from "./catalog-navigation"
 
 test("requires four public products for primary navigation", () => {
   assert.deepEqual(visibleCollectionSlugs(new Map([

@@ -1,7 +1,9 @@
-import HeaderClient from "@/components/HeaderClient"
-import { getCatalogNavigationState } from "@/lib/storefront/collection-catalog"
+"use client"
 
-export default async function Header() {
-  const navigationState = await getCatalogNavigationState()
+import HeaderClient from "@/components/HeaderClient"
+import { useCatalogNavigationState } from "@/components/CatalogNavigationProvider"
+
+export default function Header() {
+  const navigationState = useCatalogNavigationState()
   return <HeaderClient navigationState={navigationState} />
 }

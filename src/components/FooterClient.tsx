@@ -9,7 +9,7 @@ import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
 import { siteAssetUrl } from "@/lib/assets"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
-import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/collection-catalog"
+import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
 
 type FooterClientProps = {
   navigationState: CatalogNavigationState

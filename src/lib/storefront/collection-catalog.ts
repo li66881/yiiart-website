@@ -1,10 +1,15 @@
+import "server-only"
 import { unstable_cache } from "next/cache"
-import { getMarketingCollection, marketingCollections, type MarketingCollection } from "@/lib/collections"
+import { getMarketingCollection, marketingCollections } from "@/lib/collections"
 import { normalizeCategory } from "@/lib/artwork-display"
-import { inferArtworkSize } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
-import { parsePhysicalDimensions, readPhysicalDimensions } from "@/lib/physical-dimensions"
 import { client } from "@/lib/sanity"
+import { matchesMarketingCollection, visibleCollectionSlugs } from "./catalog-rules"
+import type { CatalogNavigationState } from "./catalog-navigation"
+
+export { filterCatalogLinks } from "./catalog-navigation"
+export type { CatalogNavigationState } from "./catalog-navigation"
+export { matchesMarketingCollection, visibleCollectionSlugs } from "./catalog-rules"
 
 export type CollectionArtwork = {
   _id?: string
@@ -16,13 +21,6 @@ export type CollectionArtwork = {
   orientation?: string | null
   seriesSlug?: string | null
 }
-
-export type CatalogNavigationState = {
-  visibleCollectionSlugs: string[]
-  visibleCategories: string[]
-}
-
-type CatalogLink = { href: string }
 
 const publicCollectionInventoryQuery = `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{
   _id,
@@ -40,42 +38,6 @@ const fetchPublicCollectionInventory = unstable_cache(
   ["public-collection-inventory-v1"],
   { revalidate: 600 },
 )
-
-export function matchesMarketingCollection(artwork: CollectionArtwork, collection: MarketingCollection) {
-  if (collection.seriesSlug) return artwork.seriesSlug === collection.seriesSlug
-  if (collection.categories?.length) return collection.categories.includes(normalizeCategory(artwork.category))
-  if (collection.slug === "large-canvas-art") {
-    const dimensions = readPhysicalDimensions(artwork.widthCm, artwork.heightCm)
-      || parsePhysicalDimensions(artwork.dimensions)
-    if (!dimensions) return false
-
-    const size = inferArtworkSize(`${dimensions.widthCm} x ${dimensions.heightCm} cm`)
-    return size === "Large" || size === "Oversized"
-  }
-  return false
-}
-
-export function visibleCollectionSlugs(counts: ReadonlyMap<string, number>, minimum: number) {
-  return Array.from(counts, ([slug, count]) => ({ slug, count }))
-    .filter(({ count }) => count >= minimum)
-    .map(({ slug }) => slug)
-}
-
-export function filterCatalogLinks<Link extends CatalogLink>(links: readonly Link[], state: CatalogNavigationState) {
-  const visibleCollectionSlugs = new Set(state.visibleCollectionSlugs)
-  const visibleCategories = new Set(state.visibleCategories)
-
-  return links.filter((link) => {
-    const url = new URL(link.href, "https://yiiart.example")
-    const collectionSlug = url.pathname.match(/^\/collections\/([^/]+)$/)?.[1]
-
-    if (collectionSlug) return visibleCollectionSlugs.has(collectionSlug)
-    if (url.pathname !== "/artworks") return true
-
-    const category = url.searchParams.get("category")
-    return !category || visibleCategories.has(normalizeCategory(category))
-  })
-}
 
 export async function getCatalogNavigationState(): Promise<CatalogNavigationState> {
   try {

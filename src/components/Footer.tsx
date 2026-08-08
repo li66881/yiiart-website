@@ -1,7 +1,9 @@
-import FooterClient from "@/components/FooterClient"
-import { getCatalogNavigationState } from "@/lib/storefront/collection-catalog"
+"use client"
 
-export default async function Footer() {
-  const navigationState = await getCatalogNavigationState()
+import FooterClient from "@/components/FooterClient"
+import { useCatalogNavigationState } from "@/components/CatalogNavigationProvider"
+
+export default function Footer() {
+  const navigationState = useCatalogNavigationState()
   return <FooterClient navigationState={navigationState} />
 }
