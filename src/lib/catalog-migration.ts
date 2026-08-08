@@ -55,6 +55,7 @@ export type PlannedArtworkPatch = {
   rightsStatus?: "approved"
   migrationStatus?: "ready"
   allowCheckout: boolean
+  shippingProfile: "Ships rolled"
   widthCm: number
   heightCm: number
   orientation: "Portrait" | "Landscape" | "Square"
@@ -203,13 +204,13 @@ export function planArtworkMigration(
   const mayPublish = decision.rightsApproved && decision.contentReady
   const mayCheckout = mayPublish
     && decision.enableRolledCheckout
-    && source.shippingProfile === "Ships rolled"
     && directSizes.length > 0
   const comparableSource = source as ComparableSourceArtwork
   const patch: Partial<PlannedArtworkPatch> = {}
 
   if (source.productionModel !== "hand_painted_to_order") patch.productionModel = "hand_painted_to_order"
   if (source.allowCheckout !== mayCheckout) patch.allowCheckout = mayCheckout
+  if (mayCheckout && source.shippingProfile !== "Ships rolled") patch.shippingProfile = "Ships rolled"
   if (source.widthCm !== dimensions.widthCm) patch.widthCm = dimensions.widthCm
   if (source.heightCm !== dimensions.heightCm) patch.heightCm = dimensions.heightCm
   if (source.orientation !== orientation) patch.orientation = orientation

@@ -92,6 +92,19 @@ test("plans made-to-order rolled options with deterministic keys", () => {
   assert.ok(result.patch.standardSizes?.every((size) => size._key === `rolled-${size.widthCm}x${size.heightCm}`))
 })
 
+test("enables reviewed rolled checkout when the legacy shipping profile is empty", () => {
+  const result = planArtworkMigration(
+    { ...reviewedSource, shippingProfile: null },
+    reviewedDecision,
+  )
+
+  assert.equal(result.status, "ready")
+  if (result.status !== "ready") return
+  assert.equal(result.patch.allowCheckout, true)
+  assert.equal(result.patch.shippingProfile, "Ships rolled")
+  assert.ok(result.patch.standardSizes?.every((size) => Math.max(size.widthCm, size.heightCm) <= 210))
+})
+
 test("keeps checkout disabled when commercial approval is absent", () => {
   const result = planArtworkMigration(reviewedSource, { ...reviewedDecision, enableRolledCheckout: false })
   assert.equal(result.status, "ready")
@@ -241,6 +254,7 @@ test("returns an idempotent patch without unchanged values", () => {
     rightsStatus: "approved",
     migrationStatus: "ready",
     allowCheckout: true,
+    shippingProfile: "Ships rolled",
     sizeProfile: "three-four" as const,
     standardSizes: [
       { _key: "rolled-45x60", _type: "standardSize" as const, label: "45 x 60 cm", widthCm: 45, heightCm: 60, priceCny: 1300 },
@@ -269,6 +283,7 @@ test("returns an idempotent patch without unchanged values", () => {
     assert.equal("rightsStatus" in first.patch, false)
     assert.equal("migrationStatus" in first.patch, false)
     assert.equal("allowCheckout" in first.patch, false)
+    assert.equal("shippingProfile" in first.patch, false)
     assert.equal("widthCm" in first.patch, false)
     assert.equal("heightCm" in first.patch, false)
     assert.equal("orientation" in first.patch, false)
