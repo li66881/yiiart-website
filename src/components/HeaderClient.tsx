@@ -9,8 +9,8 @@ import { useCart } from "@/context/CartContext"
 import StorefrontControls from "@/components/StorefrontControls"
 import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
-import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
-import { headerNavigationGroups } from "@/lib/storefront/editorial-presentation"
+import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
+import { getHeaderNavigationModel } from "@/lib/storefront/catalog-presentation"
 
 const primaryNav = [
   { href: "/artworks", label: "Shop Art" },
@@ -33,8 +33,7 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
-  const visiblePrimaryNav = filterCatalogLinks(primaryNav, navigationState)
-  const navigationGroups = headerNavigationGroups(visiblePrimaryNav)
+  const navigationGroups = getHeaderNavigationModel(primaryNav, navigationState)
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
   const openSearch = () => {
@@ -201,7 +200,7 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
           </div>
 
           <nav className="grid gap-1 text-base" aria-label="Mobile navigation">
-            {visiblePrimaryNav.map((item) => (
+            {navigationGroups.mobile.map((item) => (
               <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
                 {item.label}
               </Link>

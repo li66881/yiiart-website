@@ -9,7 +9,8 @@ import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
 import { siteAssetUrl } from "@/lib/assets"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
-import { filterCatalogLinks, type CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
+import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
+import { getFooterNavigationModel } from "@/lib/storefront/catalog-presentation"
 
 type FooterClientProps = {
   navigationState: CatalogNavigationState
@@ -28,6 +29,20 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
     { title: t("footer.texturedWallArt"), href: "/collections/textured-wall-art" },
     { title: t("common.artists"), href: "/artists" },
   ]
+  const footerNavigation = getFooterNavigationModel(
+    shopLinks,
+    [
+      { title: t("footer.contactUs"), href: "/contact" },
+      { title: t("footer.reviews"), href: "/reviews" },
+      { title: t("footer.artInRealHomes"), href: "/art-in-real-homes" },
+      { title: "Wall Art Guide", href: "/guides/home-wall-art-pairing-guide" },
+      { title: t("footer.faq"), href: "/faq" },
+      { title: "Shipping & Returns", href: "/shipping-returns" },
+      { title: t("footer.shippingInfo"), href: "/shipping" },
+      { title: t("footer.returns"), href: "/returns" },
+    ],
+    navigationState,
+  )
 
   return (
     <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
@@ -60,20 +75,15 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
 
           <div className="grid gap-8 sm:grid-cols-3">
             <FooterColumn title={t("footer.shop")}>
-              {filterCatalogLinks(shopLinks, navigationState).map((item) => (
+              {footerNavigation.shop.map((item) => (
                 <FooterLink key={item.href} href={item.href}>{item.title}</FooterLink>
               ))}
             </FooterColumn>
 
             <FooterColumn title={t("footer.support")}>
-              <FooterLink href="/contact">{t("footer.contactUs")}</FooterLink>
-              <FooterLink href="/reviews">{t("footer.reviews")}</FooterLink>
-              <FooterLink href="/art-in-real-homes">{t("footer.artInRealHomes")}</FooterLink>
-              <FooterLink href="/guides/home-wall-art-pairing-guide">Wall Art Guide</FooterLink>
-              <FooterLink href="/faq">{t("footer.faq")}</FooterLink>
-              <FooterLink href="/shipping-returns">Shipping & Returns</FooterLink>
-              <FooterLink href="/shipping">{t("footer.shippingInfo")}</FooterLink>
-              <FooterLink href="/returns">{t("footer.returns")}</FooterLink>
+              {footerNavigation.support.map((item) => (
+                <FooterLink key={item.href} href={item.href}>{item.title}</FooterLink>
+              ))}
             </FooterColumn>
 
             <FooterColumn title={t("footer.company")}>

@@ -1,11 +1,11 @@
 import "server-only"
 import { unstable_cache } from "next/cache"
-import { getMarketingCollection, marketingCollections } from "@/lib/collections"
-import { normalizeCategory } from "@/lib/artwork-display"
+import { getMarketingCollection } from "@/lib/collections"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { client } from "@/lib/sanity"
 import { matchesMarketingCollection, visibleCollectionSlugs } from "./catalog-rules"
 import type { CatalogNavigationState } from "./catalog-navigation"
+import { getCatalogNavigationStateFromLoader } from "./catalog-navigation-loader"
 
 export { filterCatalogLinks } from "./catalog-navigation"
 export type { CatalogNavigationState } from "./catalog-navigation"
@@ -40,31 +40,7 @@ const fetchPublicCollectionInventory = unstable_cache(
 )
 
 export async function getCatalogNavigationState(): Promise<CatalogNavigationState> {
-  try {
-    const artworks = await fetchPublicCollectionInventory()
-    if (!Array.isArray(artworks)) return emptyCatalogNavigationState()
-
-    const collectionCounts = new Map(marketingCollections.map((collection) => [collection.slug, 0]))
-    const categoryCounts = new Map<string, number>()
-
-    for (const artwork of artworks) {
-      const category = normalizeCategory(artwork.category)
-      if (category) categoryCounts.set(category, (categoryCounts.get(category) || 0) + 1)
-
-      for (const collection of marketingCollections) {
-        if (matchesMarketingCollection(artwork, collection)) {
-          collectionCounts.set(collection.slug, (collectionCounts.get(collection.slug) || 0) + 1)
-        }
-      }
-    }
-
-    return {
-      visibleCollectionSlugs: visibleCollectionSlugs(collectionCounts, 4),
-      visibleCategories: visibleCollectionSlugs(categoryCounts, 4),
-    }
-  } catch {
-    return emptyCatalogNavigationState()
-  }
+  return getCatalogNavigationStateFromLoader(fetchPublicCollectionInventory)
 }
 
 export async function getCollectionArtworks(slug: string): Promise<CollectionArtwork[]> {
@@ -83,8 +59,4 @@ export async function getCollectionArtworks(slug: string): Promise<CollectionArt
   } catch {
     return []
   }
-}
-
-function emptyCatalogNavigationState(): CatalogNavigationState {
-  return { visibleCollectionSlugs: [], visibleCategories: [] }
 }
