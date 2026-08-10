@@ -28,6 +28,8 @@ import {
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
+import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
+import { isArtworkCheckoutAvailable } from "@/lib/checkout-availability"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
@@ -240,10 +242,14 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       kind: index === 0 ? "artwork" as const : "detail" as const,
     })),
   )
+  const detailCopy = buildProductDetailCopy({
+    creationWindow: storefrontProduct.creationWindow,
+    shippingProfile,
+  })
   const priceCny = storefrontProduct.sizes[0]?.priceCny || Number(artwork.price || 0)
   const currency = getStoreCurrency()
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
-  const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkDirectCheckoutAvailable(artwork)
+  const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkCheckoutAvailable(artwork)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const reviews = await getArtworkReviews(artwork._id)
   const reviewStats = getReviewStats(reviews)
@@ -435,7 +441,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 <Detail label={<TranslatedText k="product.detail.certificate" />} value={<TranslatedText k="product.detail.certificateValue" />} />
                 <Detail
                   label={<TranslatedText k="product.detail.dispatch" />}
-                  value={shippingProfile || <TranslatedText k="product.detail.dispatchFallback" />}
+                  value={detailCopy.dispatch}
                 />
               </div>
 
@@ -488,7 +494,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               medium={medium}
               surfaceFinish={surfaceFinish}
               framingNotes={framingNotes}
-              shippingProfile={shippingProfile}
+              processingTime={detailCopy.processingTime}
             />
           </section>
 
@@ -595,7 +601,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <InfoBlock title="Processing time" text={shippingProfile || "Production timing is confirmed before the order is finalized."} />
+              <InfoBlock title="Processing time" text={detailCopy.processingTime} />
               <InfoBlock title="Shipping time" text="Tracking information is shared when the selected carrier service provides it." />
               <InfoBlock title="Returns and damage" text="Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process." />
             </div>
@@ -673,12 +679,12 @@ function ArtworkDetails({
   medium,
   surfaceFinish,
   framingNotes,
-  shippingProfile,
+  processingTime,
 }: {
   medium?: string
   surfaceFinish?: string
   framingNotes?: string
-  shippingProfile?: string
+  processingTime: string
 }) {
   const rows = [
     medium ? { label: "Material", value: inferMaterial(medium) } : null,
@@ -686,7 +692,7 @@ function ArtworkDetails({
     medium && /canvas/i.test(medium) ? { label: "Canvas type", value: "Artist canvas" } : null,
     { label: "Handmade note", value: "Physical hand-painted artwork, not a printed reproduction." },
     framingNotes ? { label: "Frame option", value: framingNotes } : null,
-    { label: "Processing time", value: shippingProfile || "Final checks, documentation, and packing are confirmed before dispatch." },
+    { label: "Processing time", value: processingTime },
     { label: "Shipping time", value: "Delivery timing and format are confirmed by destination, size, finish, and carrier route." },
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
@@ -796,20 +802,6 @@ function buildArtworkImageAlt({
   return [`${title} by ${artistName}`, artType, scale + roomFit]
     .filter(Boolean)
     .join(", ")
-}
-
-function isArtworkDirectCheckoutAvailable(artwork: {
-  availability?: "available" | "reserved" | "sold" | string
-  allowCheckout?: boolean
-  reservedUntil?: string | null
-}) {
-  if (artwork.allowCheckout === false) return false
-  if (artwork.availability === "sold") return false
-  if (artwork.availability === "reserved") {
-    if (!artwork.reservedUntil) return false
-    return new Date(artwork.reservedUntil).getTime() < Date.now()
-  }
-  return true
 }
 
 function getSchemaAvailability(

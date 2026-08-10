@@ -39,3 +39,17 @@ test("keeps legacy image galleries working when audited media is absent", () => 
   assert.equal(media[1].role, "original")
   assert.equal(media[1].alt, "Blue handmade painting, view 2")
 })
+
+test("keeps a dining-room scene distinct from a generic additional view", () => {
+  const media = getApprovedProductMedia({
+    productMedia: [{
+      _key: "dining",
+      mediaType: "image",
+      role: "dining_room",
+      url: "https://assets.yiiart.com/dining.webp",
+      approvedForStorefront: true,
+    }],
+  })
+
+  assert.equal(media[0].role, "dining_room")
+})

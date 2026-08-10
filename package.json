@@ -12,6 +12,7 @@
     "copy:check": "node scripts/check-public-copy.mjs",
     "media:audit": "node scripts/audit-product-media.mjs",
     "media:import": "tsx scripts/import-product-media.mts",
+    "media:publish-generated": "tsx scripts/publish-generated-product-batch.mts",
     "r2:upload-public": "node scripts/upload-public-assets-to-r2.mjs",
     "r2:migrate-sanity-images": "node scripts/migrate-sanity-images-to-r2.mjs",
     "media:upload-r2": "npm run r2:upload-public"
