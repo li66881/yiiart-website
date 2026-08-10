@@ -5,6 +5,7 @@ const mediaRoles = [
   { title: 'Living room scene', value: 'living_room' },
   { title: 'Angle / edge view', value: 'angle' },
   { title: 'Bedroom scene', value: 'bedroom' },
+  { title: 'Dining room scene', value: 'dining_room' },
   { title: 'Studio process', value: 'process' },
   { title: 'Scale guide', value: 'scale' },
   { title: 'Other', value: 'other' },

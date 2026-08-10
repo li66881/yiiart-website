@@ -2,6 +2,7 @@ import { client } from "@/lib/sanity"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { pickEnglish } from "@/lib/artwork-display"
 import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
+import { isArtworkCheckoutAvailable } from "@/lib/checkout-availability"
 import {
   CheckoutValidationError,
   resolveCheckoutSelection,
@@ -46,6 +47,7 @@ type ArtworkForCheckout = CheckoutSelectionArtwork & {
   availability?: "available" | "reserved" | "sold"
   allowCheckout?: boolean
   reservedUntil?: string
+  shippingProfile?: string
   cloudflareImages?: unknown[]
   images?: unknown[]
 }
@@ -71,6 +73,7 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       availability,
       allowCheckout,
       reservedUntil,
+      shippingProfile,
       cloudflareImages,
       productMedia,
       images
@@ -87,7 +90,7 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
       throw new CheckoutValidationError("One or more artworks are no longer available.")
     }
 
-    if (!isArtworkAvailableForCheckout(artwork)) {
+    if (!isArtworkCheckoutAvailable(artwork)) {
       throw new CheckoutValidationError(`${pickEnglish(artwork.title, "This artwork")} is not available for checkout.`)
     }
 
@@ -111,7 +114,6 @@ export async function getCheckoutLineItems(items: unknown, checkoutCurrency?: st
     }
   })
 }
-
 export function normalizeCurrency(value: string | undefined, fallback: string) {
   return (value || fallback).trim().toLowerCase()
 }
@@ -142,14 +144,4 @@ function normalizeCheckoutItems(items: unknown): CheckoutItemInput[] {
 
     return { id, quantity, sizeId, finishId }
   })
-}
-
-function isArtworkAvailableForCheckout(artwork: ArtworkForCheckout) {
-  if (artwork.allowCheckout === false) return false
-  if (artwork.availability === "sold") return false
-  if (artwork.availability === "reserved") {
-    if (!artwork.reservedUntil) return false
-    return new Date(artwork.reservedUntil).getTime() < Date.now()
-  }
-  return true
 }

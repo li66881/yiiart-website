@@ -7,6 +7,7 @@ export type ProductMediaRole =
   | "living_room"
   | "angle"
   | "bedroom"
+  | "dining_room"
   | "process"
   | "scale"
   | "other"
@@ -44,6 +45,7 @@ const roleOrder: Record<ProductMediaRole, number> = {
   living_room: 50,
   angle: 60,
   bedroom: 70,
+  dining_room: 75,
   scale: 80,
   other: 90,
 }
@@ -55,6 +57,7 @@ export const productMediaRoleLabels: Record<ProductMediaRole, string> = {
   living_room: "Living room view",
   angle: "Angle view",
   bedroom: "Bedroom view",
+  dining_room: "Dining room view",
   process: "Studio video",
   scale: "Scale reference",
   other: "Additional view",

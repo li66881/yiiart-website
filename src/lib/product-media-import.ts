@@ -188,6 +188,7 @@ const roleOrder: Record<string, number> = {
   living_room: 4,
   angle: 5,
   bedroom: 6,
+  dining_room: 7,
   scale: 7,
   other: 8,
 }
@@ -200,6 +201,7 @@ const roleLabels: Record<string, string> = {
   living_room: "living room view",
   angle: "angle view",
   bedroom: "bedroom view",
+  dining_room: "dining room view",
   scale: "scale view",
   other: "additional view",
 }
