@@ -27,3 +27,17 @@ test("public copy validation rejects stale optimized-branch claims", async () =>
   assert.match(copyCheck, /free replacement or a full refund/)
   assert.match(copyCheck, /arrive 5-10 business days later/)
 })
+
+test("optimized storefront restores the global shell and homepage composition", async () => {
+  const headerClient = await readFile("src/components/HeaderClient.tsx", "utf8")
+  const hero = await readFile("src/components/HeroSection.tsx", "utf8")
+  const editorialHome = await readFile("src/components/home/EditorialHome.tsx", "utf8")
+
+  assert.match(headerClient, /optimized-storefront-header/)
+  assert.match(hero, /type HeroSlide/)
+  assert.match(hero, /aria-label="Previous slide"/)
+  assert.match(hero, /aria-label="Next slide"/)
+  assert.match(editorialHome, /Shop by room/)
+  assert.match(editorialHome, /Shop by style/)
+  assert.match(editorialHome, /Custom painting/)
+})

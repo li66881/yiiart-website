@@ -1,24 +1,27 @@
 "use client"
 
 import Link from "next/link"
-import { useState } from "react"
-import { useSession, signOut } from "next-auth/react"
+import { useState, type ReactNode } from "react"
+import { signOut, useSession } from "next-auth/react"
+import SearchDialog from "@/components/SearchDialog"
+import StorefrontControls from "@/components/StorefrontControls"
+import { useCart } from "@/context/CartContext"
 import { useLanguage } from "@/context/LanguageContext"
 import { useWishlist } from "@/context/WishlistContext"
-import { useCart } from "@/context/CartContext"
-import StorefrontControls from "@/components/StorefrontControls"
-import SearchDialog from "@/components/SearchDialog"
 import { siteAssetUrl } from "@/lib/assets"
 import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
 import { getHeaderNavigationModel } from "@/lib/storefront/catalog-presentation"
 
 const primaryNav = [
-  { href: "/artworks", label: "Shop Art" },
+  { href: "/artworks?sort=featured", label: "Best Sellers" },
+  { href: "/artworks?sort=newest", label: "New In" },
+  { href: "/artworks", label: "All Art" },
   { href: "/collections/large-canvas-art", label: "Large Wall Art" },
+  { href: "/collections/textured-wall-art", label: "Textured Art" },
+  { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
   { href: "/custom-painting", label: "Custom Painting" },
-  { href: "/size-guide", label: "Size Guide" },
-  { href: "/reviews", label: "Reviews" },
   { href: "/artists", label: "Artists" },
+  { href: "/about", label: "Our Story" },
 ]
 
 type HeaderClientProps = {
@@ -42,114 +45,65 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
   }
 
   return (
-    <header className="fixed left-0 right-0 top-0 z-50 border-b border-white/15 bg-[#1d1c18]/95 text-[#fffdf8] backdrop-blur-xl">
-      <div className="bg-[#75432f] px-4 py-2 text-center text-xs text-[#fffdf8] sm:text-sm">
-        Hand-painted modern art, custom sizes, and worldwide delivery options.
+    <header className="optimized-storefront-header fixed left-0 right-0 top-0 z-50 border-b border-stone-200 bg-[#fbfaf7]/98 text-[#1d1c18] backdrop-blur-xl">
+      <div className="bg-[#75432f] px-4 py-2 text-center text-[11px] font-medium tracking-[0.03em] text-[#fffdf8] sm:text-xs">
+        Hand-painted art, custom sizes, and worldwide delivery.
       </div>
-      <div className="mx-auto flex min-h-[72px] max-w-[1440px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-10">
-        <div className="flex min-w-0 items-center gap-8">
-          <Link href="/" className="shrink-0" onClick={closeMobileMenu} aria-label="YiiArt home">
-            <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-8 w-auto" />
-          </Link>
 
-          <nav className="hidden items-center gap-6 text-sm lg:flex" aria-label="Primary navigation">
-            <div className="flex items-center gap-6 text-white/88">
-            {navigationGroups.primary.map((item) => (
-              <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white">
-                {item.label}
-              </Link>
-            ))}
-            </div>
-            <div className="flex items-center gap-4 border-l border-white/20 pl-5 text-xs text-white/72">
-              {navigationGroups.secondary.map((item) => (
-                <Link key={item.href} href={item.href} className="transition-colors duration-200 hover:text-white/90">
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          </nav>
+      <div className="hidden border-b border-stone-200/80 bg-white/80 md:block">
+        <div className="mx-auto flex min-h-7 max-w-[1440px] items-center justify-between gap-6 px-6 text-[11px] text-stone-500 lg:px-10">
+          <p>Made for homes, hospitality, offices, and design projects.</p>
+          <StorefrontControls />
         </div>
+      </div>
 
-        <div className="flex items-center gap-2">
-          <div className="hidden sm:block">
-            <StorefrontControls />
-          </div>
-
+      <div className="mx-auto grid min-h-[54px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:px-10">
+        <div className="flex items-center">
           <button
             type="button"
-            onClick={openSearch}
-            className="hidden h-9 border border-white/20 px-3 text-xs uppercase tracking-[0.08em] text-white/75 transition-colors duration-200 hover:border-white/60 hover:text-white md:inline-flex md:items-center"
+            className="inline-flex h-10 w-10 items-center justify-center lg:hidden"
+            aria-label={mobileMenuOpen ? t("common.closeMenu") : t("common.openMenu")}
+            aria-expanded={mobileMenuOpen}
+            onClick={() => setMobileMenuOpen((open) => !open)}
           >
-            {t("common.search")}
+            <span className="grid gap-1.5" aria-hidden="true">
+              <span className="h-px w-5 bg-current" />
+              <span className="h-px w-5 bg-current" />
+              <span className="h-px w-5 bg-current" />
+            </span>
           </button>
-
-          <Link
-            href="/contact"
-            className="hidden h-9 items-center bg-[#fffdf8] px-4 text-xs font-medium uppercase tracking-[0.08em] text-[#1d1c18] transition-colors duration-200 hover:bg-[#e9e2d6] 2xl:inline-flex"
-          >
-            {t("home.requestRoomAdvice")}
+          <Link href="/contact" className="hidden text-xs font-medium text-stone-600 hover:text-black lg:inline-flex">
+            Art advisory
           </Link>
+        </div>
 
-          <Link
-            href="/wishlist"
-            className="relative hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
-          >
-            {t("common.wishlist")}
-            {wishlistItems.length > 0 && (
-              <span className="ml-2 flex h-5 min-w-5 items-center justify-center bg-[#fffdf8] px-1.5 text-xs text-[#1d1c18]">
-                {wishlistItems.length}
-              </span>
-            )}
-          </Link>
+        <Link href="/" className="justify-self-center" onClick={closeMobileMenu} aria-label="YiiArt home">
+          <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-7 w-auto sm:h-8" />
+        </Link>
 
-          {session && (
-            <Link
-              href="/orders"
-              className="hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
-            >
-              {t("common.orders")}
-            </Link>
-          )}
+        <div className="flex items-center justify-end gap-0.5 sm:gap-1.5">
+          <IconButton label={t("common.search")} onClick={openSearch}>
+            <SearchIcon />
+          </IconButton>
 
-          <Link
-            href="/cart"
-            className="relative hidden h-9 items-center border border-transparent px-2 text-sm text-white/80 transition-colors duration-200 hover:border-white/35 hover:text-white md:inline-flex"
-          >
-            {t("common.cart")}
-            {cartItemCount > 0 && (
-              <span className="ml-2 flex h-5 min-w-5 items-center justify-center bg-[#fffdf8] px-1.5 text-xs text-[#1d1c18]">
-                {cartItemCount}
-              </span>
-            )}
-          </Link>
-
-          {status === "loading" ? (
-            <div className="hidden h-8 w-8 animate-pulse bg-stone-200 md:block" />
-          ) : session ? (
+          {status !== "loading" && session ? (
             <div
-              className="group relative hidden md:block"
+              className="relative hidden sm:block"
               onKeyDown={(event) => {
                 if (event.key === "Escape") setAccountMenuOpen(false)
               }}
               onBlur={(event) => {
-                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-                  setAccountMenuOpen(false)
-                }
+                if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setAccountMenuOpen(false)
               }}
             >
-              <button
-                type="button"
-                aria-haspopup="menu"
-                aria-expanded={accountMenuOpen}
-                aria-label="Account menu"
+              <IconButton
+                label="Account menu"
                 onClick={() => setAccountMenuOpen((open) => !open)}
-                className="flex h-8 w-8 items-center justify-center bg-stone-200 text-sm text-stone-700"
+                expanded={accountMenuOpen}
               >
-                {session.user?.name?.[0] || session.user?.email?.[0] || "?"}
-              </button>
-              <div
-                className={`absolute right-0 mt-3 w-56 border border-stone-200 bg-white shadow-xl group-hover:block ${accountMenuOpen ? "block" : "hidden"}`}
-              >
+                <AccountIcon />
+              </IconButton>
+              <div className={`absolute right-0 mt-2 w-56 border border-stone-200 bg-white shadow-xl ${accountMenuOpen ? "block" : "hidden"}`}>
                 <div className="border-b border-stone-200 px-4 py-3 text-sm">
                   <p className="font-medium">{session.user?.name || "User"}</p>
                   <p className="mt-1 truncate text-xs text-stone-500">{session.user?.email}</p>
@@ -157,100 +111,110 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
                 <Link href="/orders" className="block px-4 py-2 text-sm hover:bg-stone-50" onClick={() => setAccountMenuOpen(false)}>
                   {t("common.orders")}
                 </Link>
-                <Link href="/wishlist" className="block px-4 py-2 text-sm hover:bg-stone-50" onClick={() => setAccountMenuOpen(false)}>
-                  {t("common.wishlist")}
-                </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="w-full px-4 py-2 text-left text-sm text-red-700 hover:bg-stone-50"
-                >
+                <button type="button" onClick={() => signOut()} className="w-full px-4 py-2 text-left text-sm text-red-700 hover:bg-stone-50">
                   {t("auth.signOut")}
                 </button>
               </div>
             </div>
           ) : (
-            <div className="hidden items-center gap-2 md:flex">
-              <Link href="/login" className="text-sm text-white/80 transition-colors hover:text-white">
-                {t("common.login")}
-              </Link>
-              <Link href="/register" className="border border-white/65 px-3 py-2 text-sm transition-colors hover:bg-white hover:text-[#1d1c18]">
-                {t("common.register")}
-              </Link>
-            </div>
+            <Link href="/login" className="hidden h-10 w-10 items-center justify-center text-stone-700 hover:text-black sm:inline-flex" aria-label={t("common.login")}>
+              <AccountIcon />
+            </Link>
           )}
 
-          <button
-            type="button"
-            className="flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-1 border border-white/35 bg-transparent md:hidden"
-            aria-label={mobileMenuOpen ? t("common.closeMenu") : t("common.openMenu")}
-            aria-expanded={mobileMenuOpen}
-            onClick={() => setMobileMenuOpen((open) => !open)}
-          >
-            <span className="h-px w-5 bg-white" />
-            <span className="h-px w-5 bg-white" />
-            <span className="h-px w-5 bg-white" />
-          </button>
+          <HeaderCountLink href="/wishlist" label={t("common.wishlist")} count={wishlistItems.length}>
+            <HeartIcon />
+          </HeaderCountLink>
+          <HeaderCountLink href="/cart" label={t("common.cart")} count={cartItemCount}>
+            <BagIcon />
+          </HeaderCountLink>
         </div>
       </div>
 
-      {mobileMenuOpen && (
-        <div className="border-t border-white/15 bg-[#1d1c18] px-4 py-4 text-[#fffdf8] shadow-xl md:hidden">
-          <div className="mb-4 sm:hidden">
+      <nav className="hidden border-t border-stone-200 bg-white lg:block" aria-label="Primary navigation">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-7 px-4 py-2 text-[13px]">
+          {navigationGroups.primary.map((item) => (
+            <Link key={`${item.href}-${item.label}`} href={item.href} className="font-medium text-stone-800 transition hover:text-black">
+              {item.label}
+            </Link>
+          ))}
+          {navigationGroups.secondary.length > 0 ? <span className="h-4 w-px bg-stone-200" aria-hidden="true" /> : null}
+          {navigationGroups.secondary.map((item) => (
+            <Link key={`${item.href}-${item.label}`} href={item.href} className="text-stone-600 transition hover:text-black">
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
+
+      {mobileMenuOpen ? (
+        <div className="max-h-[calc(100svh-var(--yiiart-header-offset))] overflow-y-auto border-t border-stone-200 bg-[#fbfaf7] px-4 py-4 shadow-xl lg:hidden">
+          <div className="mb-4 md:hidden">
             <StorefrontControls />
           </div>
-
-          <nav className="grid gap-1 text-base" aria-label="Mobile navigation">
+          <nav className="grid text-base" aria-label="Mobile navigation">
             {navigationGroups.mobile.map((item) => (
-              <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
+              <Link key={`${item.href}-${item.label}`} href={item.href} onClick={closeMobileMenu} className="border-b border-stone-200 px-2 py-3 text-stone-800">
                 {item.label}
               </Link>
             ))}
-            <Link href="/contact" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
+            <Link href="/contact" onClick={closeMobileMenu} className="border-b border-stone-200 px-2 py-3 text-stone-800">
               {t("nav.contact")}
             </Link>
+            <Link href="/size-guide" onClick={closeMobileMenu} className="border-b border-stone-200 px-2 py-3 text-stone-800">
+              Size Guide
+            </Link>
           </nav>
-
-          <div className="mt-3 grid gap-1 border-t border-white/15 pt-3 text-sm">
-            <button type="button" onClick={openSearch} className="px-3 py-2 text-left text-white/88 hover:bg-white/10">
-              {t("common.search")}
-            </button>
-            <Link href="/wishlist" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
-              {t("common.wishlist")}{wishlistItems.length > 0 ? ` (${wishlistItems.length})` : ""}
-            </Link>
-            <Link href="/cart" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
-              {t("common.cart")}{cartItemCount > 0 ? ` (${cartItemCount})` : ""}
-            </Link>
-            {session && (
-              <Link href="/orders" onClick={closeMobileMenu} className="px-3 py-2 text-white/88 hover:bg-white/10">
-                {t("common.orders")}
-              </Link>
-            )}
+          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
             {session ? (
-              <button
-                type="button"
-                onClick={() => {
-                  closeMobileMenu()
-                  signOut()
-                }}
-                className="px-3 py-2 text-left text-red-300 hover:bg-white/10"
-              >
-                {t("auth.signOut")}
-              </button>
+              <>
+                <Link href="/orders" onClick={closeMobileMenu} className="border border-stone-300 px-3 py-2.5 text-center">{t("common.orders")}</Link>
+                <button type="button" onClick={() => { closeMobileMenu(); signOut() }} className="border border-stone-300 px-3 py-2.5 text-red-700">{t("auth.signOut")}</button>
+              </>
             ) : (
-              <div className="grid grid-cols-2 gap-2 px-3 pt-2">
-                <Link href="/login" onClick={closeMobileMenu} className="border border-white/35 px-3 py-2 text-center text-white hover:bg-white/10">
-                  {t("common.login")}
-                </Link>
-                <Link href="/register" onClick={closeMobileMenu} className="bg-white px-3 py-2 text-center text-[#1d1c18]">
-                  {t("common.register")}
-                </Link>
-              </div>
+              <>
+                <Link href="/login" onClick={closeMobileMenu} className="border border-stone-300 px-3 py-2.5 text-center">{t("common.login")}</Link>
+                <Link href="/register" onClick={closeMobileMenu} className="bg-[#1d1c18] px-3 py-2.5 text-center text-white">{t("common.register")}</Link>
+              </>
             )}
           </div>
         </div>
-      )}
+      ) : null}
 
       <SearchDialog open={searchOpen} onClose={() => setSearchOpen(false)} />
     </header>
   )
+}
+
+function IconButton({ label, children, onClick, expanded }: { label: string; children: ReactNode; onClick: () => void; expanded?: boolean }) {
+  return (
+    <button type="button" aria-label={label} aria-expanded={expanded} onClick={onClick} className="inline-flex h-10 w-10 items-center justify-center text-stone-700 transition hover:bg-stone-100 hover:text-black">
+      {children}
+    </button>
+  )
+}
+
+function HeaderCountLink({ href, label, count, children }: { href: string; label: string; count: number; children: ReactNode }) {
+  return (
+    <Link href={href} className="relative inline-flex h-10 w-10 items-center justify-center text-stone-700 transition hover:bg-stone-100 hover:text-black" aria-label={`${label}${count > 0 ? `, ${count} items` : ""}`}>
+      {children}
+      {count > 0 ? <span className="absolute right-0 top-0 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#75432f] px-1 text-[10px] text-white">{count}</span> : null}
+    </Link>
+  )
+}
+
+function SearchIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.6" /><path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+}
+
+function AccountIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.2" stroke="currentColor" strokeWidth="1.6" /><path d="M5 19c1.6-3.2 4-4.8 7-4.8s5.4 1.6 7 4.8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
+}
+
+function HeartIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20s-6.5-4.2-8.8-8C1.5 9 3 6 6.2 6c1.8 0 3.1 1 3.8 2 .7-1 2-2 3.8-2C17 6 18.5 9 16.8 12c-2.3 3.8-8.8 8-8.8 8Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" /></svg>
+}
+
+function BagIcon() {
+  return <svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 8h12l-1 11H7L6 8Z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" /><path d="M9 8V7a3 3 0 0 1 6 0v1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" /></svg>
 }
