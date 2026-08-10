@@ -50,13 +50,20 @@ test("optimized storefront contains no stale hard-coded promotion", async () => 
   ].map((file) => readFile(file, "utf8")))
   assert.doesNotMatch(sources.join("\n"), /40% off|sale ends in|only \d+ left/i)
 })
+
+test("public copy validation rejects stale optimized-branch claims", async () => {
+  const copyCheck = await readFile("scripts/check-public-copy.mjs", "utf8")
+  assert.match(copyCheck, /40% off/)
+  assert.match(copyCheck, /free replacement or a full refund/)
+  assert.match(copyCheck, /arrive 5-10 business days later/)
+})
 ```
 
-- [ ] **Step 2: Run the guardrail test and verify the optimized-layout assertions fail**
+- [ ] **Step 2: Run the guardrail test and verify the copy-check assertion fails**
 
 Run: `npx tsx --test src/lib/storefront/optimized-storefront.test.ts`
 
-Expected: FAIL because the optimized shell/layout markers added in later tasks do not exist yet.
+Expected: FAIL because `scripts/check-public-copy.mjs` does not yet contain all three stale-claim patterns.
 
 - [ ] **Step 3: Extend public-copy validation with exact forbidden claims**
 
