@@ -3,13 +3,12 @@ import { notFound } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
-import { client } from "@/lib/sanity"
 import { getMarketingCollection } from "@/lib/collections"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
-import { buildArtworkDiscoveryItem, inferArtworkSize } from "@/lib/artwork-discovery"
-import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { filterCatalogLinks, getCatalogNavigationState, getCollectionArtworks } from "@/lib/storefront/collection-catalog"
 
 export const revalidate = 600
 
@@ -21,35 +20,6 @@ const internalCollectionLinks = [
   { title: "Living Room Art", href: "/collections/abstract-art-for-living-room" },
   { title: "Custom Paintings", href: "/custom-painting" },
 ]
-
-async function getCollectionArtworks(slug: string) {
-  const collection = getMarketingCollection(slug)
-  if (!collection) return []
-
-  let artworks: any[] = []
-
-  try {
-    artworks = collection.categories?.length
-      ? await client.fetch(
-          `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc)[0...24]{
-            ...,
-            artist->{name}
-          }`,
-          { categories: collection.categories }
-        )
-      : await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...30]{
-          ...,
-          artist->{name}
-        }`)
-  } catch {
-    return []
-  }
-
-  if (slug !== "large-canvas-art") return artworks
-
-  const largeArtworks = artworks.filter((artwork: any) => inferArtworkSize(artwork.dimensions) === "Large" || inferArtworkSize(artwork.dimensions) === "Oversized")
-  return largeArtworks.length > 0 ? largeArtworks : artworks.slice(0, 12)
-}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
@@ -65,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const artworks = await getCollectionArtworks(slug)
-  const artworkWithImage = artworks.find(hasArtworkImage)
+  const artworkWithImage = artworks.find(hasArtworkImage) as any
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
   const description = buildCollectionMetaDescription(collection)
 
@@ -83,7 +53,11 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   const collection = getMarketingCollection(slug)
   if (!collection) notFound()
 
-  const artworks = await getCollectionArtworks(slug)
+  const [artworks, navigationState] = await Promise.all([
+    getCollectionArtworks(slug),
+    getCatalogNavigationState(),
+  ])
+  const visibleInternalCollectionLinks = filterCatalogLinks(internalCollectionLinks, navigationState)
   const heroCopy = buildCollectionHeroCopy(collection)
   const artworkItems = artworks.map((artwork: any) => {
     const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
@@ -170,7 +144,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
             <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>
-                <h2 className="text-2xl font-light">Available works</h2>
+                <h2 className="text-2xl font-light">Collection artworks</h2>
                 <p className="mt-2 text-sm text-gray-500">
                   Each piece is original, documented, and prepared for tracked international delivery.
                 </p>
@@ -182,7 +156,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
             <ArtworkDiscoveryGrid
               items={artworkItems}
-              emptyText="No works match this collection right now."
+              emptyText="No reviewed artworks are available in this collection. Browse all artworks or request a custom painting."
             />
           </div>
         </section>
@@ -212,7 +186,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
               <Link href="/artworks" className="text-sm underline underline-offset-4">All artworks</Link>
             </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {internalCollectionLinks.map((item) => (
+              {visibleInternalCollectionLinks.map((item) => (
                 <Link key={item.href} href={item.href} className="flex min-h-20 items-center justify-between border border-stone-200 bg-white px-5 py-4 transition hover:border-black">
                   <span className="font-medium">{item.title}</span>
                   <span className="text-sm text-stone-400">View</span>
@@ -224,10 +198,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
         <section className="border-y border-stone-200 bg-white py-12">
           <div className="mx-auto grid max-w-[1440px] gap-6 px-4 sm:px-6 md:grid-cols-4 lg:px-10">
-            <Info title="Original" text="No prints or editions in the main collection." />
-            <Info title="Documented" text="Artist details and signed certificate included." />
-            <Info title="Delivered" text="Tracked worldwide shipping with careful packaging." />
-            <Info title="Supported" text="30-day return window after delivery." />
+            <Info title="Hand-painted" text="Physical hand-painted artwork, not a printed reproduction." />
+            <Info title="Production" text="Production timing is confirmed before the order is finalized." />
+            <Info title="Delivered" text="Tracking information is shared when the selected carrier service provides it." />
+            <Info title="Supported" text="Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." />
           </div>
         </section>
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { contactEmail } from "@/lib/site"
+import { returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -14,88 +14,52 @@ export const metadata: Metadata = buildSeoMetadata({
 
 const processingItems = [
   {
-    title: "Ready-made: 3-5 business days",
-    text: "Ready-made paintings are inspected, photographed before packing, documented, and dispatched within 3-5 business days of your order.",
+    title: "Processing confirmed per order",
+    text: "Preparation and production timing depends on the selected size, finish, surface, and current studio workload.",
   },
   {
-    title: "Custom: 2-4 weeks",
-    text: "Custom paintings need 2-4 weeks for production, drying, and review before dispatch. The exact timeline is confirmed with you before production begins.",
+    title: "Production timing",
+    text: "Production timing is confirmed before the order is finalized.",
   },
   {
-    title: "Certificate included",
-    text: "Every original ships with a signed certificate of authenticity and care instructions inside the package.",
+    title: "Hand-painted artwork",
+    text: "Physical hand-painted artwork, not a printed reproduction.",
   },
 ]
 
-const shippingItems = [
-  {
-    title: "Free worldwide shipping",
-    text: "Shipping is included in the price for every destination we serve. Artwork travels with express carriers such as DHL, FedEx, or UPS, typically arriving 5-10 business days after dispatch.",
-  },
-  {
-    title: "Tracked and insured",
-    text: "Tracking is emailed the day your artwork ships. Every shipment is fully insured by YiiArt from the studio to your door.",
-  },
-  {
-    title: "Carefully packaged artwork",
-    text: "Oversized canvas works ship rolled in a rigid tube for safety; smaller or ready-to-hang works ship flat in reinforced boxes or wooden crates.",
-  },
-]
+const shippingItems = shippingHighlights
 
 const damageItems = [
-  {
-    title: "Report within 48 hours",
-    text: "If artwork arrives damaged, contact YiiArt within 48 hours with photos of the artwork, outer box, inner packaging, and shipping label.",
-  },
-  {
-    title: "Keep the packaging",
-    text: "Please keep all packaging until the issue is resolved. Carriers require packaging evidence for the insurance claim.",
-  },
-  {
-    title: "Replacement or full refund",
-    text: "Because every shipment is insured, YiiArt will arrange a free replacement or a full refund - the insurance claim is our job, not yours.",
-  },
+  trustPrinciples[3],
+  returnHighlights[3],
 ]
 
-const returnItems = [
-  {
-    title: "30 days, any reason",
-    text: "Ready-made artwork can be returned within 30 days of delivery for any reason. After approval you have 14 days to ship it back in original condition; the refund is issued within 5 business days of the artwork arriving back.",
-  },
-  {
-    title: "Custom paintings",
-    text: "Custom paintings are made for your specific size, palette, and room, so they are final sale once production is complete. Cancellation is free before production starts, and transit damage is always covered.",
-  },
-  {
-    title: "Before shipping anything back",
-    text: `Contact ${contactEmail} first and wait for return packing and shipping instructions before sending artwork back. Change-of-mind return shipping is paid by the buyer; damaged or not-as-described returns are fully covered by YiiArt.`,
-  },
-]
+const returnItems = returnHighlights
 
 const shippingReturnFaqs = [
   {
     question: "How much does shipping cost?",
-    answer: "Nothing - shipping is free worldwide and included in the price. Express carriers such as DHL, FedEx, or UPS deliver within 5-10 business days of dispatch, and every shipment is insured door to door.",
+    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route.",
   },
   {
     question: "How is the painting packed?",
-    answer: "Oversized canvas ships rolled in a rigid tube; smaller or ready-to-hang works ship flat in reinforced boxes or wooden crates. Every package includes the signed certificate of authenticity.",
+    answer: "Packaging is selected for the artwork size, finish, texture, and carrier route.",
   },
   {
     question: "Will I receive tracking?",
-    answer: "Yes. Tracking is emailed the day your artwork ships so you can follow the delivery from dispatch to your door.",
+    answer: "Tracking information is shared when the selected carrier service provides it.",
   },
   {
     question: "What if the painting arrives damaged?",
-    answer: "Keep the artwork and all packaging, then contact YiiArt within 48 hours with photos of the artwork, box, inner packaging, and shipping label. We will arrange a free replacement or a full refund.",
+    answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
   {
     question: "Who pays for return shipping, and when do I get my refund?",
-    answer: "For change-of-mind returns the buyer covers return shipping; for damaged or not-as-described artwork YiiArt covers everything. Refunds go to the original payment method within 5 business days after the returned artwork is received.",
+    answer: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.",
   },
   {
     question: "Can I return a custom painting?",
-    answer: "Custom paintings are final sale because they are made for a specific request. You can cancel free of charge before production starts, and damage in transit is always covered by a replacement or full refund.",
+    answer: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
   },
 ]
 
@@ -124,7 +88,7 @@ export default function ShippingReturnsPage() {
               <h1 className="text-5xl font-light leading-tight md:text-6xl">Shipping, returns, and damage support for handmade art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              These policies are written for original paintings, ready-made canvas art, and custom artwork requests.
+               These policies are written for hand-painted paintings, ready-made canvas art, and custom artwork requests.
               Exact handling can vary by artwork size, surface, destination, and confirmed order terms.
             </p>
           </div>

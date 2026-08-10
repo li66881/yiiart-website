@@ -6,7 +6,7 @@ import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
   title: "Terms of Service",
-  description: "YiiArt terms for original artwork purchases, pricing, shipping, returns, and intellectual property.",
+  description: "YiiArt terms for hand-painted artwork purchases, pricing, shipping, returns, and intellectual property.",
   path: "/terms",
 })
 
@@ -33,7 +33,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Returns</h2>
-              <p>See our Returns & Refunds policy. Returns must be requested within 30 days of delivery.</p>
+              <p>Return conditions depend on the order. Contact YiiArt with the order details before returning artwork.</p>
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Intellectual Property</h2>

@@ -45,10 +45,10 @@ export const revalidate = 600
 
 const trustItems = [
   { title: "Secure payment", text: "Pay with PayPal or major cards over an encrypted SSL checkout. YiiArt never stores your card details." },
-  { title: "Free insured shipping", text: "Shipping is included in the price worldwide, fully insured door to door, typically 5-10 business days after dispatch." },
+  { title: "Worldwide delivery options", text: "Delivery timing and format are confirmed by destination, size, finish, and carrier route." },
   { title: "Carefully packaged", text: "Rolled, stretched, or flat packaging is selected for the safest practical handling." },
-  { title: "30-day returns", text: "Ready-made works can be returned within 30 days for any reason. Damage in transit is covered by a free replacement or full refund." },
-  { title: "Handmade artwork", text: "Original hand-painted work with a signed certificate of authenticity, not a mass-produced print." },
+  { title: "Returns", text: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." },
+  { title: "Handmade artwork", text: "Physical hand-painted artwork, not a printed reproduction." },
 ]
 
 const artworkPageFaqs = [
@@ -585,9 +585,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <p className="mb-3 text-sm uppercase text-stone-500">Shipping & Returns Summary</p>
               <h2 className="text-3xl font-light">Short version before checkout</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
-                Shipping is free worldwide and included in the price. Ready-made works dispatch within 3-5 business
-                days, arrive insured with tracked express delivery in 5-10 business days, and can be returned within
-                30 days of delivery for any reason. Custom work is confirmed separately before production.
+                Delivery timing and format are confirmed by destination, size, finish, and carrier route. Standard and
+                custom orders may have different conditions; contact YiiArt with the order details before returning artwork.
               </p>
               <div className="mt-5 flex flex-wrap gap-4 text-sm">
                 <Link href="/shipping-returns" className="underline underline-offset-4">Read Shipping & Returns</Link>
@@ -596,9 +595,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
             </div>
             <div className="grid gap-4 md:grid-cols-3">
-              <InfoBlock title="Processing time" text={shippingProfile || "Final checks and packaging are confirmed before dispatch."} />
-              <InfoBlock title="Shipping time" text="Typically 5-10 business days after dispatch with insured express carriers such as DHL, FedEx, or UPS. Tracking is emailed the day it ships." />
-              <InfoBlock title="Returns and damage" text="30-day returns on ready-made works. If damage happens in transit, send photos within 48 hours for a free replacement or full refund." />
+              <InfoBlock title="Processing time" text={shippingProfile || "Production timing is confirmed before the order is finalized."} />
+              <InfoBlock title="Shipping time" text="Tracking information is shared when the selected carrier service provides it." />
+              <InfoBlock title="Returns and damage" text="Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process." />
             </div>
           </section>
 
@@ -607,7 +606,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               <p className="mb-3 text-sm uppercase text-stone-500">FAQ</p>
               <h2 className="text-3xl font-light">Product questions collectors often ask</h2>
               <p className="mt-4 text-sm leading-6 text-stone-600">
-                These answers are written for original handmade paintings, large wall art, custom canvas inquiries,
+                These answers are written for hand-painted artworks, large wall art, custom canvas inquiries,
                 and home interior placement decisions.
               </p>
             </div>
@@ -685,10 +684,10 @@ function ArtworkDetails({
     medium ? { label: "Material", value: inferMaterial(medium) } : null,
     medium ? { label: "Medium", value: medium } : null,
     medium && /canvas/i.test(medium) ? { label: "Canvas type", value: "Artist canvas" } : null,
-    { label: "Handmade note", value: "Original hand-painted artwork, not a mass-produced print." },
+    { label: "Handmade note", value: "Physical hand-painted artwork, not a printed reproduction." },
     framingNotes ? { label: "Frame option", value: framingNotes } : null,
     { label: "Processing time", value: shippingProfile || "Final checks, documentation, and packing are confirmed before dispatch." },
-    { label: "Shipping time", value: "Typically 5-10 business days after dispatch, free worldwide, insured and tracked." },
+    { label: "Shipping time", value: "Delivery timing and format are confirmed by destination, size, finish, and carrier route." },
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
 

@@ -29,17 +29,17 @@
   "hero": {
     "title": "Handmade Modern Paintings",
     "titleEmphasis": "for Home Interiors",
-    "subtitle": "Shop original canvas art, large wall art, and custom paintings selected for living rooms, bedrooms, offices, and calm modern interiors.",
+    "subtitle": "Shop hand-painted canvas art, large wall art, and custom paintings selected for living rooms, bedrooms, offices, and calm modern interiors.",
     "browseArtworks": "Shop ready-to-hang art",
     "meetArtists": "Meet Artists"
   },
   "trust": {
-    "original": "100% Original",
-    "originalDesc": "Signed certificate",
-    "shipping": "Free Shipping",
-    "shippingDesc": "Worldwide delivery",
-    "trial": "30-Day Trial",
-    "trialDesc": "Full refund",
+    "original": "Hand-painted to order",
+    "originalDesc": "Natural variations in brushwork and color",
+    "shipping": "Worldwide delivery options",
+    "shippingDesc": "Confirmed by destination and carrier route",
+    "trial": "Return conditions",
+    "trialDesc": "Reviewed by order",
     "support": "Support Artists",
     "supportDesc": "80% to creators"
   },
@@ -157,7 +157,7 @@
   },
   "home": {
     "featuredArtworks": "Featured Artworks",
-    "featuredArtworksDesc": "Original hand-painted works with clear sizing, international pricing, and collectible documentation.",
+    "featuredArtworksDesc": "Hand-painted works with clear sizing, international pricing, and production guidance.",
     "ourArtists": "Our Artists",
     "ourArtistsDesc": "Meet the artists behind each work, with biographies and available pieces kept together for collectors.",
     "noArtworks": "No artworks are available in this view right now.",
@@ -188,13 +188,13 @@
       },
       "3": {
         "title": "Receive documented art",
-        "text": "Original works ship with careful packaging and collector documentation."
+        "text": "Hand-painted artworks are prepared with careful packaging and order-specific guidance."
       }
     }
   },
   "artworksPage": {
     "allTitle": "All Artworks",
-    "description": "Browse original YiiArt paintings by room, style, color, scale, and orientation.",
+    "description": "Browse hand-painted YiiArt paintings by room, style, color, scale, and orientation.",
     "curatedPaths": "Curated paths",
     "shopBy": "Shop by room, style, color, or scale",
     "livingRooms": "Start with living rooms"
@@ -345,9 +345,9 @@
       "palette": "Palette",
       "surface": "Surface",
       "authenticity": "Authenticity",
-      "authenticityValue": "Original, one-of-a-kind",
-      "certificate": "Certificate",
-      "certificateValue": "Signed certificate included",
+      "authenticityValue": "Physical hand-painted artwork, not a printed reproduction",
+      "certificate": "Production guidance",
+      "certificateValue": "Production timing is confirmed before the order is finalized",
       "dispatch": "Dispatch",
       "dispatchFallback": "Confirm safest format before dispatch"
     },
@@ -362,7 +362,7 @@
     "askWhatsApp": "Ask on WhatsApp before purchase",
     "supportEyebrow": "Collector support",
     "confirmTitle": "What to confirm before checkout",
-    "confirmText": "Original art is a physical object, so the buying decision should include scale, surface, room light, framing, and shipping format. These details can be confirmed before payment.",
+    "confirmText": "Hand-painted artwork is physical, so the buying decision should include scale, surface, room light, framing, and shipping format. These details can be confirmed before payment.",
     "advice": {
       "0": {
         "title": "Room fit",
@@ -379,20 +379,20 @@
     },
     "confidence": {
       "0": {
-        "title": "Original artwork",
-        "text": "One physical work, not a print edition."
+        "title": "Hand-painted artwork",
+        "text": "Physical hand-painted artwork, not a printed reproduction."
       },
       "1": {
-        "title": "Signed certificate",
-        "text": "Collector documentation is included when available for the artwork."
+        "title": "Production guidance",
+        "text": "Production timing is confirmed before the order is finalized."
       },
       "2": {
         "title": "Tracked delivery",
         "text": "Packaging format is selected according to artwork size and shipping safety."
       },
       "3": {
-        "title": "30-day return window",
-        "text": "Return requests can be opened after delivery according to YiiArt policy."
+        "title": "Return conditions",
+        "text": "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork."
       }
     }
   },

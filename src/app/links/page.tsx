@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic"
 export const metadata = buildSeoMetadata({
   title: "YiiArt Social Links",
   description:
-    "Quick links to original hand-painted artworks, collector collections, shipping details, and YiiArt contact information.",
+    "Quick links to hand-painted artworks, collector collections, shipping details, and YiiArt contact information.",
   path: "/links",
 })
 
@@ -49,7 +49,7 @@ export default async function LinksPage() {
           <div className="container mx-auto px-4">
             <p className="mb-3 text-sm uppercase tracking-wider text-gray-500">YiiArt</p>
             <h1 className="max-w-3xl text-4xl font-light leading-tight md:text-5xl">
-              Original hand-painted art for calm, modern spaces.
+              Hand-painted art for calm, modern spaces.
             </h1>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/artworks" className="bg-black px-5 py-3 text-sm text-white">
@@ -67,9 +67,9 @@ export default async function LinksPage() {
 
         <section className="bg-gray-50 py-8">
           <div className="container mx-auto grid gap-4 px-4 text-sm text-gray-600 md:grid-cols-4">
-            <p>Signed certificate included</p>
-            <p>Worldwide tracked delivery</p>
-            <p>30-day return window</p>
+            <p>Physical hand-painted artwork</p>
+            <p>Worldwide delivery options</p>
+            <p>Return conditions reviewed by order</p>
             <p>Artist-first direct support</p>
           </div>
         </section>
@@ -90,7 +90,7 @@ export default async function LinksPage() {
 
             <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {artworks.length > 0 ? artworks.map((artwork: any) => {
-                const title = pickEnglish(artwork.title, "Original artwork")
+                const title = pickEnglish(artwork.title, "Hand-painted artwork")
                 const image = getArtworkImageUrl(artwork, { width: 700 })
 
                 return (

@@ -37,6 +37,19 @@ test("keeps browse links ahead of collector information in the gallery header", 
   assert.deepEqual(groups.secondary, ["Reviews", "Artists"])
 })
 
+test("keeps the first four remaining links primary after empty collections are removed", () => {
+  const groups = headerNavigationGroups([
+    "Shop Art",
+    "Custom Painting",
+    "Size Guide",
+    "Reviews",
+    "Artists",
+  ])
+
+  assert.deepEqual(groups.primary, ["Shop Art", "Custom Painting", "Size Guide", "Reviews"])
+  assert.deepEqual(groups.secondary, ["Artists"])
+})
+
 test("keeps handmade support in a single product confidence group", () => {
   assert.deepEqual(productDetailGroups().map((group) => group.id), ["artwork", "room", "care"])
 })

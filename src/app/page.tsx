@@ -12,7 +12,7 @@ export const revalidate = 600
 const faqs = [
   {
     question: "Is each painting handmade?",
-    answer: "Yes. YiiArt focuses on original hand-painted canvas works, not mass-produced poster prints. If a listing ever differs, the product page should state it clearly.",
+    answer: "Physical hand-painted artwork, not a printed reproduction. Each listed design is recreated by studio artists, with natural variations in brushwork and color.",
   },
   {
     question: "Can I customize the size?",
@@ -20,11 +20,11 @@ const faqs = [
   },
   {
     question: "How long does shipping take?",
-    answer: "Ready-made works dispatch within 3-5 business days and arrive 5-10 business days later with insured express carriers such as DHL, FedEx, or UPS. Shipping is free worldwide and included in the price.",
+    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route. Tracking information is shared when the selected carrier service provides it.",
   },
   {
     question: "What if the artwork arrives damaged?",
-    answer: "Every shipment is insured. Keep the packaging and send photos within 48 hours; YiiArt arranges a free replacement or a full refund.",
+    answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
 ]
 

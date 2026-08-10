@@ -5,6 +5,7 @@ export type MarketingCollection = {
   description: string
   intro: string
   categories?: string[]
+  seriesSlug?: string
   keywords: string[]
   rooms: string[]
   buyerGuide: string[]
@@ -23,11 +24,11 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Abstract Art for Living Rooms",
     shortTitle: "Living Room Abstracts",
     description:
-      "Browse original abstract paintings selected for calm living rooms, open-plan spaces, and modern interiors.",
+      "Browse hand-painted abstract paintings selected for calm living rooms, open-plan spaces, and modern interiors.",
     intro:
-      "A focused edit of original abstract paintings with balanced color, strong surface presence, and sizes that hold a room without overwhelming it.",
+      "A focused edit of hand-painted abstract paintings with balanced color, strong surface presence, and sizes that hold a room without overwhelming it.",
     categories: ["Abstract"],
-    keywords: ["abstract wall art", "living room art", "original canvas painting"],
+    keywords: ["abstract wall art", "living room art", "hand-painted canvas painting"],
     rooms: ["Living rooms", "Open-plan apartments", "Quiet statement walls"],
     buyerGuide: [
       "Start with the sofa or main seating wall, then choose a painting that feels wide enough to anchor the furniture.",
@@ -49,7 +50,7 @@ export const marketingCollections: MarketingCollection[] = [
       },
       {
         question: "Can an abstract work be customized?",
-        answer: "A listed original is sold as shown, but a custom canvas can be discussed if you need a different size, palette, or composition direction.",
+        answer: "A listed design can be recreated with a custom canvas if you need a different size, palette, or composition direction.",
       },
     ],
     group: "room",
@@ -59,7 +60,7 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Textured Wall Art",
     shortTitle: "Textured Wall Art",
     description:
-      "Explore original textured paintings and mixed-media canvas works with tactile surfaces for modern homes.",
+      "Explore hand-painted textured paintings and mixed-media canvas works with tactile surfaces for modern homes.",
     intro:
       "Textured works bring depth to simple rooms. This collection highlights pieces with visible brushwork, mineral surfaces, and layered paint.",
     categories: ["Texture", "Textured Art"],
@@ -95,10 +96,10 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Large Canvas Art",
     shortTitle: "Large Canvas Art",
     description:
-      "Shop large original canvas paintings for feature walls, collector homes, offices, and hospitality spaces.",
+      "Shop large hand-painted canvas paintings for feature walls, collector homes, offices, and hospitality spaces.",
     intro:
       "Large-format works are selected for rooms that need presence from a single piece: generous walls, above-sofa placements, and calm commercial spaces.",
-    keywords: ["large canvas art", "oversized original painting", "statement wall art"],
+    keywords: ["large canvas art", "oversized hand-painted painting", "statement wall art"],
     rooms: ["Feature walls", "Offices", "Hotels and studios"],
     buyerGuide: [
       "Measure the wall width, furniture width, and viewing distance before choosing oversized art.",
@@ -130,9 +131,9 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Wabi-sabi Wall Art",
     shortTitle: "Wabi-sabi Art",
     description:
-      "Browse original wabi-sabi and textured paintings with grounded palettes, quiet movement, and imperfect surfaces.",
+      "Browse hand-painted wabi-sabi and textured paintings with grounded palettes, quiet movement, and imperfect surfaces.",
     intro:
-      "A calm edit of original works for collectors who prefer texture, restraint, natural marks, and rooms that do not feel over-decorated.",
+      "A calm edit of hand-painted works for collectors who prefer texture, restraint, natural marks, and rooms that do not feel over-decorated.",
     categories: ["Wabi-sabi", "Texture"],
     keywords: ["wabi-sabi wall art", "neutral textured painting", "quiet luxury art"],
     rooms: ["Bedrooms", "Reading corners", "Minimal living rooms"],
@@ -166,11 +167,11 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Bedroom Wall Art",
     shortTitle: "Bedroom Art",
     description:
-      "Original paintings selected for bedrooms, private spaces, and calm rooms that need measured color and texture.",
+      "Hand-painted paintings selected for bedrooms, private spaces, and calm rooms that need measured color and texture.",
     intro:
       "Bedroom works should support the room instead of dominating it. This collection favors softer color, balanced scale, and quieter surfaces.",
     categories: ["Abstract", "Landscape", "Texture", "Wabi-sabi"],
-    keywords: ["bedroom wall art", "calm original painting", "soft abstract art"],
+    keywords: ["bedroom wall art", "calm hand-painted painting", "soft abstract art"],
     rooms: ["Bedrooms", "Guest rooms", "Private sitting areas"],
     buyerGuide: [
       "Choose softer contrast and calmer movement for bedrooms, especially above a headboard.",
@@ -202,7 +203,7 @@ export const marketingCollections: MarketingCollection[] = [
     title: "Neutral Canvas Art",
     shortTitle: "Neutral Art",
     description:
-      "Explore original neutral canvas paintings, textured works, and minimalist pieces for restrained modern interiors.",
+      "Explore hand-painted neutral canvas paintings, textured works, and minimalist pieces for restrained modern interiors.",
     intro:
       "Neutral art is useful when the room already has strong materials or furniture. These pieces focus on surface, proportion, and subtle color.",
     categories: ["Texture", "Wabi-sabi", "Minimalist"],

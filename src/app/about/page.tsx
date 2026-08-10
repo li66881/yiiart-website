@@ -14,7 +14,7 @@ export const dynamic = "force-dynamic"
 export const metadata: Metadata = buildSeoMetadata({
   title: "About YiiArt",
   description:
-    "Learn how YiiArt connects collectors with independent artists through original hand-painted works, artist-first pricing, and worldwide delivery.",
+    "Learn how YiiArt supports hand-painted artwork with clear guidance for size, production, and worldwide delivery options.",
   path: "/about",
 })
 
@@ -29,17 +29,17 @@ export default async function AboutPage() {
           <section className="grid gap-10 border-b border-stone-200 pb-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">About YiiArt</p>
-              <h1 className="text-5xl font-light leading-tight">Original art should be within reach.</h1>
+              <h1 className="text-5xl font-light leading-tight">Hand-painted art should be within reach.</h1>
             </div>
             <div className="space-y-5 text-base leading-8 text-stone-600">
               <p>
                 YiiArt is a curated online platform connecting collectors around the world with talented independent
-                artists in China. Our artists work in oil, acrylic, and mixed media, producing hand-painted originals
+                artists in China. Our artists work in oil, acrylic, and mixed media, recreating hand-painted designs
                 that range from serene abstracts to expressive landscapes.
               </p>
               <p>
-                Each work is genuine and unrepeatable. Every brushstroke, layer of color, and subtle surface texture is
-                part of the original object you receive.
+                Each listed design is recreated by studio artists, with natural variations in brushwork, color, and
+                surface texture.
               </p>
             </div>
           </section>
@@ -61,7 +61,7 @@ export default async function AboutPage() {
             <div className="space-y-5 text-base leading-8 text-stone-600">
               <p>
                 YiiArt keeps the buying process practical: clear artwork details, visible scale, signed documentation,
-                protective packaging, tracked international delivery, and a 30-day return process.
+                protective packaging, delivery options confirmed by carrier route, and return conditions reviewed by order.
               </p>
               <p>
                 Need help before purchasing? Send room dimensions, wall photos, or artwork links. YiiArt will help
@@ -79,20 +79,20 @@ export default async function AboutPage() {
             <div className="space-y-6">
               <ul className="grid gap-4 text-sm leading-6 text-stone-600 sm:grid-cols-2">
                 <li className="border border-stone-200 bg-white p-5">
-                  <span className="block font-medium text-stone-900">Replies within 12 hours</span>
-                  Questions by email or WhatsApp are answered within 12 hours, including extra photos or a short video of any artwork before you buy.
+                  <span className="block font-medium text-stone-900">Practical response guidance</span>
+                  YiiArt replies as soon as practical with sizing, palette, and pricing guidance.
                 </li>
                 <li className="border border-stone-200 bg-white p-5">
-                  <span className="block font-medium text-stone-900">Free insured shipping</span>
-                  Shipping is included in the price, fully insured door to door, with tracking emailed at dispatch and delivery in 5-10 business days.
+                  <span className="block font-medium text-stone-900">Worldwide delivery options</span>
+                  Delivery timing and format are confirmed by destination, size, finish, and carrier route.
                 </li>
                 <li className="border border-stone-200 bg-white p-5">
-                  <span className="block font-medium text-stone-900">30-day returns</span>
-                  Ready-made works can be returned within 30 days for any reason, with the refund issued within 5 business days of the artwork arriving back.
+                  <span className="block font-medium text-stone-900">Return conditions</span>
+                  Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.
                 </li>
                 <li className="border border-stone-200 bg-white p-5">
-                  <span className="block font-medium text-stone-900">Signed certificate</span>
-                  Every original ships with a signed certificate of authenticity and care instructions in the package.
+                  <span className="block font-medium text-stone-900">Hand-painted artwork</span>
+                  Physical hand-painted artwork, not a printed reproduction.
                 </li>
               </ul>
               <PaymentBadges />

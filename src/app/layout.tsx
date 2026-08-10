@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Script from 'next/script'
 import './globals.css'
 import Providers from '@/components/SessionProvider'
+import CatalogNavigationProvider from '@/components/CatalogNavigationProvider'
 import { CartProvider } from '@/context/CartContext'
 import { WishlistProvider } from '@/context/WishlistContext'
 import { LanguageProvider } from '@/context/LanguageContext'
@@ -12,6 +13,7 @@ import MarketingPixels from '@/components/MarketingPixels'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
+import { getCatalogNavigationState } from '@/lib/storefront/collection-catalog'
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "G-8B8R7YY67Q"
 
@@ -55,11 +57,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const navigationState = await getCatalogNavigationState()
+
   return (
     <html lang="en">
       <head>
@@ -128,17 +132,19 @@ export default function RootLayout({
           }}
         />
         <Providers>
-          <LanguageProvider>
-            <CurrencyProvider>
-              <WishlistProvider>
-                <CartProvider>
-                  {children}
-                  <ChatWidget />
-                  <CookieConsent />
-                </CartProvider>
-              </WishlistProvider>
-            </CurrencyProvider>
-          </LanguageProvider>
+          <CatalogNavigationProvider navigationState={navigationState}>
+            <LanguageProvider>
+              <CurrencyProvider>
+                <WishlistProvider>
+                  <CartProvider>
+                    {children}
+                    <ChatWidget />
+                    <CookieConsent />
+                  </CartProvider>
+                </WishlistProvider>
+              </CurrencyProvider>
+            </LanguageProvider>
+          </CatalogNavigationProvider>
         </Providers>
         <MarketingPixels />
         <VercelInsights />

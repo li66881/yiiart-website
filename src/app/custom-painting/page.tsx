@@ -23,7 +23,7 @@ const steps = [
   },
   {
     title: "We create your handmade painting",
-    text: "YiiArt confirms the scope, price, and a 2-4 week production timeline before the studio begins the handmade artwork. No payment is taken before you approve the plan.",
+    text: "YiiArt confirms the scope, price, and production guidance before the studio begins the handmade artwork. Production timing is confirmed before the order is finalized.",
   },
   {
     title: "Carefully packed and shipped to you",
@@ -50,19 +50,19 @@ const trustItems = [
     text: "Confirm room details, quote, timeline, and payment direction before production begins.",
   },
   {
-    title: "Clear production timeline",
-    text: "Most custom paintings are completed in 2-4 weeks, then shipped free worldwide with insured, tracked express delivery.",
+    title: "Production guidance",
+    text: "Production timing is confirmed before the order is finalized.",
   },
   {
-    title: "Damage protection",
-    text: "Every shipment is fully insured. If artwork arrives damaged, send photos within 48 hours and YiiArt arranges a free replacement or full refund.",
+    title: "Damage support",
+    text: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
 ]
 
 const faqs = [
   {
     question: "How long does custom painting take?",
-    answer: "Most custom paintings are completed in 2-4 weeks depending on size, surface, and complexity. Add 5-10 business days of insured express shipping, and YiiArt confirms the exact timeline with you before the order starts.",
+    answer: "Production timing is confirmed before the order is finalized. Delivery timing and format are confirmed by destination, size, finish, and carrier route.",
   },
   {
     question: "Can I send a reference image?",
@@ -145,7 +145,7 @@ export default function CustomPaintingPage() {
               <p className="mb-3 text-sm uppercase text-stone-500">Request Form</p>
               <h2 className="text-4xl font-light leading-tight">Tell us what your room needs.</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">
-                Share your wall size, room photos, and the mood you want. YiiArt replies within 12 hours with sizing,
+                Share your wall size, room photos, and the mood you want. YiiArt replies as soon as practical with sizing,
                 palette, and pricing guidance, and confirms the full scope with you before any payment is taken.
               </p>
               <a

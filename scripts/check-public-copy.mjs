@@ -14,6 +14,18 @@ const bannedPatterns = [
   { pattern: /\bwill appear here\b/i, reason: "placeholder future-state copy" },
   { pattern: /\bcoming soon\b/i, reason: "unfinished public copy" },
   { pattern: /\bbeing prepared\b/i, reason: "unfinished public copy" },
+  { pattern: /free worldwide (?:shipping|delivery)/i, reason: "unsupported universal free delivery" },
+  { pattern: /shipping is (?:free|included in the price)/i, reason: "unsupported included shipping" },
+  { pattern: /30[- ]day (?:returns?|return window|trial)/i, reason: "unconfirmed fixed return window" },
+  { pattern: /refund(?:s|ed)? within \d+ business days/i, reason: "unconfirmed refund timing" },
+  { pattern: /fully insured/i, reason: "unconfirmed insurance scope" },
+  { pattern: /signed certificate/i, reason: "unconfirmed certificate fulfillment" },
+  { pattern: /repl(?:y|ies) within 12 hours/i, reason: "unconfirmed response SLA" },
+  { pattern: /\b(?:3-5|5-10) business days\b/i, reason: "unconfirmed shipping timing" },
+  { pattern: /\b2-4 weeks\b/i, reason: "unconfirmed production timing" },
+  { pattern: /within 48 hours/i, reason: "unconfirmed damage deadline" },
+  { pattern: /free replacement or (?:a )?full refund/i, reason: "unsupported damage remedy" },
+  { pattern: /for any reason/i, reason: "unsupported unconditional return" },
 ]
 
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".md", ".mdx"])
