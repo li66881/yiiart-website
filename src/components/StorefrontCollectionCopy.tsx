@@ -14,11 +14,11 @@ export function StorefrontCollectionSummary({ collection }: { collection: Storef
   const translated = useTranslatedCollection(collection)
 
   return (
-    <>
+    <div className="optimized-collection-card">
       <p className="text-xs uppercase text-stone-500">{translated.eyebrow}</p>
-      <h3 className="mt-2 font-medium text-stone-950">{translated.title}</h3>
+      <h3 className="mt-2 text-lg font-medium text-stone-950">{translated.title}</h3>
       <p className="mt-2 text-sm leading-6 text-stone-600">{translated.meta}</p>
-    </>
+    </div>
   )
 }
 
@@ -26,7 +26,7 @@ export function StorefrontCollectionCard({ collection, image }: StorefrontCollec
   const translated = useTranslatedCollection(collection)
 
   return (
-    <Link href={collection.href} className="group block border border-stone-200 bg-white transition hover:border-stone-950">
+    <Link href={collection.href} className="optimized-collection-card group block bg-white transition">
       <div className="relative aspect-[5/3] overflow-hidden bg-stone-100">
         {image ? (
           <Image

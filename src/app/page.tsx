@@ -30,7 +30,7 @@ const faqs = [
 
 async function getData() {
   try {
-    const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc)[0...18]{
+    const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(_createdAt desc){
       ...,
       artist->{name}
     }`)

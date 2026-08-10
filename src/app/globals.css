@@ -16,6 +16,7 @@
   --yiiart-paper-strong: #fffdf8;
   --yiiart-content: 1440px;
   --yiiart-gutter: clamp(20px, 4vw, 64px);
+  --yiiart-header-offset: 163px;
 }
 
 html {
@@ -56,6 +57,18 @@ textarea {
 
 img {
   max-width: 100%;
+}
+
+@media (max-width: 1023px) {
+  :root {
+    --yiiart-header-offset: 119px;
+  }
+}
+
+@media (max-width: 767px) {
+  :root {
+    --yiiart-header-offset: 88px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

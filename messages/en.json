@@ -445,6 +445,7 @@
     "reset": "Reset filters",
     "empty": "No artworks match these filters.",
     "sortFeatured": "Featured first",
+    "sortNewest": "Newest first",
     "sortPriceAsc": "Price low to high",
     "sortPriceDesc": "Price high to low",
     "sortLargeFirst": "Largest first",

@@ -81,16 +81,16 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(collection.faqs)) }}
       />
-      <main className="flex-1 pt-28">
-        <section className="border-b border-stone-200 py-14">
+      <main className="optimized-collection-page flex-1 pt-[var(--yiiart-header-offset)]">
+        <section className="border-b border-stone-200 bg-[#f2eee7] py-16">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
             <Link href="/artworks" className="mb-8 inline-block text-sm text-gray-500 hover:text-black">
               Back to artworks
             </Link>
-            <div className="grid gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+            <div className="grid gap-10 lg:grid-cols-[0.68fr_1fr] lg:items-start">
               <div className="max-w-4xl">
-                <p className="mb-3 text-sm uppercase tracking-wider text-stone-500">YiiArt collection</p>
-                <h1 className="text-5xl font-light leading-tight md:text-6xl">{collection.title}</h1>
+                <p className="mb-3 text-xs font-semibold uppercase text-[#75432f]">YiiArt collection</p>
+                <h1 className="text-4xl font-light leading-none md:text-6xl">{collection.title}</h1>
               </div>
               <div>
                 <p className="max-w-2xl text-base leading-8 text-stone-600">{heroCopy}</p>
@@ -114,7 +114,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           </div>
         </section>
 
-        <section className="border-b border-stone-200 bg-white py-8">
+        <section className="border-b border-stone-200 bg-white py-7">
           <div className="mx-auto grid max-w-[1440px] gap-4 px-4 text-sm text-stone-600 sm:px-6 md:grid-cols-3 lg:px-10">
             {collection.rooms.map((room) => (
               <p key={room} className="border-l border-stone-300 pl-4">{room}</p>
@@ -140,13 +140,13 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           </div>
         </section>
 
-        <section id="available-works" className="py-16">
+        <section id="available-works" className="py-20">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
             <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>
-                <h2 className="text-2xl font-light">Collection artworks</h2>
+                <h2 className="text-3xl font-light">Collection artworks</h2>
                 <p className="mt-2 text-sm text-gray-500">
-                  Each piece is original, documented, and prepared for tracked international delivery.
+                  Compare the current works by scale, palette, orientation, and listed production model.
                 </p>
               </div>
               <Link href="/contact" className="text-sm underline underline-offset-4">
@@ -161,10 +161,10 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           </div>
         </section>
 
-        <section className="border-b border-stone-200 bg-white py-16">
+        <section className="border-b border-stone-200 bg-white py-20">
           <div className="mx-auto grid max-w-[1440px] gap-10 px-4 sm:px-6 lg:grid-cols-[0.75fr_1fr] lg:px-10">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Buying Guide</p>
+              <p className="mb-3 text-xs font-semibold uppercase text-[#75432f]">Buying guide</p>
               <h2 className="text-4xl font-light leading-tight">How to choose {collection.shortTitle}</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">{collection.sizeAdvice}</p>
             </div>
@@ -176,7 +176,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
           </div>
         </section>
 
-        <section className="border-b border-stone-200 py-14">
+        <section className="border-b border-stone-200 py-20">
           <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
             <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
               <div>

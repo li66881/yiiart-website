@@ -45,28 +45,29 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
   )
 
   return (
-    <footer className="border-t border-black/15 bg-[#1e2520] text-[#fffdf8]">
-      <div className="mx-auto max-w-[1440px] px-4 py-20 sm:px-6 lg:px-10">
-        <div className="mb-14 grid grid-cols-2 gap-6 border-b border-white/15 pb-10 lg:grid-cols-4">
+    <footer className="border-t border-stone-200 bg-[#f2eee7] text-[#1d1c18]">
+      <div className="mx-auto max-w-[1440px] px-4 py-14 sm:px-6 lg:px-10">
+        <div className="mb-12 grid grid-cols-2 gap-5 border-b border-stone-300 pb-9 lg:grid-cols-4">
           <GuaranteeItem title="Worldwide delivery options" text="Confirmed by destination and carrier route" />
           <GuaranteeItem title="Hand-painted to order" text="Natural variations in brushwork and color" />
           <GuaranteeItem title="Return conditions" text="Standard and custom orders may differ" />
           <GuaranteeItem title="Secure payment" text="Encrypted provider processing" />
         </div>
 
-        <div className="grid gap-12 border-b border-white/15 pb-14 lg:grid-cols-[1.1fr_2fr_0.9fr]">
+        <div className="grid gap-12 border-b border-stone-300 pb-12 lg:grid-cols-[1.05fr_2fr_0.95fr]">
           <div>
-            <img src={siteAssetUrl("/brand/yiiart-logo-light.svg")} alt="YiiArt" className="h-9 w-auto" />
-            <p className="mt-5 max-w-xs font-serif text-lg leading-7 text-white/75">{t("footer.tagline")}</p>
+            <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-9 w-auto" />
+            <p className="mt-5 max-w-xs font-serif text-lg leading-7 text-stone-600">{t("footer.tagline")}</p>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Talk to the studio</p>
             <div className="mt-5 space-y-2">
-              <TrackableEmailLink email={contactEmail} className="block text-sm text-white/72 transition-colors hover:text-white" leadType="footer_email">
+              <TrackableEmailLink email={contactEmail} className="block text-sm text-stone-600 transition-colors hover:text-black" leadType="footer_email">
                 {contactEmail}
               </TrackableEmailLink>
               <a
                 href={getWhatsAppUrl("Hello YiiArt, I found you from the website footer.")}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-sm text-white/72 transition-colors hover:text-white"
+                className="block text-sm text-stone-600 transition-colors hover:text-black"
               >
                 WhatsApp +{whatsappNumber}
               </a>
@@ -95,22 +96,22 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{t("footer.newsletter")}</h4>
+            <h4 className="text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{t("footer.newsletter")}</h4>
             <div className="mt-4">
               <NewsletterSignup />
             </div>
             <div className="mt-6">
-              <h4 className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{t("footer.follow")}</h4>
-              <SocialLinks variant="dark" />
+              <h4 className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{t("footer.follow")}</h4>
+              <SocialLinks />
             </div>
           </div>
         </div>
 
         <div className="flex flex-col items-start justify-between gap-4 pt-6 md:flex-row md:items-center">
-          <PaymentBadges variant="dark" />
-          <p className="text-xs uppercase tracking-[0.06em] text-white/45">Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
+          <PaymentBadges />
+          <p className="text-xs text-stone-500">Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
         </div>
-        <div className="pt-4 text-xs uppercase tracking-[0.06em] text-white/45">
+        <div className="pt-4 text-xs text-stone-500">
           <p>{t("footer.copyright")}</p>
         </div>
       </div>
@@ -120,9 +121,9 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
 
 function GuaranteeItem({ title, text }: { title: string; text: string }) {
   return (
-    <div>
-      <p className="text-sm font-medium text-white/90">{title}</p>
-      <p className="mt-1 text-xs text-white/55">{text}</p>
+    <div className="border-l border-stone-300 pl-4">
+      <p className="text-sm font-medium text-stone-800">{title}</p>
+      <p className="mt-1 text-xs leading-5 text-stone-500">{text}</p>
     </div>
   )
 }
@@ -130,8 +131,8 @@ function GuaranteeItem({ title, text }: { title: string; text: string }) {
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="mb-4 text-sm font-medium uppercase tracking-[0.12em] text-[#d7aa8f]">{title}</h4>
-      <ul className="space-y-2 text-sm text-white/68">{children}</ul>
+      <h4 className="mb-4 text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{title}</h4>
+      <ul className="space-y-2 text-sm text-stone-600">{children}</ul>
     </div>
   )
 }
@@ -139,7 +140,7 @@ function FooterColumn({ title, children }: { title: string; children: ReactNode 
 function FooterLink({ href, children }: { href: string; children: ReactNode }) {
   return (
     <li>
-      <Link href={href} className="transition-colors duration-200 hover:text-white">
+      <Link href={href} className="transition-colors duration-200 hover:text-black">
         {children}
       </Link>
     </li>

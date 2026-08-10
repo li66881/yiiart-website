@@ -29,6 +29,7 @@ export default function ProductPurchasePanel({
   const initialFinish = product.finishes[0]?.id || ""
   const [sizeId, setSizeId] = useState(initialSize)
   const [finishId, setFinishId] = useState(initialFinish)
+  const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
@@ -39,6 +40,7 @@ export default function ProductPurchasePanel({
   const { isInWishlist, toggleWishlist } = useWishlist()
   const image = product.images[0]
   const saved = isInWishlist(product.id)
+  const madeToOrder = product.productionModel === "hand_painted_to_order"
 
   const addSelection = () => {
     if (!selection || !image || !directCheckoutAvailable) return
@@ -50,7 +52,7 @@ export default function ProductPurchasePanel({
       artist: product.artistName,
       price: selection.priceCny,
       image: image.src,
-      quantity: 1,
+      quantity,
       productionModel: product.productionModel,
       sizeId: selection.size.id,
       sizeLabel: selection.size.label,
@@ -62,11 +64,12 @@ export default function ProductPurchasePanel({
       content_name: product.title,
       content_type: "product",
       currency,
-      value: convertCnyToStoreAmount(selection.priceCny, currency),
+      value: convertCnyToStoreAmount(selection.priceCny * quantity, currency),
+      quantity,
       size: selection.size.id,
       finish: selection.finish.id,
     })
-    setConfirmation(`${product.title} was added to your cart.`)
+    setConfirmation(`${quantity} x ${product.title} was added to your cart.`)
   }
 
   const toggleSaved = () => {
@@ -82,10 +85,10 @@ export default function ProductPurchasePanel({
   }
 
   return (
-    <section className={styles.purchasePanel} aria-labelledby="product-title">
+    <section className={`${styles.purchasePanel} optimized-purchase-panel`} aria-labelledby="product-title">
       <div className={styles.kickerRow}>
         <p className={styles.eyebrow}>
-          {product.productionModel === "hand_painted_to_order"
+          {madeToOrder
             ? "Hand-Painted to Order"
             : "Artist Collection"}
         </p>
@@ -142,9 +145,25 @@ export default function ProductPurchasePanel({
       )}
 
       <div className={styles.creation}>
-        <strong>{product.productionModel === "hand_painted_to_order" ? "Creation window" : "Availability"}</strong>
+        <strong>{madeToOrder ? "Creation window" : "Availability"}</strong>
         <span>{product.creationWindow}</span>
       </div>
+
+      {madeToOrder ? (
+        <div className={styles.quantityRow}>
+          <div>
+            <strong>Quantity</strong>
+            <span>Each canvas is painted individually.</span>
+          </div>
+          <div className={styles.quantityControl} aria-label="Artwork quantity">
+            <button type="button" aria-label="Decrease quantity" disabled={quantity === 1} onClick={() => setQuantity((current) => Math.max(1, current - 1))}>-</button>
+            <output aria-live="polite">{quantity}</output>
+            <button type="button" aria-label="Increase quantity" disabled={quantity === 10} onClick={() => setQuantity((current) => Math.min(10, current + 1))}>+</button>
+          </div>
+        </div>
+      ) : (
+        <p className={styles.originalQuantity}>Original artwork quantity is fixed at one.</p>
+      )}
 
       {directCheckoutAvailable && selection ? (
         <button className={styles.primaryAction} type="button" onClick={addSelection}>
@@ -165,13 +184,31 @@ export default function ProductPurchasePanel({
         </a>
       </div>
 
+      <div className={styles.purchaseTrust} aria-label="Purchase support">
+        <span>Secure payment</span>
+        <span>Hand-painted</span>
+        <span>Careful packing</span>
+        <span>Damage support</span>
+      </div>
+
+      <div className={styles.purchaseDetails}>
+        <details>
+          <summary>Hand-painted finish <span>+</span></summary>
+          <p>{madeToOrder ? "The composition and palette follow the listing, with natural variation in brushwork and small details." : "This listing is for the physical artwork shown, subject to the stated availability."}</p>
+        </details>
+        <details>
+          <summary>Size and delivery planning <span>+</span></summary>
+          <p>Delivery format and timing depend on the selected size, finish, destination, and carrier route.</p>
+        </details>
+      </div>
+
       <p className={styles.confirmation} role="status" aria-live="polite">{confirmation}</p>
 
       {directCheckoutAvailable && selection && (
         <div className={styles.mobilePurchaseBar}>
           <span>
             Selected price
-            <strong><PriceText amountCny={selection.priceCny} /></strong>
+            <strong><PriceText amountCny={selection.priceCny * quantity} /></strong>
           </span>
           <button type="button" onClick={addSelection}>Add to Cart</button>
         </div>

@@ -8,6 +8,8 @@ import {
 
 export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
 export type ArtworkCollectionTab = "all" | "new_collection" | "artist_collection"
+export type ArtworkSortMode = "featured" | "newest" | "price-asc" | "price-desc" | "large-first"
+export type ArtworkDiscoveryQuery = Record<string, string | string[] | undefined>
 
 export type ArtworkFilterState = Record<ArtworkFilterKey, string[]>
 
@@ -23,6 +25,7 @@ export type ArtworkDiscoveryItem = {
   dimensions: string
   rawDimensions?: string | null
   createdAt?: string
+  featured: boolean
   styles: string[]
   rooms: string[]
   colors: string[]
@@ -86,6 +89,25 @@ export function normalizeArtworkFilters(initial?: Partial<ArtworkFilterState>): 
   }
 }
 
+export function buildArtworkDiscoveryInitialState(query: ArtworkDiscoveryQuery) {
+  return {
+    sortMode: normalizeArtworkSort(query.sort),
+    filters: normalizeArtworkFilters({
+      styles: normalizeQueryOptions("styles", query.style),
+      rooms: normalizeQueryOptions("rooms", query.room),
+      colors: normalizeQueryOptions("colors", query.color),
+      sizes: normalizeQueryOptions("sizes", query.size),
+      orientations: normalizeQueryOptions("orientations", query.orientation),
+    }),
+  }
+}
+
+export function normalizeArtworkSort(value?: string | string[]) : ArtworkSortMode {
+  const candidate = Array.isArray(value) ? value[0] : value
+  const allowed: ArtworkSortMode[] = ["featured", "newest", "price-asc", "price-desc", "large-first"]
+  return allowed.includes(candidate as ArtworkSortMode) ? candidate as ArtworkSortMode : "featured"
+}
+
 export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): ArtworkDiscoveryItem {
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
@@ -113,6 +135,7 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     dimensions,
     rawDimensions: artwork.dimensions,
     createdAt: artwork._createdAt,
+    featured: artwork.featured === true,
     styles: unique([category].filter(Boolean)),
     rooms: unique(rooms.length > 0 ? rooms : inferRooms(category)),
     colors: unique(colors.length > 0 ? colors : inferColors(artwork, category)),
@@ -141,6 +164,18 @@ export function artworkMatchesFilters(item: ArtworkDiscoveryItem, filters: Artwo
 
 export function countActiveArtworkFilters(filters: ArtworkFilterState) {
   return Object.values(filters).reduce((count, values) => count + values.length, 0)
+}
+
+export function sortArtworkDiscoveryItems(items: ArtworkDiscoveryItem[], sortMode: ArtworkSortMode) {
+  return items.slice().sort((a, b) => {
+    if (sortMode === "price-asc") return priceValue(a, Number.MAX_SAFE_INTEGER) - priceValue(b, Number.MAX_SAFE_INTEGER)
+    if (sortMode === "price-desc") return priceValue(b, Number.MIN_SAFE_INTEGER) - priceValue(a, Number.MIN_SAFE_INTEGER)
+    if (sortMode === "large-first") return sizeRank(b.size) - sizeRank(a.size)
+    if (sortMode === "newest") return dateValue(b.createdAt) - dateValue(a.createdAt)
+
+    const featuredDifference = Number(b.featured) - Number(a.featured)
+    return featuredDifference || dateValue(b.createdAt) - dateValue(a.createdAt)
+  })
 }
 
 export function inferArtworkSize(dimensions?: string | null) {
@@ -172,6 +207,34 @@ export function parseDimensionsCm(dimensions?: string | null) {
 function matchesAny(values: string[], active: string[]) {
   if (active.length === 0) return true
   return active.some((value) => values.includes(value))
+}
+
+function normalizeQueryOptions(key: ArtworkFilterKey, value?: string | string[]) {
+  const requested = (Array.isArray(value) ? value : value ? [value] : [])
+    .flatMap((entry) => entry.split(","))
+    .map((entry) => entry.trim())
+    .filter(Boolean)
+  const allowed = artworkFilterGroups.find((group) => group.key === key)?.options || []
+
+  return unique(requested.map((entry) => allowed.find((option) => option.toLowerCase() === entry.toLowerCase()) || ""))
+}
+
+function priceValue(item: ArtworkDiscoveryItem, fallback: number) {
+  return typeof item.price === "number" ? item.price : fallback
+}
+
+function dateValue(value?: string) {
+  return value ? new Date(value).getTime() || 0 : 0
+}
+
+function sizeRank(size: string) {
+  const ranks: Record<string, number> = {
+    Small: 1,
+    Medium: 2,
+    Large: 3,
+    Oversized: 4,
+  }
+  return ranks[size] || 0
 }
 
 function normalizeList(value: unknown) {
