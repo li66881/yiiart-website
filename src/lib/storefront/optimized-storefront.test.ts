@@ -41,3 +41,18 @@ test("optimized storefront restores the global shell and homepage composition", 
   assert.match(editorialHome, /Shop by style/)
   assert.match(editorialHome, /Custom painting/)
 })
+
+test("optimized storefront restores artwork and collection discovery", async () => {
+  const discoveryGrid = await readFile("src/components/ArtworkDiscoveryGrid.tsx", "utf8")
+  const storefrontControls = await readFile("src/components/StorefrontControls.tsx", "utf8")
+  const collectionCopy = await readFile("src/components/StorefrontCollectionCopy.tsx", "utf8")
+  const collectionPage = await readFile("src/app/collections/[slug]/page.tsx", "utf8")
+  const artworksPage = await readFile("src/app/artworks/page.tsx", "utf8")
+
+  assert.match(discoveryGrid, /optimized-product-grid/)
+  assert.match(discoveryGrid, /aria-label="Sort artworks"/)
+  assert.match(storefrontControls, /border-stone-300/)
+  assert.match(collectionCopy, /optimized-collection-card/)
+  assert.match(collectionPage, /optimized-collection-page/)
+  assert.match(artworksPage, /PUBLIC_ARTWORK_GROQ_FILTER/)
+})

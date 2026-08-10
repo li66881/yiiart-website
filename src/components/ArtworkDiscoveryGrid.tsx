@@ -58,8 +58,8 @@ export default function ArtworkDiscoveryGrid({
   }
 
   return (
-    <div>
-      <div className="mb-12 flex gap-1 overflow-hidden border-b border-black/20 md:overflow-x-auto" role="tablist" aria-label="Artwork collections">
+    <div className="optimized-product-grid">
+      <div className="mb-9 flex gap-1 overflow-hidden border-b border-black/20 md:overflow-x-auto" role="tablist" aria-label="Artwork collections">
         {([
           ["all", "All Art", "All"],
           ["new_collection", "New Collections", "New Works"],
@@ -83,8 +83,8 @@ export default function ArtworkDiscoveryGrid({
         ))}
       </div>
 
-      <div className="grid gap-12 lg:grid-cols-[250px_minmax(0,1fr)]">
-      <aside className="border-y border-black/15 bg-[#f4f0e8] lg:sticky lg:top-28 lg:self-start lg:border-0 lg:border-t lg:px-0 lg:py-5">
+      <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)] xl:gap-12">
+      <aside className="border-y border-black/15 bg-[#f4f0e8] px-3 lg:sticky lg:top-[calc(var(--yiiart-header-offset)+24px)] lg:self-start lg:border-0 lg:border-t lg:bg-transparent lg:px-0 lg:py-5">
         <button
           type="button"
           onClick={() => setFiltersOpen((open) => !open)}
@@ -118,7 +118,7 @@ export default function ArtworkDiscoveryGrid({
           {artworkFilterGroups.map((group) => (
             <fieldset key={group.key}>
               <legend className="mb-3 text-sm font-medium">{t(`discovery.group.${group.key}`)}</legend>
-              <div className="space-y-2">
+              <div className="divide-y divide-stone-200 border-y border-stone-200">
               {visibleFilterOptions(group.options, optionCounts[group.key], filters[group.key]).map((option) => {
                   const checked = filters[group.key].includes(option)
                   const count = optionCounts[group.key].get(option) || 0
@@ -126,8 +126,8 @@ export default function ArtworkDiscoveryGrid({
                   return (
                     <label
                       key={option}
-                      className={`flex min-h-10 items-center justify-between gap-3 border px-3 py-2 text-sm transition ${
-                        checked ? "border-[#26352c] bg-[#26352c] text-white" : "border-black/15 bg-[#fffdf8] hover:border-[#26352c]"
+                      className={`flex min-h-10 items-center justify-between gap-3 px-1 py-2 text-sm transition ${
+                        checked ? "bg-[#e4ded3] text-[#26352c]" : "text-stone-700 hover:bg-[#f2eee7]"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function ArtworkDiscoveryGrid({
                         />
                         <span>{translateOption(option)}</span>
                       </span>
-                      <span className={checked ? "text-white/70" : "text-stone-400"}>{count}</span>
+                      <span className="text-stone-400">{count}</span>
                     </label>
                   )
                 })}
@@ -167,6 +167,7 @@ export default function ArtworkDiscoveryGrid({
           <label className="flex items-center gap-2 text-sm">
             <span className="text-stone-500">{t("discovery.sort")}</span>
             <select
+              aria-label="Sort artworks"
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as SortMode)}
               className="border border-black/20 bg-[#fffdf8] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
@@ -179,7 +180,7 @@ export default function ArtworkDiscoveryGrid({
           </label>
         </div>
 
-        <div className="grid grid-cols-1 gap-x-5 gap-y-12 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12 xl:grid-cols-3">
           {filteredItems.length > 0 ? (
             filteredItems.map((artwork) => (
               <ArtworkTile key={artwork.id} artwork={artwork} translateOption={translateOption} />
@@ -232,29 +233,29 @@ function ArtworkTile({
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
-        <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/68 px-4 py-3 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+        <div className="absolute inset-x-0 bottom-0 hidden items-center justify-between bg-black/68 px-4 py-3 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:flex">
           <span>{artwork.orientation}</span>
           <span>View details</span>
         </div>
       </div>
-      <div className="bg-transparent px-0 py-4">
-        {collectionCue && <p className="mb-3 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[#75432f]">{collectionCue}</p>}
-        <p className="text-xs uppercase text-stone-500">
+      <div className="bg-transparent px-0 py-3 sm:py-4">
+        {collectionCue && <p className="mb-2 text-[0.65rem] font-medium uppercase text-[#75432f] sm:mb-3">{collectionCue}</p>}
+        <p className="truncate text-[0.65rem] uppercase text-stone-500 sm:text-xs">
           {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
         </p>
-        <div className="mt-2 flex items-start justify-between gap-4">
-          <div>
-            <h3 className="font-medium leading-snug text-stone-950">{artwork.title}</h3>
-            <p className="mt-1 text-sm text-stone-500">{artwork.artistName}</p>
+        <div className="mt-2 grid gap-1.5 sm:flex sm:items-start sm:justify-between sm:gap-4">
+          <div className="min-w-0">
+            <h3 className="text-sm font-medium leading-snug text-stone-950 sm:text-base">{artwork.title}</h3>
+            <p className="mt-1 truncate text-xs text-stone-500 sm:text-sm">{artwork.artistName}</p>
           </div>
-          <p className="shrink-0 text-right text-sm font-semibold text-stone-950">
+          <p className="shrink-0 text-sm font-semibold text-stone-950 sm:text-right">
             <PriceText amountCny={artwork.price} />
           </p>
         </div>
-        <p className="mt-3 text-sm text-stone-500">
+        <p className="mt-2 text-xs leading-5 text-stone-500 sm:mt-3 sm:text-sm">
           {artwork.dimensions || "Size on request"}
         </p>
-        {artwork.customRequestAvailable && <p className="mt-3 text-xs text-stone-500">Custom size and colour available</p>}
+        {artwork.customRequestAvailable && <p className="mt-2 text-[0.68rem] text-stone-500 sm:mt-3 sm:text-xs">Custom size and colour available</p>}
       </div>
     </Link>
   )
