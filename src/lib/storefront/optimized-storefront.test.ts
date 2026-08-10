@@ -68,3 +68,11 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)
 })
+
+test("optimized storefront restores cart presentation without changing checkout", async () => {
+  const cartPage = await readFile("src/app/cart/page.tsx", "utf8")
+
+  assert.match(cartPage, /optimized-cart-layout/)
+  assert.match(cartPage, /useCart/)
+  assert.doesNotMatch(cartPage, /api\/webhooks|stripe\.checkout/i)
+})
