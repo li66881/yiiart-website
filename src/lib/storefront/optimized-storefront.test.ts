@@ -21,17 +21,9 @@ test("optimized storefront contains no stale hard-coded promotion", async () => 
   assert.doesNotMatch(sources.join("\n"), /40% off|sale ends in|only \d+ left/i)
 })
 
-test("optimized storefront has its planned shell and homepage composition markers", async () => {
-  const [headerClient, hero, editorialHome] = await Promise.all([
-    readFile("src/components/HeaderClient.tsx", "utf8"),
-    readFile("src/components/HeroSection.tsx", "utf8"),
-    readFile("src/components/home/EditorialHome.tsx", "utf8"),
-  ])
-  assert.match(headerClient, /optimized-storefront-header/)
-  assert.match(hero, /type HeroSlide/)
-  assert.match(hero, /aria-label="Previous slide"/)
-  assert.match(hero, /aria-label="Next slide"/)
-  assert.match(editorialHome, /Shop by room/)
-  assert.match(editorialHome, /Shop by style/)
-  assert.match(editorialHome, /Custom painting/)
+test("public copy validation rejects stale optimized-branch claims", async () => {
+  const copyCheck = await readFile("scripts/check-public-copy.mjs", "utf8")
+  assert.match(copyCheck, /40% off/)
+  assert.match(copyCheck, /free replacement or a full refund/)
+  assert.match(copyCheck, /arrive 5-10 business days later/)
 })

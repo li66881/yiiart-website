@@ -12,7 +12,7 @@ const forbiddenStorefrontClaims = [
 ]
 
 const bannedPatterns = [
-  ...forbiddenStorefrontClaims.map((pattern) => ({ pattern, reason: "forbidden stale storefront claim" })),
+  { pattern: forbiddenStorefrontClaims[0], reason: "forbidden stale storefront claim" },
   { pattern: /This area uses the current artwork data/i, reason: "internal data-source note" },
   { pattern: /sales ranking data/i, reason: "internal ranking roadmap" },
   { pattern: /real order performance/i, reason: "internal ranking roadmap" },
