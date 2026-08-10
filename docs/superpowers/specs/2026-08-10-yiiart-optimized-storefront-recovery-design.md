@@ -130,4 +130,3 @@ This is a forward port, not a branch merge or production rollback.
 3. Restore product-detail presentation against current product contracts.
 4. Restore cart presentation without changing checkout logic.
 5. Run full automated and visual verification, then merge through a reviewed PR.
-
