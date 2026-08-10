@@ -5,7 +5,14 @@ const root = process.cwd()
 const sourceDir = path.join(root, "src")
 const messagesDir = path.join(root, "messages")
 
+const forbiddenStorefrontClaims = [
+  /40% off/i,
+  /free replacement or a full refund/i,
+  /arrive 5-10 business days later/i,
+]
+
 const bannedPatterns = [
+  ...forbiddenStorefrontClaims.map((pattern) => ({ pattern, reason: "forbidden stale storefront claim" })),
   { pattern: /This area uses the current artwork data/i, reason: "internal data-source note" },
   { pattern: /sales ranking data/i, reason: "internal ranking roadmap" },
   { pattern: /real order performance/i, reason: "internal ranking roadmap" },
@@ -30,6 +37,16 @@ const bannedPatterns = [
 
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".md", ".mdx"])
 const violations = []
+
+function shouldScanPublicSource(filePath) {
+  const relativePath = path.relative(root, filePath).split(path.sep).join("/")
+
+  if (/(^|\/)(?:docs|reports|node_modules)(?:\/|$)/i.test(relativePath)) return false
+  if (/(?:\.test|\.spec)\.(?:ts|tsx|js|jsx|md|mdx)$/i.test(relativePath)) return false
+  if (/(^|\/)scripts\/(?:migrate|migration)[^/]*\./i.test(relativePath)) return false
+
+  return true
+}
 
 function walkFiles(dir) {
   if (!existsSync(dir)) return []
@@ -80,6 +97,7 @@ function checkJsonStrings(filePath, value, stack = []) {
 
 for (const filePath of walkFiles(sourceDir)) {
   if (!sourceExtensions.has(path.extname(filePath))) continue
+  if (!shouldScanPublicSource(filePath)) continue
 
   const text = readFileSync(filePath, "utf8")
   const relativePath = path.relative(root, filePath)
@@ -90,6 +108,7 @@ for (const filePath of walkFiles(sourceDir)) {
 
 for (const filePath of walkFiles(messagesDir)) {
   if (path.extname(filePath) !== ".json") continue
+  if (!shouldScanPublicSource(filePath)) continue
 
   const relativePath = path.relative(root, filePath)
   const data = JSON.parse(readFileSync(filePath, "utf8"))

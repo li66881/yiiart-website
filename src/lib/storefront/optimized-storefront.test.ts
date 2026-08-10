@@ -1,0 +1,37 @@
+import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
+import test from "node:test"
+
+test("optimized storefront keeps current catalog and checkout boundaries", async () => {
+  const home = await readFile("src/app/page.tsx", "utf8")
+  const product = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+  const checkout = await readFile("src/lib/checkout.ts", "utf8")
+  assert.match(home, /PUBLIC_ARTWORK_GROQ_FILTER/)
+  assert.match(product, /isArtworkCheckoutAvailable/)
+  assert.match(checkout, /resolveCheckoutSelection/)
+  assert.match(checkout, /shippingProfile/)
+})
+
+test("optimized storefront contains no stale hard-coded promotion", async () => {
+  const sources = await Promise.all([
+    "src/components/HeroSection.tsx",
+    "src/components/home/EditorialHome.tsx",
+    "src/components/storefront/ProductPurchasePanel.tsx",
+  ].map((file) => readFile(file, "utf8")))
+  assert.doesNotMatch(sources.join("\n"), /40% off|sale ends in|only \d+ left/i)
+})
+
+test("optimized storefront has its planned shell and homepage composition markers", async () => {
+  const [headerClient, hero, editorialHome] = await Promise.all([
+    readFile("src/components/HeaderClient.tsx", "utf8"),
+    readFile("src/components/HeroSection.tsx", "utf8"),
+    readFile("src/components/home/EditorialHome.tsx", "utf8"),
+  ])
+  assert.match(headerClient, /optimized-storefront-header/)
+  assert.match(hero, /type HeroSlide/)
+  assert.match(hero, /aria-label="Previous slide"/)
+  assert.match(hero, /aria-label="Next slide"/)
+  assert.match(editorialHome, /Shop by room/)
+  assert.match(editorialHome, /Shop by style/)
+  assert.match(editorialHome, /Custom painting/)
+})
