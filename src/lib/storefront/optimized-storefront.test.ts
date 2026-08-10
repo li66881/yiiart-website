@@ -56,3 +56,15 @@ test("optimized storefront restores artwork and collection discovery", async () 
   assert.match(collectionPage, /optimized-collection-page/)
   assert.match(artworksPage, /PUBLIC_ARTWORK_GROQ_FILTER/)
 })
+
+test("optimized storefront restores product detail presentation", async () => {
+  const productGallery = await readFile("src/components/storefront/ProductGallery.tsx", "utf8")
+  const purchasePanel = await readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8")
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(productGallery, /aria-label="Artwork gallery"/)
+  assert.match(productGallery, /dining_room/)
+  assert.match(purchasePanel, /optimized-purchase-panel/)
+  assert.match(artworkPage, /isArtworkCheckoutAvailable/)
+  assert.match(artworkPage, /buildProductDetailCopy/)
+})

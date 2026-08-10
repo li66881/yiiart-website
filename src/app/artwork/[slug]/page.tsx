@@ -379,7 +379,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
         category={category}
       />
 
-      <main className="flex-1 pb-28 pt-24 lg:pb-16">
+      <main className="optimized-product-page flex-1 pb-28 pt-[var(--yiiart-header-offset)] lg:pb-20">
         <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-10">
           <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-stone-500" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
@@ -401,8 +401,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             &larr; <TranslatedText k="product.backToArtworks" />
           </Link>
 
-          <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)]">
-            <div className="lg:sticky lg:top-28 lg:self-start">
+          <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)] xl:gap-14">
+            <div className="lg:sticky lg:top-[calc(var(--yiiart-header-offset)+24px)] lg:self-start">
               <ProductGallery media={galleryMedia} alt={artworkImageAlt} />
             </div>
 
