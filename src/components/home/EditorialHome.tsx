@@ -24,7 +24,7 @@ const heroMessages = [
     title: "Choose the scale that belongs on your wall.",
     subtitle: "Explore adaptable compositions, then select the size and finish that suit your space.",
     ctaHref: "/artworks?sort=featured",
-    ctaLabel: "Shop best sellers",
+    ctaLabel: "Shop featured art",
   },
   {
     eyebrow: "Custom painting",
@@ -38,16 +38,16 @@ const heroMessages = [
 const roomPaths = [
   { title: "Living room", href: "/collections/abstract-art-for-living-room", text: "Statement art for the room where people gather." },
   { title: "Bedroom", href: "/collections/bedroom-wall-art", text: "Softer palettes and balanced compositions." },
-  { title: "Dining room", href: "/artworks?category=Abstract", text: "Horizontal pieces for long walls and tables." },
-  { title: "Office", href: "/artworks?category=Minimalist", text: "Calm artwork for focused, considered spaces." },
+  { title: "Dining room", href: "/artworks?room=Dining%20Room", text: "Horizontal pieces for long walls and tables." },
+  { title: "Office", href: "/artworks?room=Office", text: "Calm artwork for focused, considered spaces." },
   { title: "Large walls", href: "/collections/large-canvas-art", text: "Generous canvases with visual presence." },
 ]
 
 const stylePaths = [
   { title: "Abstract paintings", href: "/artworks?category=Abstract", match: ["abstract"] },
   { title: "Textured wall art", href: "/collections/textured-wall-art", match: ["texture", "textured", "plaster"] },
-  { title: "Neutral wall art", href: "/artworks?category=Minimalist", match: ["neutral", "minimal"] },
-  { title: "Black and white", href: "/artworks?category=Abstract", match: ["black", "white", "monochrome"] },
+  { title: "Neutral wall art", href: "/artworks?color=Neutral", match: ["neutral", "minimal"] },
+  { title: "Black and white", href: "/artworks?color=Black&color=White", match: ["black", "white", "monochrome"] },
   { title: "Minimalist art", href: "/artworks?category=Minimalist", match: ["minimal"] },
   { title: "Large wall art", href: "/collections/large-canvas-art", match: ["large", "oversized"] },
 ]
@@ -74,11 +74,11 @@ const faqs = [
 ] as const
 
 export default function EditorialHome({ artworks }: EditorialHomeProps) {
-  const { featured, artistCollection } = buildEditorialHomeEdit(artworks)
+  const { featured, newArrivals: newestCatalogArtworks, artistCollection } = buildEditorialHomeEdit(artworks)
   const withImages = artworks.filter(hasArtworkImage)
   const featuredArtworks = uniqueArtworks([...featured, ...withImages]).slice(0, 8)
-  const newArrivals = withImages.slice(0, 8)
-  const heroArtworks = uniqueArtworks([...featured.filter(hasArtworkImage), ...withImages]).slice(0, 3)
+  const newArrivals = newestCatalogArtworks.filter(hasArtworkImage)
+  const heroArtworks = uniqueArtworks([...newArrivals, ...featuredArtworks, ...withImages]).slice(0, 3)
   const heroSlides: HeroSlide[] = heroArtworks.map((artwork, index) => ({
     imageUrl: getArtworkImageUrl(artwork, { width: 1800, height: 1200 }) || "",
     imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} styled for a modern interior`,
@@ -110,7 +110,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
 
       <section id="featured-works" className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>
-          <SectionHeading eyebrow="Best sellers" title="Art collectors return to." action={{ href: "/artworks?sort=featured", label: "View all art" }} />
+          <SectionHeading eyebrow="Featured artworks" title="A considered studio edit." action={{ href: "/artworks?sort=featured", label: "View featured art" }} />
           <div className={styles.artworkGrid}>
             {featuredArtworks.length > 0 ? featuredArtworks.map((artwork) => <ArtworkCard key={artwork._id} artwork={artwork} />) : <EmptyArtworkState />}
           </div>

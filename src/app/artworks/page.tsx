@@ -7,14 +7,14 @@ import { client } from "@/lib/sanity"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { storefrontCollectionTiles } from "@/lib/storefront-content"
-import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
+import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 
 export const revalidate = 600
 
 interface Props {
-  searchParams: Promise<{ category?: string }>
+  searchParams: Promise<Record<string, string | string[] | undefined>>
 }
 
 async function getArtworks() {
@@ -58,7 +58,7 @@ async function getSeoImage(category?: string) {
 
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = normalizeCategory(params.category)
+  const activeCategory = normalizeCategory(firstQueryValue(params.category))
   const seoImage = await getSeoImage(activeCategory)
   const title = activeCategory ? `${activeCategory} Hand-Painted Paintings` : "Hand-Painted Paintings"
   const description = activeCategory
@@ -77,7 +77,8 @@ export async function generateMetadata({ searchParams }: Props) {
 
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = normalizeCategory(params.category)
+  const activeCategory = normalizeCategory(firstQueryValue(params.category))
+  const initialDiscovery = buildArtworkDiscoveryInitialState(params)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
     const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
@@ -108,11 +109,19 @@ export default async function ArtworksPage({ searchParams }: Props) {
             </div>
           </section>
 
-          <ArtworkDiscoveryGrid items={artworkItems} />
+          <ArtworkDiscoveryGrid
+            items={artworkItems}
+            initialFilters={initialDiscovery.filters}
+            initialSort={initialDiscovery.sortMode}
+          />
         </div>
       </main>
 
       <Footer />
     </div>
   )
+}
+
+function firstQueryValue(value?: string | string[]) {
+  return Array.isArray(value) ? value[0] : value
 }

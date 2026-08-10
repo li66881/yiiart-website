@@ -24,6 +24,31 @@ test("keeps artist collection works separate in the editorial home edit", () => 
   assert.deepEqual(edit.artistCollection.map((item) => item.id), ["artist-1"])
 })
 
+test("builds featured and new-arrival edits from explicit catalog data", () => {
+  const edit = buildEditorialHomeEdit([
+    { id: "older-featured", collectionType: "new_collection", featured: true, _createdAt: "2026-01-01T00:00:00.000Z" },
+    { id: "newest", collectionType: "new_collection", featured: false, _createdAt: "2026-08-01T00:00:00.000Z" },
+    { id: "newer-featured", collectionType: "new_collection", featured: true, _createdAt: "2026-07-01T00:00:00.000Z" },
+    { id: "artist-1", collectionType: "artist_collection", featured: true, _createdAt: "2026-08-10T00:00:00.000Z" },
+  ])
+
+  assert.deepEqual(edit.featured.map((item) => item.id), ["newer-featured", "older-featured", "newest"])
+  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["newest", "newer-featured", "older-featured"])
+  assert.deepEqual(edit.artistCollection.map((item) => item.id), ["artist-1"])
+})
+
+test("carousel autoplay stops for user pause, hover, or reduced motion", async () => {
+  const visualContent = await import("./visual-content")
+  const shouldAutoplay = (visualContent as any).shouldAutoplayCarousel
+
+  assert.equal(typeof shouldAutoplay, "function")
+  assert.equal(shouldAutoplay({ slideCount: 3, userPaused: false, hoverPaused: false, prefersReducedMotion: false }), true)
+  assert.equal(shouldAutoplay({ slideCount: 3, userPaused: true, hoverPaused: false, prefersReducedMotion: false }), false)
+  assert.equal(shouldAutoplay({ slideCount: 3, userPaused: false, hoverPaused: true, prefersReducedMotion: false }), false)
+  assert.equal(shouldAutoplay({ slideCount: 3, userPaused: false, hoverPaused: false, prefersReducedMotion: true }), false)
+  assert.equal(shouldAutoplay({ slideCount: 1, userPaused: false, hoverPaused: false, prefersReducedMotion: false }), false)
+})
+
 test("uses a distinct editorial sequence for the home page", () => {
   assert.deepEqual(editorialHomeSequence(), ["discover", "place", "process", "customize", "trust"])
 })

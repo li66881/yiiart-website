@@ -37,9 +37,16 @@ test("optimized storefront restores the global shell and homepage composition", 
   assert.match(hero, /type HeroSlide/)
   assert.match(hero, /aria-label="Previous slide"/)
   assert.match(hero, /aria-label="Next slide"/)
+  assert.match(hero, /Pause carousel/)
+  assert.match(hero, /prefers-reduced-motion/)
   assert.match(editorialHome, /Shop by room/)
   assert.match(editorialHome, /Shop by style/)
   assert.match(editorialHome, /Custom painting/)
+  assert.doesNotMatch(headerClient, /Best Sellers/)
+  assert.doesNotMatch(editorialHome, /Best sellers/)
+  assert.match(editorialHome, /room=Dining%20Room/)
+  assert.match(editorialHome, /room=Office/)
+  assert.match(editorialHome, /color=Black/)
 })
 
 test("optimized storefront restores artwork and collection discovery", async () => {
@@ -64,6 +71,8 @@ test("optimized storefront restores product detail presentation", async () => {
 
   assert.match(productGallery, /aria-label="Artwork gallery"/)
   assert.match(productGallery, /dining_room/)
+  assert.match(productGallery, /event\.key === "Tab"/)
+  assert.match(productGallery, /previouslyFocused\.focus/)
   assert.match(purchasePanel, /optimized-purchase-panel/)
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)

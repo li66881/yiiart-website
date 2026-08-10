@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useEffect, useState, type WheelEvent } from "react"
+import { useEffect, useRef, useState, type WheelEvent } from "react"
 import { productMediaRoleLabels, type ProductMediaItem } from "@/lib/artwork-media"
 import styles from "./storefront.module.css"
 
@@ -16,6 +16,8 @@ export default function ProductGallery({ media, alt }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [zoom, setZoom] = useState(1)
+  const lightboxRef = useRef<HTMLDivElement>(null)
+  const lightboxCloseRef = useRef<HTMLButtonElement>(null)
   const selectedMedia = media[selectedIndex] || media[0]
 
   const showPrevious = () => {
@@ -30,14 +32,40 @@ export default function ProductGallery({ media, alt }: Props) {
   useEffect(() => {
     if (!lightboxOpen) return
 
+    const previouslyFocused = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    const previousOverflow = document.body.style.overflow
+    const focusTimer = window.setTimeout(() => lightboxCloseRef.current?.focus(), 0)
+    document.body.style.overflow = "hidden"
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setLightboxOpen(false)
       if (event.key === "ArrowLeft") showPrevious()
       if (event.key === "ArrowRight") showNext()
+      if (event.key === "Tab") {
+        const focusable = Array.from(
+          lightboxRef.current?.querySelectorAll<HTMLElement>('button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])') || [],
+        )
+        if (focusable.length === 0) return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault()
+          last.focus()
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault()
+          first.focus()
+        }
+      }
     }
 
     document.addEventListener("keydown", handleKeyDown)
-    return () => document.removeEventListener("keydown", handleKeyDown)
+    return () => {
+      window.clearTimeout(focusTimer)
+      document.removeEventListener("keydown", handleKeyDown)
+      document.body.style.overflow = previousOverflow
+      if (previouslyFocused) previouslyFocused.focus()
+    }
   }, [lightboxOpen, media.length])
 
   if (!selectedMedia) {
@@ -135,8 +163,8 @@ export default function ProductGallery({ media, alt }: Props) {
       </div>
 
       {lightboxOpen && selectedMedia.type === "image" ? (
-        <div className={styles.lightbox} role="dialog" aria-modal="true" aria-label="Artwork image viewer">
-          <button type="button" className={styles.lightboxClose} aria-label="Close artwork image viewer" onClick={() => setLightboxOpen(false)}>x</button>
+        <div ref={lightboxRef} className={styles.lightbox} role="dialog" aria-modal="true" aria-label="Artwork image viewer" tabIndex={-1}>
+          <button ref={lightboxCloseRef} type="button" className={styles.lightboxClose} aria-label="Close artwork image viewer" onClick={() => setLightboxOpen(false)}>x</button>
           <div className={styles.lightboxStage} onWheel={handleZoom}>
             <Image
               src={selectedMedia.url}

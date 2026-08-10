@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { shouldAutoplayCarousel } from "@/lib/storefront/visual-content"
 
 export type HeroSlide = {
   imageUrl: string
@@ -39,19 +40,30 @@ export default function HeroSection({
         }]
       : []
   const [activeIndex, setActiveIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
+  const [userPaused, setUserPaused] = useState(false)
+  const [hoverPaused, setHoverPaused] = useState(false)
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const slideCount = resolvedSlides.length
   const activeSlide = resolvedSlides[activeIndex] || resolvedSlides[0]
+  const autoplay = shouldAutoplayCarousel({ slideCount, userPaused, hoverPaused, prefersReducedMotion })
 
   useEffect(() => {
-    if (slideCount < 2 || paused) return
+    const motionPreference = window.matchMedia("(prefers-reduced-motion: reduce)")
+    const updatePreference = () => setPrefersReducedMotion(motionPreference.matches)
+    updatePreference()
+    motionPreference.addEventListener("change", updatePreference)
+    return () => motionPreference.removeEventListener("change", updatePreference)
+  }, [])
+
+  useEffect(() => {
+    if (!autoplay) return
 
     const intervalId = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % slideCount)
     }, 5600)
 
     return () => window.clearInterval(intervalId)
-  }, [paused, slideCount])
+  }, [autoplay, slideCount])
 
   useEffect(() => {
     if (activeIndex >= slideCount && slideCount > 0) setActiveIndex(0)
@@ -69,15 +81,15 @@ export default function HeroSection({
   return (
     <section
       className="relative mt-[var(--yiiart-header-offset)] min-h-[min(78svh,820px)] overflow-hidden bg-[#25231f] text-white"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
+      onMouseEnter={() => setHoverPaused(true)}
+      onMouseLeave={() => setHoverPaused(false)}
       aria-roledescription="carousel"
       aria-label="Featured YiiArt collections"
     >
       {resolvedSlides.map((slide, index) => (
         <div
           key={`${slide.imageUrl}-${index}`}
-          className={`absolute inset-0 transition-opacity duration-700 ease-out ${index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"}`}
+          className={`absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none ${index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"}`}
           aria-hidden={index !== activeIndex}
         >
           <Image
@@ -136,6 +148,16 @@ export default function HeroSection({
               />
             ))}
           </div>
+          <button
+            type="button"
+            aria-label={userPaused ? "Start carousel" : "Pause carousel"}
+            title={prefersReducedMotion ? "Autoplay is disabled by your motion preference" : undefined}
+            disabled={prefersReducedMotion}
+            className="absolute bottom-3 right-4 z-20 inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/55 bg-black/25 text-sm text-white backdrop-blur-sm transition hover:bg-black/45 disabled:cursor-default disabled:opacity-55"
+            onClick={() => setUserPaused((current) => !current)}
+          >
+            <span aria-hidden="true">{userPaused ? "\u25b6" : "\u2016"}</span>
+          </button>
           <button
             type="button"
             aria-label="Previous slide"

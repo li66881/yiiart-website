@@ -13,7 +13,7 @@ import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation
 import { getHeaderNavigationModel } from "@/lib/storefront/catalog-presentation"
 
 const primaryNav = [
-  { href: "/artworks?sort=featured", label: "Best Sellers" },
+  { href: "/artworks?sort=featured", label: "Featured Art" },
   { href: "/artworks?sort=newest", label: "New In" },
   { href: "/artworks", label: "All Art" },
   { href: "/collections/large-canvas-art", label: "Large Wall Art" },

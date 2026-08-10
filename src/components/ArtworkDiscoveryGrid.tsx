@@ -9,32 +9,34 @@ import {
   ArtworkDiscoveryItem,
   ArtworkFilterKey,
   ArtworkFilterState,
+  ArtworkSortMode,
   artworkFilterGroups,
   artworkMatchesCollection,
   artworkMatchesFilters,
   countActiveArtworkFilters,
   emptyArtworkFilters,
   normalizeArtworkFilters,
+  sortArtworkDiscoveryItems,
   type ArtworkCollectionTab,
 } from "@/lib/artwork-discovery"
 import { tileCollectionCue, visibleFilterOptions } from "@/lib/storefront/editorial-presentation"
 
-type SortMode = "featured" | "price-asc" | "price-desc" | "large-first"
-
 type ArtworkDiscoveryGridProps = {
   items: ArtworkDiscoveryItem[]
   initialFilters?: Partial<ArtworkFilterState>
+  initialSort?: ArtworkSortMode
   emptyText?: string
 }
 
 export default function ArtworkDiscoveryGrid({
   items,
   initialFilters,
+  initialSort = "featured",
   emptyText,
 }: ArtworkDiscoveryGridProps) {
   const { t } = useLanguage()
   const [filters, setFilters] = useState<ArtworkFilterState>(() => normalizeArtworkFilters(initialFilters))
-  const [sortMode, setSortMode] = useState<SortMode>("featured")
+  const [sortMode, setSortMode] = useState<ArtworkSortMode>(initialSort)
   const [collection, setCollection] = useState<ArtworkCollectionTab>("all")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const activeCount = countActiveArtworkFilters(filters)
@@ -47,8 +49,10 @@ export default function ArtworkDiscoveryGrid({
   const filteredItems = useMemo(() => {
     return collectionItems
       .filter((item) => artworkMatchesFilters(item, filters))
-      .slice()
-      .sort((a, b) => sortArtworkItems(a, b, sortMode))
+    return sortArtworkDiscoveryItems(
+      collectionItems.filter((item) => artworkMatchesFilters(item, filters)),
+      sortMode,
+    )
   }, [collectionItems, filters, sortMode])
 
   const optionCounts = useMemo(() => buildOptionCounts(collectionItems), [collectionItems])
@@ -169,10 +173,11 @@ export default function ArtworkDiscoveryGrid({
             <select
               aria-label="Sort artworks"
               value={sortMode}
-              onChange={(event) => setSortMode(event.target.value as SortMode)}
+              onChange={(event) => setSortMode(event.target.value as ArtworkSortMode)}
               className="border border-black/20 bg-[#fffdf8] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
             >
               <option value="featured">{t("discovery.sortFeatured")}</option>
+              <option value="newest">{t("discovery.sortNewest")}</option>
               <option value="price-asc">{t("discovery.sortPriceAsc")}</option>
               <option value="price-desc">{t("discovery.sortPriceDesc")}</option>
               <option value="large-first">{t("discovery.sortLargeFirst")}</option>
@@ -325,31 +330,6 @@ function activeFilterLabels(
   return artworkFilterGroups.flatMap((group) =>
     filters[group.key].map((value) => `${t(`discovery.group.${group.key}`)}: ${translateOption(value)}`)
   )
-}
-
-function sortArtworkItems(a: ArtworkDiscoveryItem, b: ArtworkDiscoveryItem, sortMode: SortMode) {
-  if (sortMode === "price-asc") return priceValue(a) - priceValue(b)
-  if (sortMode === "price-desc") return priceValue(b) - priceValue(a)
-  if (sortMode === "large-first") return sizeRank(b.size) - sizeRank(a.size)
-  return dateValue(b.createdAt) - dateValue(a.createdAt)
-}
-
-function priceValue(item: ArtworkDiscoveryItem) {
-  return typeof item.price === "number" ? item.price : Number.MAX_SAFE_INTEGER
-}
-
-function dateValue(value?: string) {
-  return value ? new Date(value).getTime() || 0 : 0
-}
-
-function sizeRank(size: string) {
-  const ranks: Record<string, number> = {
-    Small: 1,
-    Medium: 2,
-    Large: 3,
-    Oversized: 4,
-  }
-  return ranks[size] || 0
 }
 
 function formatResultCount(template: string, shown: number, total: number) {
