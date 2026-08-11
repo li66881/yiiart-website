@@ -33,22 +33,22 @@ export default function CookieConsent() {
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-[60] border-t bg-white/95 backdrop-blur">
-      <div className="container mx-auto px-4 py-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <p className="text-sm text-gray-600 max-w-2xl">
+      <div className="container mx-auto flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:py-4">
+        <p className="max-w-2xl text-xs leading-5 text-gray-600 md:text-sm">
           {t("cookie.message")}
         </p>
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="grid grid-cols-2 gap-2 md:flex md:flex-row">
           <button
             type="button"
             onClick={() => saveChoice("essential")}
-            className="px-4 py-2 border text-sm hover:bg-gray-50"
+            className="min-h-10 border px-3 py-2 text-xs hover:bg-gray-50 md:px-4 md:text-sm"
           >
             {t("cookie.essential")}
           </button>
           <button
             type="button"
             onClick={() => saveChoice("accepted")}
-            className="px-4 py-2 bg-black text-sm text-white hover:bg-gray-800"
+            className="min-h-10 bg-black px-3 py-2 text-xs text-white hover:bg-gray-800 md:px-4 md:text-sm"
           >
             {t("cookie.accept")}
           </button>

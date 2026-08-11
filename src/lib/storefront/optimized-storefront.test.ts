@@ -104,9 +104,14 @@ test("complete recovery matches the approved MesonArt-aligned composition", asyn
 })
 
 test("optimized storefront restores cart presentation without changing checkout", async () => {
-  const cartPage = await readFile("src/app/cart/page.tsx", "utf8")
+  const [cartPage, cookieConsent] = await Promise.all([
+    readFile("src/app/cart/page.tsx", "utf8"),
+    readFile("src/components/CookieConsent.tsx", "utf8"),
+  ])
 
   assert.match(cartPage, /optimized-cart-layout/)
+  assert.match(cartPage, /meson-cart-shell/)
   assert.match(cartPage, /useCart/)
   assert.doesNotMatch(cartPage, /api\/webhooks|stripe\.checkout/i)
+  assert.match(cookieConsent, /grid-cols-2/)
 })

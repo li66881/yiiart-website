@@ -163,15 +163,6 @@ export default function ArtworkDiscoveryGrid({
             >
               {filtersVisible ? "Hide filters" : "Show filters"}
             </button>
-            <button
-              type="button"
-              className="inline-flex min-h-10 items-center rounded-full border border-stone-800 bg-white px-4 text-sm lg:hidden"
-              onClick={() => setFiltersOpen((open) => !open)}
-              aria-expanded={filtersOpen}
-              aria-controls="artwork-filter-options"
-            >
-              {t("discovery.filters")}{activeCount > 0 ? ` (${activeCount})` : ""}
-            </button>
             <span className="text-sm text-stone-600">
               <strong className="font-medium text-stone-900">{filteredItems.length}</strong> artworks
             </span>

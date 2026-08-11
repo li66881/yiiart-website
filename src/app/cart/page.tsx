@@ -17,12 +17,12 @@ export default function CartPage() {
     <div className="flex min-h-screen flex-col bg-[#f4f0e8] text-[#181613]">
       <Header />
 
-      <main className="optimized-cart-layout flex-1 pb-20 pt-[calc(var(--yiiart-header-offset)+48px)]">
-        <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-10">
-          <div className="mb-10 flex items-end justify-between gap-6 border-b border-black/15 pb-7">
+      <main className="meson-cart-shell optimized-cart-layout flex-1 pb-20 pt-[calc(var(--yiiart-header-offset)+32px)]">
+        <div className="mx-auto max-w-[1180px] px-4 sm:px-6 lg:px-10">
+          <div className="mb-8 flex items-end justify-between gap-6 border-b border-black/15 pb-6">
             <div>
               <p className="mb-3 text-xs font-semibold uppercase text-[#75432f]">Your selected works</p>
-              <h1 className="text-4xl font-light leading-none md:text-6xl">{t("cart.title")}</h1>
+              <h1 className="text-4xl font-medium leading-none tracking-[-0.035em] md:text-5xl">{t("cart.title")}</h1>
             </div>
             {ready && items.length > 0 ? <p className="pb-1 text-sm text-stone-500">{itemCount} {itemCount === 1 ? "item" : "items"}</p> : null}
           </div>
@@ -32,7 +32,7 @@ export default function CartPage() {
           ) : items.length === 0 ? (
             <div className="border-y border-black/15 py-24 text-center">
               <p className="mb-7 text-stone-500">{t("cart.empty")}</p>
-              <Link href="/artworks" className="inline-flex min-h-12 items-center bg-[#26352c] px-7 text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
+              <Link href="/artworks" className="inline-flex min-h-12 items-center rounded-full bg-[#26352c] px-8 text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
                 {t("cart.continueShopping")}
               </Link>
             </div>
@@ -44,7 +44,7 @@ export default function CartPage() {
                     const madeToOrder = item.productionModel === "hand_painted_to_order"
                     return (
                       <article key={item.key} className="grid grid-cols-[112px_minmax(0,1fr)] gap-4 border-b border-black/15 py-6 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6">
-                        <Link href={`/artwork/${item.slug}`} className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d6]">
+                        <Link href={`/artwork/${item.slug}`} className="relative aspect-[4/5] overflow-hidden rounded-[9px] bg-[#e8e1d6]">
                           {item.image ? <Image src={item.image} alt={item.title} fill sizes="150px" className="object-cover" /> : null}
                         </Link>
 
@@ -67,7 +67,7 @@ export default function CartPage() {
                           <div className="flex flex-wrap items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                               {madeToOrder ? (
-                                <div className="grid h-10 grid-cols-[36px_38px_36px] border border-black/20 bg-[#fffdf8]" aria-label={`Quantity for ${item.title}`}>
+                                <div className="grid h-10 grid-cols-[36px_38px_36px] overflow-hidden rounded-full border border-black/20 bg-[#fffdf8]" aria-label={`Quantity for ${item.title}`}>
                                   <button type="button" aria-label={`Decrease ${item.title} quantity`} disabled={item.quantity <= 1} onClick={() => updateQuantity(item.key, item.quantity - 1)} className="disabled:text-stone-300">-</button>
                                   <output className="flex items-center justify-center border-x border-black/10 text-sm">{item.quantity}</output>
                                   <button type="button" aria-label={`Increase ${item.title} quantity`} disabled={item.quantity >= 99} onClick={() => updateQuantity(item.key, item.quantity + 1)} className="disabled:text-stone-300">+</button>
@@ -90,7 +90,7 @@ export default function CartPage() {
               </section>
 
               <aside>
-                <div className="sticky top-[calc(var(--yiiart-header-offset)+24px)] border border-black/15 bg-[#fffdf8] p-6 sm:p-7">
+                <div className="sticky top-[calc(var(--yiiart-header-offset)+24px)] rounded-[12px] border border-black/15 bg-[#fffdf8] p-6 shadow-[0_16px_44px_rgba(48,39,30,0.07)] sm:p-7">
                   <h2 className="mb-5 text-xl font-medium">{t("cart.orderSummary") || "Order Summary"}</h2>
                   <div className="space-y-4 text-sm">
                     <div className="flex justify-between gap-4">
@@ -106,7 +106,7 @@ export default function CartPage() {
                       <span><PriceText amountCny={subtotal} /></span>
                     </div>
                   </div>
-                  <Link href="/checkout" className="mt-6 flex min-h-14 w-full items-center justify-center bg-[#26352c] px-5 text-center text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
+                  <Link href="/checkout" className="mt-6 flex min-h-14 w-full items-center justify-center rounded-full bg-[#26352c] px-5 text-center text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
                     {t("cart.proceedToCheckout")}
                   </Link>
                   <p className="mt-4 text-center text-xs leading-5 text-stone-500">Secure checkout through the current YiiArt payment flow.</p>
