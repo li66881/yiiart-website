@@ -110,7 +110,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
 
       <section id="featured-works" className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>
-          <SectionHeading eyebrow="Featured artworks" title="A considered studio edit." action={{ href: "/artworks?sort=featured", label: "View featured art" }} />
+          <SectionHeading eyebrow="Best Sellers" title="Most-loved paintings for modern rooms." action={{ href: "/artworks?sort=featured", label: "Shop best sellers" }} />
           <div className={styles.artworkGrid}>
             {featuredArtworks.length > 0 ? featuredArtworks.map((artwork) => <ArtworkCard key={artwork._id} artwork={artwork} />) : <EmptyArtworkState />}
           </div>

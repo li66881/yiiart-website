@@ -11,7 +11,7 @@
 
 .section,
 .process {
-  padding-block: clamp(72px, 8vw, 112px);
+  padding-block: clamp(64px, 7vw, 96px);
 }
 
 .featured,
@@ -46,12 +46,12 @@
 .stickyCopy h2,
 .customCopy h2,
 .faqLayout h2 {
-  max-width: 13ch;
+  max-width: 16ch;
   margin: 0;
-  font-size: 3.5rem;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1;
+  font-size: clamp(2.1rem, 3.4vw, 3.15rem);
+  font-weight: 450;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
 }
 
 .textLink {
@@ -122,6 +122,7 @@
   display: grid;
   overflow: hidden;
   place-items: center;
+  border-radius: 10px;
   background: #e8e1d6;
   color: var(--yiiart-muted);
   font-size: 0.85rem;
@@ -271,6 +272,7 @@
   position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
+  border-radius: 12px;
   background: #d9d1c6;
   color: white;
 }

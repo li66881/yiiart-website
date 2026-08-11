@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { useState, type ReactNode } from "react"
+import { useEffect, useState, type ReactNode } from "react"
 import { signOut, useSession } from "next-auth/react"
 import SearchDialog from "@/components/SearchDialog"
 import StorefrontControls from "@/components/StorefrontControls"
@@ -13,15 +13,27 @@ import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation
 import { getHeaderNavigationModel } from "@/lib/storefront/catalog-presentation"
 
 const primaryNav = [
-  { href: "/artworks?sort=featured", label: "Featured Art" },
+  { href: "/artworks?sort=featured", label: "Best Sellers" },
   { href: "/artworks?sort=newest", label: "New In" },
   { href: "/artworks", label: "All Art" },
+  { href: "/custom-painting", label: "Custom Art" },
   { href: "/collections/large-canvas-art", label: "Large Wall Art" },
   { href: "/collections/textured-wall-art", label: "Textured Art" },
   { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
-  { href: "/custom-painting", label: "Custom Painting" },
   { href: "/artists", label: "Artists" },
   { href: "/about", label: "Our Story" },
+]
+
+const trustMessages = [
+  "Hand-painted by studio artists",
+  "Custom sizing available on request",
+  "Delivery options confirmed for every order",
+  "Secure checkout and personal art support",
+]
+
+const socialLinks = [
+  { label: "Instagram", href: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "https://www.instagram.com" },
+  { label: "Pinterest", href: process.env.NEXT_PUBLIC_PINTEREST_URL || "https://www.pinterest.com" },
 ]
 
 type HeaderClientProps = {
@@ -36,7 +48,15 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const [accountMenuOpen, setAccountMenuOpen] = useState(false)
+  const [trustIndex, setTrustIndex] = useState(0)
   const navigationGroups = getHeaderNavigationModel(primaryNav, navigationState)
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      setTrustIndex((current) => (current + 1) % trustMessages.length)
+    }, 4800)
+    return () => window.clearInterval(intervalId)
+  }, [])
 
   const closeMobileMenu = () => setMobileMenuOpen(false)
   const openSearch = () => {
@@ -50,14 +70,29 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
         Hand-painted art, custom sizes, and worldwide delivery.
       </div>
 
-      <div className="hidden border-b border-stone-200/80 bg-white/80 md:block">
-        <div className="mx-auto flex min-h-7 max-w-[1440px] items-center justify-between gap-6 px-6 text-[11px] text-stone-500 lg:px-10">
-          <p>Made for homes, hospitality, offices, and design projects.</p>
-          <StorefrontControls />
+      <div className="hidden border-b border-stone-200/80 bg-white md:block">
+        <div className="mx-auto grid min-h-7 max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-6 text-[11px] text-stone-500 lg:px-10">
+          <div className="flex items-center gap-4">
+            {socialLinks.map((item) => (
+              <a key={item.label} href={item.href} target="_blank" rel="noopener noreferrer" className="transition hover:text-black">
+                {item.label}
+              </a>
+            ))}
+          </div>
+          <div className="flex min-w-[320px] items-center justify-center gap-3" aria-live="polite">
+            <button type="button" aria-label="Previous trust message" className="px-1 text-base leading-none hover:text-black" onClick={() => setTrustIndex((current) => (current - 1 + trustMessages.length) % trustMessages.length)}>
+              <span aria-hidden="true">&#8249;</span>
+            </button>
+            <p className="min-w-[250px] text-center">{trustMessages[trustIndex]}</p>
+            <button type="button" aria-label="Next trust message" className="px-1 text-base leading-none hover:text-black" onClick={() => setTrustIndex((current) => (current + 1) % trustMessages.length)}>
+              <span aria-hidden="true">&#8250;</span>
+            </button>
+          </div>
+          <div className="justify-self-end"><StorefrontControls /></div>
         </div>
       </div>
 
-      <div className="mx-auto grid min-h-[54px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:px-10">
+      <div className="mx-auto grid min-h-[50px] max-w-[1440px] grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 sm:px-6 lg:px-10">
         <div className="flex items-center">
           <button
             type="button"
@@ -132,23 +167,29 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
       </div>
 
       <nav className="meson-primary-navigation hidden border-t border-stone-200 bg-white lg:block" aria-label="Primary navigation">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-7 px-4 py-2 text-[13px]">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-8 px-4 py-1.5 text-[13px]">
           {navigationGroups.primary.map((item) => (
             <Link key={`${item.href}-${item.label}`} href={item.href} className="font-medium text-stone-800 transition hover:text-black">
-              {item.label}
-            </Link>
-          ))}
-          {navigationGroups.secondary.length > 0 ? <span className="h-4 w-px bg-stone-200" aria-hidden="true" /> : null}
-          {navigationGroups.secondary.map((item) => (
-            <Link key={`${item.href}-${item.label}`} href={item.href} className="text-stone-600 transition hover:text-black">
               {item.label}
             </Link>
           ))}
         </div>
       </nav>
 
+      {navigationGroups.secondary.length > 0 ? (
+        <nav className="meson-category-navigation hidden overflow-x-auto border-t border-stone-200 bg-[#f7f5f0] lg:block" aria-label="Category navigation">
+          <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-6 px-4 py-1 text-xs">
+          {navigationGroups.secondary.map((item) => (
+            <Link key={`${item.href}-${item.label}`} href={item.href} className="text-stone-600 transition hover:text-black">
+              {item.label}
+            </Link>
+          ))}
+          </div>
+        </nav>
+      ) : null}
+
       {mobileMenuOpen ? (
-        <div className="meson-category-navigation max-h-[calc(100svh-var(--yiiart-header-offset))] overflow-y-auto border-t border-stone-200 bg-[#fbfaf7] px-4 py-4 shadow-xl lg:hidden">
+        <div className="max-h-[calc(100svh-var(--yiiart-header-offset))] overflow-y-auto border-t border-stone-200 bg-[#fbfaf7] px-4 py-4 shadow-xl lg:hidden">
           <div className="mb-4 md:hidden">
             <StorefrontControls />
           </div>
