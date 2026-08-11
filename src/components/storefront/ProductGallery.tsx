@@ -82,7 +82,7 @@ export default function ProductGallery({ media, alt }: Props) {
   }
 
   return (
-    <figure className={styles.gallery} aria-label="Artwork gallery">
+    <figure className={`${styles.gallery} meson-gallery-thumbnails`} aria-label="Artwork gallery">
       {media.length > 1 ? (
         <div className={styles.thumbnailGrid} aria-label="Additional artwork views">
           {media.slice(0, 10).map((item, index) => (

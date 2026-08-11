@@ -131,7 +131,7 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
         </div>
       </div>
 
-      <nav className="hidden border-t border-stone-200 bg-white lg:block" aria-label="Primary navigation">
+      <nav className="meson-primary-navigation hidden border-t border-stone-200 bg-white lg:block" aria-label="Primary navigation">
         <div className="mx-auto flex max-w-[1440px] items-center justify-center gap-7 px-4 py-2 text-[13px]">
           {navigationGroups.primary.map((item) => (
             <Link key={`${item.href}-${item.label}`} href={item.href} className="font-medium text-stone-800 transition hover:text-black">
@@ -148,7 +148,7 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
       </nav>
 
       {mobileMenuOpen ? (
-        <div className="max-h-[calc(100svh-var(--yiiart-header-offset))] overflow-y-auto border-t border-stone-200 bg-[#fbfaf7] px-4 py-4 shadow-xl lg:hidden">
+        <div className="meson-category-navigation max-h-[calc(100svh-var(--yiiart-header-offset))] overflow-y-auto border-t border-stone-200 bg-[#fbfaf7] px-4 py-4 shadow-xl lg:hidden">
           <div className="mb-4 md:hidden">
             <StorefrontControls />
           </div>

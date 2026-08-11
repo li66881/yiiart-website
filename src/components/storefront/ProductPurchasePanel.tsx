@@ -85,7 +85,7 @@ export default function ProductPurchasePanel({
   }
 
   return (
-    <section className={`${styles.purchasePanel} optimized-purchase-panel`} aria-labelledby="product-title">
+    <section className={`${styles.purchasePanel} optimized-purchase-panel meson-purchase-stack`} aria-labelledby="product-title">
       <div className={styles.kickerRow}>
         <p className={styles.eyebrow}>
           {madeToOrder

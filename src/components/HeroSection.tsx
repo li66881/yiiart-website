@@ -71,7 +71,7 @@ export default function HeroSection({
 
   if (!activeSlide) {
     return (
-      <section className="relative mt-[var(--yiiart-header-offset)] min-h-[68svh] overflow-hidden bg-[#d8d0c2]">
+      <section className="meson-hero-shell relative mt-[var(--yiiart-header-offset)] min-h-[68svh] overflow-hidden bg-[#d8d0c2]">
         <div className="absolute inset-x-[12%] top-[16%] h-[54%] border border-black/10 bg-[#b9aea0]" />
         <div className="absolute bottom-0 left-0 right-0 h-[28%] bg-[#93877a]" />
       </section>
@@ -80,7 +80,7 @@ export default function HeroSection({
 
   return (
     <section
-      className="relative mt-[var(--yiiart-header-offset)] min-h-[min(78svh,820px)] overflow-hidden bg-[#25231f] text-white"
+      className="meson-hero-shell relative mt-[var(--yiiart-header-offset)] min-h-[min(78svh,820px)] overflow-hidden bg-[#25231f] text-white"
       onMouseEnter={() => setHoverPaused(true)}
       onMouseLeave={() => setHoverPaused(false)}
       aria-roledescription="carousel"

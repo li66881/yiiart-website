@@ -78,6 +78,23 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(artworkPage, /buildProductDetailCopy/)
 })
 
+test("complete recovery matches the approved MesonArt-aligned composition", async () => {
+  const [header, hero, gallery, purchase, styles] = await Promise.all([
+    readFile("src/components/HeaderClient.tsx", "utf8"),
+    readFile("src/components/HeroSection.tsx", "utf8"),
+    readFile("src/components/storefront/ProductGallery.tsx", "utf8"),
+    readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
+  ])
+
+  assert.match(header, /meson-primary-navigation/)
+  assert.match(header, /meson-category-navigation/)
+  assert.match(hero, /meson-hero-shell/)
+  assert.match(gallery, /meson-gallery-thumbnails/)
+  assert.match(purchase, /meson-purchase-stack/)
+  assert.match(styles, /\.mesonProductLayout/)
+})
+
 test("optimized storefront restores cart presentation without changing checkout", async () => {
   const cartPage = await readFile("src/app/cart/page.tsx", "utf8")
 

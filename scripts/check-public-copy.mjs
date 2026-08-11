@@ -33,6 +33,12 @@ const bannedPatterns = [
   { pattern: /within 48 hours/i, reason: "unconfirmed damage deadline" },
   { pattern: /free replacement or (?:a )?full refund/i, reason: "unsupported damage remedy" },
   { pattern: /for any reason/i, reason: "unsupported unconditional return" },
+  { pattern: /\b\d+\s+people saved this\b/i, reason: "unverified popularity claim" },
+  { pattern: /\bin \d+ carts\b/i, reason: "unverified cart activity claim" },
+  { pattern: /\b\d+ sold in (?:the )?last \d+ hours\b/i, reason: "unverified sales velocity claim" },
+  { pattern: /\b\d(?:\.\d)?\s*[★☆]\s*\d+ reviews?\b/i, reason: "unverified review summary" },
+  { pattern: /shipping and tariffs included/i, reason: "unsupported landed-cost claim" },
+  { pattern: /deals still going/i, reason: "unsupported promotional urgency" },
 ]
 
 const sourceExtensions = new Set([".ts", ".tsx", ".js", ".jsx", ".md", ".mdx"])

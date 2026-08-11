@@ -1,3 +1,7 @@
+.mesonProductLayout {
+  display: contents;
+}
+
 .gallery {
   display: grid;
   grid-template-columns: 84px minmax(0, 1fr);
