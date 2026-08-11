@@ -1,12 +1,10 @@
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
-import { ArtworksPageHeroCopy, CuratedPathsCopy, LivingRoomsLinkCopy } from "@/components/ArtworksPageCopy"
-import { StorefrontCollectionSummary } from "@/components/StorefrontCollectionCopy"
+import { ArtworksPageHeroCopy } from "@/components/ArtworksPageCopy"
 import { client } from "@/lib/sanity"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
-import { storefrontCollectionTiles } from "@/lib/storefront-content"
 import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
@@ -89,25 +87,9 @@ export default async function ArtworksPage({ searchParams }: Props) {
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
       <Header />
 
-      <main className="flex-1 pb-20 pt-[calc(var(--yiiart-header-offset)+48px)]">
+      <main className="flex-1 pb-20 pt-[calc(var(--yiiart-header-offset)+30px)]">
         <div className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-10">
           <ArtworksPageHeroCopy activeCategory={activeCategory} />
-
-          <section className="mb-14 border-y border-stone-200 bg-[#f2eee7] px-4 py-8 sm:px-6">
-            <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-end">
-              <CuratedPathsCopy />
-              <a href="/collections/abstract-art-for-living-room" className="text-sm underline underline-offset-4">
-                <LivingRoomsLinkCopy />
-              </a>
-            </div>
-            <div className="flex snap-x gap-5 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:overflow-visible md:pb-0">
-              {storefrontCollectionTiles.map((collection) => (
-                <a key={collection.href} href={collection.href} className="min-w-[76vw] snap-start border-l border-stone-300 py-1 pl-4 transition hover:border-stone-900 md:min-w-0">
-                  <StorefrontCollectionSummary collection={collection} />
-                </a>
-              ))}
-            </div>
-          </section>
 
           <ArtworkDiscoveryGrid
             items={artworkItems}

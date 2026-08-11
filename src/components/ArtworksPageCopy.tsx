@@ -13,13 +13,15 @@ export function ArtworksPageHeroCopy({ activeCategory }: ArtworksPageCopyProps) 
     : t("artworksPage.allTitle")
 
   return (
-    <>
-      <p className="mb-3 text-xs font-semibold uppercase text-[#75432f]">Curated handmade art</p>
-      <h1 className="mb-5 max-w-[14ch] text-4xl font-light leading-none md:text-6xl">{title}</h1>
-      <p className="mb-10 max-w-2xl text-base leading-8 text-stone-600">
+    <div className="mb-7 grid gap-3 border-b border-stone-200 pb-7 md:grid-cols-[minmax(0,0.75fr)_minmax(340px,1.25fr)] md:items-end">
+      <div>
+        <p className="mb-2 text-xs font-semibold uppercase text-[#75432f]">Curated handmade art</p>
+        <h1 className="max-w-[14ch] text-4xl font-light leading-none md:text-5xl">{title}</h1>
+      </div>
+      <p className="max-w-2xl text-sm leading-7 text-stone-600 md:justify-self-end">
         {t("artworksPage.description")}
       </p>
-    </>
+    </div>
   )
 }
 
@@ -28,8 +30,8 @@ export function CuratedPathsCopy() {
 
   return (
     <div>
-      <p className="text-xs font-medium uppercase text-[#75432f]">{t("artworksPage.curatedPaths")}</p>
-      <h2 className="mt-3 text-2xl font-light md:text-3xl">{t("artworksPage.shopBy")}</h2>
+      <p className="text-[0.65rem] font-medium uppercase text-[#75432f]">{t("artworksPage.curatedPaths")}</p>
+      <h2 className="mt-1 text-lg font-medium">{t("artworksPage.shopBy")}</h2>
     </div>
   )
 }

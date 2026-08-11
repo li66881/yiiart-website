@@ -15,9 +15,9 @@ export function StorefrontCollectionSummary({ collection }: { collection: Storef
 
   return (
     <div className="optimized-collection-card">
-      <p className="text-xs uppercase text-stone-500">{translated.eyebrow}</p>
-      <h3 className="mt-2 text-lg font-medium text-stone-950">{translated.title}</h3>
-      <p className="mt-2 text-sm leading-6 text-stone-600">{translated.meta}</p>
+      <p className="text-[0.65rem] uppercase text-stone-500">{translated.eyebrow}</p>
+      <h3 className="mt-1 text-base font-medium text-stone-950">{translated.title}</h3>
+      <p className="mt-1 text-xs leading-5 text-stone-600">{translated.meta}</p>
     </div>
   )
 }

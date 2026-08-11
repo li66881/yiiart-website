@@ -39,6 +39,7 @@ export default function ArtworkDiscoveryGrid({
   const [sortMode, setSortMode] = useState<ArtworkSortMode>(initialSort)
   const [collection, setCollection] = useState<ArtworkCollectionTab>("all")
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const [filtersVisible, setFiltersVisible] = useState(true)
   const activeCount = countActiveArtworkFilters(filters)
 
   const collectionItems = useMemo(
@@ -47,8 +48,6 @@ export default function ArtworkDiscoveryGrid({
   )
 
   const filteredItems = useMemo(() => {
-    return collectionItems
-      .filter((item) => artworkMatchesFilters(item, filters))
     return sortArtworkDiscoveryItems(
       collectionItems.filter((item) => artworkMatchesFilters(item, filters)),
       sortMode,
@@ -87,8 +86,8 @@ export default function ArtworkDiscoveryGrid({
         ))}
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)] xl:gap-12">
-      <aside className="border-y border-black/15 bg-[#f4f0e8] px-3 lg:sticky lg:top-[calc(var(--yiiart-header-offset)+24px)] lg:self-start lg:border-0 lg:border-t lg:bg-transparent lg:px-0 lg:py-5">
+      <div className={`grid gap-8 ${filtersVisible ? "lg:grid-cols-[220px_minmax(0,1fr)]" : ""} xl:gap-10`}>
+      {filtersVisible ? <aside className="border-y border-black/15 bg-[#f4f0e8] px-3 lg:sticky lg:top-[calc(var(--yiiart-header-offset)+24px)] lg:self-start lg:border-0 lg:bg-transparent lg:px-0">
         <button
           type="button"
           onClick={() => setFiltersOpen((open) => !open)}
@@ -152,20 +151,41 @@ export default function ArtworkDiscoveryGrid({
           ))}
         </div>
         </div>
-      </aside>
+      </aside> : null}
 
       <section>
-        <div className="mb-5 flex flex-col justify-between gap-3 md:flex-row md:items-center">
+        <div className="meson-discovery-toolbar mb-5 flex flex-col justify-between gap-3 border-b border-stone-200 pb-4 md:flex-row md:items-center">
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              type="button"
+              className="hidden min-h-10 items-center rounded-full border border-stone-800 bg-white px-4 text-sm lg:inline-flex"
+              onClick={() => setFiltersVisible((visible) => !visible)}
+            >
+              {filtersVisible ? "Hide filters" : "Show filters"}
+            </button>
+            <button
+              type="button"
+              className="inline-flex min-h-10 items-center rounded-full border border-stone-800 bg-white px-4 text-sm lg:hidden"
+              onClick={() => setFiltersOpen((open) => !open)}
+              aria-expanded={filtersOpen}
+              aria-controls="artwork-filter-options"
+            >
+              {t("discovery.filters")}{activeCount > 0 ? ` (${activeCount})` : ""}
+            </button>
+            <span className="text-sm text-stone-600">
+              <strong className="font-medium text-stone-900">{filteredItems.length}</strong> artworks
+            </span>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
           <div className="flex flex-wrap gap-2">
             {activeCount > 0 ? (
               activeFilterLabels(filters, t, translateOption).map((label) => (
-                <span key={label} className="border border-black/15 bg-[#fffdf8] px-3 py-1 text-xs text-stone-600">
+                <span key={label} className="rounded-full border border-black/15 bg-[#fffdf8] px-3 py-1 text-xs text-stone-600">
                   {label}
                 </span>
               ))
-            ) : (
-              <span className="text-sm text-stone-500">{t("discovery.allAvailable")}</span>
-            )}
+            ) : null}
           </div>
 
           <label className="flex items-center gap-2 text-sm">
@@ -174,7 +194,7 @@ export default function ArtworkDiscoveryGrid({
               aria-label="Sort artworks"
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as ArtworkSortMode)}
-              className="border border-black/20 bg-[#fffdf8] px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
+              className="min-h-10 rounded-full border border-stone-800 bg-[#fffdf8] px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
             >
               <option value="featured">{t("discovery.sortFeatured")}</option>
               <option value="newest">{t("discovery.sortNewest")}</option>
@@ -183,9 +203,10 @@ export default function ArtworkDiscoveryGrid({
               <option value="large-first">{t("discovery.sortLargeFirst")}</option>
             </select>
           </label>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-5 sm:gap-y-12 xl:grid-cols-3">
+        <div className={`grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 sm:gap-y-10 md:grid-cols-3 ${filtersVisible ? "xl:grid-cols-3" : "xl:grid-cols-4"}`}>
           {filteredItems.length > 0 ? (
             filteredItems.map((artwork) => (
               <ArtworkTile key={artwork.id} artwork={artwork} translateOption={translateOption} />
@@ -225,8 +246,8 @@ function ArtworkTile({
   const collectionCue = tileCollectionCue(artwork)
 
   return (
-    <Link href={artwork.href} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden bg-[#e8e1d6]">
+    <Link href={artwork.href} className="meson-product-card group block">
+      <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] bg-[#e8e1d6]">
         {artwork.imageUrl ? (
           <Image
             src={artwork.imageUrl}
@@ -238,17 +259,16 @@ function ArtworkTile({
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
-        <div className="absolute inset-x-0 bottom-0 hidden items-center justify-between bg-black/68 px-4 py-3 text-sm text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 sm:flex">
-          <span>{artwork.orientation}</span>
-          <span>View details</span>
+        <div className="absolute inset-x-3 bottom-3 hidden min-h-10 items-center justify-center rounded-full bg-white/94 px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#1d1c18] opacity-0 shadow-lg backdrop-blur transition-all duration-300 group-hover:opacity-100 sm:flex">
+          <span>Choose options</span>
         </div>
       </div>
-      <div className="bg-transparent px-0 py-3 sm:py-4">
-        {collectionCue && <p className="mb-2 text-[0.65rem] font-medium uppercase text-[#75432f] sm:mb-3">{collectionCue}</p>}
+      <div className="bg-transparent px-0 py-3">
+        {collectionCue && <p className="mb-1.5 text-[0.65rem] font-medium uppercase text-[#75432f]">{collectionCue}</p>}
         <p className="truncate text-[0.65rem] uppercase text-stone-500 sm:text-xs">
           {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
         </p>
-        <div className="mt-2 grid gap-1.5 sm:flex sm:items-start sm:justify-between sm:gap-4">
+        <div className="mt-1.5 grid gap-1.5 sm:flex sm:items-start sm:justify-between sm:gap-4">
           <div className="min-w-0">
             <h3 className="text-sm font-medium leading-snug text-stone-950 sm:text-base">{artwork.title}</h3>
             <p className="mt-1 truncate text-xs text-stone-500 sm:text-sm">{artwork.artistName}</p>
