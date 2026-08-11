@@ -131,7 +131,7 @@ export default function ProductGallery({ media, alt }: Props) {
             <button
               type="button"
               className={styles.galleryImageButton}
-              aria-label="Open artwork image viewer"
+              aria-label="Open image viewer"
               onClick={() => setLightboxOpen(true)}
             >
               <Image

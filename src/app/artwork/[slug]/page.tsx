@@ -42,6 +42,7 @@ import {
   productProcessItems,
 } from "@/lib/storefront-content"
 import { productDetailGroups } from "@/lib/storefront/editorial-presentation"
+import storefrontStyles from "@/components/storefront/storefront.module.css"
 
 export const revalidate = 600
 
@@ -380,8 +381,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       />
 
       <main className="optimized-product-page flex-1 pb-28 pt-[var(--yiiart-header-offset)] lg:pb-20">
-        <div className="mx-auto max-w-[1440px] px-4 py-10 sm:px-6 lg:px-10">
-          <nav className="mb-4 flex flex-wrap items-center gap-2 text-sm text-stone-500" aria-label="Breadcrumb">
+        <div className="mx-auto max-w-[1600px] px-4 py-6 sm:px-6 lg:px-8">
+          <nav className="mb-2 flex flex-wrap items-center gap-2 text-xs text-stone-500" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-black"><TranslatedText k="common.home" /></Link>
             <span>/</span>
             <Link href="/artworks" className="hover:text-black"><TranslatedText k="common.artworks" /></Link>
@@ -397,16 +398,16 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             <span className="text-black">{title}</span>
           </nav>
 
-          <Link href="/artworks" className="mb-8 inline-block text-stone-500 hover:text-black">
+          <Link href="/artworks" className="mb-4 inline-block text-sm text-stone-500 hover:text-black">
             &larr; <TranslatedText k="product.backToArtworks" />
           </Link>
 
-          <div className="mt-4 grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(420px,0.75fr)] xl:gap-14">
-            <div className="lg:sticky lg:top-[calc(var(--yiiart-header-offset)+24px)] lg:self-start">
+          <div className={storefrontStyles.mesonProductLayout}>
+            <div>
               <ProductGallery media={galleryMedia} alt={artworkImageAlt} />
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 lg:sticky lg:top-[calc(var(--yiiart-header-offset)+18px)] lg:self-start">
               <ProductPurchasePanel
                 product={storefrontProduct}
                 directCheckoutAvailable={directCheckoutAvailable}

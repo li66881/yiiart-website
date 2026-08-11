@@ -74,12 +74,16 @@ test("optimized storefront restores product detail presentation", async () => {
   const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
 
   assert.match(productGallery, /aria-label="Artwork gallery"/)
+  assert.match(productGallery, /aria-label="Open image viewer"/)
   assert.match(productGallery, /dining_room/)
   assert.match(productGallery, /event\.key === "Tab"/)
   assert.match(productGallery, /previouslyFocused\.focus/)
   assert.match(purchasePanel, /optimized-purchase-panel/)
+  assert.match(purchasePanel, /meson-purchase-stack/)
+  assert.doesNotMatch(purchasePanel, /people saved this|sold in last|shipping and tariffs included/i)
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)
+  assert.match(artworkPage, /mesonProductLayout/)
 })
 
 test("complete recovery matches the approved MesonArt-aligned composition", async () => {

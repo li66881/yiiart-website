@@ -1,11 +1,15 @@
 .mesonProductLayout {
-  display: contents;
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(390px, 0.82fr);
+  gap: clamp(32px, 4vw, 58px);
+  margin-top: 1rem;
+  align-items: start;
 }
 
 .gallery {
   display: grid;
-  grid-template-columns: 84px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: 78px minmax(0, 1fr);
+  gap: 12px;
   margin: 0;
 }
 
@@ -17,10 +21,11 @@
 .galleryEmpty {
   position: relative;
   display: flex;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-radius: 10px;
   background: #eee9e1;
 }
 
@@ -108,6 +113,7 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border-radius: 8px;
   border: 1px solid #d8d1c6;
   background: white;
   cursor: pointer;
@@ -226,9 +232,7 @@
 }
 
 .purchasePanel {
-  border: 1px solid #d7cfc3;
-  background: #fffdf8;
-  padding: 34px;
+  padding: 2px 0 22px;
 }
 
 .kickerRow {
@@ -248,43 +252,44 @@
 }
 
 .saveButton {
-  min-height: 2.75rem;
-  border: 0;
-  border-bottom: 1px solid currentColor;
+  min-height: 2.4rem;
+  border: 1px solid #d6d3d1;
+  border-radius: 999px;
   background: transparent;
+  padding: 0 0.85rem;
   color: #57534e;
   cursor: pointer;
 }
 
 .purchasePanel h1 {
-  margin: 0.75rem 0 0;
-  font-size: 3.25rem;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1;
+  margin: 0.6rem 0 0;
+  font-size: clamp(2rem, 3vw, 2.65rem);
+  font-weight: 450;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
 }
 
 .artist {
-  margin-top: 1rem;
+  margin-top: 0.65rem;
   color: #78716c;
 }
 
 .description {
   max-width: 42rem;
-  margin-top: 1.25rem;
+  margin-top: 0.9rem;
   color: #57534e;
   line-height: 1.7;
 }
 
 .priceBlock {
-  margin: 1.35rem 0;
-  padding: 1.1rem 0;
+  margin: 1rem 0;
+  padding: 0.9rem 0;
   border-block: 1px solid #ded8ce;
 }
 
 .price {
   margin: 0;
-  font-size: 1.75rem;
+  font-size: 1.55rem;
   font-weight: 600;
 }
 
@@ -298,7 +303,7 @@
 }
 
 .options {
-  margin: 1.35rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   border: 0;
 }
@@ -312,13 +317,14 @@
 .choiceGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
 
 .choice {
   position: relative;
   min-height: 3.1rem;
   border: 1px solid #d6d3d1;
+  border-radius: 9px;
   cursor: pointer;
 }
 
@@ -343,7 +349,8 @@
 .creation {
   display: grid;
   gap: 0.3rem;
-  margin-top: 1.35rem;
+  margin-top: 1rem;
+  border-radius: 9px;
   padding: 0.9rem 1rem;
   background: #f2eee7;
   color: #57534e;
@@ -412,11 +419,12 @@
 .primaryAction {
   display: flex;
   width: 100%;
-  min-height: 3.5rem;
+  min-height: 3.35rem;
   align-items: center;
   justify-content: center;
   margin-top: 1.35rem;
   border: 1px solid #181613;
+  border-radius: 999px;
   background: #26352c;
   color: white;
   cursor: pointer;
@@ -445,6 +453,7 @@
   align-items: center;
   justify-content: center;
   border: 1px solid #d6d3d1;
+  border-radius: 999px;
   padding: 0.65rem;
   color: #292524;
   font-size: 0.78rem;
@@ -454,7 +463,7 @@
 .purchaseTrust {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px 18px;
+  gap: 10px 18px;
   margin-top: 20px;
   padding: 18px 0;
   border-block: 1px solid #ded8ce;
@@ -462,10 +471,9 @@
   font-size: 0.75rem;
 }
 
-.purchaseTrust span::before {
-  margin-right: 7px;
-  color: #75432f;
-  content: "+";
+.purchaseTrust span {
+  border-left: 2px solid #a8795e;
+  padding-left: 9px;
 }
 
 .purchaseDetails {
@@ -529,6 +537,13 @@
   }
 }
 
+@media (max-width: 1023px) {
+  .mesonProductLayout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+}
+
 @media (max-width: 760px) {
   .galleryStage {
     aspect-ratio: 4 / 5;
@@ -544,8 +559,7 @@
   }
 
   .purchasePanel {
-    border-inline: 0;
-    padding: 26px 20px;
+    padding: 10px 0 24px;
   }
 
   .purchasePanel h1 {
