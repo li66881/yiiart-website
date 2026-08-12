@@ -244,7 +244,7 @@ export default function CheckoutPage() {
                       />
                     </div>
                   </div>
-                  <button type="submit" className="mt-6 w-full bg-[#26352c] py-4 text-white transition-colors hover:bg-[#1e2520]">
+                  <button type="submit" className="yii-btn-primary mt-6 w-full py-4">
                     Continue to payment
                   </button>
                 </form>
@@ -299,7 +299,7 @@ export default function CheckoutPage() {
                     <button type="button" onClick={() => setStep("shipping")} className="flex-1 border py-3 hover:bg-gray-50">
                       Back
                     </button>
-                    <button type="submit" className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520]">
+                    <button type="submit" className="yii-btn-primary flex-1 py-3">
                       Review order
                     </button>
                   </div>
@@ -352,7 +352,7 @@ export default function CheckoutPage() {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={loading}
-                      className="flex-1 bg-[#26352c] py-3 text-white transition-colors hover:bg-[#1e2520] disabled:opacity-50"
+                      className="yii-btn-primary flex-1 py-3 disabled:opacity-50"
                     >
                       {loading ? "Redirecting..." : paymentMethod === "invoice" ? "Request invoice" : "Place order"}
                     </button>

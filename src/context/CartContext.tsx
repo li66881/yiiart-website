@@ -21,6 +21,9 @@ interface CartContextType {
   itemCount: number
   subtotal: number
   ready: boolean
+  cartOpen: boolean
+  openCart: () => void
+  closeCart: () => void
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined)
@@ -28,6 +31,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined)
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([])
   const [mounted, setMounted] = useState(false)
+  const [cartOpen, setCartOpen] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -48,7 +52,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, mounted])
 
-  const addItem = (item: CartItemInput) => setItems((current) => addCartItem(current, item))
+  const addItem = (item: CartItemInput) => {
+    setItems((current) => addCartItem(current, item))
+    setCartOpen(true)
+  }
 
   const removeItem = (key: string) => setItems((current) => removeCartItem(current, key))
 
@@ -60,9 +67,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const itemCount = items.reduce((sum, item) => sum + item.quantity, 0)
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+  const openCart = () => setCartOpen(true)
+  const closeCart = () => setCartOpen(false)
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, ready: mounted }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, clearCart, itemCount, subtotal, ready: mounted, cartOpen, openCart, closeCart }}>
       {children}
     </CartContext.Provider>
   )

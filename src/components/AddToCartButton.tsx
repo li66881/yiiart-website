@@ -41,7 +41,7 @@ export default function AddToCartButton({ item }: AddToCartButtonProps) {
     <button
       type="button"
       onClick={handleClick}
-      className="flex min-h-14 w-full items-center justify-center bg-[#26352c] px-6 text-sm font-medium uppercase text-white transition hover:bg-[#1e2520]"
+      className="flex min-h-14 w-full items-center justify-center rounded-[3.75rem] border-2 border-[#171717] bg-[#171717] px-6 text-[15px] font-normal text-white transition hover:bg-black"
     >
       {added ? t("cart.addedToCart") : t("artwork.addToCart")}
     </button>

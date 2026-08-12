@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
+import { Poppins, Urbanist } from 'next/font/google'
 import './globals.css'
 import Providers from '@/components/SessionProvider'
 import CatalogNavigationProvider from '@/components/CatalogNavigationProvider'
@@ -8,12 +9,27 @@ import { WishlistProvider } from '@/context/WishlistContext'
 import { LanguageProvider } from '@/context/LanguageContext'
 import { CurrencyProvider } from '@/context/CurrencyContext'
 import ChatWidget from '@/components/ChatWidget'
+import MiniCartDrawer from '@/components/MiniCartDrawer'
 import CookieConsent from '@/components/CookieConsent'
 import MarketingPixels from '@/components/MarketingPixels'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
 import { getCatalogNavigationState } from '@/lib/storefront/collection-catalog'
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  variable: '--font-body',
+  display: 'swap',
+})
+
+const urbanist = Urbanist({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-heading',
+  display: 'swap',
+})
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "G-8B8R7YY67Q"
 
@@ -65,7 +81,7 @@ export default async function RootLayout({
   const navigationState = await getCatalogNavigationState()
 
   return (
-    <html lang="en">
+    <html lang="en" className={`${poppins.variable} ${urbanist.variable}`}>
       <head>
         {gaMeasurementId && (
           <>
@@ -138,6 +154,7 @@ export default async function RootLayout({
                 <WishlistProvider>
                   <CartProvider>
                     {children}
+                    <MiniCartDrawer />
                     <ChatWidget />
                     <CookieConsent />
                   </CartProvider>

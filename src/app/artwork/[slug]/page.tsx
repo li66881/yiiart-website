@@ -6,11 +6,11 @@ import Footer from "@/components/Footer"
 import ProductGallery from "@/components/storefront/ProductGallery"
 import ProductDisclosure from "@/components/storefront/ProductDisclosure"
 import ProductPurchasePanel from "@/components/storefront/ProductPurchasePanel"
+import HomeProductCard from "@/components/home/HomeProductCard"
 import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
 import ReviewStars from "@/components/ReviewStars"
-import { PriceText } from "@/components/PriceText"
 import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
 import { client } from "@/lib/sanity"
 import {
@@ -524,7 +524,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </p>
               <Link
                 href={`/custom-painting?artwork=${encodeURIComponent(slug)}`}
-                className="mt-6 inline-flex bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800"
+                className="yii-btn-primary mt-6"
               >
                 Request Custom Painting
               </Link>
@@ -636,8 +636,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           <section className="mt-16 border-t border-stone-200 pt-12">
             <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
-                <p className="mb-3 text-sm uppercase text-stone-500">Related Products</p>
-                <h2 className="text-3xl font-light">Similar artworks to compare</h2>
+                <p className="mb-3 text-sm uppercase text-stone-500">You may also like</p>
+                <h2 className="text-3xl font-light">Similar artworks</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
                   Compare works with a similar style or medium before deciding on size, palette, and room fit.
                 </p>
@@ -647,7 +647,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             {relatedArtworks.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {relatedArtworks.map((related: any) => (
-                  <RelatedArtworkCard key={related._id} artwork={related} />
+                  <HomeProductCard key={related._id} artwork={related} />
                 ))}
               </div>
             ) : (
@@ -704,42 +704,6 @@ function ArtworkDetails({
         <Detail key={row.label} label={row.label} value={row.value} />
       ))}
     </div>
-  )
-}
-
-function RelatedArtworkCard({ artwork }: { artwork: any }) {
-  const href = `/artwork/${artwork.slug?.current || artwork._id}`
-  const image = getArtworkImageUrl(artwork, { width: 700, height: 900 })
-  const title = pickEnglish(artwork.title, "Untitled artwork")
-  const category = normalizeCategory(artwork.category)
-  const medium = normalizeMedium(artwork.medium)
-
-  return (
-    <Link href={href} className="group block">
-      <div className="relative aspect-[4/5] overflow-hidden bg-stone-100">
-        {image ? (
-          <Image
-            src={image}
-            alt={`${title}, related handmade artwork`}
-            fill
-            sizes="(min-width: 1024px) 25vw, 50vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full w-full items-center justify-center border border-stone-200 bg-white text-stone-400">
-            Artwork image available on request
-          </div>
-        )}
-      </div>
-      <div className="pt-4">
-        <p className="text-xs uppercase text-stone-500">{[category, medium].filter(Boolean).join(" / ")}</p>
-        <h3 className="mt-2 font-medium leading-snug">{title}</h3>
-        <div className="mt-2 flex items-center justify-between gap-3 text-sm">
-          <span className="text-stone-500">{formatArtworkDimensions(artwork)}</span>
-          <span className="font-semibold"><PriceText amountCny={artwork.price} /></span>
-        </div>
-      </div>
-    </Link>
   )
 }
 

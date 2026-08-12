@@ -32,7 +32,7 @@ export default function CartPage() {
           ) : items.length === 0 ? (
             <div className="border-y border-black/15 py-24 text-center">
               <p className="mb-7 text-stone-500">{t("cart.empty")}</p>
-              <Link href="/artworks" className="inline-flex min-h-12 items-center rounded-full bg-[#26352c] px-8 text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
+              <Link href="/artworks" className="yii-btn-primary min-h-12 px-8">
                 {t("cart.continueShopping")}
               </Link>
             </div>
@@ -106,7 +106,7 @@ export default function CartPage() {
                       <span><PriceText amountCny={subtotal} /></span>
                     </div>
                   </div>
-                  <Link href="/checkout" className="mt-6 flex min-h-14 w-full items-center justify-center rounded-full bg-[#26352c] px-5 text-center text-sm font-medium text-white transition-colors hover:bg-[#1e2520]">
+                  <Link href="/checkout" className="yii-btn-primary mt-6 min-h-14 w-full">
                     {t("cart.proceedToCheckout")}
                   </Link>
                   <p className="mt-4 text-center text-xs leading-5 text-stone-500">Secure checkout through the current YiiArt payment flow.</p>

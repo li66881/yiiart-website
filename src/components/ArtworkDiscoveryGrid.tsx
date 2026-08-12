@@ -76,8 +76,8 @@ export default function ArtworkDiscoveryGrid({
             onClick={() => setCollection(value)}
             className={`min-h-12 min-w-0 flex-1 whitespace-nowrap border-b-2 px-2 text-sm transition-colors duration-200 md:flex-none md:px-5 ${
               collection === value
-                ? "border-[#26352c] text-[#26352c]"
-                : "border-transparent text-stone-500 hover:text-[#26352c]"
+                ? "border-[#171717] text-[#171717]"
+                : "border-transparent text-stone-500 hover:text-[#171717]"
             }`}
           >
             <span className="md:hidden">{compactLabel}</span>
@@ -130,7 +130,7 @@ export default function ArtworkDiscoveryGrid({
                     <label
                       key={option}
                       className={`flex min-h-10 items-center justify-between gap-3 px-1 py-2 text-sm transition ${
-                        checked ? "bg-[#e4ded3] text-[#26352c]" : "text-stone-700 hover:bg-[#f2eee7]"
+                        checked ? "bg-[#eceae4] text-[#171717]" : "text-stone-700 hover:bg-[#f5f4f0]"
                       }`}
                     >
                       <span className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export default function ArtworkDiscoveryGrid({
               aria-label="Sort artworks"
               value={sortMode}
               onChange={(event) => setSortMode(event.target.value as ArtworkSortMode)}
-              className="min-h-10 rounded-full border border-stone-800 bg-[#fffdf8] px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#26352c]"
+              className="min-h-10 rounded-full border border-stone-800 bg-white px-4 py-2 focus:outline-none focus:ring-1 focus:ring-[#171717]"
             >
               <option value="featured">{t("discovery.sortFeatured")}</option>
               <option value="newest">{t("discovery.sortNewest")}</option>
@@ -238,24 +238,21 @@ function ArtworkTile({
 
   return (
     <Link href={artwork.href} className="meson-product-card group block">
-      <div className="relative aspect-[4/5] overflow-hidden rounded-[10px] bg-[#e8e1d6]">
+      <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f4f0]">
         {artwork.imageUrl ? (
           <Image
             src={artwork.imageUrl}
             alt={buildArtworkTileAlt(artwork, translateOption)}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+            className="object-cover transition-opacity duration-300"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
-        <div className="absolute inset-x-3 bottom-3 hidden min-h-10 items-center justify-center rounded-full bg-white/94 px-4 text-xs font-semibold uppercase tracking-[0.08em] text-[#1d1c18] opacity-0 shadow-lg backdrop-blur transition-all duration-300 group-hover:opacity-100 sm:flex">
-          <span>Choose options</span>
-        </div>
       </div>
       <div className="bg-transparent px-0 py-3">
-        {collectionCue && <p className="mb-1.5 text-[0.65rem] font-medium uppercase text-[#75432f]">{collectionCue}</p>}
+        {collectionCue && <p className="mb-1.5 text-[0.65rem] font-medium uppercase text-[#a4a4a4]">{collectionCue}</p>}
         <p className="truncate text-[0.65rem] uppercase text-stone-500 sm:text-xs">
           {[translateOption(artwork.category), translateOption(artwork.medium)].filter(Boolean).join(" / ")}
         </p>
@@ -264,10 +261,12 @@ function ArtworkTile({
             <h3 className="text-sm font-medium leading-snug text-stone-950 sm:text-base">{artwork.title}</h3>
             <p className="mt-1 truncate text-xs text-stone-500 sm:text-sm">{artwork.artistName}</p>
           </div>
-          <p className="shrink-0 text-sm font-semibold text-stone-950 sm:text-right">
+          <p className="shrink-0 text-sm font-medium text-stone-950 sm:text-right">
+            <span className="text-[12px] font-normal text-[#a4a4a4]">From </span>
             <PriceText amountCny={artwork.price} />
           </p>
         </div>
+        <p className="pt-2 text-[13px] font-medium text-[#171717] underline-offset-4 group-hover:underline">Choose options</p>
         <p className="mt-2 text-xs leading-5 text-stone-500 sm:mt-3 sm:text-sm">
           {artwork.dimensions || "Size on request"}
         </p>

@@ -23,10 +23,10 @@
 .eyebrow,
 .darkEyebrow {
   margin: 0 0 14px;
-  color: var(--yiiart-clay);
+  color: var(--yiiart-muted);
   font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0;
+  font-weight: 500;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
@@ -45,13 +45,14 @@
 .sectionHeading h2,
 .stickyCopy h2,
 .customCopy h2,
-.faqLayout h2 {
-  max-width: 16ch;
+.faqLayout h2,
+.brandGrid h2 {
+  max-width: 18ch;
   margin: 0;
-  font-size: clamp(2.1rem, 3.4vw, 3.15rem);
-  font-weight: 450;
-  letter-spacing: -0.035em;
-  line-height: 1.04;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .textLink {
@@ -59,19 +60,19 @@
   min-height: 44px;
   align-items: center;
   border-bottom: 1px solid currentColor;
-  color: var(--yiiart-forest);
+  color: var(--yiiart-ink);
   font-size: 0.9rem;
-  font-weight: 650;
+  font-weight: 500;
   transition: color 180ms ease;
 }
 
 .textLink:hover {
-  color: var(--yiiart-clay);
+  color: #000;
 }
 
 .quickLinks {
   border-bottom: 1px solid var(--yiiart-line);
-  background: #f2eee7;
+  background: var(--yiiart-warm);
 }
 
 .quickLinkRow {
@@ -202,6 +203,186 @@
   text-align: center;
 }
 
+.popular {
+  background: #fff;
+}
+
+.mosaic {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.mosaicTile {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: #eceae4;
+  color: #fff;
+}
+
+.mosaicFeature {
+  grid-column: span 2;
+  grid-row: span 2;
+  aspect-ratio: auto;
+  min-height: 420px;
+}
+
+.mosaicTile img {
+  object-fit: cover;
+}
+
+.mosaicLabel {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.mosaicLabel small {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.mosaicLabel strong {
+  font-size: 1.15rem;
+  font-weight: 400;
+}
+
+.roomShows {
+  display: grid;
+}
+
+.roomShow {
+  position: relative;
+  min-height: min(62vw, 520px);
+  overflow: hidden;
+  background: #eceae4;
+  color: #fff;
+}
+
+.roomShow img {
+  object-fit: cover;
+}
+
+.roomShowCopy {
+  position: absolute;
+  left: 24px;
+  bottom: 28px;
+  display: grid;
+  gap: 8px;
+}
+
+.roomShowCopy small {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.8);
+}
+
+.roomShowCopy strong {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 300;
+}
+
+.artworkRail {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scroll-snap-type: x mandatory;
+}
+
+.railItem {
+  flex: 0 0 72vw;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 768px) {
+  .artworkRail {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: visible;
+    padding-bottom: 0;
+    scroll-snap-type: none;
+  }
+
+  .railItem {
+    flex: none;
+  }
+}
+
+.orientations {
+  background: #f7f6f2;
+}
+
+.orientGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.orientCard {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: #eceae4;
+  color: #fff;
+}
+
+.orientCard img {
+  object-fit: cover;
+}
+
+.orientCard span {
+  position: absolute;
+  inset: auto 16px 16px;
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.brand {
+  background: #fff;
+}
+
+.brandGrid {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.9fr) minmax(0, 1.4fr);
+  gap: clamp(32px, 6vw, 80px);
+  margin-bottom: 48px;
+}
+
+.brandGrid p {
+  max-width: 42ch;
+  margin: 20px 0 24px;
+  color: #5e5d57;
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.trustIcons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 32px;
+}
+
+.trustIcons strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.trustIcons p {
+  margin: 0;
+  color: var(--yiiart-muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
 .rooms {
   background: #e9e2d6;
 }
@@ -313,14 +494,8 @@
   font-size: 0.75rem;
 }
 
-.artworkRail {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 22px;
-}
-
 .artistCollection {
-  background: #dcd5c8;
+  background: #fff;
 }
 
 .splitLayout,
@@ -388,14 +563,15 @@
 
 .lightButton {
   display: inline-flex;
-  min-height: 52px;
+  min-height: 48px;
   align-items: center;
-  padding: 13px 24px;
+  padding: 12px 24px;
+  border-radius: 3.75rem;
   background: var(--yiiart-paper-strong);
-  color: var(--yiiart-forest);
-  font-size: 0.9rem;
-  font-weight: 650;
-  transition: background 180ms ease, transform 180ms ease;
+  color: var(--yiiart-ink);
+  font-size: 0.9375rem;
+  font-weight: 400;
+  transition: background 180ms ease;
 }
 
 .lightButton:hover {
@@ -538,9 +714,22 @@
 }
 
 @media (max-width: 1100px) {
-  .artworkGrid,
-  .artworkRail {
+  .mosaic,
+  .orientGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .mosaicFeature {
+    grid-column: span 2;
+    min-height: 280px;
+  }
+
+  .artworkGrid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .brandGrid {
+    grid-template-columns: 1fr;
   }
 
   .roomGrid {
@@ -611,10 +800,20 @@
   }
 
   .artworkGrid,
-  .artworkRail,
   .artistGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 30px 12px;
+  }
+
+  .mosaic,
+  .orientGrid,
+  .trustIcons {
+    grid-template-columns: 1fr;
+  }
+
+  .mosaicFeature {
+    grid-column: auto;
+    min-height: 240px;
   }
 
   .artworkCopy > div {

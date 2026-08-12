@@ -110,7 +110,7 @@ export default function ProductPurchasePanel({
         <fieldset className={styles.options}>
           <legend>Select a size</legend>
           <div className={styles.choiceGrid}>
-            {product.sizes.map((size) => (
+            {product.sizes.map((size, index) => (
               <label key={size.id} className={styles.choice}>
                 <input
                   type="radio"
@@ -118,7 +118,10 @@ export default function ProductPurchasePanel({
                   checked={selection?.size.id === size.id}
                   onChange={() => setSizeId(size.id)}
                 />
-                <span>{size.label}</span>
+                <span>
+                  {size.label}
+                  {index === 0 && product.sizes.length > 1 ? <em className={styles.popularBadge}>Popular</em> : null}
+                </span>
               </label>
             ))}
           </div>
@@ -189,6 +192,12 @@ export default function ProductPurchasePanel({
         <span>Hand-painted</span>
         <span>Careful packing</span>
         <span>Damage support</span>
+      </div>
+
+      <div className={styles.artAdvisory}>
+        <strong>Complimentary art advisory</strong>
+        <p>Send a room photo and wall measurement. The studio will help confirm scale before you order.</p>
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
       </div>
 
       <div className={styles.purchaseDetails}>
