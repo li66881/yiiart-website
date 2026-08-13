@@ -9,6 +9,21 @@ type StickyPurchaseVisibility = {
   footerVisible: boolean
 }
 
+export type StickyPurchaseBodyTarget = {
+  dataset: {
+    stickyPurchaseVisible?: string
+  }
+}
+
+export function clearStickyPurchaseBodyState(target: StickyPurchaseBodyTarget) {
+  delete target.dataset.stickyPurchaseVisible
+}
+
+export function applyStickyPurchaseBodyState(target: StickyPurchaseBodyTarget) {
+  target.dataset.stickyPurchaseVisible = "true"
+  return () => clearStickyPurchaseBodyState(target)
+}
+
 export function mainActionBlocksSticky(position: MainActionPosition) {
   return position.isIntersecting || position.top >= 0
 }

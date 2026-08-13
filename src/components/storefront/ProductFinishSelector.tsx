@@ -3,7 +3,10 @@
 import Image from "next/image"
 import { PriceText } from "@/components/PriceText"
 import type { NormalizedFinishOption } from "@/lib/storefront/finish-options"
-import { buildProductFinishSelectorViewModel } from "@/lib/storefront/finish-selector"
+import {
+  buildProductFinishSelectorViewModel,
+  finishThumbnailImageProps,
+} from "@/lib/storefront/finish-selector"
 import styles from "./storefront.module.css"
 
 type Props = {
@@ -47,6 +50,7 @@ export function ProductFinishSelector({
                   width={88}
                   height={88}
                   sizes="88px"
+                  {...finishThumbnailImageProps}
                 />
               </span>
               <span className={styles.finishName}>{finish.label}</span>

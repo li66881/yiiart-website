@@ -148,6 +148,12 @@ img {
   }
 }
 
+@media (min-width: 768px) {
+  body[data-sticky-purchase-visible="true"] .yiiart-chat-widget {
+    bottom: calc(var(--cookie-consent-height, 0px) + 8rem);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

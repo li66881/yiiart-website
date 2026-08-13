@@ -4,7 +4,11 @@ import { useEffect, useState } from "react"
 import { PriceText } from "@/components/PriceText"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import type { getProductSelection } from "@/lib/storefront/selection"
-import { shouldShowStickyPurchase } from "@/lib/storefront/sticky-purchase"
+import {
+  applyStickyPurchaseBodyState,
+  clearStickyPurchaseBodyState,
+  shouldShowStickyPurchase,
+} from "@/lib/storefront/sticky-purchase"
 import styles from "./storefront.module.css"
 
 type ProductSelection = ReturnType<typeof getProductSelection>
@@ -42,6 +46,15 @@ export function ProductStickyPurchaseBar({
     actionVisible,
     footerVisible,
   })
+
+  useEffect(() => {
+    if (!visible) {
+      clearStickyPurchaseBodyState(document.body)
+      return
+    }
+
+    return applyStickyPurchaseBodyState(document.body)
+  }, [visible])
 
   if (!visible || !selection) return null
 

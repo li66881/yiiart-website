@@ -5,6 +5,7 @@ import {
   applyCookieConsentBodyState,
   clearCookieConsentBodyState,
 } from "../cookie-consent-state"
+import * as finishSelectorModule from "./finish-selector"
 import { buildProductFinishSelectorViewModel } from "./finish-selector"
 import type { NormalizedFinishOption } from "./finish-options"
 import {
@@ -12,6 +13,7 @@ import {
   productDetailStoryLayout,
 } from "./product-detail-information"
 import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
+import * as stickyPurchaseModule from "./sticky-purchase"
 import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
 import { productDetailNavigationItems } from "./product-detail-navigation"
 import { buildProductGalleryLabelModel } from "./product-gallery-labels"
@@ -88,6 +90,25 @@ test("finish selector keeps native radio semantics and distinguishable focus and
   assert.match(selector, /data-selected=/)
   assert.match(styles, /\.finishRadio:focus-visible \+ \.finishControl/)
   assert.match(styles, /\.finishChoice\[data-selected="true"\]/)
+})
+
+test("finish thumbnails request tiny local assets eagerly without optimizer indirection", async () => {
+  const finishSelector = await readFile(
+    "src/components/storefront/ProductFinishSelector.tsx",
+    "utf8",
+  )
+  const module = finishSelectorModule as typeof finishSelectorModule & {
+    finishThumbnailImageProps?: {
+      loading: string
+      unoptimized: boolean
+    }
+  }
+
+  assert.deepEqual(module.finishThumbnailImageProps, {
+    loading: "eager",
+    unoptimized: true,
+  })
+  assert.match(finishSelector, /\{\.\.\.finishThumbnailImageProps\}/)
 })
 
 test("optimized storefront keeps current catalog and checkout boundaries", async () => {
@@ -301,6 +322,52 @@ test("sticky purchase visibility requires a selection and an unobscured offscree
     actionVisible: false,
     footerVisible: true,
   }), false)
+})
+
+test("sticky purchase body state applies while visible and cleans up on hide or unmount", () => {
+  type StickyPurchaseBodyTarget = {
+    dataset: { stickyPurchaseVisible?: string }
+  }
+  const module = stickyPurchaseModule as typeof stickyPurchaseModule & {
+    applyStickyPurchaseBodyState?: (target: StickyPurchaseBodyTarget) => () => void
+    clearStickyPurchaseBodyState?: (target: StickyPurchaseBodyTarget) => void
+  }
+
+  assert.equal(typeof module.applyStickyPurchaseBodyState, "function")
+  assert.equal(typeof module.clearStickyPurchaseBodyState, "function")
+
+  const unmounted: StickyPurchaseBodyTarget = { dataset: {} }
+  const cleanup = module.applyStickyPurchaseBodyState!(unmounted)
+  assert.equal(unmounted.dataset.stickyPurchaseVisible, "true")
+  cleanup()
+  assert.equal(unmounted.dataset.stickyPurchaseVisible, undefined)
+
+  const hidden: StickyPurchaseBodyTarget = {
+    dataset: { stickyPurchaseVisible: "true" },
+  }
+  module.clearStickyPurchaseBodyState!(hidden)
+  assert.equal(hidden.dataset.stickyPurchaseVisible, undefined)
+})
+
+test("desktop chat follows sticky purchase state without changing the mobile offset", async () => {
+  const [stickyPurchase, chatWidget, globalStyles] = await Promise.all([
+    readFile("src/components/storefront/ProductStickyPurchaseBar.tsx", "utf8"),
+    readFile("src/components/ChatWidget.tsx", "utf8"),
+    readFile("src/app/globals.css", "utf8"),
+  ])
+  const mobileStyles = globalStyles.slice(
+    globalStyles.indexOf("@media (max-width: 767px)"),
+    globalStyles.indexOf("@media (min-width: 768px)"),
+  )
+
+  assert.match(stickyPurchase, /applyStickyPurchaseBodyState\(document\.body\)/)
+  assert.match(stickyPurchase, /clearStickyPurchaseBodyState\(document\.body\)/)
+  assert.match(chatWidget, /yiiart-chat-widget/)
+  assert.match(
+    globalStyles,
+    /@media \(min-width: 768px\)[\s\S]*?body\[data-sticky-purchase-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*bottom:\s*calc\(var\(--cookie-consent-height, 0px\) \+ 8rem\)/,
+  )
+  assert.doesNotMatch(mobileStyles, /data-sticky-purchase-visible/)
 })
 
 test("desktop sticky purchase aligns with the artwork page container and gutters", async () => {

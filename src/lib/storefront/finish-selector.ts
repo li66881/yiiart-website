@@ -3,6 +3,11 @@ import {
   type NormalizedFinishOption,
 } from "./finish-options"
 
+export const finishThumbnailImageProps = {
+  loading: "eager",
+  unoptimized: true,
+} as const
+
 export type ProductFinishSelectorChoice = NormalizedFinishOption & {
   selected: boolean
   priceDeltaCny: number | null
