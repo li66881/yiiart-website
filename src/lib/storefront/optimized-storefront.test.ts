@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { buildProductFinishSelectorViewModel } from "./finish-selector"
 import type { NormalizedFinishOption } from "./finish-options"
+import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
 
 const selectorFinishes: NormalizedFinishOption[] = [
   {
@@ -142,6 +143,47 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)
   assert.match(artworkPage, /mesonProductLayout/)
+})
+
+test("product purchase hierarchy shares the selected total and sticky action state", async () => {
+  const [purchasePanel, cookieConsent] = await Promise.all([
+    readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8"),
+    readFile("src/components/CookieConsent.tsx", "utf8"),
+  ])
+
+  assert.match(purchasePanel, /Add to Cart —/)
+  assert.match(purchasePanel, /ProductStickyPurchaseBar/)
+  assert.match(purchasePanel, /mainAction(?:Ref|Sentinel)/)
+  assert.match(purchasePanel, /onClick={addSelection}/)
+  assert.match(purchasePanel, /onAdd={addSelection}/)
+  assert.match(cookieConsent, /document\.body\.dataset\.cookieConsentVisible\s*=\s*["']true["']/)
+  assert.match(cookieConsent, /delete document\.body\.dataset\.cookieConsentVisible/)
+})
+
+test("sticky purchase visibility requires a selection and an unobscured offscreen action", () => {
+  assert.equal(mainActionBlocksSticky({ isIntersecting: true, top: 0 }), true)
+  assert.equal(mainActionBlocksSticky({ isIntersecting: false, top: 480 }), true)
+  assert.equal(mainActionBlocksSticky({ isIntersecting: false, top: -1 }), false)
+  assert.equal(shouldShowStickyPurchase({
+    hasSelection: true,
+    actionVisible: false,
+    footerVisible: false,
+  }), true)
+  assert.equal(shouldShowStickyPurchase({
+    hasSelection: true,
+    actionVisible: true,
+    footerVisible: false,
+  }), false)
+  assert.equal(shouldShowStickyPurchase({
+    hasSelection: false,
+    actionVisible: false,
+    footerVisible: false,
+  }), false)
+  assert.equal(shouldShowStickyPurchase({
+    hasSelection: true,
+    actionVisible: false,
+    footerVisible: true,
+  }), false)
 })
 
 test("complete recovery matches the approved MesonArt-aligned composition", async () => {

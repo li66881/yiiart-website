@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
 
 const STORAGE_KEY = "yiiart-cookie-consent"
@@ -11,6 +11,7 @@ export default function CookieConsent() {
   const { t } = useLanguage()
   const [choice, setChoice] = useState<CookieChoice>("pending")
   const [mounted, setMounted] = useState(false)
+  const bannerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
@@ -20,6 +21,34 @@ export default function CookieConsent() {
       setChoice(savedChoice)
     }
   }, [])
+
+  const consentVisible = mounted && choice === "pending"
+
+  useEffect(() => {
+    if (!consentVisible) {
+      delete document.body.dataset.cookieConsentVisible
+      document.body.style.removeProperty("--cookie-consent-height")
+      return
+    }
+
+    document.body.dataset.cookieConsentVisible = "true"
+    const updateHeight = () => {
+      const height = bannerRef.current?.getBoundingClientRect().height || 0
+      document.body.style.setProperty("--cookie-consent-height", `${Math.ceil(height)}px`)
+    }
+    updateHeight()
+
+    const resizeObserver = typeof ResizeObserver === "undefined"
+      ? null
+      : new ResizeObserver(updateHeight)
+    if (bannerRef.current) resizeObserver?.observe(bannerRef.current)
+
+    return () => {
+      resizeObserver?.disconnect()
+      delete document.body.dataset.cookieConsentVisible
+      document.body.style.removeProperty("--cookie-consent-height")
+    }
+  }, [consentVisible])
 
   const saveChoice = (nextChoice: Exclude<CookieChoice, "pending">) => {
     localStorage.setItem(STORAGE_KEY, nextChoice)
@@ -32,7 +61,7 @@ export default function CookieConsent() {
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] border-t bg-white/95 backdrop-blur">
+    <div ref={bannerRef} className="fixed inset-x-0 bottom-0 z-[60] border-t bg-white/95 backdrop-blur">
       <div className="container mx-auto flex flex-col gap-3 px-4 py-3 md:flex-row md:items-center md:justify-between md:py-4">
         <p className="max-w-2xl text-xs leading-5 text-gray-600 md:text-sm">
           {t("cookie.message")}
