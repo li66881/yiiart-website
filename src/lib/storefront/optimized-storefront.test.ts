@@ -9,6 +9,7 @@ import { buildProductFinishSelectorViewModel } from "./finish-selector"
 import type { NormalizedFinishOption } from "./finish-options"
 import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
 import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
+import { productDetailNavigationItems } from "./product-detail-navigation"
 
 const selectorFinishes: NormalizedFinishOption[] = [
   {
@@ -166,6 +167,26 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)
   assert.match(artworkPage, /mesonProductLayout/)
+})
+
+test("product information navigation exposes the four detail groups in reading order", () => {
+  assert.deepEqual(productDetailNavigationItems, [
+    { id: "about-artwork", label: "About the artwork" },
+    { id: "details-customization", label: "Details & customization" },
+    { id: "shipping-returns", label: "Shipping & returns" },
+    { id: "reviews", label: "Reviews" },
+  ])
+})
+
+test("artwork page integrates the product information navigation and anchored regions", async () => {
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(artworkPage, /ProductDetailNavigation/)
+  assert.match(artworkPage, /id="about-artwork"/)
+  assert.match(artworkPage, /id="details-customization"/)
+  assert.match(artworkPage, /id="shipping-returns"/)
+  assert.match(artworkPage, /id="reviews"/)
+  assert.doesNotMatch(artworkPage, /&larr;[^\n]*product\.backToArtworks/)
 })
 
 test("product purchase hierarchy shares the selected total and sticky action state", async () => {
