@@ -2,7 +2,8 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState, type WheelEvent } from "react"
-import { productMediaRoleLabels, type ProductMediaItem } from "@/lib/artwork-media"
+import type { ProductMediaItem } from "@/lib/artwork-media"
+import { buildProductGalleryLabelModel } from "@/lib/storefront/product-gallery-labels"
 import styles from "./storefront.module.css"
 
 type Props = {
@@ -19,6 +20,10 @@ export default function ProductGallery({ media, alt }: Props) {
   const lightboxRef = useRef<HTMLDivElement>(null)
   const lightboxCloseRef = useRef<HTMLButtonElement>(null)
   const selectedMedia = media[selectedIndex] || media[0]
+  const galleryLabels = buildProductGalleryLabelModel(
+    media.map((item) => item.role),
+    selectedIndex,
+  )
 
   const showPrevious = () => {
     setSelectedIndex((current) => (current - 1 + media.length) % media.length)
@@ -90,7 +95,7 @@ export default function ProductGallery({ media, alt }: Props) {
               type="button"
               className={styles.thumbnail}
               key={item.id}
-              aria-label={`Show ${productMediaRoleLabels[item.role].toLowerCase()}`}
+              aria-label={galleryLabels.thumbnailLabels[index]}
               aria-pressed={selectedIndex === index}
               data-room-scene={roomSceneRoles.has(item.role) || undefined}
               onClick={() => selectMedia(index)}
@@ -157,7 +162,7 @@ export default function ProductGallery({ media, alt }: Props) {
           ) : null}
         </div>
         <figcaption>
-          <span>{productMediaRoleLabels[selectedMedia.role]}</span>
+          <span aria-live="polite">{galleryLabels.visibleLabel}</span>
           <span>{selectedIndex + 1} / {media.length}</span>
         </figcaption>
       </div>

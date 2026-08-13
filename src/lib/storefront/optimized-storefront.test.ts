@@ -14,6 +14,7 @@ import {
 import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
 import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
 import { productDetailNavigationItems } from "./product-detail-navigation"
+import { buildProductGalleryLabelModel } from "./product-gallery-labels"
 
 const selectorFinishes: NormalizedFinishOption[] = [
   {
@@ -171,6 +172,43 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)
   assert.match(artworkPage, /mesonProductLayout/)
+})
+
+test("gallery labels expose the current role and disambiguate repeated role views", () => {
+  const labels = buildProductGalleryLabelModel(
+    ["front", "detail", "detail"],
+    2,
+  )
+
+  assert.equal(labels.visibleLabel, "Texture detail")
+  assert.deepEqual(labels.thumbnailLabels, [
+    "Show front view",
+    "Show texture detail, view 2",
+    "Show texture detail, view 3",
+  ])
+  assert.equal(new Set(labels.thumbnailLabels).size, labels.thumbnailLabels.length)
+})
+
+test("product layout keeps the gallery dominant and stacks safely across narrow viewports", async () => {
+  const [gallery, styles] = await Promise.all([
+    readFile("src/components/storefront/ProductGallery.tsx", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
+  ])
+
+  assert.match(gallery, /aria-live="polite"[^>]*>\s*{galleryLabels\.visibleLabel}/)
+  assert.match(gallery, /aria-label={galleryLabels\.thumbnailLabels\[index\]}/)
+  assert.match(styles, /\.mesonProductLayout\s*{[^}]*grid-template-columns:\s*minmax\(0,\s*3fr\)\s+minmax\(360px,\s*2fr\)/)
+  assert.match(styles, /\.purchasePanel\s*{[^}]*position:\s*sticky;[^}]*top:\s*calc\(var\(--yiiart-header-offset\) \+ 24px\)/)
+  assert.match(styles, /@media \(max-width: 1023px\)[\s\S]*?\.purchasePanel\s*{[^}]*position:\s*static/)
+  assert.match(styles, /@media \(max-width: 900px\)[\s\S]*?\.thumbnailGrid\s*{[^}]*overflow-x:\s*auto;[^}]*flex-direction:\s*row/)
+  assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.productDetailNavigation\s*{[^}]*width:\s*calc\(100% \+ 2rem\);[^}]*max-width:\s*100vw/)
+  assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.finishGrid\s*{[^}]*overflow-x:\s*auto;[\s\S]*?\.finishName\s*{[^}]*display:\s*block/)
+  assert.match(styles, /\.productDetailNavigation a\s*{[^}]*min-height:\s*44px/)
+  assert.match(styles, /\.galleryArrow,[\s\S]*?width:\s*44px;[^}]*height:\s*44px/)
+  assert.match(styles, /\.quantityControl\s*{[^}]*grid-template-columns:\s*44px 42px 44px;[^}]*height:\s*44px/)
+  assert.match(styles, /:global\(body\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ env\(safe-area-inset-bottom\)\)/)
+  assert.match(styles, /:global\(body\[data-cookie-consent-visible="true"\]\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ var\(--cookie-consent-height, 0px\) \+ env\(safe-area-inset-bottom\)\)/)
+  assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.stickyPurchaseShell\s*{[^}]*animation:\s*none/)
 })
 
 test("product information navigation exposes the four detail groups in reading order", () => {
