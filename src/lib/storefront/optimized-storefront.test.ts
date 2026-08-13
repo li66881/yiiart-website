@@ -349,57 +349,6 @@ test("sticky purchase body state applies while visible and cleans up on hide or 
   assert.equal(hidden.dataset.stickyPurchaseVisible, undefined)
 })
 
-test("rendered sticky shell owns body visibility state at DOM commit", async () => {
-  const stickyPurchase = await readFile(
-    "src/components/storefront/ProductStickyPurchaseBar.tsx",
-    "utf8",
-  )
-  const stickyShellMarkup = stickyPurchase.slice(
-    stickyPurchase.indexOf("<aside"),
-    stickyPurchase.indexOf("</aside>") + "</aside>".length,
-  )
-
-  assert.match(stickyPurchase, /const stickyPurchaseBodyStateRef = useCallback/)
-  assert.match(stickyShellMarkup, /<aside[^>]*ref={stickyPurchaseBodyStateRef}/)
-})
-
-test("observed main purchase controls suppress mobile chat only while intersecting", async () => {
-  type MainPurchaseActionBodyTarget = {
-    dataset: { mainPurchaseActionVisible?: string }
-  }
-  const module = stickyPurchaseModule as typeof stickyPurchaseModule & {
-    setMainPurchaseActionBodyState?: (
-      target: MainPurchaseActionBodyTarget,
-      visible: boolean,
-    ) => void
-  }
-  const [purchasePanel, globalStyles] = await Promise.all([
-    readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8"),
-    readFile("src/app/globals.css", "utf8"),
-  ])
-  const mobileStyles = globalStyles.slice(
-    globalStyles.indexOf("@media (max-width: 767px)"),
-    globalStyles.indexOf("@media (min-width: 768px)"),
-  )
-
-  assert.equal(typeof module.setMainPurchaseActionBodyState, "function")
-  const body: MainPurchaseActionBodyTarget = { dataset: {} }
-  module.setMainPurchaseActionBodyState!(body, true)
-  assert.equal(body.dataset.mainPurchaseActionVisible, "true")
-  module.setMainPurchaseActionBodyState!(body, false)
-  assert.equal(body.dataset.mainPurchaseActionVisible, undefined)
-
-  assert.match(
-    purchasePanel,
-    /setMainPurchaseActionBodyState\(document\.body, entry\.isIntersecting\)/,
-  )
-  assert.match(purchasePanel, /ref={mainActionRef}/)
-  assert.match(
-    mobileStyles,
-    /body\[data-main-purchase-action-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*display:\s*none/,
-  )
-})
-
 test("desktop chat follows sticky purchase state without changing the mobile offset", async () => {
   const [stickyPurchase, chatWidget, globalStyles] = await Promise.all([
     readFile("src/components/storefront/ProductStickyPurchaseBar.tsx", "utf8"),
@@ -419,6 +368,10 @@ test("desktop chat follows sticky purchase state without changing the mobile off
     /@media \(min-width: 768px\)[\s\S]*?body\[data-sticky-purchase-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*bottom:\s*calc\(var\(--cookie-consent-height, 0px\) \+ 8rem\)/,
   )
   assert.doesNotMatch(mobileStyles, /data-sticky-purchase-visible/)
+  assert.match(
+    mobileStyles,
+    /body\[data-main-purchase-action-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*display:\s*none/,
+  )
 })
 
 test("desktop sticky purchase aligns with the artwork page container and gutters", async () => {

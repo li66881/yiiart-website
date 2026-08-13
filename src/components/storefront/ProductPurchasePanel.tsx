@@ -40,7 +40,7 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const [mainActionVisible, setMainActionVisible] = useState(true)
-  const mainActionObserverRef = useRef<IntersectionObserver | null>(null)
+  const mainActionCleanupRef = useRef<() => void>(() => undefined)
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
     [finishId, product, sizeId],
@@ -53,21 +53,33 @@ export default function ProductPurchasePanel({
   const madeToOrder = product.productionModel === "hand_painted_to_order"
 
   const mainActionRef = useCallback((action: HTMLDivElement | null) => {
-    mainActionObserverRef.current?.disconnect()
-    mainActionObserverRef.current = null
+    mainActionCleanupRef.current()
     setMainPurchaseActionBodyState(document.body, false)
 
-    if (!action || typeof IntersectionObserver === "undefined") return
+    if (!action) {
+      mainActionCleanupRef.current = () => undefined
+      return
+    }
 
-    const observer = new IntersectionObserver(([entry]) => {
+    const updateMainActionPosition = () => {
+      const rect = action.getBoundingClientRect()
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+      const isIntersecting = rect.bottom > 0 && rect.top < viewportHeight
       setMainActionVisible(mainActionBlocksSticky({
-        isIntersecting: entry.isIntersecting,
-        top: entry.boundingClientRect.top,
+        isIntersecting,
+        top: rect.top,
       }))
-      setMainPurchaseActionBodyState(document.body, entry.isIntersecting)
-    })
-    observer.observe(action)
-    mainActionObserverRef.current = observer
+      setMainPurchaseActionBodyState(document.body, isIntersecting)
+    }
+
+    updateMainActionPosition()
+    window.addEventListener("scroll", updateMainActionPosition, { passive: true })
+    window.addEventListener("resize", updateMainActionPosition)
+    mainActionCleanupRef.current = () => {
+      window.removeEventListener("scroll", updateMainActionPosition)
+      window.removeEventListener("resize", updateMainActionPosition)
+      setMainPurchaseActionBodyState(document.body, false)
+    }
   }, [])
 
   const addSelection = () => {
