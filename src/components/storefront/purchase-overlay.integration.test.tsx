@@ -1,4 +1,4 @@
-import { act, cleanup, render, screen } from "@testing-library/react"
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import React from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { CartProvider } from "@/context/CartContext"
@@ -9,8 +9,12 @@ import { buildStorefrontProduct } from "@/lib/storefront/product"
 import ChatWidget from "@/components/ChatWidget"
 import ProductPurchasePanel from "./ProductPurchasePanel"
 
+const navigationState = vi.hoisted(() => ({
+  pathname: "/artwork/ink-garden-01",
+}))
+
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/artwork/ink-garden-01",
+  usePathname: () => navigationState.pathname,
 }))
 
 type Observation = {
@@ -91,22 +95,24 @@ const product = buildStorefrontProduct({
 
 describe("purchase overlay integration", () => {
   beforeEach(() => {
+    navigationState.pathname = "/artwork/ink-garden-01"
     ControlledIntersectionObserver.instances = []
     vi.stubGlobal("IntersectionObserver", ControlledIntersectionObserver)
+    vi.spyOn(HTMLElement.prototype, "getBoundingClientRect")
+      .mockImplementation(() => rect(1200, 1248))
     window.localStorage.clear()
-    document.body.removeAttribute("data-sticky-purchase-visible")
-    document.body.removeAttribute("data-main-purchase-action-visible")
     const footer = document.createElement("footer")
     document.body.appendChild(footer)
   })
 
   afterEach(() => {
     cleanup()
+    vi.restoreAllMocks()
     vi.unstubAllGlobals()
     document.body.innerHTML = ""
   })
 
-  it("shows sticky purchase after an anchor jump moves the primary action from below to above the viewport", async () => {
+  it("keeps sticky purchase available across non-intersecting jumps until the primary action is visible", async () => {
     renderStorefront(1440, 1000)
     const mainButton = screen.getByRole("button", { name: /Add to Cart/ })
     const mainAction = mainButton.parentElement as HTMLDivElement
@@ -128,15 +134,53 @@ describe("purchase overlay integration", () => {
     expect(screen.getByRole("complementary", {
       name: "Selected artwork purchase",
     })).not.toBeNull()
-    expect(document.body.dataset.stickyPurchaseVisible).toBe("true")
-    expect(
-      screen.getByRole("button", { name: "Open WhatsApp support" })
-        .closest(".yiiart-chat-widget"),
-    ).not.toBeNull()
+
+    actionRect = rect(1200, 1248)
+    await act(async () => {
+      window.dispatchEvent(new Event("resize"))
+    })
+    expect(screen.getByRole("complementary", {
+      name: "Selected artwork purchase",
+    })).not.toBeNull()
+
+    actionRect = rect(700, 748)
+    await act(async () => {
+      window.dispatchEvent(new Event("scroll"))
+    })
+    expect(screen.queryByRole("complementary", {
+      name: "Selected artwork purchase",
+    })).toBeNull()
   })
 
-  it("publishes mobile purchase-control state and restores sticky-safe chat after controls leave", async () => {
-    const view = renderStorefront(390, 844)
+  it("hides both closed and open floating chat states on mobile artwork details", () => {
+    const view = renderChatWidget()
+
+    const chatButton = screen.getByRole("button", { name: "Open WhatsApp support" })
+    expect(chatButton.classList.contains("hidden")).toBe(true)
+    expect(chatButton.classList.contains("md:flex")).toBe(true)
+
+    fireEvent.click(chatButton)
+    const chatPanel = view.container.querySelector(".yiiart-chat-widget")
+    expect(chatPanel?.classList.contains("hidden")).toBe(true)
+    expect(chatPanel?.classList.contains("md:block")).toBe(true)
+  })
+
+  it("preserves floating chat on non-product mobile routes", () => {
+    navigationState.pathname = "/cart"
+    const view = renderChatWidget()
+
+    const chatButton = screen.getByRole("button", { name: "Open WhatsApp support" })
+    expect(chatButton.classList.contains("hidden")).toBe(false)
+    expect(chatButton.classList.contains("flex")).toBe(true)
+
+    fireEvent.click(chatButton)
+    const chatPanel = view.container.querySelector(".yiiart-chat-widget")
+    expect(chatPanel?.classList.contains("hidden")).toBe(false)
+    expect(chatPanel?.classList.contains("block")).toBe(true)
+  })
+
+  it("keeps mobile sticky purchase accessible after the primary controls leave", async () => {
+    renderStorefront(390, 844)
     const mainButton = screen.getByRole("button", { name: /Add to Cart/ })
     const mainAction = mainButton.parentElement as HTMLDivElement
     let actionRect = rect(640, 732)
@@ -145,23 +189,17 @@ describe("purchase overlay integration", () => {
     await act(async () => {
       window.dispatchEvent(new Event("scroll"))
     })
-    expect(document.body.dataset.mainPurchaseActionVisible).toBe("true")
-    expect(document.body.dataset.stickyPurchaseVisible).toBeUndefined()
+    expect(screen.queryByRole("complementary", {
+      name: "Selected artwork purchase",
+    })).toBeNull()
 
     actionRect = rect(-1204, -1156)
     await act(async () => {
       window.dispatchEvent(new Event("scroll"))
     })
-    expect(document.body.dataset.mainPurchaseActionVisible).toBeUndefined()
-    expect(document.body.dataset.stickyPurchaseVisible).toBe("true")
-    expect(
-      screen.getByRole("button", { name: "Open WhatsApp support" })
-        .closest(".yiiart-chat-widget"),
-    ).not.toBeNull()
-
-    view.unmount()
-    expect(document.body.dataset.mainPurchaseActionVisible).toBeUndefined()
-    expect(document.body.dataset.stickyPurchaseVisible).toBeUndefined()
+    expect(screen.getByRole("complementary", {
+      name: "Selected artwork purchase",
+    })).not.toBeNull()
   })
 })
 
@@ -189,6 +227,14 @@ function renderStorefront(width: number, height: number) {
           </CartProvider>
         </WishlistProvider>
       </CurrencyProvider>
+    </LanguageProvider>,
+  )
+}
+
+function renderChatWidget() {
+  return render(
+    <LanguageProvider>
+      <ChatWidget />
     </LanguageProvider>,
   )
 }

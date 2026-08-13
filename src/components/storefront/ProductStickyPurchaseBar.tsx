@@ -1,14 +1,10 @@
 "use client"
 
-import { useCallback, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { PriceText } from "@/components/PriceText"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import type { getProductSelection } from "@/lib/storefront/selection"
-import {
-  applyStickyPurchaseBodyState,
-  clearStickyPurchaseBodyState,
-  shouldShowStickyPurchase,
-} from "@/lib/storefront/sticky-purchase"
+import { shouldShowStickyPurchase } from "@/lib/storefront/sticky-purchase"
 import styles from "./storefront.module.css"
 
 type ProductSelection = ReturnType<typeof getProductSelection>
@@ -17,7 +13,7 @@ type Props = {
   product: StorefrontProduct
   selection: ProductSelection
   quantity: number
-  actionVisible: boolean
+  mainActionPassed: boolean
   onAdd: () => void
 }
 
@@ -25,7 +21,7 @@ export function ProductStickyPurchaseBar({
   product,
   selection,
   quantity,
-  actionVisible,
+  mainActionPassed,
   onAdd,
 }: Props) {
   const [footerVisible, setFooterVisible] = useState(false)
@@ -43,24 +39,16 @@ export function ProductStickyPurchaseBar({
 
   const visible = shouldShowStickyPurchase({
     hasSelection: Boolean(selection),
-    actionVisible,
+    mainActionPassed,
     footerVisible,
   })
-
-  const stickyPurchaseBodyStateRef = useCallback((element: HTMLElement | null) => {
-    if (element) {
-      applyStickyPurchaseBodyState(document.body)
-    } else {
-      clearStickyPurchaseBodyState(document.body)
-    }
-  }, [])
 
   if (!visible || !selection) return null
 
   const image = product.images[0]
 
   return (
-    <aside ref={stickyPurchaseBodyStateRef} className={styles.stickyPurchaseShell} aria-label="Selected artwork purchase">
+    <aside className={styles.stickyPurchaseShell} aria-label="Selected artwork purchase">
       <div className={styles.stickyPurchaseBar}>
         <div className={styles.stickyProductIdentity}>
           {image ? <img src={image.src} alt="" /> : null}

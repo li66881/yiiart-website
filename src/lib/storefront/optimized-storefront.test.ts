@@ -13,8 +13,7 @@ import {
   productDetailStoryLayout,
 } from "./product-detail-information"
 import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
-import * as stickyPurchaseModule from "./sticky-purchase"
-import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
+import { shouldShowStickyPurchase } from "./sticky-purchase"
 import { productDetailNavigationItems } from "./product-detail-navigation"
 import { buildProductGalleryLabelModel } from "./product-gallery-labels"
 
@@ -298,79 +297,39 @@ test("product purchase hierarchy shares the selected total and sticky action sta
   assert.match(purchasePanel, /mainAction(?:Ref|Sentinel)/)
 })
 
-test("sticky purchase visibility requires a selection and an unobscured offscreen action", () => {
-  assert.equal(mainActionBlocksSticky({ isIntersecting: true, top: 0 }), true)
-  assert.equal(mainActionBlocksSticky({ isIntersecting: false, top: 480 }), true)
-  assert.equal(mainActionBlocksSticky({ isIntersecting: false, top: -1 }), false)
+test("sticky purchase visibility requires a selection and a passed primary action", () => {
   assert.equal(shouldShowStickyPurchase({
     hasSelection: true,
-    actionVisible: false,
+    mainActionPassed: true,
     footerVisible: false,
   }), true)
   assert.equal(shouldShowStickyPurchase({
     hasSelection: true,
-    actionVisible: true,
+    mainActionPassed: false,
     footerVisible: false,
   }), false)
   assert.equal(shouldShowStickyPurchase({
     hasSelection: false,
-    actionVisible: false,
+    mainActionPassed: true,
     footerVisible: false,
   }), false)
   assert.equal(shouldShowStickyPurchase({
     hasSelection: true,
-    actionVisible: false,
+    mainActionPassed: true,
     footerVisible: true,
   }), false)
 })
 
-test("sticky purchase body state applies while visible and cleans up on hide or unmount", () => {
-  type StickyPurchaseBodyTarget = {
-    dataset: { stickyPurchaseVisible?: string }
-  }
-  const module = stickyPurchaseModule as typeof stickyPurchaseModule & {
-    applyStickyPurchaseBodyState?: (target: StickyPurchaseBodyTarget) => () => void
-    clearStickyPurchaseBodyState?: (target: StickyPurchaseBodyTarget) => void
-  }
-
-  assert.equal(typeof module.applyStickyPurchaseBodyState, "function")
-  assert.equal(typeof module.clearStickyPurchaseBodyState, "function")
-
-  const unmounted: StickyPurchaseBodyTarget = { dataset: {} }
-  const cleanup = module.applyStickyPurchaseBodyState!(unmounted)
-  assert.equal(unmounted.dataset.stickyPurchaseVisible, "true")
-  cleanup()
-  assert.equal(unmounted.dataset.stickyPurchaseVisible, undefined)
-
-  const hidden: StickyPurchaseBodyTarget = {
-    dataset: { stickyPurchaseVisible: "true" },
-  }
-  module.clearStickyPurchaseBodyState!(hidden)
-  assert.equal(hidden.dataset.stickyPurchaseVisible, undefined)
-})
-
-test("desktop chat follows sticky purchase state without changing the mobile offset", async () => {
-  const [stickyPurchase, chatWidget, globalStyles] = await Promise.all([
-    readFile("src/components/storefront/ProductStickyPurchaseBar.tsx", "utf8"),
+test("desktop chat clears the rendered sticky shell with cookie and safe-area offsets", async () => {
+  const [chatWidget, styles] = await Promise.all([
     readFile("src/components/ChatWidget.tsx", "utf8"),
-    readFile("src/app/globals.css", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
   ])
-  const mobileStyles = globalStyles.slice(
-    globalStyles.indexOf("@media (max-width: 767px)"),
-    globalStyles.indexOf("@media (min-width: 768px)"),
-  )
 
-  assert.match(stickyPurchase, /applyStickyPurchaseBodyState\(document\.body\)/)
-  assert.match(stickyPurchase, /clearStickyPurchaseBodyState\(document\.body\)/)
   assert.match(chatWidget, /yiiart-chat-widget/)
   assert.match(
-    globalStyles,
-    /@media \(min-width: 768px\)[\s\S]*?body\[data-sticky-purchase-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*bottom:\s*calc\(var\(--cookie-consent-height, 0px\) \+ 8rem\)/,
-  )
-  assert.doesNotMatch(mobileStyles, /data-sticky-purchase-visible/)
-  assert.match(
-    mobileStyles,
-    /body\[data-main-purchase-action-visible="true"\] \.yiiart-chat-widget\s*\{[^}]*display:\s*none/,
+    styles,
+    /@media \(min-width: 768px\) \{\s*:global\(body\):has\(\.stickyPurchaseShell\) :global\(\.yiiart-chat-widget\)\s*\{\s*bottom:\s*calc\(var\(--cookie-consent-height, 0px\) \+ 8rem \+ env\(safe-area-inset-bottom\)\);\s*\}\s*\}/,
   )
 })
 

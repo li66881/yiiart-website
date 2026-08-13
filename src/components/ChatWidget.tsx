@@ -14,9 +14,10 @@ export default function ChatWidget() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const defaultUrl = useMemo(() => getWhatsAppUrl(), [])
-  const mobilePosition = shouldShowFloatingChatOnMobile(pathname) ? "bottom-24 right-4" : "bottom-6 right-6"
-  const mobileVisibility = shouldShowFloatingChatOnMobile(pathname) ? "flex" : "hidden md:flex"
-  const mobilePanelVisibility = shouldShowFloatingChatOnMobile(pathname) ? "block" : "hidden md:block"
+  const showOnMobile = shouldShowFloatingChatOnMobile(pathname)
+  const mobilePosition = showOnMobile ? "bottom-24 right-4" : "bottom-6 right-6"
+  const mobileVisibility = showOnMobile ? "flex" : "hidden md:flex"
+  const mobilePanelVisibility = showOnMobile ? "block" : "hidden md:block"
 
   const trackWhatsAppLead = (leadType: string) => {
     trackMarketingEvent("Lead", { lead_type: leadType, channel: "whatsapp" })

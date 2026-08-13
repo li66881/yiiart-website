@@ -1,3 +1,3 @@
 export function shouldShowFloatingChatOnMobile(pathname: string) {
-  return pathname.startsWith("/artwork/")
+  return !pathname.startsWith("/artwork/")
 }

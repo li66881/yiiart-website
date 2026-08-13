@@ -850,7 +850,7 @@
   position: fixed;
   z-index: 50;
   right: 0;
-  bottom: 18px;
+  bottom: calc(18px + env(safe-area-inset-bottom));
   left: 0;
   padding-inline: 16px;
   pointer-events: none;
@@ -858,7 +858,7 @@
 }
 
 :global(body[data-cookie-consent-visible="true"]) .stickyPurchaseShell {
-  bottom: calc(var(--cookie-consent-height, 0px) + 18px);
+  bottom: calc(var(--cookie-consent-height, 0px) + 18px + env(safe-area-inset-bottom));
 }
 
 .stickyPurchaseBar {
@@ -948,6 +948,12 @@
 @media (min-width: 640px) {
   .stickyPurchaseShell {
     padding-inline: 24px;
+  }
+}
+
+@media (min-width: 768px) {
+  :global(body):has(.stickyPurchaseShell) :global(.yiiart-chat-widget) {
+    bottom: calc(var(--cookie-consent-height, 0px) + 8rem + env(safe-area-inset-bottom));
   }
 }
 

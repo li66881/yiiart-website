@@ -146,16 +146,6 @@ img {
   :root {
     --yiiart-header-offset: 92px;
   }
-
-  body[data-main-purchase-action-visible="true"] .yiiart-chat-widget {
-    display: none;
-  }
-}
-
-@media (min-width: 768px) {
-  body[data-sticky-purchase-visible="true"] .yiiart-chat-widget {
-    bottom: calc(var(--cookie-consent-height, 0px) + 8rem);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -12,10 +12,6 @@ import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
-import {
-  mainActionBlocksSticky,
-  setMainPurchaseActionBodyState,
-} from "@/lib/storefront/sticky-purchase"
 import { ProductFinishSelector } from "./ProductFinishSelector"
 import { ProductStickyPurchaseBar } from "./ProductStickyPurchaseBar"
 import styles from "./storefront.module.css"
@@ -39,7 +35,7 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
-  const [mainActionVisible, setMainActionVisible] = useState(true)
+  const [mainActionPassed, setMainActionPassed] = useState(false)
   const mainActionCleanupRef = useRef<() => void>(() => undefined)
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
@@ -54,7 +50,6 @@ export default function ProductPurchasePanel({
 
   const mainActionRef = useCallback((action: HTMLDivElement | null) => {
     mainActionCleanupRef.current()
-    setMainPurchaseActionBodyState(document.body, false)
 
     if (!action) {
       mainActionCleanupRef.current = () => undefined
@@ -65,11 +60,11 @@ export default function ProductPurchasePanel({
       const rect = action.getBoundingClientRect()
       const viewportHeight = window.innerHeight || document.documentElement.clientHeight
       const isIntersecting = rect.bottom > 0 && rect.top < viewportHeight
-      setMainActionVisible(mainActionBlocksSticky({
-        isIntersecting,
-        top: rect.top,
-      }))
-      setMainPurchaseActionBodyState(document.body, isIntersecting)
+      setMainActionPassed((wasPassed) => {
+        if (rect.bottom <= 0) return true
+        if (isIntersecting) return false
+        return wasPassed
+      })
     }
 
     updateMainActionPosition()
@@ -78,7 +73,6 @@ export default function ProductPurchasePanel({
     mainActionCleanupRef.current = () => {
       window.removeEventListener("scroll", updateMainActionPosition)
       window.removeEventListener("resize", updateMainActionPosition)
-      setMainPurchaseActionBodyState(document.body, false)
     }
   }, [])
 
@@ -250,7 +244,7 @@ export default function ProductPurchasePanel({
           product={product}
           selection={selection}
           quantity={quantity}
-          actionVisible={mainActionVisible}
+          mainActionPassed={mainActionPassed}
           onAdd={purchaseAction.sticky}
         />
       )}
