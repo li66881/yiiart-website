@@ -201,9 +201,36 @@ describe("purchase overlay integration", () => {
       name: "Selected artwork purchase",
     })).not.toBeNull()
   })
+
+  it("expands a long product description with an accessible disclosure control", () => {
+    const longDescription = "This atmospheric hand-painted composition layers translucent mineral tones, quiet botanical gestures, and softly worked texture across the surface. Each passage is built by hand in the studio so the finished canvas retains subtle variation, depth, and a calm sense of movement suited to considered interiors."
+    renderStorefront(1440, 1000, { ...product, shortDescription: longDescription })
+
+    const description = screen.getByText(longDescription)
+    const readMore = screen.getByRole("button", { name: "Read more" })
+    expect(readMore.getAttribute("aria-expanded")).toBe("false")
+    expect(readMore.getAttribute("aria-controls")).toBe(description.id)
+    expect(description.getAttribute("data-expanded")).toBe("false")
+
+    fireEvent.click(readMore)
+
+    expect(screen.getByRole("button", { name: "Show less" }).getAttribute("aria-expanded")).toBe("true")
+    expect(description.getAttribute("data-expanded")).toBe("true")
+  })
+
+  it("does not show a redundant description control for short copy", () => {
+    renderStorefront(1440, 1000, { ...product, shortDescription: "A quiet hand-painted work." })
+
+    expect(screen.getByText("A quiet hand-painted work.")).not.toBeNull()
+    expect(screen.queryByRole("button", { name: /Read more|Show less/ })).toBeNull()
+  })
 })
 
-function renderStorefront(width: number, height: number) {
+function renderStorefront(
+  width: number,
+  height: number,
+  storefrontProduct = product,
+) {
   Object.defineProperty(window, "innerWidth", {
     configurable: true,
     value: width,
@@ -218,7 +245,7 @@ function renderStorefront(width: number, height: number) {
         <WishlistProvider>
           <CartProvider>
             <ProductPurchasePanel
-              product={product}
+              product={storefrontProduct}
               directCheckoutAvailable
               invoiceUrl="/invoice"
               whatsappUrl="https://wa.me/example"

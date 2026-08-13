@@ -77,7 +77,7 @@ export function buildNormalizedFinishOptions(
   }
 
   const configured = normalizeConfiguredFinishes(frameOptions)
-  if (configured.length > 0) return configured
+  if (hasConfiguredFinishInput(frameOptions)) return configured
 
   return FALLBACK_PRESENTATION_IDS.map((presentationId) => {
     const presentation = FALLBACK_PRESENTATIONS[presentationId]
@@ -114,13 +114,26 @@ export function resolveFinishDeltaCny(
 function normalizeConfiguredFinishes(frameOptions: unknown): NormalizedFinishOption[] {
   if (!Array.isArray(frameOptions)) return []
 
+  const idCounts = frameOptions.reduce((counts, value) => {
+    if (!value || typeof value !== "object") return counts
+    const id = text((value as Record<string, unknown>)._key)
+    if (id) counts.set(id, (counts.get(id) || 0) + 1)
+    return counts
+  }, new Map<string, number>())
+
   return frameOptions.flatMap((value): NormalizedFinishOption[] => {
     if (!value || typeof value !== "object") return []
     const finish = value as Record<string, unknown>
     const id = text(finish._key)
     const label = text(finish.label)
     const priceDeltaCny = finiteNumber(finish.priceDeltaCny)
-    if (!id || !label || priceDeltaCny === null || priceDeltaCny < 0) return []
+    if (
+      !id
+      || idCounts.get(id) !== 1
+      || !label
+      || priceDeltaCny === null
+      || priceDeltaCny < 0
+    ) return []
 
     const fallback = FALLBACK_PRESENTATIONS[id as Exclude<CatalogPresentationId, "as-listed">]
     return [{
@@ -137,7 +150,11 @@ function text(value: unknown) {
   return typeof value === "string" ? value.trim() : ""
 }
 
+function hasConfiguredFinishInput(value: unknown) {
+  if (value === null || value === undefined) return false
+  return !Array.isArray(value) || value.length > 0
+}
+
 function finiteNumber(value: unknown) {
-  const number = typeof value === "number" ? value : Number(value)
-  return Number.isFinite(number) ? number : null
+  return typeof value === "number" && Number.isFinite(value) ? value : null
 }

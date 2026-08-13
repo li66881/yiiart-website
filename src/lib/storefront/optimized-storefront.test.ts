@@ -235,6 +235,27 @@ test("product layout keeps the gallery dominant and stacks safely across narrow 
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.stickyPurchaseShell\s*{[^}]*animation:\s*none/)
 })
 
+test("phone size choices stay two-column until a very narrow breakpoint", async () => {
+  const styles = await readFile("src/components/storefront/storefront.module.css", "utf8")
+  const phoneLayoutStart = styles.indexOf("@media (max-width: 760px)")
+  const narrowLayoutStart = styles.indexOf("@media (max-width: 359px)")
+  const phoneLayout = styles.slice(phoneLayoutStart, narrowLayoutStart)
+  const narrowLayout = styles.slice(narrowLayoutStart)
+
+  assert.ok(phoneLayoutStart >= 0)
+  assert.ok(narrowLayoutStart > phoneLayoutStart)
+  assert.match(phoneLayout, /\.secondaryActions\s*{[^}]*grid-template-columns:\s*1fr/)
+  assert.doesNotMatch(phoneLayout, /\.choiceGrid\s*{[^}]*grid-template-columns:\s*1fr/)
+  assert.match(narrowLayout, /\.choiceGrid\s*{[^}]*grid-template-columns:\s*1fr/)
+})
+
+test("desktop product descriptions clamp to three lines only while collapsed", async () => {
+  const styles = await readFile("src/components/storefront/storefront.module.css", "utf8")
+
+  assert.match(styles, /\.description\[data-expanded="false"\]\s*{[^}]*-webkit-line-clamp:\s*3/)
+  assert.match(styles, /@media \(max-width: 760px\)[\s\S]*?\.description\[data-expanded="false"\]\s*{[^}]*-webkit-line-clamp:\s*unset/)
+})
+
 test("product information navigation exposes the four detail groups in reading order", () => {
   assert.deepEqual(productDetailNavigationItems, [
     { id: "about-artwork", label: "About the artwork" },

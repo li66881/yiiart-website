@@ -49,6 +49,79 @@ test("server rebuilds the same fallback finish total", () => {
   assert.equal(selection.priceCny, 3090)
 })
 
+const malformedCheckoutPriceDeltas: Array<{
+  name: string
+  value?: unknown
+  omit?: boolean
+}> = [
+  { name: "an absent value", omit: true },
+  { name: "null", value: null },
+  { name: "a blank string", value: "" },
+  { name: "whitespace", value: "   " },
+  { name: "NaN", value: Number.NaN },
+  { name: "positive infinity", value: Number.POSITIVE_INFINITY },
+  { name: "a numeric string", value: "0" },
+  { name: "a non-number string", value: "free" },
+  { name: "a boolean", value: false },
+]
+
+test("authoritative checkout rejects configured finishes with malformed price deltas", async (t) => {
+  for (const invalid of malformedCheckoutPriceDeltas) {
+    await t.test(invalid.name, () => {
+      const configured = {
+        _key: "rolled",
+        label: "Rolled canvas",
+        ...(!invalid.omit ? { priceDeltaCny: invalid.value } : {}),
+      }
+
+      assert.throws(() => resolveCheckoutSelection({
+        _id: "catalog-malformed-finish",
+        productionModel: "hand_painted_to_order",
+        standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 2600 }],
+        frameOptions: [configured],
+      } as never, {
+        id: "catalog-malformed-finish",
+        quantity: 1,
+        sizeId: "80x100",
+        finishId: "rolled",
+      }), CheckoutValidationError)
+    })
+  }
+})
+
+test("authoritative checkout rejects ambiguous duplicate normalized finish ids", () => {
+  assert.throws(() => resolveCheckoutSelection({
+    _id: "catalog-duplicate-finish",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 2600 }],
+    frameOptions: [
+      { _key: " rolled ", label: "Rolled canvas", priceDeltaCny: 0 },
+      { _key: "rolled", label: "Rolled duplicate", priceDeltaCny: 200 },
+    ],
+  }, {
+    id: "catalog-duplicate-finish",
+    quantity: 1,
+    sizeId: "80x100",
+    finishId: "rolled",
+  }), CheckoutValidationError)
+})
+
+test("authoritative checkout preserves a numeric zero configured price delta", () => {
+  const selection = resolveCheckoutSelection({
+    _id: "catalog-zero-finish",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 2600 }],
+    frameOptions: [{ _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 }],
+  }, {
+    id: "catalog-zero-finish",
+    quantity: 1,
+    sizeId: "80x100",
+    finishId: "rolled",
+  })
+
+  assert.equal(selection.priceCny, 2600)
+})
+
 test("rejects an unknown made-to-order size", () => {
   assert.throws(() => resolveCheckoutSelection({
     _id: "catalog-1",

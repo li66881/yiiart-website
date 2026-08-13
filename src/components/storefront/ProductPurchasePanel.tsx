@@ -12,6 +12,7 @@ import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
+import ProductDescription from "./ProductDescription"
 import { ProductFinishSelector } from "./ProductFinishSelector"
 import { ProductStickyPurchaseBar } from "./ProductStickyPurchaseBar"
 import styles from "./storefront.module.css"
@@ -134,7 +135,7 @@ export default function ProductPurchasePanel({
 
       <h1 id="product-title">{product.title}</h1>
       <p className={styles.artist}>By {product.artistName}</p>
-      <p className={styles.description}>{product.shortDescription}</p>
+      <ProductDescription description={product.shortDescription} />
 
       <div className={styles.priceBlock}>
         <p className={styles.price}><PriceText amountCny={selection?.priceCny} /></p>

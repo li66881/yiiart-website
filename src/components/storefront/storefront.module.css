@@ -460,6 +460,33 @@
   line-height: 1.55;
 }
 
+.description[data-expanded="false"] {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+}
+
+.descriptionToggle {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #57534e;
+  cursor: pointer;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.descriptionToggle:focus-visible {
+  border-radius: 2px;
+  outline: 2px solid #b45309;
+  outline-offset: 3px;
+}
+
 .priceBlock {
   margin: 1rem 0;
   padding: 0.9rem 0;
@@ -1072,9 +1099,18 @@
     font-size: 2.35rem;
   }
 
-  .choiceGrid,
   .secondaryActions {
     grid-template-columns: 1fr;
+  }
+
+  .description[data-expanded="false"] {
+    display: block;
+    overflow: visible;
+    -webkit-line-clamp: unset;
+  }
+
+  .descriptionToggle {
+    display: none;
   }
 
   .finishGrid {
@@ -1150,6 +1186,12 @@
   .lightboxStage {
     width: 100vw;
     height: 76vh;
+  }
+}
+
+@media (max-width: 359px) {
+  .choiceGrid {
+    grid-template-columns: 1fr;
   }
 }
 
