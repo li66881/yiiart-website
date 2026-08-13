@@ -71,6 +71,10 @@
   gap: clamp(36px, 7vw, 112px);
 }
 
+.productDetailStoryGridTextOnly {
+  grid-template-columns: minmax(0, 680px);
+}
+
 .productDetailReadingColumn,
 .productDetailSectionHeading {
   max-width: 680px;

@@ -7,6 +7,10 @@ import {
 } from "../cookie-consent-state"
 import { buildProductFinishSelectorViewModel } from "./finish-selector"
 import type { NormalizedFinishOption } from "./finish-options"
+import {
+  buildProductDetailContentModel,
+  productDetailStoryLayout,
+} from "./product-detail-information"
 import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
 import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
 import { productDetailNavigationItems } from "./product-detail-navigation"
@@ -187,6 +191,40 @@ test("artwork page integrates the product information navigation and anchored re
   assert.match(artworkPage, /id="shipping-returns"/)
   assert.match(artworkPage, /id="reviews"/)
   assert.doesNotMatch(artworkPage, /&larr;[^\n]*product\.backToArtworks/)
+})
+
+test("product information story layout expands when no editorial media is available", () => {
+  assert.equal(productDetailStoryLayout(true), "with-media")
+  assert.equal(productDetailStoryLayout(false), "text-only")
+})
+
+test("consolidated product details retain framing notes once and remove repeated advice", () => {
+  const model = buildProductDetailContentModel({
+    framingNotes: " Ships rolled; framing can be discussed. ",
+    adviceItems: [
+      { id: "room-fit", title: "Room fit", text: "Repeated by scale guidance." },
+      { id: "framing", title: "Framing", text: "Repeated by presentation guidance." },
+      { id: "color-confidence", title: "Color confidence", text: "Request daylight photos." },
+      { id: "care", title: "Care", text: "Keep away from direct moisture." },
+    ],
+  })
+
+  assert.equal(model.presentationNote, "Ships rolled; framing can be discussed.")
+  assert.deepEqual(model.supplementalAdvice, [
+    { id: "color-confidence", title: "Color confidence", text: "Request daylight photos.", translationIndex: 2 },
+    { id: "care", title: "Care", text: "Keep away from direct moisture.", translationIndex: 3 },
+  ])
+})
+
+test("artwork story applies the text-only layout modifier when media is absent", async () => {
+  const [artworkPage, styles] = await Promise.all([
+    readFile("src/app/artwork/[slug]/page.tsx", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
+  ])
+
+  assert.match(artworkPage, /productDetailStoryLayout\(Boolean\(editorialMedia\)\)/)
+  assert.match(artworkPage, /productDetailStoryGridTextOnly/)
+  assert.match(styles, /\.productDetailStoryGridTextOnly\s*{[^}]*grid-template-columns:\s*minmax\(0,\s*680px\)/)
 })
 
 test("product purchase hierarchy shares the selected total and sticky action state", async () => {

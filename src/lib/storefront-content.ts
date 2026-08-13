@@ -97,14 +97,17 @@ export const productConfidenceItems = [
 
 export const productAdviceItems = [
   {
+    id: "room-fit",
     title: "Room fit",
     text: "Best considered for living rooms, bedrooms, offices, hallways, and quiet statement walls.",
   },
   {
+    id: "framing",
     title: "Framing",
     text: "Ask before purchase if you need advice on frame color, float framing, or keeping the canvas unframed.",
   },
   {
+    id: "color-confidence",
     title: "Color confidence",
     text: "Screens vary. Request extra daylight photos on WhatsApp if the palette must match a room.",
   },

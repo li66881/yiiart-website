@@ -29,6 +29,10 @@ import {
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
 import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
+import {
+  buildProductDetailContentModel,
+  productDetailStoryLayout,
+} from "@/lib/storefront/product-detail-information"
 import { isArtworkCheckoutAvailable } from "@/lib/checkout-availability"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
@@ -206,6 +210,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     media.type === "image"
       && ["detail", "living_room", "bedroom", "dining_room"].includes(media.role)
   )
+  const storyLayout = productDetailStoryLayout(Boolean(editorialMedia))
+  const detailContent = buildProductDetailContentModel({ framingNotes, adviceItems: productAdviceItems })
   const storefrontProduct = buildStorefrontProduct(
     artwork,
     galleryImages.map((src: string, index: number) => ({
@@ -386,7 +392,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
           <div className={storefrontStyles.productDetailSections}>
             <section id="about-artwork" className={storefrontStyles.productDetailSection}>
-              <div className={storefrontStyles.productDetailStoryGrid}>
+              <div className={`${storefrontStyles.productDetailStoryGrid} ${
+                storyLayout === "text-only" ? storefrontStyles.productDetailStoryGridTextOnly : ""
+              }`}>
                 <div className={storefrontStyles.productDetailReadingColumn}>
                   <p className={storefrontStyles.productDetailEyebrow}>Artwork story</p>
                   <h2>About the artwork</h2>
@@ -432,7 +440,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 roomTypes={roomTypes}
                 colorFamilies={colorFamilies}
                 surfaceFinish={surfaceFinish}
-                framingNotes={framingNotes}
               />
 
               <div className={storefrontStyles.productDetailSplit}>
@@ -455,7 +462,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   <p>
                     Available rolled, stretched, and framed choices appear in the purchase panel. Options vary by artwork and size; the selected presentation is confirmed with the order.
                   </p>
-                  {framingNotes && <p>{framingNotes}</p>}
+                  {detailContent.presentationNote && <p>{detailContent.presentationNote}</p>}
                 </div>
                 <div>
                   <p className={storefrontStyles.productDetailEyebrow}>Customization</p>
@@ -473,11 +480,11 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
               </div>
 
               <div className={storefrontStyles.productDetailCards}>
-                {productAdviceItems.map((item, index) => (
+                {detailContent.supplementalAdvice.map((item) => (
                   <InfoBlock
                     key={item.title}
-                    title={<TranslatedText k={`product.advice.${index}.title`} fallback={item.title} />}
-                    text={<TranslatedText k={`product.advice.${index}.text`} fallback={item.text} />}
+                    title={<TranslatedText k={`product.advice.${item.translationIndex}.title`} fallback={item.title} />}
+                    text={<TranslatedText k={`product.advice.${item.translationIndex}.text`} fallback={item.text} />}
                   />
                 ))}
               </div>
@@ -554,7 +561,6 @@ function ArtworkDetails({
   roomTypes,
   colorFamilies,
   surfaceFinish,
-  framingNotes,
 }: {
   dimensions?: string
   medium?: string
@@ -563,7 +569,6 @@ function ArtworkDetails({
   roomTypes: string[]
   colorFamilies: string[]
   surfaceFinish?: string
-  framingNotes?: string
 }) {
   const rows = [
     dimensions ? { label: "Dimensions", value: dimensions } : null,
@@ -574,7 +579,6 @@ function ArtworkDetails({
     roomTypes.length > 0 ? { label: "Recommended rooms", value: roomTypes.join(", ") } : null,
     colorFamilies.length > 0 ? { label: "Color palette", value: colorFamilies.join(", ") } : null,
     { label: "Handmade note", value: "Physical hand-painted artwork, not a printed reproduction." },
-    framingNotes ? { label: "Presentation note", value: framingNotes } : null,
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
 
