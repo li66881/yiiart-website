@@ -4,6 +4,10 @@ import {
   normalizeMedium,
   pickEnglish,
 } from "../artwork-display"
+import {
+  buildNormalizedFinishOptions,
+  type NormalizedFinishOption,
+} from "./finish-options"
 
 export type StorefrontCollectionType = "new_collection" | "artist_collection"
 export type StorefrontProductionModel = "hand_painted_to_order" | "original"
@@ -31,11 +35,7 @@ export type StorefrontSize = {
   priceCny: number
 }
 
-export type StorefrontFinish = {
-  id: string
-  label: string
-  priceDeltaCny: number
-}
+export type StorefrontFinish = NormalizedFinishOption
 
 export type StorefrontProduct = {
   id: string
@@ -123,7 +123,7 @@ export function buildStorefrontProduct(
     colorTags: uniqueStrings(readStringList(artwork.colorFamilies)),
     orientation: normalizeOrientation(artwork.orientation, artwork.widthCm, artwork.heightCm, dimensions),
     sizes: buildSizes(artwork, productionModel, dimensions),
-    finishes: buildFinishes(artwork.frameOptions, productionModel),
+    finishes: buildNormalizedFinishOptions(artwork.frameOptions, productionModel),
     creationWindow: pickEnglish(
       artwork.creationWindow,
       productionModel === "hand_painted_to_order"
@@ -179,30 +179,6 @@ function buildSizes(
     widthCm: positiveNumber(artwork.widthCm) || undefined,
     heightCm: positiveNumber(artwork.heightCm) || undefined,
     priceCny,
-  }]
-}
-
-function buildFinishes(value: unknown, productionModel: StorefrontProductionModel) {
-  const finishes = (Array.isArray(value) ? value : []).flatMap((item, index): StorefrontFinish[] => {
-    if (!item || typeof item !== "object") return []
-    const finish = item as Record<string, unknown>
-    const priceDeltaCny = finiteNumber(finish.priceDeltaCny)
-    if (priceDeltaCny === null || priceDeltaCny < 0) return []
-    const label = cleanString(finish.label) || `Finish ${index + 1}`
-
-    return [{
-      id: cleanString(finish._key) || slugify(label),
-      label,
-      priceDeltaCny,
-    }]
-  })
-
-  if (finishes.length > 0) return finishes
-
-  return [{
-    id: productionModel === "hand_painted_to_order" ? "rolled" : "as-listed",
-    label: productionModel === "hand_painted_to_order" ? "Rolled canvas" : "As listed",
-    priceDeltaCny: 0,
   }]
 }
 

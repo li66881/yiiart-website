@@ -5,13 +5,13 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ProductGallery from "@/components/storefront/ProductGallery"
 import ProductDisclosure from "@/components/storefront/ProductDisclosure"
+import ProductDetailNavigation from "@/components/storefront/ProductDetailNavigation"
 import ProductPurchasePanel from "@/components/storefront/ProductPurchasePanel"
 import HomeProductCard from "@/components/home/HomeProductCard"
 import SocialShare from "@/components/SocialShare"
 import ArtworkViewTracker from "@/components/ArtworkViewTracker"
 import ArtworkReviewSection from "@/components/ArtworkReviewSection"
-import ReviewStars from "@/components/ReviewStars"
-import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTemplate } from "@/components/TranslatedText"
+import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { client } from "@/lib/sanity"
 import {
   buildArtworkSeoTitle,
@@ -29,49 +29,22 @@ import {
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
 import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
+import {
+  buildProductDetailContentModel,
+  productDetailStoryLayout,
+} from "@/lib/storefront/product-detail-information"
 import { isArtworkCheckoutAvailable } from "@/lib/checkout-availability"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
-import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { getArtworkReviews, getReviewStats } from "@/lib/reviews"
-import PaymentBadges from "@/components/PaymentBadges"
 import { getWhatsAppUrl } from "@/lib/site"
 import {
   productAdviceItems,
-  productConfidenceItems,
   productPackagingItems,
-  productProcessItems,
 } from "@/lib/storefront-content"
-import { productDetailGroups } from "@/lib/storefront/editorial-presentation"
 import storefrontStyles from "@/components/storefront/storefront.module.css"
 
 export const revalidate = 600
-
-const trustItems = [
-  { title: "Secure payment", text: "Pay with PayPal or major cards over an encrypted SSL checkout. YiiArt never stores your card details." },
-  { title: "Worldwide delivery options", text: "Delivery timing and format are confirmed by destination, size, finish, and carrier route." },
-  { title: "Carefully packaged", text: "Rolled, stretched, or flat packaging is selected for the safest practical handling." },
-  { title: "Returns", text: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." },
-  { title: "Handmade artwork", text: "Physical hand-painted artwork, not a printed reproduction." },
-]
-
-const artworkPageFaqs = [
-  {
-    question: "Will the painting look exactly like the photo?",
-    answer: "Photos are prepared to show the artwork clearly, but screen color, daylight, and room lighting can change how color and texture appear. Ask for extra daylight photos or a short video before purchase if palette accuracy is important.",
-  },
-  {
-    question: "Can I request a custom size?",
-    answer: "Yes. Send your wall size, room photo, preferred orientation, and color direction. YiiArt can confirm whether a custom canvas is possible before production starts.",
-  },
-  {
-    question: "Is the painting handmade?",
-    answer: "Yes. YiiArt product pages are intended for original hand-painted artwork unless a listing clearly says otherwise.",
-  },
-  {
-    question: "What if it arrives damaged?",
-    answer: "Keep the artwork, box, inner packaging, and shipping label. Contact YiiArt promptly with clear photos so the damage support process can be reviewed.",
-  },
-]
 
 async function getArtwork(slug: string) {
   try {
@@ -210,12 +183,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   }
 
   const title = pickEnglish(artwork.title, "Untitled artwork")
-  const detailGroups = productDetailGroups()
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
   const dimensions = formatArtworkDimensions(artwork)
   const description = pickEnglish(artwork.description)
+  const artworkStory = pickEnglish(artwork.artworkStory)
   const roomTypes = normalizeList(artwork.roomTypes)
   const colorFamilies = normalizeList(artwork.colorFamilies)
   const orientation = artwork.orientation || inferOrientation(dimensions)
@@ -233,6 +206,12 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     roomTypes,
   })
   const galleryMedia = buildProductGalleryMedia(artwork, galleryImages, artworkImageAlt)
+  const editorialMedia = galleryMedia.find((media) =>
+    media.type === "image"
+      && ["detail", "living_room", "bedroom", "dining_room"].includes(media.role)
+  )
+  const storyLayout = productDetailStoryLayout(Boolean(editorialMedia))
+  const detailContent = buildProductDetailContentModel({ framingNotes, adviceItems: productAdviceItems })
   const storefrontProduct = buildStorefrontProduct(
     artwork,
     galleryImages.map((src: string, index: number) => ({
@@ -367,10 +346,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
           ])),
         }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(artworkPageFaqs)) }}
-      />
       <ArtworkViewTracker
         id={artwork._id}
         title={title}
@@ -398,246 +373,159 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             <span className="text-black">{title}</span>
           </nav>
 
-          <Link href="/artworks" className="mb-4 inline-block text-sm text-stone-500 hover:text-black">
-            &larr; <TranslatedText k="product.backToArtworks" />
-          </Link>
-
           <div className={storefrontStyles.mesonProductLayout}>
             <div>
               <ProductGallery media={galleryMedia} alt={artworkImageAlt} />
             </div>
 
-            <div className="space-y-6 lg:sticky lg:top-[calc(var(--yiiart-header-offset)+18px)] lg:self-start">
+            <div className="lg:sticky lg:top-[calc(var(--yiiart-header-offset)+18px)] lg:self-start">
               <ProductPurchasePanel
                 product={storefrontProduct}
                 directCheckoutAvailable={directCheckoutAvailable}
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
               />
-
-              <div className="border border-stone-200 bg-white p-6 md:p-8">
-              <div className="mb-6 text-sm text-stone-600">
-                {reviewStats.count > 0 ? (
-                  <div className="flex flex-wrap items-center gap-2">
-                    <ReviewStars rating={reviewStats.overall} size="sm" />
-                    <span>
-                      {reviewStats.overall.toFixed(1)} / 5 - {reviewStats.count}{" "}
-                      <TranslatedText k={reviewStats.count === 1 ? "product.verifiedReview" : "product.verifiedReviews"} />
-                    </span>
-                  </div>
-                ) : (
-                  <span><TranslatedText k="product.noReviews" /></span>
-                )}
-              </div>
-
-              <div className="mb-8 grid gap-3 text-sm text-stone-700 sm:grid-cols-2">
-                {dimensions && <Detail label={<TranslatedText k="artwork.size" />} value={dimensions} />}
-                {medium && <Detail label={<TranslatedText k="artwork.medium" />} value={<TranslatedOption value={medium} />} />}
-                {category && <Detail label={<TranslatedText k="product.detail.style" />} value={<TranslatedOption value={category} />} />}
-                {orientation && <Detail label={<TranslatedText k="product.detail.orientation" />} value={<TranslatedOption value={orientation} />} />}
-                {roomTypes.length > 0 && <Detail label={<TranslatedText k="product.detail.bestRooms" />} value={<TranslatedOptionList values={roomTypes} />} />}
-                {colorFamilies.length > 0 && <Detail label={<TranslatedText k="product.detail.palette" />} value={<TranslatedOptionList values={colorFamilies} />} />}
-                {surfaceFinish && <Detail label={<TranslatedText k="product.detail.surface" />} value={surfaceFinish} />}
-                <Detail label={<TranslatedText k="product.detail.authenticity" />} value={<TranslatedText k="product.detail.authenticityValue" />} />
-                <Detail label={<TranslatedText k="product.detail.certificate" />} value={<TranslatedText k="product.detail.certificateValue" />} />
-                <Detail
-                  label={<TranslatedText k="product.detail.dispatch" />}
-                  value={detailCopy.dispatch}
-                />
-              </div>
-
-              <div className="space-y-6 border-t border-stone-200 pt-8">
-                <section>
-                  <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.aboutTitle" /></h2>
-                  <p className="whitespace-pre-line leading-7 text-stone-600">
-                    {description || <TranslatedTemplate k="product.aboutFallback" values={{ title }} />}
-                  </p>
-                </section>
-
-                <section>
-                  <h2 className="mb-3 text-lg font-medium"><TranslatedText k="product.sizingTitle" /></h2>
-                  <ul className="space-y-2 text-stone-600">
-                    <li>
-                      {dimensions
-                        ? <TranslatedTemplate k="product.sizeLine" values={{ dimensions }} />
-                        : <TranslatedText k="product.confirmSize" />}
-                    </li>
-                    <li>
-                      {roomTypes.length > 0
-                        ? <TranslatedTemplate k="product.recommendedSpaces" values={{ rooms: roomTypes.join(", ") }} />
-                        : <TranslatedText k="product.defaultRooms" />}
-                    </li>
-                    <li>
-                      {framingNotes || <TranslatedText k="product.defaultFramingAdvice" />}
-                    </li>
-                  </ul>
-                </section>
-              </div>
-
-              <div className="mt-8">
-                <SocialShare title={title} image={imageUrl} />
-              </div>
-              <ProductDisclosure productionModel={storefrontProduct.productionModel} />
-              </div>
             </div>
           </div>
 
-          <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[0].eyebrow}</p>
-              <h2 className="text-3xl font-light">{detailGroups[0].title}</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Product rows are shown when the current listing has enough information. For missing production details,
-                YiiArt confirms the safest format before dispatch or custom production.
-              </p>
-            </div>
-            <ArtworkDetails
-              medium={medium}
-              surfaceFinish={surfaceFinish}
-              framingNotes={framingNotes}
-              processingTime={detailCopy.processingTime}
-            />
-          </section>
+          <ProductDetailNavigation />
 
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[1].eyebrow}</p>
-              <h2 className="text-3xl font-light">{detailGroups[1].title}</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Use this as a practical starting point for sofas, beds, entryways, and feature walls. For exact advice,
-                send your wall width and a room photo on WhatsApp before purchase.
-              </p>
-              <Link href="/size-guide" className="mt-5 inline-flex text-sm underline underline-offset-4">
-                Read full size guide
-              </Link>
-            </div>
-            <ScaleGuidance dimensions={artwork.dimensions} roomTypes={roomTypes} title={title} />
-          </section>
+          <div className={storefrontStyles.productDetailSections}>
+            <section id="about-artwork" className={storefrontStyles.productDetailSection}>
+              <div className={`${storefrontStyles.productDetailStoryGrid} ${
+                storyLayout === "text-only" ? storefrontStyles.productDetailStoryGridTextOnly : ""
+              }`}>
+                <div className={storefrontStyles.productDetailReadingColumn}>
+                  <p className={storefrontStyles.productDetailEyebrow}>Artwork story</p>
+                  <h2>About the artwork</h2>
+                  <p className="whitespace-pre-line">
+                    {description || `${title} is a physical hand-painted artwork by ${artistName}.`}
+                  </p>
+                  {artworkStory && artworkStory !== description && (
+                    <p className="whitespace-pre-line">{artworkStory}</p>
+                  )}
+                  <ProductDisclosure productionModel={storefrontProduct.productionModel} />
+                  <div className={storefrontStyles.productDetailShare}>
+                    <SocialShare title={title} image={imageUrl} />
+                  </div>
+                </div>
 
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Customization</p>
-              <h2 className="text-3xl font-light">Need a custom size, color palette, or matching artwork for your room?</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Send your wall width, ceiling height, room photo, and preferred palette. YiiArt can help confirm whether
-                this artwork fits as listed or whether a custom painting is a better path.
-              </p>
-              <Link
-                href={`/custom-painting?artwork=${encodeURIComponent(slug)}`}
-                className="yii-btn-primary mt-6"
-              >
-                Request Custom Painting
-              </Link>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {productAdviceItems.map((item, index) => (
-                <InfoBlock
-                  key={item.title}
-                  title={<TranslatedText k={`product.advice.${index}.title`} fallback={item.title} />}
-                  text={<TranslatedText k={`product.advice.${index}.text`} fallback={item.text} />}
-                />
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-16 border-t border-stone-200 pt-12">
-            <div className="mb-8">
-              <p className="mb-3 text-xs font-medium uppercase tracking-[0.12em] text-stone-500">{detailGroups[2].eyebrow}</p>
-              <h2 className="text-3xl font-light">{detailGroups[2].title}</h2>
-            </div>
-            <div className="grid gap-4 md:grid-cols-5">
-              {trustItems.map((item) => (
-                <InfoBlock key={item.title} title={item.title} text={item.text} />
-              ))}
-            </div>
-            <div className="mt-6">
-              <PaymentBadges />
-            </div>
-          </section>
-
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Handmade modern painting</p>
-              <h2 className="text-3xl font-light">What YiiArt checks before this artwork ships</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Buying original canvas art online should feel clear before payment. These checks help you confirm
-                surface, color, scale, and delivery format before the work reaches your home.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {productProcessItems.map((item) => (
-                <InfoBlock key={item.title} title={item.title} text={item.text} />
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Packaging and delivery</p>
-              <h2 className="text-3xl font-light">Prepared for canvas size, surface, and shipping safety</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Shipping format depends on the artwork size and safest handling method. Oversized canvas art may ship
-                rolled, while smaller works can sometimes ship stretched or framed.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              {productPackagingItems.map((item) => (
-                <InfoBlock key={item.title} title={item.title} text={item.text} />
-              ))}
-            </div>
-          </section>
-
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Shipping & Returns Summary</p>
-              <h2 className="text-3xl font-light">Short version before checkout</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                Delivery timing and format are confirmed by destination, size, finish, and carrier route. Standard and
-                custom orders may have different conditions; contact YiiArt with the order details before returning artwork.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-4 text-sm">
-                <Link href="/shipping-returns" className="underline underline-offset-4">Read Shipping & Returns</Link>
-                <Link href="/shipping" className="underline underline-offset-4">Read full Shipping page</Link>
-                <Link href="/returns" className="underline underline-offset-4">Read full Returns page</Link>
+                {editorialMedia && (
+                  <figure className={storefrontStyles.productDetailFeatureImage}>
+                    <Image
+                      src={editorialMedia.url}
+                      alt={editorialMedia.alt}
+                      fill
+                      sizes="(max-width: 1023px) 100vw, 50vw"
+                    />
+                  </figure>
+                )}
               </div>
-            </div>
-            <div className="grid gap-4 md:grid-cols-3">
-              <InfoBlock title="Processing time" text={detailCopy.processingTime} />
-              <InfoBlock title="Shipping time" text="Tracking information is shared when the selected carrier service provides it." />
-              <InfoBlock title="Returns and damage" text="Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process." />
-            </div>
-          </section>
+            </section>
 
-          <section className="mt-16 grid gap-8 border-t border-stone-200 pt-12 lg:grid-cols-[0.8fr_1fr]">
-            <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">FAQ</p>
-              <h2 className="text-3xl font-light">Product questions collectors often ask</h2>
-              <p className="mt-4 text-sm leading-6 text-stone-600">
-                These answers are written for hand-painted artworks, large wall art, custom canvas inquiries,
-                and home interior placement decisions.
-              </p>
+            <section id="details-customization" className={storefrontStyles.productDetailSection}>
+              <div className={storefrontStyles.productDetailSectionHeading}>
+                <p className={storefrontStyles.productDetailEyebrow}>Specifications and room fit</p>
+                <h2>Details &amp; customization</h2>
+                <p>
+                  Review the listed materials, scale, and presentation notes, then ask for room-specific advice before ordering.
+                </p>
+              </div>
+
+              <ArtworkDetails
+                dimensions={dimensions}
+                medium={medium}
+                category={category}
+                orientation={orientation}
+                roomTypes={roomTypes}
+                colorFamilies={colorFamilies}
+                surfaceFinish={surfaceFinish}
+              />
+
+              <div className={storefrontStyles.productDetailSplit}>
+                <div>
+                  <h3>Scale and placement</h3>
+                  <p>
+                    Use the guide as a starting point. A wall measurement and room photo provide better context for exact placement advice.
+                  </p>
+                  <Link href="/size-guide" className={storefrontStyles.productDetailTextLink}>
+                    Read full size guide
+                  </Link>
+                </div>
+                <ScaleGuidance dimensions={artwork.dimensions} roomTypes={roomTypes} title={title} />
+              </div>
+
+              <div className={storefrontStyles.productDetailSplit}>
+                <div>
+                  <p className={storefrontStyles.productDetailEyebrow}>Presentation</p>
+                  <h3>Choose the finish that suits your room</h3>
+                  <p>
+                    Available rolled, stretched, and framed choices appear in the purchase panel. Options vary by artwork and size; the selected presentation is confirmed with the order.
+                  </p>
+                  {detailContent.presentationNote && <p>{detailContent.presentationNote}</p>}
+                </div>
+                <div>
+                  <p className={storefrontStyles.productDetailEyebrow}>Customization</p>
+                  <h3>Need a custom size, palette, or orientation?</h3>
+                  <p>
+                    Send your wall width, ceiling height, room photo, and preferred palette. YiiArt can confirm whether this listing fits or a custom painting is the better path.
+                  </p>
+                  <Link
+                    href={`/custom-painting?artwork=${encodeURIComponent(slug)}`}
+                    className="yii-btn-primary mt-6"
+                  >
+                    Request Custom Painting
+                  </Link>
+                </div>
+              </div>
+
+              <div className={storefrontStyles.productDetailCards}>
+                {detailContent.supplementalAdvice.map((item) => (
+                  <InfoBlock
+                    key={item.title}
+                    title={<TranslatedText k={`product.advice.${item.translationIndex}.title`} fallback={item.title} />}
+                    text={<TranslatedText k={`product.advice.${item.translationIndex}.text`} fallback={item.text} />}
+                  />
+                ))}
+              </div>
+            </section>
+
+            <section id="shipping-returns" className={storefrontStyles.productDetailSection}>
+              <div className={storefrontStyles.productDetailSectionHeading}>
+                <p className={storefrontStyles.productDetailEyebrow}>Order guidance and support</p>
+                <h2>Shipping &amp; returns</h2>
+                <p>
+                  Production and delivery are separate stages. Timing and format depend on the artwork, finish, destination, and carrier route.
+                </p>
+              </div>
+
+              <div className={storefrontStyles.productDetailCards}>
+                <InfoBlock title="Production guidance" text={detailCopy.processingTime} />
+                <InfoBlock title="Dispatch" text={detailCopy.dispatch} />
+                <InfoBlock title="Tracking" text="Tracking information is shared when the selected carrier service provides it." />
+                <InfoBlock title="Returns" text="Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." />
+                {productPackagingItems.map((item) => (
+                  <InfoBlock key={item.title} title={item.title} text={item.text} />
+                ))}
+              </div>
+
+              <div className={storefrontStyles.productDetailPolicyLinks}>
+                <Link href="/shipping-returns">Shipping &amp; Returns overview</Link>
+                <Link href="/shipping">Complete shipping policy</Link>
+                <Link href="/returns">Complete returns policy</Link>
+              </div>
+            </section>
+
+            <div id="reviews" className={storefrontStyles.productDetailReviewsTarget}>
+              <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
             </div>
-            <div className="divide-y divide-stone-200 border-y border-stone-200">
-              {artworkPageFaqs.map((item) => (
-                <details key={item.question} className="group py-5">
-                  <summary className="cursor-pointer list-none font-medium">
-                    <span className="inline-flex w-full items-center justify-between gap-4">
-                      {item.question}
-                      <span className="text-stone-400 group-open:hidden">+</span>
-                      <span className="hidden text-stone-400 group-open:inline">-</span>
-                    </span>
-                  </summary>
-                  <p className="mt-3 text-sm leading-6 text-stone-600">{item.answer}</p>
-                </details>
-              ))}
-            </div>
-          </section>
+          </div>
 
           <section className="mt-16 border-t border-stone-200 pt-12">
             <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
               <div>
                 <p className="mb-3 text-sm uppercase text-stone-500">You may also like</p>
-                <h2 className="text-3xl font-light">Similar artworks</h2>
+                <h2 className="text-3xl font-light">Related products</h2>
                 <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">
                   Compare works with a similar style or medium before deciding on size, palette, and room fit.
                 </p>
@@ -657,17 +545,6 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
             )}
           </section>
 
-          <ArtworkReviewSection reviews={reviews} stats={reviewStats} />
-
-          <section className="mt-16 grid gap-6 border-t border-stone-200 pt-12 md:grid-cols-4">
-            {productConfidenceItems.map((item, index) => (
-              <InfoBlock
-                key={item.title}
-                title={<TranslatedText k={`product.confidence.${index}.title`} fallback={item.title} />}
-                text={<TranslatedText k={`product.confidence.${index}.text`} fallback={item.text} />}
-              />
-            ))}
-          </section>
         </div>
       </main>
 
@@ -677,24 +554,31 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 }
 
 function ArtworkDetails({
+  dimensions,
   medium,
+  category,
+  orientation,
+  roomTypes,
+  colorFamilies,
   surfaceFinish,
-  framingNotes,
-  processingTime,
 }: {
+  dimensions?: string
   medium?: string
+  category?: string
+  orientation?: string
+  roomTypes: string[]
+  colorFamilies: string[]
   surfaceFinish?: string
-  framingNotes?: string
-  processingTime: string
 }) {
   const rows = [
+    dimensions ? { label: "Dimensions", value: dimensions } : null,
     medium ? { label: "Material", value: inferMaterial(medium) } : null,
     medium ? { label: "Medium", value: medium } : null,
-    medium && /canvas/i.test(medium) ? { label: "Canvas type", value: "Artist canvas" } : null,
+    category ? { label: "Style", value: category } : null,
+    orientation ? { label: "Orientation", value: orientation } : null,
+    roomTypes.length > 0 ? { label: "Recommended rooms", value: roomTypes.join(", ") } : null,
+    colorFamilies.length > 0 ? { label: "Color palette", value: colorFamilies.join(", ") } : null,
     { label: "Handmade note", value: "Physical hand-painted artwork, not a printed reproduction." },
-    framingNotes ? { label: "Frame option", value: framingNotes } : null,
-    { label: "Processing time", value: processingTime },
-    { label: "Shipping time", value: "Delivery timing and format are confirmed by destination, size, finish, and carrier route." },
     surfaceFinish ? { label: "Surface", value: surfaceFinish } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>
 
@@ -912,7 +796,7 @@ function Detail({ label, value }: { label: ReactNode; value: ReactNode }) {
 function InfoBlock({ title, text }: { title: ReactNode; text: ReactNode }) {
   return (
     <div className="border-t border-stone-300 pt-5">
-      <h2 className="mb-2 text-lg font-medium">{title}</h2>
+      <h3 className="mb-2 text-lg font-medium">{title}</h3>
       <p className="text-sm leading-6 text-stone-600">{text}</p>
     </div>
   )

@@ -1,3 +1,8 @@
+import {
+  buildNormalizedFinishOptions,
+  resolveFinishTotalCny,
+} from "./storefront/finish-options"
+
 export class CheckoutValidationError extends Error {}
 
 export type CheckoutSelectionRequest = {
@@ -49,14 +54,15 @@ export function resolveCheckoutSelection(
       throw new CheckoutValidationError("One or more artworks do not have a valid price.")
     }
 
+    const finish = buildNormalizedFinishOptions(artwork.frameOptions, productionModel)[0]
     return {
       productionModel,
       quantity,
       sizeId: "original",
       sizeLabel: text(artwork.dimensions) || "Original size",
-      finishId: "as-listed",
-      finishLabel: "As listed",
-      priceCny,
+      finishId: finish.id,
+      finishLabel: finish.label,
+      priceCny: resolveFinishTotalCny(finish, priceCny),
     }
   }
 
@@ -71,16 +77,9 @@ export function resolveCheckoutSelection(
     throw new CheckoutValidationError("The selected artwork size is no longer available.")
   }
 
-  const configuredFinishes = (artwork.frameOptions || []).filter((finish) => (
-    Boolean(text(finish?._key))
-    && Boolean(text(finish?.label))
-    && nonNegativeNumber(finish?.priceDeltaCny) !== null
-  ))
-  const finishes = configuredFinishes.length > 0
-    ? configuredFinishes
-    : [{ _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 }]
-  const requestedFinishId = text(request.finishId) || text(finishes[0]?._key)
-  const finish = finishes.find((option) => text(option._key) === requestedFinishId)
+  const finishes = buildNormalizedFinishOptions(artwork.frameOptions, productionModel)
+  const requestedFinishId = text(request.finishId) || finishes[0]?.id
+  const finish = finishes.find((option) => option.id === requestedFinishId)
   if (!finish) {
     throw new CheckoutValidationError("The selected artwork finish is no longer available.")
   }
@@ -90,9 +89,9 @@ export function resolveCheckoutSelection(
     quantity,
     sizeId: text(size._key),
     sizeLabel: text(size.label),
-    finishId: text(finish._key),
-    finishLabel: text(finish.label),
-    priceCny: positiveNumber(size.priceCny)! + nonNegativeNumber(finish.priceDeltaCny)!,
+    finishId: finish.id,
+    finishLabel: finish.label,
+    priceCny: resolveFinishTotalCny(finish, positiveNumber(size.priceCny)!),
   }
 }
 
@@ -117,9 +116,4 @@ function text(value: unknown) {
 function positiveNumber(value: unknown) {
   const number = Number(value)
   return Number.isFinite(number) && number > 0 ? number : null
-}
-
-function nonNegativeNumber(value: unknown) {
-  const number = Number(value)
-  return Number.isFinite(number) && number >= 0 ? number : null
 }

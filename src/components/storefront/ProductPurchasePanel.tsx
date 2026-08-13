@@ -1,7 +1,8 @@
 "use client"
 
 import Link from "next/link"
-import { useMemo, useState } from "react"
+import { LockKey, Package, PaintBrush, ShieldCheck } from "@phosphor-icons/react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
@@ -9,7 +10,11 @@ import { useWishlist } from "@/context/WishlistContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
+import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
+import ProductDescription from "./ProductDescription"
+import { ProductFinishSelector } from "./ProductFinishSelector"
+import { ProductStickyPurchaseBar } from "./ProductStickyPurchaseBar"
 import styles from "./storefront.module.css"
 
 type Props = {
@@ -31,6 +36,8 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
+  const [mainActionPassed, setMainActionPassed] = useState(false)
+  const mainActionCleanupRef = useRef<() => void>(() => undefined)
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
     [finishId, product, sizeId],
@@ -41,6 +48,34 @@ export default function ProductPurchasePanel({
   const image = product.images[0]
   const saved = isInWishlist(product.id)
   const madeToOrder = product.productionModel === "hand_painted_to_order"
+
+  const mainActionRef = useCallback((action: HTMLDivElement | null) => {
+    mainActionCleanupRef.current()
+
+    if (!action) {
+      mainActionCleanupRef.current = () => undefined
+      return
+    }
+
+    const updateMainActionPosition = () => {
+      const rect = action.getBoundingClientRect()
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+      const isIntersecting = rect.bottom > 0 && rect.top < viewportHeight
+      setMainActionPassed((wasPassed) => {
+        if (rect.bottom <= 0) return true
+        if (isIntersecting) return false
+        return wasPassed
+      })
+    }
+
+    updateMainActionPosition()
+    window.addEventListener("scroll", updateMainActionPosition, { passive: true })
+    window.addEventListener("resize", updateMainActionPosition)
+    mainActionCleanupRef.current = () => {
+      window.removeEventListener("scroll", updateMainActionPosition)
+      window.removeEventListener("resize", updateMainActionPosition)
+    }
+  }, [])
 
   const addSelection = () => {
     if (!selection || !image || !directCheckoutAvailable) return
@@ -71,6 +106,7 @@ export default function ProductPurchasePanel({
     })
     setConfirmation(`${quantity} x ${product.title} was added to your cart.`)
   }
+  const purchaseAction = bindPurchaseAction(addSelection)
 
   const toggleSaved = () => {
     if (!selection || !image) return
@@ -99,7 +135,7 @@ export default function ProductPurchasePanel({
 
       <h1 id="product-title">{product.title}</h1>
       <p className={styles.artist}>By {product.artistName}</p>
-      <p className={styles.description}>{product.shortDescription}</p>
+      <ProductDescription description={product.shortDescription} />
 
       <div className={styles.priceBlock}>
         <p className={styles.price}><PriceText amountCny={selection?.priceCny} /></p>
@@ -129,22 +165,12 @@ export default function ProductPurchasePanel({
       )}
 
       {product.finishes.length > 0 && (
-        <fieldset className={styles.options}>
-          <legend>Select a finish</legend>
-          <div className={styles.choiceGrid}>
-            {product.finishes.map((finish) => (
-              <label key={finish.id} className={styles.choice}>
-                <input
-                  type="radio"
-                  name="product-finish"
-                  checked={selection?.finish.id === finish.id}
-                  onChange={() => setFinishId(finish.id)}
-                />
-                <span>{finish.label}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <ProductFinishSelector
+          finishes={product.finishes}
+          rolledPriceCny={selection?.size.priceCny ?? product.sizes[0]?.priceCny ?? 0}
+          selectedId={selection?.finish.id ?? finishId}
+          onChange={setFinishId}
+        />
       )}
 
       <div className={styles.creation}>
@@ -152,46 +178,47 @@ export default function ProductPurchasePanel({
         <span>{product.creationWindow}</span>
       </div>
 
-      {madeToOrder ? (
-        <div className={styles.quantityRow}>
-          <div>
-            <strong>Quantity</strong>
-            <span>Each canvas is painted individually.</span>
-          </div>
-          <div className={styles.quantityControl} aria-label="Artwork quantity">
-            <button type="button" aria-label="Decrease quantity" disabled={quantity === 1} onClick={() => setQuantity((current) => Math.max(1, current - 1))}>-</button>
-            <output aria-live="polite">{quantity}</output>
-            <button type="button" aria-label="Increase quantity" disabled={quantity === 10} onClick={() => setQuantity((current) => Math.min(10, current + 1))}>+</button>
-          </div>
-        </div>
-      ) : (
+      {!madeToOrder && (
         <p className={styles.originalQuantity}>Original artwork quantity is fixed at one.</p>
       )}
 
-      {directCheckoutAvailable && selection ? (
-        <button className={styles.primaryAction} type="button" onClick={addSelection}>
-          Add to Cart
-        </button>
-      ) : (
-        <a className={styles.primaryAction} href={invoiceUrl} target="_blank" rel="noopener noreferrer">
-          Request invoice
-        </a>
-      )}
+      <div className={styles.purchaseActionRow} ref={mainActionRef}>
+        {madeToOrder && (
+          <div className={styles.quantityPicker}>
+            <strong>Quantity</strong>
+            <div className={styles.quantityControl} aria-label="Artwork quantity">
+              <button type="button" aria-label="Decrease quantity" disabled={quantity === 1} onClick={() => setQuantity((current) => Math.max(1, current - 1))}>-</button>
+              <output aria-live="polite">{quantity}</output>
+              <button type="button" aria-label="Increase quantity" disabled={quantity === 10} onClick={() => setQuantity((current) => Math.min(10, current + 1))}>+</button>
+            </div>
+          </div>
+        )}
+
+        {directCheckoutAvailable && selection ? (
+          <button className={styles.primaryAction} type="button" onClick={purchaseAction.main}>
+            Add to Cart — <PriceText amountCny={selection.priceCny * quantity} />
+          </button>
+        ) : (
+          <a className={styles.primaryAction} href={invoiceUrl} target="_blank" rel="noopener noreferrer">
+            Request invoice
+          </a>
+        )}
+      </div>
 
       <div className={styles.secondaryActions}>
         <Link href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
           Request custom size or color
         </Link>
         <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Ask a question
+          Ask an art advisor
         </a>
       </div>
 
       <div className={styles.purchaseTrust} aria-label="Purchase support">
-        <span>Secure payment</span>
-        <span>Hand-painted</span>
-        <span>Careful packing</span>
-        <span>Damage support</span>
+        <span><LockKey aria-hidden="true" size={18} />Secure payment</span>
+        <span><PaintBrush aria-hidden="true" size={18} />{purchaseTrustLabel(madeToOrder)}</span>
+        <span><Package aria-hidden="true" size={18} />Careful packing</span>
+        <span><ShieldCheck aria-hidden="true" size={18} />Damage support</span>
       </div>
 
       <div className={styles.artAdvisory}>
@@ -213,14 +240,14 @@ export default function ProductPurchasePanel({
 
       <p className={styles.confirmation} role="status" aria-live="polite">{confirmation}</p>
 
-      {directCheckoutAvailable && selection && (
-        <div className={styles.mobilePurchaseBar}>
-          <span>
-            Selected price
-            <strong><PriceText amountCny={selection.priceCny * quantity} /></strong>
-          </span>
-          <button type="button" onClick={addSelection}>Add to Cart</button>
-        </div>
+      {directCheckoutAvailable && (
+        <ProductStickyPurchaseBar
+          product={product}
+          selection={selection}
+          quantity={quantity}
+          mainActionPassed={mainActionPassed}
+          onAdd={purchaseAction.sticky}
+        />
       )}
     </section>
   )

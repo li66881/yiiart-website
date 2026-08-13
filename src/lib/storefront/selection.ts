@@ -1,4 +1,5 @@
 import type { StorefrontFinish, StorefrontSize } from "./product"
+import { resolveFinishTotalCny } from "./finish-options"
 
 type SelectableProduct = {
   sizes: StorefrontSize[]
@@ -17,6 +18,6 @@ export function getProductSelection(
   return {
     size,
     finish,
-    priceCny: size.priceCny + finish.priceDeltaCny,
+    priceCny: resolveFinishTotalCny(finish, size.priceCny),
   }
 }

@@ -51,6 +51,24 @@ test("maps made-to-order sizes and finishes without accepting invalid prices", (
   assert.deepEqual(product.finishes.map((finish) => finish.id), ["rolled"])
 })
 
+test("uses catalog presentation choices when a made-to-order product has no configured finishes", () => {
+  const product = buildStorefrontProduct({
+    _id: "catalog-fallback-1",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 1730 }],
+  }, [])
+
+  assert.deepEqual(product.finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+    "gold-frame",
+    "silver-frame",
+  ])
+})
+
 test("uses safe made-to-order copy and normalized discovery facets", () => {
   const product = buildStorefrontProduct({
     _id: "catalog-2",
