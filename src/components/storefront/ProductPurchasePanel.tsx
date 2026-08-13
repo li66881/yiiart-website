@@ -10,6 +10,7 @@ import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import { getProductSelection } from "@/lib/storefront/selection"
+import { ProductFinishSelector } from "./ProductFinishSelector"
 import styles from "./storefront.module.css"
 
 type Props = {
@@ -129,22 +130,12 @@ export default function ProductPurchasePanel({
       )}
 
       {product.finishes.length > 0 && (
-        <fieldset className={styles.options}>
-          <legend>Select a finish</legend>
-          <div className={styles.choiceGrid}>
-            {product.finishes.map((finish) => (
-              <label key={finish.id} className={styles.choice}>
-                <input
-                  type="radio"
-                  name="product-finish"
-                  checked={selection?.finish.id === finish.id}
-                  onChange={() => setFinishId(finish.id)}
-                />
-                <span>{finish.label}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
+        <ProductFinishSelector
+          finishes={product.finishes}
+          rolledPriceCny={selection?.size.priceCny ?? product.sizes[0]?.priceCny ?? 0}
+          selectedId={selection?.finish.id ?? finishId}
+          onChange={setFinishId}
+        />
       )}
 
       <div className={styles.creation}>

@@ -1,6 +1,64 @@
 import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
+import { buildProductFinishSelectorViewModel } from "./finish-selector"
+import type { NormalizedFinishOption } from "./finish-options"
+
+const selectorFinishes: NormalizedFinishOption[] = [
+  {
+    id: "rolled",
+    label: "Rolled canvas",
+    pricing: { kind: "fixed_delta", priceDeltaCny: 0 },
+    assetSrc: "/images/product-finishes/rolled-canvas.webp",
+    assetAlt: "Rolled canvas",
+  },
+  {
+    id: "black-frame",
+    label: "Black float frame",
+    pricing: { kind: "catalog_formula", presentationId: "black-frame" },
+    assetSrc: "/images/product-finishes/black-float-frame.webp",
+    assetAlt: "Black float frame",
+  },
+]
+
+test("finish selector exposes the active presentation and only positive price increments", () => {
+  const viewModel = buildProductFinishSelectorViewModel(selectorFinishes, 1730, "black-frame")
+
+  assert.equal(viewModel.selectedLabel, "Black float frame")
+  assert.deepEqual(viewModel.choices.map(({ id, selected, priceDeltaCny }) => ({
+    id,
+    selected,
+    priceDeltaCny,
+  })), [
+    { id: "rolled", selected: false, priceDeltaCny: null },
+    { id: "black-frame", selected: true, priceDeltaCny: 1360 },
+  ])
+})
+
+test("finish selector recalculates presentation increments when the rolled size price changes", () => {
+  const small = buildProductFinishSelectorViewModel(selectorFinishes, 1730, "black-frame")
+  const large = buildProductFinishSelectorViewModel(selectorFinishes, 3120, "black-frame")
+
+  assert.equal(small.selectedLabel, "Black float frame")
+  assert.equal(large.selectedLabel, "Black float frame")
+  assert.equal(small.choices[1].priceDeltaCny, 1360)
+  assert.equal(large.choices[1].priceDeltaCny, 2450)
+})
+
+test("finish selector keeps native radio semantics and distinguishable focus and selected states", async () => {
+  const [selector, styles] = await Promise.all([
+    readFile("src/components/storefront/ProductFinishSelector.tsx", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
+  ])
+
+  assert.match(selector, /<fieldset/)
+  assert.match(selector, /<legend>Choose a presentation<\/legend>/)
+  assert.match(selector, /type="radio"/)
+  assert.match(selector, /alt=""/)
+  assert.match(selector, /data-selected=/)
+  assert.match(styles, /\.finishRadio:focus-visible \+ \.finishControl/)
+  assert.match(styles, /\.finishChoice\[data-selected="true"\]/)
+})
 
 test("optimized storefront keeps current catalog and checkout boundaries", async () => {
   const home = await readFile("src/app/page.tsx", "utf8")
