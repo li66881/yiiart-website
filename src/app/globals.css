@@ -146,6 +146,10 @@ img {
   :root {
     --yiiart-header-offset: 92px;
   }
+
+  body[data-main-purchase-action-visible="true"] .yiiart-chat-widget {
+    display: none;
+  }
 }
 
 @media (min-width: 768px) {

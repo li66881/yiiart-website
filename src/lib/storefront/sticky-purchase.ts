@@ -24,6 +24,23 @@ export function applyStickyPurchaseBodyState(target: StickyPurchaseBodyTarget) {
   return () => clearStickyPurchaseBodyState(target)
 }
 
+export type MainPurchaseActionBodyTarget = {
+  dataset: {
+    mainPurchaseActionVisible?: string
+  }
+}
+
+export function setMainPurchaseActionBodyState(
+  target: MainPurchaseActionBodyTarget,
+  visible: boolean,
+) {
+  if (visible) {
+    target.dataset.mainPurchaseActionVisible = "true"
+  } else {
+    delete target.dataset.mainPurchaseActionVisible
+  }
+}
+
 export function mainActionBlocksSticky(position: MainActionPosition) {
   return position.isIntersecting || position.top >= 0
 }

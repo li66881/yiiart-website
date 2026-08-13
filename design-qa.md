@@ -85,3 +85,13 @@ The representative `ink-garden-01` product exposes only Rolled canvas. Its expli
 - Server-rendered markup contains the direct eager Rolled canvas asset and no Rolled canvas optimizer URL; browser visual confirmation is still required.
 - Running the production build invalidated the prior live development module graph, so the preview was restarted after build completion.
 - The latest detached preview logs contain non-blocking Watchpack scan errors for protected drive-root paths and an existing `/api/auth/session` 500 because the local detached process has no usable Auth secret. The product route and purchase CTA remain available for the requested visual retest.
+
+## Fix round 2 browser evidence and response
+
+- P1-A passed controller retest: the visible Rolled canvas thumbnail in `audits/mesonart-product-detail-implementation-2026-08-12/06-yiiart-local-desktop-finish-fixed.png` rendered with `complete=true` and `naturalWidth=88`.
+- P1-B failed its first controller retest: at 1440 x 1000 the visible sticky CTA occupied `x=1254.31..1380, y=919..967`, while Chat occupied `x=1335.31..1400.80, y=932..976`; overlap remained true in `07-yiiart-local-desktop-sticky-fixed.png`. The body dataset was absent even though one visible sticky shell existed.
+- Root cause: the sticky shell and body signal were split across render and a deferred `useEffect`. The browser could paint the shell before the effect published `data-sticky-purchase-visible`, leaving the Chat offset inactive during that real boundary window.
+- Round-2 fix: the mounted sticky `<aside>` now owns the body state through a stable callback ref during DOM commit; detaching the shell clears it. This removes the rendered-shell/dataset divergence rather than adding more spacing.
+- Additional Important mobile finding: at 390 x 844 Chat (`x≈283..344, y≈676..720`) covered the quantity control (`x≈219..344, y≈689..731`) in `09-yiiart-local-mobile-finish-fixed.png` while the main purchase section was visible.
+- Mobile response: the real main-action IntersectionObserver now publishes `data-main-purchase-action-visible` directly. At mobile widths Chat is hidden only while the purchase controls intersect the viewport, then returns in its existing sticky-safe position after those controls scroll away. Desktop behavior and cookie-aware sticky spacing are unchanged.
+- Automated status: focused `29/29`, full `176/176` plus public-copy check, TypeScript exit 0, and production build exit 0. Controller browser retest remains required; `final result: pending browser retest` is unchanged.

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { PriceText } from "@/components/PriceText"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import type { getProductSelection } from "@/lib/storefront/selection"
@@ -47,21 +47,20 @@ export function ProductStickyPurchaseBar({
     footerVisible,
   })
 
-  useEffect(() => {
-    if (!visible) {
+  const stickyPurchaseBodyStateRef = useCallback((element: HTMLElement | null) => {
+    if (element) {
+      applyStickyPurchaseBodyState(document.body)
+    } else {
       clearStickyPurchaseBodyState(document.body)
-      return
     }
-
-    return applyStickyPurchaseBodyState(document.body)
-  }, [visible])
+  }, [])
 
   if (!visible || !selection) return null
 
   const image = product.images[0]
 
   return (
-    <aside className={styles.stickyPurchaseShell} aria-label="Selected artwork purchase">
+    <aside ref={stickyPurchaseBodyStateRef} className={styles.stickyPurchaseShell} aria-label="Selected artwork purchase">
       <div className={styles.stickyPurchaseBar}>
         <div className={styles.stickyProductIdentity}>
           {image ? <img src={image.src} alt="" /> : null}

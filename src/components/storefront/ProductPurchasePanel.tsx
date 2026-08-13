@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { LockKey, Package, PaintBrush, ShieldCheck } from "@phosphor-icons/react"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
@@ -12,7 +12,10 @@ import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
-import { mainActionBlocksSticky } from "@/lib/storefront/sticky-purchase"
+import {
+  mainActionBlocksSticky,
+  setMainPurchaseActionBodyState,
+} from "@/lib/storefront/sticky-purchase"
 import { ProductFinishSelector } from "./ProductFinishSelector"
 import { ProductStickyPurchaseBar } from "./ProductStickyPurchaseBar"
 import styles from "./storefront.module.css"
@@ -37,7 +40,7 @@ export default function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const [mainActionVisible, setMainActionVisible] = useState(true)
-  const mainActionRef = useRef<HTMLDivElement>(null)
+  const mainActionObserverRef = useRef<IntersectionObserver | null>(null)
   const selection = useMemo(
     () => getProductSelection(product, sizeId, finishId),
     [finishId, product, sizeId],
@@ -49,8 +52,11 @@ export default function ProductPurchasePanel({
   const saved = isInWishlist(product.id)
   const madeToOrder = product.productionModel === "hand_painted_to_order"
 
-  useEffect(() => {
-    const action = mainActionRef.current
+  const mainActionRef = useCallback((action: HTMLDivElement | null) => {
+    mainActionObserverRef.current?.disconnect()
+    mainActionObserverRef.current = null
+    setMainPurchaseActionBodyState(document.body, false)
+
     if (!action || typeof IntersectionObserver === "undefined") return
 
     const observer = new IntersectionObserver(([entry]) => {
@@ -58,9 +64,10 @@ export default function ProductPurchasePanel({
         isIntersecting: entry.isIntersecting,
         top: entry.boundingClientRect.top,
       }))
+      setMainPurchaseActionBodyState(document.body, entry.isIntersecting)
     })
     observer.observe(action)
-    return () => observer.disconnect()
+    mainActionObserverRef.current = observer
   }, [])
 
   const addSelection = () => {
