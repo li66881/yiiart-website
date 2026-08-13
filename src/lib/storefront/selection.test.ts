@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { buildStorefrontProduct } from "./product"
 import { getProductSelection } from "./selection"
 
 const product = {
@@ -8,8 +9,20 @@ const product = {
     { id: "100x120", label: "100 x 120 cm", priceCny: 3400 },
   ],
   finishes: [
-    { id: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
-    { id: "black", label: "Black float frame", priceDeltaCny: 600 },
+    {
+      id: "rolled",
+      label: "Rolled canvas",
+      pricing: { kind: "fixed_delta" as const, priceDeltaCny: 0 },
+      assetSrc: "/images/product-finishes/rolled-canvas.webp",
+      assetAlt: "Rolled canvas",
+    },
+    {
+      id: "black",
+      label: "Black float frame",
+      pricing: { kind: "fixed_delta" as const, priceDeltaCny: 600 },
+      assetSrc: "/images/product-finishes/black-float-frame.webp",
+      assetAlt: "Black float frame",
+    },
   ],
 }
 
@@ -31,4 +44,16 @@ test("falls back to the first available options", () => {
 
 test("returns null when a product cannot be purchased", () => {
   assert.equal(getProductSelection({ sizes: [], finishes: [] }, "", ""), null)
+})
+
+test("uses catalog finish pricing for a fallback made-to-order product", () => {
+  const product = buildStorefrontProduct({
+    _id: "catalog-1",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 1730 }],
+  }, [])
+
+  const selection = getProductSelection(product, "80x100", "gold-frame")
+
+  assert.equal(selection?.priceCny, 3090)
 })

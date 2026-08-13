@@ -39,6 +39,16 @@ test("resolves a made-to-order size and finish from Sanity values", () => {
   assert.equal(selection.finishLabel, "Black float frame")
 })
 
+test("server rebuilds the same fallback finish total", () => {
+  const selection = resolveCheckoutSelection({
+    _id: "catalog-1",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 1730 }],
+  }, { id: "catalog-1", quantity: 1, sizeId: "80x100", finishId: "gold-frame" })
+
+  assert.equal(selection.priceCny, 3090)
+})
+
 test("rejects an unknown made-to-order size", () => {
   assert.throws(() => resolveCheckoutSelection({
     _id: "catalog-1",
