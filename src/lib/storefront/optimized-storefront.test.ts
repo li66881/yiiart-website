@@ -194,6 +194,10 @@ test("product layout keeps the gallery dominant and stacks safely across narrow 
     readFile("src/components/storefront/ProductGallery.tsx", "utf8"),
     readFile("src/components/storefront/storefront.module.css", "utf8"),
   ])
+  const tabletLayout = styles.slice(
+    styles.indexOf("@media (max-width: 1023px)"),
+    styles.indexOf("@media (max-width: 760px)"),
+  )
 
   assert.match(gallery, /aria-live="polite"[^>]*>\s*{galleryLabels\.visibleLabel}/)
   assert.match(gallery, /aria-label={galleryLabels\.thumbnailLabels\[index\]}/)
@@ -206,8 +210,8 @@ test("product layout keeps the gallery dominant and stacks safely across narrow 
   assert.match(styles, /\.productDetailNavigation a\s*{[^}]*min-height:\s*44px/)
   assert.match(styles, /\.galleryArrow,[\s\S]*?width:\s*44px;[^}]*height:\s*44px/)
   assert.match(styles, /\.quantityControl\s*{[^}]*grid-template-columns:\s*44px 42px 44px;[^}]*height:\s*44px/)
-  assert.match(styles, /:global\(body\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ env\(safe-area-inset-bottom\)\)/)
-  assert.match(styles, /:global\(body\[data-cookie-consent-visible="true"\]\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ var\(--cookie-consent-height, 0px\) \+ env\(safe-area-inset-bottom\)\)/)
+  assert.match(tabletLayout, /:global\(body\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ env\(safe-area-inset-bottom\)\)/)
+  assert.match(tabletLayout, /:global\(body\[data-cookie-consent-visible="true"\]\):has\(\.stickyPurchaseShell\)\s*{[^}]*padding-bottom:\s*calc\(96px \+ var\(--cookie-consent-height, 0px\) \+ env\(safe-area-inset-bottom\)\)/)
   assert.match(styles, /@media \(prefers-reduced-motion: reduce\)[\s\S]*?\.stickyPurchaseShell\s*{[^}]*animation:\s*none/)
 })
 
