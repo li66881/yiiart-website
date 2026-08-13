@@ -158,6 +158,15 @@ test("optimized storefront restores the global shell and homepage composition", 
   assert.match(editorialHome, /color=Black/)
 })
 
+test("production layout uses local fonts without a build-time Google Fonts request", async () => {
+  const layout = await readFile("src/app/layout.tsx", "utf8")
+
+  assert.match(layout, /next\/font\/local/)
+  assert.match(layout, /public\/fonts\/poppins-latin-300\.woff2/)
+  assert.match(layout, /public\/fonts\/urbanist-latin\.woff2/)
+  assert.doesNotMatch(layout, /next\/font\/google/)
+})
+
 test("optimized storefront restores artwork and collection discovery", async () => {
   const discoveryGrid = await readFile("src/components/ArtworkDiscoveryGrid.tsx", "utf8")
   const storefrontControls = await readFile("src/components/StorefrontControls.tsx", "utf8")
