@@ -1,8 +1,13 @@
 import assert from "node:assert/strict"
 import { readFile } from "node:fs/promises"
 import test from "node:test"
+import {
+  applyCookieConsentBodyState,
+  clearCookieConsentBodyState,
+} from "../cookie-consent-state"
 import { buildProductFinishSelectorViewModel } from "./finish-selector"
 import type { NormalizedFinishOption } from "./finish-options"
+import { bindPurchaseAction, purchaseTrustLabel } from "./purchase-action"
 import { mainActionBlocksSticky, shouldShowStickyPurchase } from "./sticky-purchase"
 
 const selectorFinishes: NormalizedFinishOption[] = [
@@ -21,6 +26,24 @@ const selectorFinishes: NormalizedFinishOption[] = [
     assetAlt: "Black float frame",
   },
 ]
+
+function createCookieBodyTarget() {
+  const properties = new Map<string, string>()
+  return {
+    properties,
+    target: {
+      dataset: {} as { cookieConsentVisible?: string },
+      style: {
+        setProperty(name: string, value: string) {
+          properties.set(name, value)
+        },
+        removeProperty(name: string) {
+          properties.delete(name)
+        },
+      },
+    },
+  }
+}
 
 test("finish selector exposes the active presentation and only positive price increments", () => {
   const viewModel = buildProductFinishSelectorViewModel(selectorFinishes, 1730, "black-frame")
@@ -146,18 +169,11 @@ test("optimized storefront restores product detail presentation", async () => {
 })
 
 test("product purchase hierarchy shares the selected total and sticky action state", async () => {
-  const [purchasePanel, cookieConsent] = await Promise.all([
-    readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8"),
-    readFile("src/components/CookieConsent.tsx", "utf8"),
-  ])
+  const purchasePanel = await readFile("src/components/storefront/ProductPurchasePanel.tsx", "utf8")
 
   assert.match(purchasePanel, /Add to Cart —/)
   assert.match(purchasePanel, /ProductStickyPurchaseBar/)
   assert.match(purchasePanel, /mainAction(?:Ref|Sentinel)/)
-  assert.match(purchasePanel, /onClick={addSelection}/)
-  assert.match(purchasePanel, /onAdd={addSelection}/)
-  assert.match(cookieConsent, /document\.body\.dataset\.cookieConsentVisible\s*=\s*["']true["']/)
-  assert.match(cookieConsent, /delete document\.body\.dataset\.cookieConsentVisible/)
 })
 
 test("sticky purchase visibility requires a selection and an unobscured offscreen action", () => {
@@ -184,6 +200,59 @@ test("sticky purchase visibility requires a selection and an unobscured offscree
     actionVisible: false,
     footerVisible: true,
   }), false)
+})
+
+test("desktop sticky purchase aligns with the artwork page container and gutters", async () => {
+  const [artworkPage, styles] = await Promise.all([
+    readFile("src/app/artwork/[slug]/page.tsx", "utf8"),
+    readFile("src/components/storefront/storefront.module.css", "utf8"),
+  ])
+
+  assert.match(artworkPage, /max-w-\[1600px\] px-4[^"\n]*sm:px-6[^"\n]*lg:px-8/)
+  assert.match(styles, /width: min\(100%, 1600px\)/)
+  assert.match(styles, /\.stickyPurchaseShell\s*{[^}]*padding-inline: 16px/)
+  assert.match(styles, /@media \(min-width: 640px\)[\s\S]*?\.stickyPurchaseShell\s*{[^}]*padding-inline: 24px/)
+  assert.match(styles, /@media \(min-width: 1024px\)[\s\S]*?\.stickyPurchaseShell\s*{[^}]*padding-inline: 32px/)
+})
+
+test("purchase trust copy matches the product production model", () => {
+  assert.equal(purchaseTrustLabel(true), "Hand-painted to order")
+  assert.equal(purchaseTrustLabel(false), "Original artwork")
+})
+
+test("cookie consent body state is visible only until dismissal or unmount", () => {
+  const dismissed = createCookieBodyTarget()
+  applyCookieConsentBodyState(dismissed.target, 86.2)
+  assert.equal(dismissed.target.dataset.cookieConsentVisible, "true")
+  assert.equal(dismissed.properties.get("--cookie-consent-height"), "87px")
+  clearCookieConsentBodyState(dismissed.target)
+  assert.equal(dismissed.target.dataset.cookieConsentVisible, undefined)
+  assert.equal(dismissed.properties.has("--cookie-consent-height"), false)
+
+  const unmounted = createCookieBodyTarget()
+  const cleanup = applyCookieConsentBodyState(unmounted.target, 64)
+  cleanup()
+  assert.equal(unmounted.target.dataset.cookieConsentVisible, undefined)
+  assert.equal(unmounted.properties.has("--cookie-consent-height"), false)
+})
+
+test("main and sticky buttons invoke one shared cart action", () => {
+  let payloadConstructions = 0
+  const cartLines: Array<{ priceCny: number; quantity: number }> = []
+  const addSelection = () => {
+    payloadConstructions += 1
+    cartLines.push({ priceCny: 2710, quantity: 2 })
+  }
+  const bindings = bindPurchaseAction(addSelection)
+
+  assert.strictEqual(bindings.main, bindings.sticky)
+  bindings.main()
+  bindings.sticky()
+  assert.equal(payloadConstructions, 2)
+  assert.deepEqual(cartLines, [
+    { priceCny: 2710, quantity: 2 },
+    { priceCny: 2710, quantity: 2 },
+  ])
 })
 
 test("complete recovery matches the approved MesonArt-aligned composition", async () => {

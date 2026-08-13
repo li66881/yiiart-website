@@ -10,6 +10,7 @@ import { useWishlist } from "@/context/WishlistContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
+import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
 import { mainActionBlocksSticky } from "@/lib/storefront/sticky-purchase"
 import { ProductFinishSelector } from "./ProductFinishSelector"
@@ -91,6 +92,7 @@ export default function ProductPurchasePanel({
     })
     setConfirmation(`${quantity} x ${product.title} was added to your cart.`)
   }
+  const purchaseAction = bindPurchaseAction(addSelection)
 
   const toggleSaved = () => {
     if (!selection || !image) return
@@ -179,7 +181,7 @@ export default function ProductPurchasePanel({
         )}
 
         {directCheckoutAvailable && selection ? (
-          <button className={styles.primaryAction} type="button" onClick={addSelection}>
+          <button className={styles.primaryAction} type="button" onClick={purchaseAction.main}>
             Add to Cart — <PriceText amountCny={selection.priceCny * quantity} />
           </button>
         ) : (
@@ -200,7 +202,7 @@ export default function ProductPurchasePanel({
 
       <div className={styles.purchaseTrust} aria-label="Purchase support">
         <span><LockKey aria-hidden="true" size={18} />Secure payment</span>
-        <span><PaintBrush aria-hidden="true" size={18} />Hand-painted to order</span>
+        <span><PaintBrush aria-hidden="true" size={18} />{purchaseTrustLabel(madeToOrder)}</span>
         <span><Package aria-hidden="true" size={18} />Careful packing</span>
         <span><ShieldCheck aria-hidden="true" size={18} />Damage support</span>
       </div>
@@ -230,7 +232,7 @@ export default function ProductPurchasePanel({
           selection={selection}
           quantity={quantity}
           actionVisible={mainActionVisible}
-          onAdd={addSelection}
+          onAdd={purchaseAction.sticky}
         />
       )}
     </section>

@@ -2,6 +2,10 @@
 
 import { useEffect, useRef, useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
+import {
+  applyCookieConsentBodyState,
+  clearCookieConsentBodyState,
+} from "@/lib/cookie-consent-state"
 
 const STORAGE_KEY = "yiiart-cookie-consent"
 
@@ -26,15 +30,14 @@ export default function CookieConsent() {
 
   useEffect(() => {
     if (!consentVisible) {
-      delete document.body.dataset.cookieConsentVisible
-      document.body.style.removeProperty("--cookie-consent-height")
+      clearCookieConsentBodyState(document.body)
       return
     }
 
-    document.body.dataset.cookieConsentVisible = "true"
+    let cleanupBodyState = () => clearCookieConsentBodyState(document.body)
     const updateHeight = () => {
       const height = bannerRef.current?.getBoundingClientRect().height || 0
-      document.body.style.setProperty("--cookie-consent-height", `${Math.ceil(height)}px`)
+      cleanupBodyState = applyCookieConsentBodyState(document.body, height)
     }
     updateHeight()
 
@@ -45,8 +48,7 @@ export default function CookieConsent() {
 
     return () => {
       resizeObserver?.disconnect()
-      delete document.body.dataset.cookieConsentVisible
-      document.body.style.removeProperty("--cookie-consent-height")
+      cleanupBodyState()
     }
   }, [consentVisible])
 

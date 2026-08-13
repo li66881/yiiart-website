@@ -673,7 +673,7 @@
   right: 0;
   bottom: 18px;
   left: 0;
-  padding-inline: 24px;
+  padding-inline: 16px;
   pointer-events: none;
   animation: stickyPurchaseEnter 180ms ease-out;
 }
@@ -684,7 +684,7 @@
 
 .stickyPurchaseBar {
   display: grid;
-  width: min(100%, 1440px);
+  width: min(100%, 1600px);
   min-height: 78px;
   grid-template-columns: minmax(220px, 1fr) minmax(220px, auto) auto;
   align-items: center;
@@ -763,6 +763,18 @@
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+@media (min-width: 640px) {
+  .stickyPurchaseShell {
+    padding-inline: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .stickyPurchaseShell {
+    padding-inline: 32px;
   }
 }
 
