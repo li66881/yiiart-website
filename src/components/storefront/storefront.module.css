@@ -243,6 +243,32 @@
   font-size: 0.7rem;
 }
 
+.roomCue {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  bottom: 16px;
+  display: inline-flex;
+  min-height: 40px;
+  transform: translateX(-50%);
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgb(255 255 255 / 0.7);
+  border-radius: 999px;
+  background: rgb(255 253 248 / 0.92);
+  padding: 0 1rem;
+  color: #171717;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.galleryStage:has(.roomCue) .zoomHint {
+  display: none;
+}
+
 .galleryArrow,
 .lightboxArrow {
   position: absolute;

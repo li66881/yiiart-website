@@ -86,7 +86,7 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
             onClick={onWishlist}
             aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
             aria-pressed={saved}
-            className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#1d1d1d] transition hover:bg-white"
+            className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#1d1d1d] transition hover:bg-white"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill={saved ? "currentColor" : "none"} aria-hidden="true">
               <path
@@ -97,6 +97,9 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
               />
             </svg>
           </button>
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 flex min-h-10 translate-y-1 items-center justify-center bg-[#171717]/88 text-[12px] font-medium tracking-[0.04em] text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+            Choose options
+          </span>
         </div>
 
         <div className="grid gap-1.5 pt-3">

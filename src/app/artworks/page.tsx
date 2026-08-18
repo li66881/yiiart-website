@@ -3,7 +3,7 @@ import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { ArtworksPageHeroCopy } from "@/components/ArtworksPageCopy"
 import { client } from "@/lib/sanity"
-import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
+import { getArtworkImageUrl, getArtworkImageUrls, hasArtworkImage } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
@@ -79,8 +79,8 @@ export default async function ArtworksPage({ searchParams }: Props) {
   const initialDiscovery = buildArtworkDiscoveryInitialState(params)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
-    const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
-    return buildArtworkDiscoveryItem(artwork, imageUrl)
+    const images = getArtworkImageUrls(artwork, { width: 700 })
+    return buildArtworkDiscoveryItem(artwork, images[0], images[1])
   })
 
   return (

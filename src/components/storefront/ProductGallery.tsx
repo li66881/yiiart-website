@@ -24,6 +24,11 @@ export default function ProductGallery({ media, alt }: Props) {
     media.map((item) => item.role),
     selectedIndex,
   )
+  const firstRoomIndex = media.findIndex((item) => item.type === "image" && roomSceneRoles.has(item.role))
+  const firstArtworkIndex = media.findIndex((item) => item.type === "image" && !roomSceneRoles.has(item.role))
+  const viewingRoom = Boolean(selectedMedia && roomSceneRoles.has(selectedMedia.role))
+  const roomToggleIndex = viewingRoom ? firstArtworkIndex : firstRoomIndex
+  const roomToggleLabel = viewingRoom ? "View artwork" : "View in room"
 
   const showPrevious = () => {
     setSelectedIndex((current) => (current - 1 + media.length) % media.length)
@@ -149,6 +154,16 @@ export default function ProductGallery({ media, alt }: Props) {
               <span className={styles.zoomHint}>View larger</span>
             </button>
           )}
+
+          {roomToggleIndex >= 0 ? (
+            <button
+              type="button"
+              className={styles.roomCue}
+              onClick={() => selectMedia(roomToggleIndex)}
+            >
+              {roomToggleLabel}
+            </button>
+          ) : null}
 
           {media.length > 1 ? (
             <>

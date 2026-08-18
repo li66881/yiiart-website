@@ -2,9 +2,10 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { Dispatch, SetStateAction, useMemo, useState } from "react"
+import { Dispatch, SetStateAction, useMemo, useState, type MouseEvent } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useLanguage } from "@/context/LanguageContext"
+import { useWishlist } from "@/context/WishlistContext"
 import {
   ArtworkDiscoveryItem,
   ArtworkFilterKey,
@@ -235,21 +236,67 @@ function ArtworkTile({
   translateOption: (option: string) => string
 }) {
   const collectionCue = tileCollectionCue(artwork)
+  const { isInWishlist, toggleWishlist } = useWishlist()
+  const saved = isInWishlist(artwork.id)
+
+  const onWishlist = (event: MouseEvent) => {
+    event.preventDefault()
+    event.stopPropagation()
+    if (!artwork.imageUrl) return
+    toggleWishlist({
+      id: artwork.id,
+      slug: artwork.href.replace("/artwork/", ""),
+      title: artwork.title,
+      artist: artwork.artistName,
+      price: artwork.price || 0,
+      image: artwork.imageUrl,
+    })
+  }
 
   return (
     <Link href={artwork.href} className="meson-product-card group block">
       <div className="relative aspect-[4/5] overflow-hidden bg-[#f5f4f0]">
         {artwork.imageUrl ? (
-          <Image
-            src={artwork.imageUrl}
-            alt={buildArtworkTileAlt(artwork, translateOption)}
-            fill
-            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover transition-opacity duration-300"
-          />
+          <>
+            <Image
+              src={artwork.imageUrl}
+              alt={buildArtworkTileAlt(artwork, translateOption)}
+              fill
+              sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+              className={`object-cover transition-opacity duration-300 ${artwork.hoverImageUrl ? "group-hover:opacity-0" : "transition-transform duration-500 group-hover:scale-[1.02]"}`}
+            />
+            {artwork.hoverImageUrl ? (
+              <Image
+                src={artwork.hoverImageUrl}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              />
+            ) : null}
+          </>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>
         )}
+        <button
+          type="button"
+          onClick={onWishlist}
+          aria-label={saved ? "Remove from wishlist" : "Add to wishlist"}
+          aria-pressed={saved}
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/95 text-[#1d1d1d] transition hover:bg-white"
+        >
+          <svg width="18" height="18" viewBox="0 0 20 20" fill={saved ? "currentColor" : "none"} aria-hidden="true">
+            <path
+              d="M10 16.2S3.8 12.2 3.8 7.9C3.8 5.9 5.3 4.5 7.2 4.5C8.4 4.5 9.4 5.1 10 6C10.6 5.1 11.6 4.5 12.8 4.5C14.7 4.5 16.2 5.9 16.2 7.9C16.2 12.2 10 16.2 10 16.2Z"
+              stroke="currentColor"
+              strokeWidth="1.4"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 flex min-h-10 translate-y-1 items-center justify-center bg-[#171717]/88 text-[12px] font-medium tracking-[0.04em] text-white opacity-0 transition duration-200 group-hover:translate-y-0 group-hover:opacity-100">
+          Choose options
+        </span>
       </div>
       <div className="bg-transparent px-0 py-3">
         {collectionCue && <p className="mb-1.5 text-[0.65rem] font-medium uppercase text-[#a4a4a4]">{collectionCue}</p>}

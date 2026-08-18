@@ -34,6 +34,17 @@ test("keeps approved made-to-order collection metadata", () => {
   assert.equal(item.createdAt, "2026-08-10T00:00:00.000Z")
 })
 
+test("keeps a distinct hover image when a second artwork view exists", () => {
+  const item = buildArtworkDiscoveryItem(
+    { _id: "hover-1", title: { en: "Soft Horizon" } },
+    "/primary.webp",
+    "/room.webp",
+  )
+
+  assert.equal(item.imageUrl, "/primary.webp")
+  assert.equal(item.hoverImageUrl, "/room.webp")
+})
+
 test("matches All Art, New Collection, and Artist Collection tabs", () => {
   const newItem = { collectionType: "new_collection" } as never
   const artistItem = { collectionType: "artist_collection" } as never

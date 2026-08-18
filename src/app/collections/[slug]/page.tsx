@@ -5,7 +5,7 @@ import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { getMarketingCollection } from "@/lib/collections"
 import { pickEnglish } from "@/lib/artwork-display"
-import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
+import { getArtworkImageUrl, getArtworkImageUrls, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { filterCatalogLinks, getCatalogNavigationState, getCollectionArtworks } from "@/lib/storefront/collection-catalog"
@@ -60,8 +60,8 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   const visibleInternalCollectionLinks = filterCatalogLinks(internalCollectionLinks, navigationState)
   const heroCopy = buildCollectionHeroCopy(collection)
   const artworkItems = artworks.map((artwork: any) => {
-    const imageUrl = getArtworkImageUrl(artwork, { width: 700 })
-    return buildArtworkDiscoveryItem(artwork, imageUrl)
+    const images = getArtworkImageUrls(artwork, { width: 700 })
+    return buildArtworkDiscoveryItem(artwork, images[0], images[1])
   })
 
   return (

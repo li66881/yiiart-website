@@ -17,6 +17,7 @@ export type ArtworkDiscoveryItem = {
   id: string
   href: string
   imageUrl?: string
+  hoverImageUrl?: string
   title: string
   artistName: string
   category: string
@@ -108,7 +109,7 @@ export function normalizeArtworkSort(value?: string | string[]) : ArtworkSortMod
   return allowed.includes(candidate as ArtworkSortMode) ? candidate as ArtworkSortMode : "featured"
 }
 
-export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): ArtworkDiscoveryItem {
+export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string, hoverImageUrl?: string): ArtworkDiscoveryItem {
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
   const productionModel = artwork.productionModel === "hand_painted_to_order" ? "hand_painted_to_order" : "original"
@@ -127,6 +128,7 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     id: artwork._id || artwork.slug?.current || title,
     href: artwork.slug?.current ? `/artwork/${artwork.slug.current}` : "/artworks",
     imageUrl,
+    hoverImageUrl: hoverImageUrl && hoverImageUrl !== imageUrl ? hoverImageUrl : undefined,
     title,
     artistName,
     category,
