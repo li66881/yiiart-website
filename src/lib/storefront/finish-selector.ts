@@ -11,11 +11,43 @@ export const finishThumbnailImageProps = {
 export type ProductFinishSelectorChoice = NormalizedFinishOption & {
   selected: boolean
   priceDeltaCny: number | null
+  shortLabel: string
 }
+
+export const finishFamilyHeading = "Rolled Canvas/Frameless/Framed"
 
 export type ProductFinishSelectorViewModel = {
   selectedLabel: string
+  groupLabel: string
+  headingSelection: string
+  familyHeading: string
   choices: ProductFinishSelectorChoice[]
+}
+
+export function shortFinishLabel(id: string, label: string) {
+  const value = `${id} ${label}`.toLowerCase()
+  if (value.includes("rolled")) return "Rolled"
+  if (value.includes("stretch") || value.includes("frameless") || value.includes("gallery")) return "Frameless"
+  if (value.includes("gold")) return "Gold"
+  if (value.includes("silver")) return "Silver"
+  if (value.includes("white")) return "White"
+  if (value.includes("black")) return "Black"
+  if (value.includes("wood") || value.includes("natural") || value.includes("oak")) return "Wood"
+  return label.replace(/float frame/i, "").replace(/canvas/i, "").trim() || label
+}
+
+export function finishGroupLabel(id: string, label: string) {
+  const value = `${id} ${label}`.toLowerCase()
+  if (value.includes("rolled") || value.includes("stretch") || value.includes("frameless") || value.includes("gallery")) {
+    return "Finish"
+  }
+  return "Floating Frame"
+}
+
+export function finishHeadingSelection(id: string, label: string) {
+  const short = shortFinishLabel(id, label)
+  if (short === "Rolled") return "Rolled Canvas"
+  return short
 }
 
 export function buildProductFinishSelectorViewModel(
@@ -27,12 +59,16 @@ export function buildProductFinishSelectorViewModel(
 
   return {
     selectedLabel: selectedFinish?.label || "",
+    groupLabel: finishGroupLabel(selectedFinish?.id || "", selectedFinish?.label || ""),
+    familyHeading: finishFamilyHeading,
+    headingSelection: finishHeadingSelection(selectedFinish?.id || "", selectedFinish?.label || ""),
     choices: finishes.map((finish) => {
       const priceDeltaCny = resolveFinishDeltaCny(finish, rolledPriceCny)
 
       return {
         ...finish,
         selected: finish.id === selectedFinish?.id,
+        shortLabel: shortFinishLabel(finish.id, finish.label),
         priceDeltaCny: priceDeltaCny > 0 ? priceDeltaCny : null,
       }
     }),

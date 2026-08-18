@@ -1,7 +1,6 @@
 "use client"
 
 import Image from "next/image"
-import { PriceText } from "@/components/PriceText"
 import type { NormalizedFinishOption } from "@/lib/storefront/finish-options"
 import {
   buildProductFinishSelectorViewModel,
@@ -27,12 +26,16 @@ export function ProductFinishSelector({
   return (
     <fieldset className={`${styles.options} ${styles.finishSelector}`}>
       <legend>Choose a presentation</legend>
+      <p className={styles.optionHeading} aria-live="polite">
+        {viewModel.familyHeading}: <strong>{viewModel.headingSelection}</strong>
+      </p>
       <div className={styles.finishGrid}>
         {viewModel.choices.map((finish) => (
           <label
             key={finish.id}
             className={`${styles.finishChoice} ${finish.selected ? styles.finishChoiceSelected : ""}`}
             data-selected={finish.selected}
+            title={finish.label}
           >
             <input
               className={styles.finishRadio}
@@ -40,6 +43,7 @@ export function ProductFinishSelector({
               name="product-finish"
               value={finish.id}
               checked={finish.selected}
+              aria-label={finish.label}
               onChange={() => onChange(finish.id)}
             />
             <span className={styles.finishControl}>
@@ -47,31 +51,16 @@ export function ProductFinishSelector({
                 <Image
                   src={finish.assetSrc}
                   alt=""
-                  width={88}
-                  height={88}
-                  sizes="88px"
+                  width={64}
+                  height={64}
+                  sizes="64px"
                   {...finishThumbnailImageProps}
                 />
               </span>
-              <span className={styles.finishName}>{finish.label}</span>
-              {finish.priceDeltaCny !== null ? (
-                <span className={styles.finishPrice}>
-                  +<PriceText amountCny={finish.priceDeltaCny} />
-                </span>
-              ) : null}
             </span>
           </label>
         ))}
       </div>
-      <p className={styles.finishSelection} aria-live="polite">
-        Selected: <strong>{viewModel.selectedLabel}</strong>
-      </p>
-      <details className={styles.finishDetails}>
-        <summary>Framing details</summary>
-        <p>
-          Rolled canvas ships without stretcher bars. Stretched and framed presentations arrive ready to hang.
-        </p>
-      </details>
     </fieldset>
   )
 }

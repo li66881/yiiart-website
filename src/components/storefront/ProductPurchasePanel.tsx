@@ -27,30 +27,23 @@ type Props = {
   reviewCount?: number
 }
 
-const SIZE_PREVIEW_COUNT = 6
-
 function estimateArrivalWindow() {
   const start = new Date()
   start.setDate(start.getDate() + 12)
   const end = new Date()
   end.setDate(end.getDate() + 20)
   const fmt = (date: Date) => date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
-  return `${fmt(start)}-${fmt(end)}`
+  return `${fmt(start)}–${fmt(end)}`
 }
 
-function compactSizeChipLabel(size: StorefrontSize) {
+function inchPart(cm: number) {
+  const inches = Math.round((cm / 2.54) * 10) / 10
+  return Number.isInteger(inches) ? String(inches) : inches.toFixed(1)
+}
+
+function sizeSelectLabel(size: StorefrontSize) {
   if (size.widthCm && size.heightCm) {
-    const widthIn = Math.round((size.widthCm / 2.54) * 10) / 10
-    const heightIn = Math.round((size.heightCm / 2.54) * 10) / 10
-    const fmt = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
-    return `${fmt(heightIn)}" × ${fmt(widthIn)}"`
-  }
-  const match = size.label.match(/([\d.]+)\s*[x×]\s*([\d.]+)\s*cm/i)
-  if (match) {
-    const heightCm = Number(match[1])
-    const widthCm = Number(match[2])
-    const fmt = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
-    return `${fmt(Math.round((heightCm / 2.54) * 10) / 10)}" × ${fmt(Math.round((widthCm / 2.54) * 10) / 10)}"`
+    return `${inchPart(size.heightCm)}''x ${inchPart(size.widthCm)}''/ ${Math.round(size.heightCm)}x ${Math.round(size.widthCm)} CM`
   }
   return size.label
 }
@@ -69,7 +62,6 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
-  const [showAllSizes, setShowAllSizes] = useState(false)
   const [shareUrl, setShareUrl] = useState("")
   const [shareStatus, setShareStatus] = useState("")
   const [mainActionPassed, setMainActionPassed] = useState(false)
@@ -85,14 +77,6 @@ export default function ProductPurchasePanel({
   const saved = isInWishlist(product.id)
   const madeToOrder = product.productionModel === "hand_painted_to_order"
   const arrivalWindow = useMemo(() => estimateArrivalWindow(), [])
-  const visibleSizes = useMemo(() => {
-    if (showAllSizes || product.sizes.length <= SIZE_PREVIEW_COUNT) return product.sizes
-    const preview = product.sizes.slice(0, SIZE_PREVIEW_COUNT)
-    if (selection?.size.id && !preview.some((size) => size.id === selection.size.id)) {
-      return [...preview.slice(0, SIZE_PREVIEW_COUNT - 1), selection.size]
-    }
-    return preview
-  }, [product.sizes, selection?.size, showAllSizes])
 
   useEffect(() => {
     setShareUrl(window.location.href)
@@ -208,7 +192,6 @@ export default function ProductPurchasePanel({
           </span>
         </a>
       ) : null}
-      <ProductDescription description={product.shortDescription} />
 
       <div className={styles.priceBlock}>
         <p className={styles.price}><PriceText amountCny={selection?.priceCny} /></p>
@@ -217,40 +200,19 @@ export default function ProductPurchasePanel({
 
       {product.sizes.length > 0 && (
         <fieldset className={styles.options}>
-          <legend>Select a size</legend>
-          <div className={styles.sizeChips} role="radiogroup" aria-label="Canvas sizes">
-            {visibleSizes.map((size, index) => {
-              const active = selection?.size.id === size.id
-              return (
-                <label key={size.id} className={styles.sizeChip} data-active={active} title={size.label}>
-                  <input
-                    type="radio"
-                    name="product-size"
-                    checked={active}
-                    onChange={() => setSizeId(size.id)}
-                  />
-                  <span className={styles.sizeChipPrimary}>{compactSizeChipLabel(size)}</span>
-                  {size.widthCm && size.heightCm ? (
-                    <span className={styles.sizeChipSecondary}>
-                      {Math.round(size.heightCm)} × {Math.round(size.widthCm)} cm
-                    </span>
-                  ) : null}
-                  {index === 0 && product.sizes.length > 1 && visibleSizes[0]?.id === product.sizes[0]?.id ? (
-                    <em className={styles.popularBadge}>Popular</em>
-                  ) : null}
-                </label>
-              )
-            })}
-          </div>
-          {product.sizes.length > SIZE_PREVIEW_COUNT ? (
-            <button
-              type="button"
-              className={styles.sizeMoreButton}
-              onClick={() => setShowAllSizes((open) => !open)}
-            >
-              {showAllSizes ? "Show fewer sizes" : `Show all sizes (${product.sizes.length})`}
-            </button>
-          ) : null}
+          <legend>Size</legend>
+          <select
+            className={styles.sizeSelect}
+            aria-label="Size"
+            value={selection?.size.id || sizeId}
+            onChange={(event) => setSizeId(event.target.value)}
+          >
+            {product.sizes.map((size) => (
+              <option key={size.id} value={size.id}>
+                {sizeSelectLabel(size)}
+              </option>
+            ))}
+          </select>
         </fieldset>
       )}
 
@@ -263,18 +225,14 @@ export default function ProductPurchasePanel({
         />
       )}
 
-      <div className={styles.creation}>
-        <strong>{madeToOrder ? "Creation window" : "Availability"}</strong>
-        <span>{product.creationWindow}</span>
-      </div>
-
-      {!madeToOrder && (
+      <p className={styles.arrivalLine}>
+        <span aria-hidden>✓</span> Arrives soon! Get it by <strong>{arrivalWindow}</strong> if you order today.
+      </p>
+      {madeToOrder ? (
+        <p className={styles.creationNote}>{product.creationWindow}</p>
+      ) : (
         <p className={styles.originalQuantity}>Original artwork quantity is fixed at one.</p>
       )}
-
-      <p className={styles.arrivalLine}>
-        <span aria-hidden>✓</span> Order today, get it by <strong>{arrivalWindow}</strong>
-      </p>
 
       <div className={styles.purchaseActionRow} ref={mainActionRef}>
         {madeToOrder && (
@@ -360,9 +318,7 @@ export default function ProductPurchasePanel({
       </div>
 
       <div className={styles.artAdvisory}>
-        <strong>Complimentary art advisory</strong>
-        <p>Send a room photo and wall measurement. The studio will help confirm scale before you order.</p>
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Need help? Ask the studio</a>
       </div>
 
       <div className={styles.purchaseDetails}>
@@ -375,6 +331,8 @@ export default function ProductPurchasePanel({
           <p>Delivery format and timing depend on the selected size, finish, destination, and carrier route.</p>
         </details>
       </div>
+
+      <ProductDescription description={product.shortDescription} />
 
       <p className={styles.confirmation} role="status" aria-live="polite">{confirmation}</p>
 
