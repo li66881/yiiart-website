@@ -53,6 +53,7 @@ async function getArtwork(slug: string) {
         _id,
         title,
         slug,
+        catalogCode,
         artist->{_id, name, slug, bio, location},
         collectionType,
         productionModel,
@@ -246,7 +247,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const offer: Record<string, any> = {
     "@type": "Offer",
     url: `${baseUrl}/artwork/${slug}`,
-    sku: artwork.sku || slug,
+    sku: artwork.catalogCode || artwork.sku || slug,
     priceCurrency: currency,
     priceValidUntil,
     availability: getSchemaAvailability(artwork, directCheckoutAvailable),

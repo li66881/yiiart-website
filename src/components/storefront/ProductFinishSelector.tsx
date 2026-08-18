@@ -27,9 +27,7 @@ export function ProductFinishSelector({
     <fieldset className={`${styles.options} ${styles.finishSelector}`}>
       <legend>Choose a presentation</legend>
       <p className={styles.optionHeading} aria-live="polite">
-        {viewModel.familyHeading}:
-        {" "}
-        <strong>{viewModel.headingSelection}</strong>
+        {viewModel.familyHeading}: <strong>{viewModel.headingSelection}</strong>
       </p>
       <div className={styles.finishGrid}>
         {viewModel.choices.map((finish) => (

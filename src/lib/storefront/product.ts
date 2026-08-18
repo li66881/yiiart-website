@@ -41,6 +41,7 @@ export type StorefrontProduct = {
   id: string
   slug: string
   title: string
+  sku?: string
   artistName: string
   collectionType: StorefrontCollectionType
   productionModel: StorefrontProductionModel
@@ -64,6 +65,8 @@ type LocalizedText = string | { en?: string; zh?: string } | null
 type StorefrontArtworkInput = {
   _id?: string
   title?: LocalizedText
+  catalogCode?: string | null
+  sku?: string | null
   slug?: { current?: string }
   artist?: { name?: LocalizedText }
   price?: number | string | null
@@ -105,6 +108,7 @@ export function buildStorefrontProduct(
     id: cleanString(artwork._id) || cleanString(artwork.slug?.current) || slugify(title),
     slug: cleanString(artwork.slug?.current) || cleanString(artwork._id) || slugify(title),
     title,
+    sku: cleanString(artwork.catalogCode) || cleanString(artwork.sku) || undefined,
     artistName: pickEnglish(artwork.artist?.name, "YiiArt Studio"),
     collectionType: normalizeCollectionType(artwork.collectionType),
     productionModel,

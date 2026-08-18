@@ -24,6 +24,18 @@ test("defaults legacy artwork to the artist collection and original model", () =
   assert.equal(product.sizes[0].priceCny, 7200)
   assert.equal(product.sizes[0].label, "80 x 100 cm")
   assert.equal(product.images[0].src, "https://cdn.example/quiet-field.jpg")
+  assert.equal(product.sku, undefined)
+})
+
+test("surfaces catalogCode as the visible listing sku", () => {
+  const product = buildStorefrontProduct({
+    title: { en: "Afternoon II" },
+    slug: { current: "afternoon2" },
+    catalogCode: "YF001",
+    price: 2600,
+  }, [])
+
+  assert.equal(product.sku, "YF001")
 })
 
 test("maps made-to-order sizes and finishes without accepting invalid prices", () => {

@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { Heart, LockKey, Package, PaintBrush, ShieldCheck } from "@phosphor-icons/react"
+import { Heart, LockKey, Package, PaintBrush, Question, ShieldCheck } from "@phosphor-icons/react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import ReviewStars from "@/components/ReviewStars"
@@ -37,8 +36,7 @@ function estimateArrivalWindow() {
 }
 
 function inchPart(cm: number) {
-  const inches = Math.round((cm / 2.54) * 10) / 10
-  return Number.isInteger(inches) ? String(inches) : inches.toFixed(1)
+  return String(Math.round(cm / 2.54))
 }
 
 function sizeSelectLabel(size: StorefrontSize) {
@@ -182,7 +180,10 @@ export default function ProductPurchasePanel({
         </button>
       </div>
 
-      <h1 id="product-title">{product.title}</h1>
+      <h1 id="product-title">
+        {product.title}
+        {product.sku ? <span className={styles.sku}> #{product.sku}</span> : null}
+      </h1>
       <p className={styles.artist}>By {product.artistName}</p>
       {reviewCount > 0 ? (
         <a className={styles.reviewSummaryLink} href="#reviews">
@@ -228,18 +229,16 @@ export default function ProductPurchasePanel({
       <p className={styles.arrivalLine}>
         <span aria-hidden>✓</span> Arrives soon! Get it by <strong>{arrivalWindow}</strong> if you order today.
       </p>
-      {madeToOrder ? (
-        <p className={styles.creationNote}>{product.creationWindow}</p>
-      ) : (
+      {!madeToOrder ? (
         <p className={styles.originalQuantity}>Original artwork quantity is fixed at one.</p>
-      )}
+      ) : null}
 
       <div className={styles.purchaseActionRow} ref={mainActionRef}>
         {madeToOrder && (
           <div className={styles.quantityPicker}>
             <strong>Quantity</strong>
             <div className={styles.quantityControl} aria-label="Artwork quantity">
-              <button type="button" aria-label="Decrease quantity" disabled={quantity === 1} onClick={() => setQuantity((current) => Math.max(1, current - 1))}>-</button>
+              <button type="button" aria-label="Decrease quantity" disabled={quantity === 1} onClick={() => setQuantity((current) => Math.max(1, current - 1))}>−</button>
               <output aria-live="polite">{quantity}</output>
               <button type="button" aria-label="Increase quantity" disabled={quantity === 10} onClick={() => setQuantity((current) => Math.min(10, current + 1))}>+</button>
             </div>
@@ -258,11 +257,8 @@ export default function ProductPurchasePanel({
       </div>
 
       <div className={styles.secondaryActions}>
-        <Link href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
-          Need help with size?
-        </Link>
         <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Ask about this piece
+          Need help? <Question size={16} weight="regular" aria-hidden="true" />
         </a>
       </div>
 
@@ -315,10 +311,6 @@ export default function ProductPurchasePanel({
           Pinterest
         </a>
         {shareStatus ? <span className={styles.shareStatus}>{shareStatus}</span> : null}
-      </div>
-
-      <div className={styles.artAdvisory}>
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Need help? Ask the studio</a>
       </div>
 
       <div className={styles.purchaseDetails}>
