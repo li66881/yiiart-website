@@ -104,6 +104,7 @@ export default {
         preview: { select: { title: 'label', price: 'priceCny' }, prepare: ({ title, price }: any) => ({ title, subtitle: price ? `CNY ${price}` : 'Price required' }) },
       }]},
     { name: 'frameOptions', title: 'Finish / frame options', type: 'array',
+      description: 'Optional price overrides only. Made-to-order product pages always show the seven catalog presentations (Rolled, Frameless, Gold, Silver, Black, White, Wood). Incomplete lists are filled by the storefront.',
       of: [{
         type: 'object',
         name: 'frameOption',

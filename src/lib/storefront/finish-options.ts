@@ -17,43 +17,50 @@ export type NormalizedFinishOption = {
   assetAlt: string
 }
 
+/** Bump this when replacing swatch files so CDN/browser cache cannot keep the old bytes. */
+export const FINISH_SWATCH_VERSION = "v2"
+
+function finishSwatchSrc(fileStem: string) {
+  return `/images/product-finishes/${fileStem}-${FINISH_SWATCH_VERSION}.webp`
+}
+
 const FALLBACK_PRESENTATIONS: Readonly<Record<Exclude<CatalogPresentationId, "as-listed">, {
   label: string
   assetSrc: string
 }>> = {
   rolled: {
     label: "Rolled Canvas",
-    assetSrc: "/images/product-finishes/rolled-canvas-v2.webp",
+    assetSrc: finishSwatchSrc("rolled-canvas"),
   },
   stretched: {
     label: "Frameless",
-    assetSrc: "/images/product-finishes/stretched-canvas-v2.webp",
+    assetSrc: finishSwatchSrc("stretched-canvas"),
   },
   "black-frame": {
     label: "Stretch + Black Frame",
-    assetSrc: "/images/product-finishes/black-float-frame-v2.webp",
+    assetSrc: finishSwatchSrc("black-float-frame"),
   },
   "white-frame": {
     label: "Stretch + White Frame",
-    assetSrc: "/images/product-finishes/white-float-frame-v2.webp",
+    assetSrc: finishSwatchSrc("white-float-frame"),
   },
   "natural-frame": {
     label: "Stretch + Wood Frame",
-    assetSrc: "/images/product-finishes/natural-wood-float-frame-v2.webp",
+    assetSrc: finishSwatchSrc("natural-wood-float-frame"),
   },
   "gold-frame": {
     label: "Stretch + Gold Frame",
-    assetSrc: "/images/product-finishes/gold-float-frame-v2.webp",
+    assetSrc: finishSwatchSrc("gold-float-frame"),
   },
   "silver-frame": {
     label: "Stretch + Silver Frame",
-    assetSrc: "/images/product-finishes/silver-float-frame-v2.webp",
+    assetSrc: finishSwatchSrc("silver-float-frame"),
   },
 }
 
 const AS_LISTED_PRESENTATION = {
   label: "As listed",
-  assetSrc: "/images/product-finishes/rolled-canvas-v2.webp",
+  assetSrc: finishSwatchSrc("rolled-canvas"),
 }
 
 const FALLBACK_PRESENTATION_IDS: readonly Exclude<CatalogPresentationId, "as-listed">[] = [

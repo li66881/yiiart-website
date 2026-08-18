@@ -2,6 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import {
   buildNormalizedFinishOptions,
+  FINISH_SWATCH_VERSION,
   resolveFinishDeltaCny,
   resolveFinishTotalCny,
 } from "./finish-options"
@@ -27,6 +28,7 @@ test("builds seven ordered fallback presentation choices", () => {
     "/images/product-finishes/white-float-frame-v2.webp",
     "/images/product-finishes/natural-wood-float-frame-v2.webp",
   ])
+  assert.ok(finishes.every((finish) => finish.assetSrc.includes(`-${FINISH_SWATCH_VERSION}.webp`)))
 })
 
 test("resolves rolled, stretched, and framed totals from one base price", () => {
