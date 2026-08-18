@@ -1,5 +1,6 @@
 import {
   buildNormalizedFinishOptions,
+  resolveCatalogPresentationId,
   resolveFinishTotalCny,
 } from "./storefront/finish-options"
 
@@ -79,7 +80,8 @@ export function resolveCheckoutSelection(
 
   const finishes = buildNormalizedFinishOptions(artwork.frameOptions, productionModel)
   const requestedFinishId = text(request.finishId) || finishes[0]?.id
-  const finish = finishes.find((option) => option.id === requestedFinishId)
+  const mappedFinishId = resolveCatalogPresentationId(requestedFinishId) || requestedFinishId
+  const finish = finishes.find((option) => option.id === requestedFinishId || option.id === mappedFinishId)
   if (!finish) {
     throw new CheckoutValidationError("The selected artwork finish is no longer available.")
   }

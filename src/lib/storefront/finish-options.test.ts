@@ -19,13 +19,13 @@ test("builds seven ordered fallback presentation choices", () => {
     "natural-frame",
   ])
   assert.deepEqual(finishes.map((finish) => finish.assetSrc), [
-    "/images/product-finishes/rolled-canvas.webp",
-    "/images/product-finishes/stretched-canvas.webp",
-    "/images/product-finishes/gold-float-frame.webp",
-    "/images/product-finishes/silver-float-frame.webp",
-    "/images/product-finishes/black-float-frame.webp",
-    "/images/product-finishes/white-float-frame.webp",
-    "/images/product-finishes/natural-wood-float-frame.webp",
+    "/images/product-finishes/rolled-canvas-v2.webp",
+    "/images/product-finishes/stretched-canvas-v2.webp",
+    "/images/product-finishes/gold-float-frame-v2.webp",
+    "/images/product-finishes/silver-float-frame-v2.webp",
+    "/images/product-finishes/black-float-frame-v2.webp",
+    "/images/product-finishes/white-float-frame-v2.webp",
+    "/images/product-finishes/natural-wood-float-frame-v2.webp",
   ])
 })
 
@@ -47,15 +47,24 @@ test("keeps originals as listed", () => {
   )
 })
 
-test("uses validated configured finishes instead of catalog fallback choices", () => {
+test("completes incomplete CMS finishes with the seven catalog presentations", () => {
   const finishes = buildNormalizedFinishOptions([
     { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
     { _key: "bad", label: "Invalid", priceDeltaCny: -1 },
   ], "hand_painted_to_order")
 
-  assert.deepEqual(finishes.map((finish) => finish.id), ["rolled"])
+  assert.deepEqual(finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "gold-frame",
+    "silver-frame",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+  ])
   assert.equal(finishes[0].pricing.kind, "fixed_delta")
   assert.equal(resolveFinishTotalCny(finishes[0], 1730), 1730)
+  assert.equal(finishes[2].pricing.kind, "catalog_formula")
 })
 
 const invalidConfiguredPriceDeltas: Array<{
@@ -97,7 +106,15 @@ test("preserves a numeric zero configured price delta", () => {
     { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
   ], "hand_painted_to_order")
 
-  assert.deepEqual(finishes.map((finish) => finish.id), ["rolled"])
+  assert.deepEqual(finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "gold-frame",
+    "silver-frame",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+  ])
   assert.equal(resolveFinishDeltaCny(finishes[0], 1730), 0)
 })
 
@@ -108,5 +125,16 @@ test("rejects every configured finish whose normalized id is duplicated", () => 
     { _key: "black", label: "Black float frame", priceDeltaCny: 600 },
   ], "hand_painted_to_order")
 
-  assert.deepEqual(finishes.map((finish) => finish.id), ["black"])
+  assert.deepEqual(finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "gold-frame",
+    "silver-frame",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+  ])
+  const black = finishes.find((finish) => finish.id === "black-frame")
+  assert.equal(black?.pricing.kind, "fixed_delta")
+  assert.equal(resolveFinishDeltaCny(black!, 1730), 600)
 })

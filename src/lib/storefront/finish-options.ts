@@ -23,37 +23,37 @@ const FALLBACK_PRESENTATIONS: Readonly<Record<Exclude<CatalogPresentationId, "as
 }>> = {
   rolled: {
     label: "Rolled Canvas",
-    assetSrc: "/images/product-finishes/rolled-canvas.webp",
+    assetSrc: "/images/product-finishes/rolled-canvas-v2.webp",
   },
   stretched: {
     label: "Frameless",
-    assetSrc: "/images/product-finishes/stretched-canvas.webp",
+    assetSrc: "/images/product-finishes/stretched-canvas-v2.webp",
   },
   "black-frame": {
     label: "Stretch + Black Frame",
-    assetSrc: "/images/product-finishes/black-float-frame.webp",
+    assetSrc: "/images/product-finishes/black-float-frame-v2.webp",
   },
   "white-frame": {
     label: "Stretch + White Frame",
-    assetSrc: "/images/product-finishes/white-float-frame.webp",
+    assetSrc: "/images/product-finishes/white-float-frame-v2.webp",
   },
   "natural-frame": {
     label: "Stretch + Wood Frame",
-    assetSrc: "/images/product-finishes/natural-wood-float-frame.webp",
+    assetSrc: "/images/product-finishes/natural-wood-float-frame-v2.webp",
   },
   "gold-frame": {
     label: "Stretch + Gold Frame",
-    assetSrc: "/images/product-finishes/gold-float-frame.webp",
+    assetSrc: "/images/product-finishes/gold-float-frame-v2.webp",
   },
   "silver-frame": {
     label: "Stretch + Silver Frame",
-    assetSrc: "/images/product-finishes/silver-float-frame.webp",
+    assetSrc: "/images/product-finishes/silver-float-frame-v2.webp",
   },
 }
 
 const AS_LISTED_PRESENTATION = {
   label: "As listed",
-  assetSrc: "/images/product-finishes/rolled-canvas.webp",
+  assetSrc: "/images/product-finishes/rolled-canvas-v2.webp",
 }
 
 const FALLBACK_PRESENTATION_IDS: readonly Exclude<CatalogPresentationId, "as-listed">[] = [
@@ -81,18 +81,27 @@ export function buildNormalizedFinishOptions(
   }
 
   const configured = normalizeConfiguredFinishes(frameOptions)
-  if (hasConfiguredFinishInput(frameOptions)) return configured
+  if (hasConfiguredFinishInput(frameOptions)) {
+    return configured.length > 0 ? completeCatalogPresentations(configured) : []
+  }
 
-  return FALLBACK_PRESENTATION_IDS.map((presentationId) => {
-    const presentation = FALLBACK_PRESENTATIONS[presentationId]
-    return {
-      id: presentationId,
-      label: presentation.label,
-      pricing: { kind: "catalog_formula", presentationId },
-      assetSrc: presentation.assetSrc,
-      assetAlt: presentation.label,
-    }
-  })
+  return completeCatalogPresentations([])
+}
+
+export function resolveCatalogPresentationId(id: string, label = ""): Exclude<CatalogPresentationId, "as-listed"> | null {
+  if (id in FALLBACK_PRESENTATIONS) {
+    return id as Exclude<CatalogPresentationId, "as-listed">
+  }
+
+  const value = `${id} ${label}`.toLowerCase()
+  if (value.includes("gold")) return "gold-frame"
+  if (value.includes("silver")) return "silver-frame"
+  if (value.includes("white")) return "white-frame"
+  if (value.includes("black")) return "black-frame"
+  if (value.includes("wood") || value.includes("natural") || value.includes("oak")) return "natural-frame"
+  if (value.includes("rolled")) return "rolled"
+  if (value.includes("frameless") || value.includes("stretch") || value.includes("gallery")) return "stretched"
+  return null
 }
 
 export function resolveFinishTotalCny(
@@ -139,7 +148,8 @@ function normalizeConfiguredFinishes(frameOptions: unknown): NormalizedFinishOpt
       || priceDeltaCny < 0
     ) return []
 
-    const fallback = FALLBACK_PRESENTATIONS[id as Exclude<CatalogPresentationId, "as-listed">]
+    const catalogId = resolveCatalogPresentationId(id, label)
+    const fallback = catalogId ? FALLBACK_PRESENTATIONS[catalogId] : undefined
     return [{
       id,
       label,
@@ -157,6 +167,37 @@ function text(value: unknown) {
 function hasConfiguredFinishInput(value: unknown) {
   if (value === null || value === undefined) return false
   return !Array.isArray(value) || value.length > 0
+}
+
+function completeCatalogPresentations(configured: NormalizedFinishOption[]): NormalizedFinishOption[] {
+  const byCatalogId = new Map<Exclude<CatalogPresentationId, "as-listed">, NormalizedFinishOption>()
+
+  for (const finish of configured) {
+    const catalogId = resolveCatalogPresentationId(finish.id, finish.label)
+    if (!catalogId || byCatalogId.has(catalogId)) continue
+    const presentation = FALLBACK_PRESENTATIONS[catalogId]
+    byCatalogId.set(catalogId, {
+      id: catalogId,
+      label: presentation.label,
+      pricing: finish.pricing,
+      assetSrc: presentation.assetSrc,
+      assetAlt: presentation.label,
+    })
+  }
+
+  return FALLBACK_PRESENTATION_IDS.map((presentationId) => {
+    const existing = byCatalogId.get(presentationId)
+    if (existing) return existing
+
+    const presentation = FALLBACK_PRESENTATIONS[presentationId]
+    return {
+      id: presentationId,
+      label: presentation.label,
+      pricing: { kind: "catalog_formula", presentationId },
+      assetSrc: presentation.assetSrc,
+      assetAlt: presentation.label,
+    }
+  })
 }
 
 function finiteNumber(value: unknown) {

@@ -36,7 +36,8 @@ test("resolves a made-to-order size and finish from Sanity values", () => {
 
   assert.equal(selection.priceCny, 4000)
   assert.equal(selection.sizeLabel, "100 x 120 cm")
-  assert.equal(selection.finishLabel, "Black float frame")
+  assert.equal(selection.finishId, "black-frame")
+  assert.equal(selection.finishLabel, "Stretch + Black Frame")
 })
 
 test("server rebuilds the same fallback finish total", () => {
