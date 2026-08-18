@@ -15,13 +15,16 @@ import { getHeaderNavigationModel } from "@/lib/storefront/catalog-presentation"
 const primaryNav = [
   { href: "/artworks?sort=featured", label: "Best Sellers" },
   { href: "/artworks?sort=newest", label: "New In" },
-  { href: "/artworks", label: "All Art" },
   { href: "/custom-painting", label: "Custom Art" },
+  { href: "/custom-painting?intent=trade", label: "Trade Program" },
+  { href: "/custom-painting?intent=gift", label: "Gift" },
+  { href: "/reviews", label: "Reviews" },
+  { href: "/artists", label: "Artists" },
+  { href: "/about", label: "Our Story" },
+  { href: "/artworks", label: "All Art" },
   { href: "/collections/large-canvas-art", label: "Large Wall Art" },
   { href: "/collections/textured-wall-art", label: "Textured Art" },
   { href: "/collections/abstract-art-for-living-room", label: "Living Room" },
-  { href: "/artists", label: "Artists" },
-  { href: "/about", label: "Our Story" },
 ]
 
 const trustMessages = [
@@ -139,6 +142,20 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
           </button>
         </div>
       </div>
+
+      <nav className="hidden border-t border-[#e5e5e5] lg:block" aria-label="Primary">
+        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center justify-center gap-x-6 gap-y-1 px-6 py-2.5 text-[13px] text-[#171717]">
+          {navigationGroups.mobile.map((item) => (
+            <Link
+              key={`${item.href}-${item.label}`}
+              href={item.href}
+              className="whitespace-nowrap hover:opacity-60"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </nav>
 
       {menuOpen ? (
         <>

@@ -384,6 +384,8 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                 directCheckoutAvailable={directCheckoutAvailable}
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
+                reviewRating={reviewStats.overall}
+                reviewCount={reviewStats.count}
               />
             </div>
           </div>

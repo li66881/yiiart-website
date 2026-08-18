@@ -1,15 +1,16 @@
 "use client"
 
 import Link from "next/link"
-import { LockKey, Package, PaintBrush, ShieldCheck } from "@phosphor-icons/react"
-import { useCallback, useMemo, useRef, useState } from "react"
+import { Heart, LockKey, Package, PaintBrush, ShieldCheck } from "@phosphor-icons/react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { PriceDisclosure, PriceText } from "@/components/PriceText"
+import ReviewStars from "@/components/ReviewStars"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
 import { useWishlist } from "@/context/WishlistContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
-import type { StorefrontProduct } from "@/lib/storefront/product"
+import type { StorefrontProduct, StorefrontSize } from "@/lib/storefront/product"
 import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
 import { getProductSelection } from "@/lib/storefront/selection"
 import ProductDescription from "./ProductDescription"
@@ -22,6 +23,36 @@ type Props = {
   directCheckoutAvailable: boolean
   invoiceUrl: string
   whatsappUrl: string
+  reviewRating?: number
+  reviewCount?: number
+}
+
+const SIZE_PREVIEW_COUNT = 6
+
+function estimateArrivalWindow() {
+  const start = new Date()
+  start.setDate(start.getDate() + 12)
+  const end = new Date()
+  end.setDate(end.getDate() + 20)
+  const fmt = (date: Date) => date.toLocaleDateString("en-US", { month: "short", day: "numeric" })
+  return `${fmt(start)}-${fmt(end)}`
+}
+
+function compactSizeChipLabel(size: StorefrontSize) {
+  if (size.widthCm && size.heightCm) {
+    const widthIn = Math.round((size.widthCm / 2.54) * 10) / 10
+    const heightIn = Math.round((size.heightCm / 2.54) * 10) / 10
+    const fmt = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
+    return `${fmt(heightIn)}" × ${fmt(widthIn)}"`
+  }
+  const match = size.label.match(/([\d.]+)\s*[x×]\s*([\d.]+)\s*cm/i)
+  if (match) {
+    const heightCm = Number(match[1])
+    const widthCm = Number(match[2])
+    const fmt = (value: number) => (Number.isInteger(value) ? String(value) : value.toFixed(1))
+    return `${fmt(Math.round((heightCm / 2.54) * 10) / 10)}" × ${fmt(Math.round((widthCm / 2.54) * 10) / 10)}"`
+  }
+  return size.label
 }
 
 export default function ProductPurchasePanel({
@@ -29,6 +60,8 @@ export default function ProductPurchasePanel({
   directCheckoutAvailable,
   invoiceUrl,
   whatsappUrl,
+  reviewRating = 0,
+  reviewCount = 0,
 }: Props) {
   const initialSize = product.sizes[0]?.id || ""
   const initialFinish = product.finishes[0]?.id || ""
@@ -36,6 +69,9 @@ export default function ProductPurchasePanel({
   const [finishId, setFinishId] = useState(initialFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
+  const [showAllSizes, setShowAllSizes] = useState(false)
+  const [shareUrl, setShareUrl] = useState("")
+  const [shareStatus, setShareStatus] = useState("")
   const [mainActionPassed, setMainActionPassed] = useState(false)
   const mainActionCleanupRef = useRef<() => void>(() => undefined)
   const selection = useMemo(
@@ -48,6 +84,19 @@ export default function ProductPurchasePanel({
   const image = product.images[0]
   const saved = isInWishlist(product.id)
   const madeToOrder = product.productionModel === "hand_painted_to_order"
+  const arrivalWindow = useMemo(() => estimateArrivalWindow(), [])
+  const visibleSizes = useMemo(() => {
+    if (showAllSizes || product.sizes.length <= SIZE_PREVIEW_COUNT) return product.sizes
+    const preview = product.sizes.slice(0, SIZE_PREVIEW_COUNT)
+    if (selection?.size.id && !preview.some((size) => size.id === selection.size.id)) {
+      return [...preview.slice(0, SIZE_PREVIEW_COUNT - 1), selection.size]
+    }
+    return preview
+  }, [product.sizes, selection?.size, showAllSizes])
+
+  useEffect(() => {
+    setShareUrl(window.location.href)
+  }, [])
 
   const mainActionRef = useCallback((action: HTMLDivElement | null) => {
     mainActionCleanupRef.current()
@@ -108,6 +157,16 @@ export default function ProductPurchasePanel({
   }
   const purchaseAction = bindPurchaseAction(addSelection)
 
+  const copyShareLink = async () => {
+    if (!shareUrl) return
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setShareStatus("Link copied")
+    } catch {
+      setShareStatus("Copy the URL from the address bar")
+    }
+  }
+
   const toggleSaved = () => {
     if (!selection || !image) return
     toggleWishlist({
@@ -128,13 +187,27 @@ export default function ProductPurchasePanel({
             ? "Hand-Painted to Order"
             : "Artist Collection"}
         </p>
-        <button type="button" onClick={toggleSaved} className={styles.saveButton} aria-pressed={saved}>
-          {saved ? "Saved" : "Save artwork"}
+        <button
+          type="button"
+          onClick={toggleSaved}
+          className={styles.saveButton}
+          aria-pressed={saved}
+          aria-label={saved ? "Saved" : "Save artwork"}
+        >
+          <Heart size={18} weight={saved ? "fill" : "regular"} aria-hidden="true" />
         </button>
       </div>
 
       <h1 id="product-title">{product.title}</h1>
       <p className={styles.artist}>By {product.artistName}</p>
+      {reviewCount > 0 ? (
+        <a className={styles.reviewSummaryLink} href="#reviews">
+          <ReviewStars rating={reviewRating} size="sm" />
+          <span>
+            {reviewRating.toFixed(1)} · {reviewCount} {reviewCount === 1 ? "review" : "reviews"}
+          </span>
+        </a>
+      ) : null}
       <ProductDescription description={product.shortDescription} />
 
       <div className={styles.priceBlock}>
@@ -145,22 +218,39 @@ export default function ProductPurchasePanel({
       {product.sizes.length > 0 && (
         <fieldset className={styles.options}>
           <legend>Select a size</legend>
-          <div className={styles.choiceGrid}>
-            {product.sizes.map((size, index) => (
-              <label key={size.id} className={styles.choice}>
-                <input
-                  type="radio"
-                  name="product-size"
-                  checked={selection?.size.id === size.id}
-                  onChange={() => setSizeId(size.id)}
-                />
-                <span>
-                  {size.label}
-                  {index === 0 && product.sizes.length > 1 ? <em className={styles.popularBadge}>Popular</em> : null}
-                </span>
-              </label>
-            ))}
+          <div className={styles.sizeChips} role="radiogroup" aria-label="Canvas sizes">
+            {visibleSizes.map((size, index) => {
+              const active = selection?.size.id === size.id
+              return (
+                <label key={size.id} className={styles.sizeChip} data-active={active} title={size.label}>
+                  <input
+                    type="radio"
+                    name="product-size"
+                    checked={active}
+                    onChange={() => setSizeId(size.id)}
+                  />
+                  <span className={styles.sizeChipPrimary}>{compactSizeChipLabel(size)}</span>
+                  {size.widthCm && size.heightCm ? (
+                    <span className={styles.sizeChipSecondary}>
+                      {Math.round(size.heightCm)} × {Math.round(size.widthCm)} cm
+                    </span>
+                  ) : null}
+                  {index === 0 && product.sizes.length > 1 && visibleSizes[0]?.id === product.sizes[0]?.id ? (
+                    <em className={styles.popularBadge}>Popular</em>
+                  ) : null}
+                </label>
+              )
+            })}
           </div>
+          {product.sizes.length > SIZE_PREVIEW_COUNT ? (
+            <button
+              type="button"
+              className={styles.sizeMoreButton}
+              onClick={() => setShowAllSizes((open) => !open)}
+            >
+              {showAllSizes ? "Show fewer sizes" : `Show all sizes (${product.sizes.length})`}
+            </button>
+          ) : null}
         </fieldset>
       )}
 
@@ -181,6 +271,10 @@ export default function ProductPurchasePanel({
       {!madeToOrder && (
         <p className={styles.originalQuantity}>Original artwork quantity is fixed at one.</p>
       )}
+
+      <p className={styles.arrivalLine}>
+        <span aria-hidden>✓</span> Order today, get it by <strong>{arrivalWindow}</strong>
+      </p>
 
       <div className={styles.purchaseActionRow} ref={mainActionRef}>
         {madeToOrder && (
@@ -207,18 +301,62 @@ export default function ProductPurchasePanel({
 
       <div className={styles.secondaryActions}>
         <Link href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
-          Request custom size or color
+          Need help with size?
         </Link>
         <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Ask an art advisor
+          Ask about this piece
         </a>
       </div>
 
-      <div className={styles.purchaseTrust} aria-label="Purchase support">
-        <span><LockKey aria-hidden="true" size={18} />Secure payment</span>
-        <span><PaintBrush aria-hidden="true" size={18} />{purchaseTrustLabel(madeToOrder)}</span>
-        <span><Package aria-hidden="true" size={18} />Careful packing</span>
-        <span><ShieldCheck aria-hidden="true" size={18} />Damage support</span>
+      <ul className={styles.purchaseTrust} aria-label="Purchase support">
+        <li>
+          <LockKey aria-hidden="true" size={18} />
+          <span>
+            <strong>Secure payment</strong>
+            <span>Protected checkout</span>
+          </span>
+        </li>
+        <li>
+          <PaintBrush aria-hidden="true" size={18} />
+          <span>
+            <strong>{purchaseTrustLabel(madeToOrder)}</strong>
+            <span>Each piece is made just for you</span>
+          </span>
+        </li>
+        <li>
+          <Package aria-hidden="true" size={18} />
+          <span>
+            <strong>Careful packing</strong>
+            <span>Insured express worldwide</span>
+          </span>
+        </li>
+        <li>
+          <ShieldCheck aria-hidden="true" size={18} />
+          <span>
+            <strong>Damage support</strong>
+            <span>Help if the artwork arrives damaged</span>
+          </span>
+        </li>
+      </ul>
+
+      <div className={styles.shareRow}>
+        <span className={styles.shareLabel}>Share</span>
+        <button type="button" onClick={copyShareLink}>Copy link</button>
+        <a
+          href={shareUrl ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}` : "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Facebook
+        </a>
+        <a
+          href={shareUrl ? `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(image?.src || "")}&description=${encodeURIComponent(product.title)}` : "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Pinterest
+        </a>
+        {shareStatus ? <span className={styles.shareStatus}>{shareStatus}</span> : null}
       </div>
 
       <div className={styles.artAdvisory}>

@@ -9,6 +9,20 @@ import { shouldShowFloatingChatOnMobile } from "@/lib/chat-widget"
 
 const quickMessages = ["0", "1", "2"]
 
+function ChatBubbleIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden>
+      <path
+        d="M4.5 11.2c0-3.7 3.5-6.7 7.5-6.7s7.5 3 7.5 6.7-3.5 6.7-7.5 6.7c-.7 0-1.4-.1-2-.2L6.2 19.3c-.35.2-.8-.1-.7-.5l.7-2.8C5.1 14.9 4.5 13.1 4.5 11.2Z"
+        fill="currentColor"
+      />
+      <circle cx="9" cy="11.2" r="1" fill="#111" />
+      <circle cx="12" cy="11.2" r="1" fill="#111" />
+      <circle cx="15" cy="11.2" r="1" fill="#111" />
+    </svg>
+  )
+}
+
 export default function ChatWidget() {
   const { t } = useLanguage()
   const pathname = usePathname()
@@ -28,10 +42,11 @@ export default function ChatWidget() {
       <button
         type="button"
         onClick={() => setIsOpen(true)}
-        className={`yiiart-chat-widget fixed ${mobilePosition} ${mobileVisibility} z-50 inline-flex h-11 items-center rounded-full border border-[#e5e5e5] bg-white px-4 text-[13px] font-normal text-[#171717] md:bottom-6 md:right-6`}
+        className={`yiiart-chat-widget fixed ${mobilePosition} ${mobileVisibility} z-50 inline-flex h-[3.35rem] w-[3.35rem] items-center justify-center rounded-full bg-[radial-gradient(circle_at_30%_28%,#3a3a3a_0%,#171717_58%,#0d0d0d_100%)] text-white shadow-[0_10px_24px_rgba(0,0,0,0.32)] md:bottom-6 md:right-6`}
         aria-label={t("chat.openSupport")}
       >
-        Chat
+        <ChatBubbleIcon className="h-[1.45rem] w-[1.45rem]" />
+        <span className="absolute -right-0.5 -top-0.5 h-3 w-3 rounded-full border-2 border-white bg-[#25d366]" />
       </button>
     )
   }
