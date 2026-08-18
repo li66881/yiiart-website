@@ -61,11 +61,11 @@ test("uses catalog presentation choices when a made-to-order product has no conf
   assert.deepEqual(product.finishes.map((finish) => finish.id), [
     "rolled",
     "stretched",
+    "gold-frame",
+    "silver-frame",
     "black-frame",
     "white-frame",
     "natural-frame",
-    "gold-frame",
-    "silver-frame",
   ])
 })
 

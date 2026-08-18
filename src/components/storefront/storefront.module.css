@@ -561,14 +561,18 @@
 }
 
 .optionHeading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
   margin: 0 0 0.75rem;
-  color: #181613;
+  color: #171717;
   font-size: 0.88rem;
   font-weight: 400;
+  line-height: 1.35;
 }
 
 .optionHeading strong {
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .sizeSelect {
@@ -744,7 +748,7 @@
 .finishGrid {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.85rem 1rem;
+  gap: 10px 12px;
 }
 
 .finishChoice {
@@ -764,29 +768,44 @@
 }
 
 .finishControl {
+  position: relative;
   display: grid;
   justify-items: center;
   min-width: 0;
   border-radius: 50%;
   outline: 2px solid transparent;
-  outline-offset: 1px;
+  outline-offset: 4px;
 }
 
 .finishThumbnail {
+  position: relative;
   display: block;
-  width: 64px;
-  height: 64px;
-  overflow: hidden;
-  border: 1.5px solid #d6d3d1;
+  width: 60px;
+  height: 60px;
+  overflow: visible;
+  border: 0;
   border-radius: 50%;
   background: #f5f4f0;
 }
 
+.finishThumbnail::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgb(23 23 23 / 0.114) inset,
+    0 0 0 4px #dadada;
+  pointer-events: none;
+}
+
 .finishThumbnail img {
   display: block;
-  width: 100%;
-  height: 100%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
   object-fit: cover;
+  object-position: 50% 45%;
 }
 
 .finishChoiceSelected .finishControl,
@@ -794,13 +813,36 @@
   outline-color: transparent;
 }
 
-.finishChoice[data-selected="true"] .finishThumbnail {
-  border-color: #111;
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #111;
+.finishChoice[data-selected="true"] .finishThumbnail::after {
+  box-shadow:
+    0 0 0 1px rgb(23 23 23 / 0.114) inset,
+    0 0 0 4px #171717;
 }
 
 .finishRadio:focus-visible + .finishControl {
   box-shadow: 0 0 0 3px #fff, 0 0 0 6px #b45309;
+}
+
+.finishTooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  z-index: 2;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: #171717;
+  color: #fff;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.finishChoice:hover .finishTooltip,
+.finishChoice:focus-within .finishTooltip {
+  opacity: 1;
 }
 
 .finishName {
@@ -1329,7 +1371,7 @@
   }
 
   .finishChoice {
-    flex: 0 0 76px;
+    flex: 0 0 72px;
     scroll-snap-align: start;
   }
 

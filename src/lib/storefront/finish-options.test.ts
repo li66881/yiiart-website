@@ -12,20 +12,20 @@ test("builds seven ordered fallback presentation choices", () => {
   assert.deepEqual(finishes.map((finish) => finish.id), [
     "rolled",
     "stretched",
+    "gold-frame",
+    "silver-frame",
     "black-frame",
     "white-frame",
     "natural-frame",
-    "gold-frame",
-    "silver-frame",
   ])
   assert.deepEqual(finishes.map((finish) => finish.assetSrc), [
     "/images/product-finishes/rolled-canvas.webp",
     "/images/product-finishes/stretched-canvas.webp",
+    "/images/product-finishes/gold-float-frame.webp",
+    "/images/product-finishes/silver-float-frame.webp",
     "/images/product-finishes/black-float-frame.webp",
     "/images/product-finishes/white-float-frame.webp",
     "/images/product-finishes/natural-wood-float-frame.webp",
-    "/images/product-finishes/gold-float-frame.webp",
-    "/images/product-finishes/silver-float-frame.webp",
   ])
 })
 

@@ -27,7 +27,9 @@ export function ProductFinishSelector({
     <fieldset className={`${styles.options} ${styles.finishSelector}`}>
       <legend>Choose a presentation</legend>
       <p className={styles.optionHeading} aria-live="polite">
-        {viewModel.familyHeading}: <strong>{viewModel.headingSelection}</strong>
+        {viewModel.familyHeading}:
+        {" "}
+        <strong>{viewModel.headingSelection}</strong>
       </p>
       <div className={styles.finishGrid}>
         {viewModel.choices.map((finish) => (
@@ -35,7 +37,6 @@ export function ProductFinishSelector({
             key={finish.id}
             className={`${styles.finishChoice} ${finish.selected ? styles.finishChoiceSelected : ""}`}
             data-selected={finish.selected}
-            title={finish.label}
           >
             <input
               className={styles.finishRadio}
@@ -51,12 +52,13 @@ export function ProductFinishSelector({
                 <Image
                   src={finish.assetSrc}
                   alt=""
-                  width={64}
-                  height={64}
-                  sizes="64px"
+                  width={60}
+                  height={60}
+                  sizes="60px"
                   {...finishThumbnailImageProps}
                 />
               </span>
+              <span className={styles.finishTooltip}>{finish.headingLabel}</span>
             </span>
           </label>
         ))}

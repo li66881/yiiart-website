@@ -58,7 +58,7 @@ test("finish selector exposes the active presentation and only positive price in
   assert.equal(viewModel.selectedLabel, "Black float frame")
   assert.equal(viewModel.groupLabel, "Floating Frame")
   assert.equal(viewModel.familyHeading, "Rolled Canvas/Frameless/Framed")
-  assert.equal(viewModel.headingSelection, "Black")
+  assert.equal(viewModel.headingSelection, "Stretch + Black Frame")
   assert.equal(viewModel.choices[0].shortLabel, "Rolled")
   assert.equal(viewModel.choices[1].shortLabel, "Black")
   assert.deepEqual(viewModel.choices.map(({ id, selected, priceDeltaCny }) => ({

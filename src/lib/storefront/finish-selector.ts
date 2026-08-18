@@ -12,6 +12,7 @@ export type ProductFinishSelectorChoice = NormalizedFinishOption & {
   selected: boolean
   priceDeltaCny: number | null
   shortLabel: string
+  headingLabel: string
 }
 
 export const finishFamilyHeading = "Rolled Canvas/Frameless/Framed"
@@ -45,9 +46,15 @@ export function finishGroupLabel(id: string, label: string) {
 }
 
 export function finishHeadingSelection(id: string, label: string) {
-  const short = shortFinishLabel(id, label)
-  if (short === "Rolled") return "Rolled Canvas"
-  return short
+  const value = `${id} ${label}`.toLowerCase()
+  if (value.includes("rolled")) return "Rolled Canvas"
+  if (value.includes("gold")) return "Stretch + Gold Frame"
+  if (value.includes("silver")) return "Stretch + Silver Frame"
+  if (value.includes("white")) return "Stretch + White Frame"
+  if (value.includes("black")) return "Stretch + Black Frame"
+  if (value.includes("wood") || value.includes("natural") || value.includes("oak")) return "Stretch + Wood Frame"
+  if (value.includes("stretch") || value.includes("frameless") || value.includes("gallery")) return "Frameless"
+  return label
 }
 
 export function buildProductFinishSelectorViewModel(
@@ -69,6 +76,7 @@ export function buildProductFinishSelectorViewModel(
         ...finish,
         selected: finish.id === selectedFinish?.id,
         shortLabel: shortFinishLabel(finish.id, finish.label),
+        headingLabel: finishHeadingSelection(finish.id, finish.label),
         priceDeltaCny: priceDeltaCny > 0 ? priceDeltaCny : null,
       }
     }),

@@ -1,6 +1,5 @@
 import {
   calculateFinishEstimateCny,
-  quoteFinishOptions,
   type QuoteFinishId,
 } from "./catalog-config"
 
@@ -59,7 +58,12 @@ const AS_LISTED_PRESENTATION = {
 
 const FALLBACK_PRESENTATION_IDS: readonly Exclude<CatalogPresentationId, "as-listed">[] = [
   "rolled",
-  ...quoteFinishOptions.map((finish) => finish.id),
+  "stretched",
+  "gold-frame",
+  "silver-frame",
+  "black-frame",
+  "white-frame",
+  "natural-frame",
 ]
 
 export function buildNormalizedFinishOptions(
