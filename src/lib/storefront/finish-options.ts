@@ -22,31 +22,31 @@ const FALLBACK_PRESENTATIONS: Readonly<Record<Exclude<CatalogPresentationId, "as
   assetSrc: string
 }>> = {
   rolled: {
-    label: "Rolled canvas",
+    label: "Rolled Canvas",
     assetSrc: "/images/product-finishes/rolled-canvas.webp",
   },
   stretched: {
-    label: "Stretched canvas",
+    label: "Frameless",
     assetSrc: "/images/product-finishes/stretched-canvas.webp",
   },
   "black-frame": {
-    label: "Black float frame",
+    label: "Stretch + Black Frame",
     assetSrc: "/images/product-finishes/black-float-frame.webp",
   },
   "white-frame": {
-    label: "White float frame",
+    label: "Stretch + White Frame",
     assetSrc: "/images/product-finishes/white-float-frame.webp",
   },
   "natural-frame": {
-    label: "Natural wood float frame",
+    label: "Stretch + Wood Frame",
     assetSrc: "/images/product-finishes/natural-wood-float-frame.webp",
   },
   "gold-frame": {
-    label: "Gold float frame",
+    label: "Stretch + Gold Frame",
     assetSrc: "/images/product-finishes/gold-float-frame.webp",
   },
   "silver-frame": {
-    label: "Silver float frame",
+    label: "Stretch + Silver Frame",
     assetSrc: "/images/product-finishes/silver-float-frame.webp",
   },
 }

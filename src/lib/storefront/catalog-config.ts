@@ -71,12 +71,12 @@ const SIZE_PROFILES: Readonly<Record<SizeProfileId, readonly (readonly [number, 
 }
 
 export const quoteFinishOptions: readonly QuoteFinishOption[] = [
-  { id: "stretched", label: "Stretched canvas", estimateKind: "stretched" },
-  { id: "black-frame", label: "Black float frame", estimateKind: "framed" },
-  { id: "white-frame", label: "White float frame", estimateKind: "framed" },
-  { id: "natural-frame", label: "Natural wood float frame", estimateKind: "framed" },
-  { id: "gold-frame", label: "Gold float frame", estimateKind: "framed" },
-  { id: "silver-frame", label: "Silver float frame", estimateKind: "framed" },
+  { id: "stretched", label: "Frameless", estimateKind: "stretched" },
+  { id: "black-frame", label: "Stretch + Black Frame", estimateKind: "framed" },
+  { id: "white-frame", label: "Stretch + White Frame", estimateKind: "framed" },
+  { id: "natural-frame", label: "Stretch + Wood Frame", estimateKind: "framed" },
+  { id: "gold-frame", label: "Stretch + Gold Frame", estimateKind: "framed" },
+  { id: "silver-frame", label: "Stretch + Silver Frame", estimateKind: "framed" },
 ]
 
 function round10(value: number) {
