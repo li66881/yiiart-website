@@ -7,6 +7,7 @@ import { PriceDisclosure, PriceText } from "@/components/PriceText"
 import { useCart } from "@/context/CartContext"
 import { useCurrency } from "@/context/CurrencyContext"
 import { useWishlist } from "@/context/WishlistContext"
+import { formatSizeSelectLabel } from "@/lib/artwork-display"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
@@ -144,23 +145,22 @@ export default function ProductPurchasePanel({
 
       {product.sizes.length > 0 && (
         <fieldset className={styles.options}>
-          <legend>Select a size</legend>
-          <div className={styles.choiceGrid}>
-            {product.sizes.map((size, index) => (
-              <label key={size.id} className={styles.choice}>
-                <input
-                  type="radio"
-                  name="product-size"
-                  checked={selection?.size.id === size.id}
-                  onChange={() => setSizeId(size.id)}
-                />
-                <span>
-                  {size.label}
-                  {index === 0 && product.sizes.length > 1 ? <em className={styles.popularBadge}>Popular</em> : null}
-                </span>
-              </label>
-            ))}
-          </div>
+          <legend>Size</legend>
+          <label className={styles.sizeSelectLabel} htmlFor="product-size">
+            <span className={styles.srOnly}>Select a size</span>
+            <select
+              id="product-size"
+              className={styles.sizeSelect}
+              value={selection?.size.id || sizeId}
+              onChange={(event) => setSizeId(event.target.value)}
+            >
+              {product.sizes.map((size) => (
+                <option key={size.id} value={size.id}>
+                  {formatSizeSelectLabel(size.widthCm, size.heightCm, size.label)}
+                </option>
+              ))}
+            </select>
+          </label>
         </fieldset>
       )}
 

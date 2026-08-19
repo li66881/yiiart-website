@@ -41,7 +41,7 @@ export default function BestSellerTabs({ artworks }: Props) {
       !tab || tab.id === "All"
         ? artworks
         : artworks.filter((artwork) => tab.match.some((term) => searchText(artwork).includes(term)))
-    return list.slice(0, 8)
+    return list.slice(0, 12)
   }, [active, artworks])
 
   return (

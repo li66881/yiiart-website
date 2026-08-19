@@ -47,15 +47,33 @@ test("keeps originals as listed", () => {
   )
 })
 
-test("uses validated configured finishes instead of catalog fallback choices", () => {
+test("expands a rolled-only Sanity record to the seven catalog presentations", () => {
   const finishes = buildNormalizedFinishOptions([
     { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
     { _key: "bad", label: "Invalid", priceDeltaCny: -1 },
   ], "hand_painted_to_order")
 
-  assert.deepEqual(finishes.map((finish) => finish.id), ["rolled"])
-  assert.equal(finishes[0].pricing.kind, "fixed_delta")
+  assert.deepEqual(finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+    "gold-frame",
+    "silver-frame",
+  ])
+  assert.equal(finishes[0].pricing.kind, "catalog_formula")
   assert.equal(resolveFinishTotalCny(finishes[0], 1730), 1730)
+})
+
+test("keeps a custom multi-finish list when more than rolled canvas is configured", () => {
+  const finishes = buildNormalizedFinishOptions([
+    { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
+    { _key: "black-frame", label: "Black float frame", priceDeltaCny: 600 },
+  ], "hand_painted_to_order")
+
+  assert.deepEqual(finishes.map((finish) => finish.id), ["rolled", "black-frame"])
+  assert.equal(finishes[1].pricing.kind, "fixed_delta")
 })
 
 const invalidConfiguredPriceDeltas: Array<{
@@ -92,13 +110,14 @@ test("rejects malformed configured price deltas without activating catalog fallb
   }
 })
 
-test("preserves a numeric zero configured price delta", () => {
+test("preserves a numeric zero configured price delta inside a multi-finish list", () => {
   const finishes = buildNormalizedFinishOptions([
     { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
+    { _key: "black-frame", label: "Black float frame", priceDeltaCny: 600 },
   ], "hand_painted_to_order")
 
-  assert.deepEqual(finishes.map((finish) => finish.id), ["rolled"])
   assert.equal(resolveFinishDeltaCny(finishes[0], 1730), 0)
+  assert.equal(resolveFinishDeltaCny(finishes[1], 1730), 600)
 })
 
 test("rejects every configured finish whose normalized id is duplicated", () => {

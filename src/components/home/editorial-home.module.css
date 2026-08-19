@@ -228,7 +228,8 @@
   min-height: 420px;
 }
 
-.mosaicTile img {
+.mosaicTile img,
+.mosaicTile video {
   object-fit: cover;
 }
 
@@ -264,7 +265,8 @@
   color: #fff;
 }
 
-.roomShow img {
+.roomShow img,
+.roomShow video {
   object-fit: cover;
 }
 
@@ -333,7 +335,8 @@
   color: #fff;
 }
 
-.orientCard img {
+.orientCard img,
+.orientCard video {
   object-fit: cover;
 }
 

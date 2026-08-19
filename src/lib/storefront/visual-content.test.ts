@@ -33,8 +33,29 @@ test("builds featured and new-arrival edits from explicit catalog data", () => {
   ])
 
   assert.deepEqual(edit.featured.map((item) => item.id), ["newer-featured", "older-featured", "newest"])
-  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["newest", "newer-featured", "older-featured"])
+  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["newer-featured", "older-featured", "newest"])
   assert.deepEqual(edit.artistCollection.map((item) => item.id), ["artist-1"])
+})
+
+test("ranks artworks with hang-on-wall video ahead of still images", () => {
+  const edit = buildEditorialHomeEdit([
+    { id: "still", collectionType: "new_collection", featured: true, _createdAt: "2026-08-12T00:00:00.000Z" },
+    {
+      id: "video",
+      collectionType: "new_collection",
+      featured: false,
+      _createdAt: "2026-08-01T00:00:00.000Z",
+      productMedia: [{
+        mediaType: "video",
+        role: "process",
+        url: "https://assets.yiiart.com/hang.mp4",
+        approvedForStorefront: true,
+      }],
+    },
+  ])
+
+  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["video", "still"])
+  assert.deepEqual(edit.featured.map((item) => item.id), ["video", "still"])
 })
 
 test("carousel autoplay stops for user pause, hover, or reduced motion", async () => {

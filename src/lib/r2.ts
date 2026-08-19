@@ -1,5 +1,6 @@
 import crypto from "crypto"
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 type UploadR2ObjectInput = {
   namespace: string
@@ -46,6 +47,38 @@ export async function uploadR2Object(input: UploadR2ObjectInput) {
 
   return {
     key,
+    url: getR2PublicUrl(key, config.publicUrl),
+    contentType,
+  }
+}
+
+export async function createR2DirectPut(input: {
+  namespace: string
+  filename: string
+  contentType?: string
+  expiresIn?: number
+}) {
+  const config = getR2Config()
+  if (!config) {
+    throw new Error("Cloudflare R2 is not configured.")
+  }
+
+  const key = createR2ObjectKey(config.prefix, input.namespace, input.filename)
+  const contentType = input.contentType || "application/octet-stream"
+  const uploadUrl = await getSignedUrl(
+    getR2Client(config),
+    new PutObjectCommand({
+      Bucket: config.bucket,
+      Key: key,
+      ContentType: contentType,
+      CacheControl: "public, max-age=31536000, immutable",
+    }),
+    { expiresIn: input.expiresIn || 600 },
+  )
+
+  return {
+    key,
+    uploadUrl,
     url: getR2PublicUrl(key, config.publicUrl),
     contentType,
   }

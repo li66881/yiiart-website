@@ -7,6 +7,7 @@ import { PriceText } from "@/components/PriceText"
 import { useWishlist } from "@/context/WishlistContext"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
+import { getArtworkVideo } from "@/lib/storefront/visual-content"
 
 type Props = {
   artwork: any
@@ -24,6 +25,7 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
   const images = getArtworkImageUrls(artwork, { width: 900, height: 1125 })
   const primary = images[0] || getArtworkImageUrl(artwork, { width: 900, height: 1125 })
   const secondary = images[1]
+  const video = getArtworkVideo(artwork)
   const meta = [normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")
   const saved = isInWishlist(id)
   const fromPrice = typeof artwork.price === "number"
@@ -48,21 +50,35 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
         <div className="relative aspect-[4/5] overflow-hidden bg-[#f0eee8]">
           {primary ? (
             <>
-              <Image
-                src={primary}
-                alt={`${title}, hand-painted canvas art`}
-                fill
-                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                className={`object-cover transition-opacity duration-300 ${secondary ? "group-hover:opacity-0" : "transition-transform duration-500 group-hover:scale-[1.02]"}`}
-              />
-              {secondary && (
-                <Image
-                  src={secondary}
-                  alt={`${title}, alternate view`}
-                  fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                  className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              {video?.url ? (
+                <video
+                  className="absolute inset-0 h-full w-full object-cover"
+                  muted
+                  loop
+                  playsInline
+                  autoPlay
+                  poster={video.posterUrl || primary}
+                  src={video.url}
                 />
+              ) : (
+                <>
+                  <Image
+                    src={primary}
+                    alt={`${title}, hand-painted canvas art`}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                    className={`object-cover transition-opacity duration-300 ${secondary ? "group-hover:opacity-0" : "transition-transform duration-500 group-hover:scale-[1.02]"}`}
+                  />
+                  {secondary && (
+                    <Image
+                      src={secondary}
+                      alt={`${title}, alternate view`}
+                      fill
+                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                      className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    />
+                  )}
+                </>
               )}
             </>
           ) : (

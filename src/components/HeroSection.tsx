@@ -13,6 +13,8 @@ export type HeroSlide = {
   ctaHref: string
   ctaLabel: string
   shopHref?: string
+  videoUrl?: string
+  videoPosterUrl?: string
 }
 
 type HeroSectionProps = {
@@ -85,14 +87,26 @@ export default function HeroSection({
             className={`absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none ${index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"}`}
             aria-hidden={index !== activeIndex}
           >
-            <Image
-              src={slide.imageUrl}
-              alt={slide.imageAlt}
-              fill
-              priority={index === 0}
-              sizes="100vw"
-              className="object-cover object-center"
-            />
+            {slide.videoUrl ? (
+              <video
+                className="absolute inset-0 h-full w-full object-cover object-center"
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster={slide.videoPosterUrl || slide.imageUrl}
+                src={slide.videoUrl}
+              />
+            ) : (
+              <Image
+                src={slide.imageUrl}
+                alt={slide.imageAlt}
+                fill
+                priority={index === 0}
+                sizes="100vw"
+                className="object-cover object-center"
+              />
+            )}
           </div>
         ))}
 

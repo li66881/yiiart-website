@@ -108,6 +108,13 @@ function formatDimensionPair(width: number, height: number) {
   return `${widthCm} x ${heightCm} cm / ${widthIn} x ${heightIn} in`
 }
 
+export function formatSizeSelectLabel(widthCm?: number, heightCm?: number, fallback = "") {
+  if (!widthCm || !heightCm) return fallback
+  const widthIn = Math.round(widthCm / 2.54)
+  const heightIn = Math.round(heightCm / 2.54)
+  return `${widthIn}''x ${heightIn}''/ ${formatNumber(widthCm)}x ${formatNumber(heightCm)} CM`
+}
+
 function readDimensionNumber(value?: number | string | null) {
   const number = typeof value === "number" ? value : Number(String(value || "").trim())
   return Number.isFinite(number) && number > 0 ? number : null

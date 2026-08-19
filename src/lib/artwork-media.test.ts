@@ -40,6 +40,30 @@ test("keeps legacy image galleries working when audited media is absent", () => 
   assert.equal(media[1].alt, "Blue handmade painting, view 2")
 })
 
+test("keeps listing photos when only a hang-on-wall video is approved", () => {
+  const media = buildProductGalleryMedia(
+    {
+      productMedia: [{
+        _key: "hang",
+        mediaType: "video",
+        role: "process",
+        url: "https://assets.yiiart.com/hang.mp4",
+        posterUrl: "https://assets.yiiart.com/poster.jpg",
+        approvedForStorefront: true,
+      }],
+    },
+    ["https://assets.yiiart.com/main.jpg", "https://assets.yiiart.com/detail.jpg"],
+    "Dawn Peak painting",
+  )
+
+  assert.equal(media.length, 3)
+  assert.equal(media[0].type, "image")
+  assert.equal(media[0].url, "https://assets.yiiart.com/main.jpg")
+  assert.equal(media[1].type, "video")
+  assert.equal(media[1].url, "https://assets.yiiart.com/hang.mp4")
+  assert.equal(media[2].url, "https://assets.yiiart.com/detail.jpg")
+})
+
 test("keeps a dining-room scene distinct from a generic additional view", () => {
   const media = getApprovedProductMedia({
     productMedia: [{

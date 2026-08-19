@@ -77,7 +77,9 @@ export function buildNormalizedFinishOptions(
   }
 
   const configured = normalizeConfiguredFinishes(frameOptions)
-  if (hasConfiguredFinishInput(frameOptions)) return configured
+  if (hasConfiguredFinishInput(frameOptions) && !isRolledOnlyCatalog(configured)) {
+    return configured
+  }
 
   return FALLBACK_PRESENTATION_IDS.map((presentationId) => {
     const presentation = FALLBACK_PRESENTATIONS[presentationId]
@@ -153,6 +155,10 @@ function text(value: unknown) {
 function hasConfiguredFinishInput(value: unknown) {
   if (value === null || value === undefined) return false
   return !Array.isArray(value) || value.length > 0
+}
+
+function isRolledOnlyCatalog(finishes: NormalizedFinishOption[]) {
+  return finishes.length === 1 && finishes[0]?.id === "rolled"
 }
 
 function finiteNumber(value: unknown) {

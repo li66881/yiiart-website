@@ -48,7 +48,15 @@ test("maps made-to-order sizes and finishes without accepting invalid prices", (
   assert.equal(product.collectionType, "new_collection")
   assert.equal(product.productionModel, "hand_painted_to_order")
   assert.deepEqual(product.sizes.map((size) => size.id), ["80x100"])
-  assert.deepEqual(product.finishes.map((finish) => finish.id), ["rolled"])
+  assert.deepEqual(product.finishes.map((finish) => finish.id), [
+    "rolled",
+    "stretched",
+    "black-frame",
+    "white-frame",
+    "natural-frame",
+    "gold-frame",
+    "silver-frame",
+  ])
 })
 
 test("uses catalog presentation choices when a made-to-order product has no configured finishes", () => {

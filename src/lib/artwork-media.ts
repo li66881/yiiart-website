@@ -101,15 +101,23 @@ export function buildProductGalleryMedia(
   fallbackAlt: string,
 ) {
   const structuredMedia = getApprovedProductMedia(artwork)
-  if (structuredMedia.length > 0) return structuredMedia.slice(0, 10)
-
-  return fallbackImages.slice(0, 10).map((url, index): ProductMediaItem => ({
+  const legacyImages = fallbackImages.slice(0, 10).map((url, index): ProductMediaItem => ({
     id: `legacy-image-${index + 1}`,
     type: "image",
     role: index === 0 ? "front" : index === 1 ? "original" : "detail",
     url,
     alt: index === 0 ? fallbackAlt : `${fallbackAlt}, view ${index + 1}`,
   }))
+
+  if (structuredMedia.length === 0) return legacyImages
+
+  const hasStructuredImage = structuredMedia.some((item) => item.type === "image")
+  if (hasStructuredImage) return structuredMedia.slice(0, 10)
+
+  const videos = structuredMedia.filter((item) => item.type === "video")
+  if (legacyImages.length === 0) return videos.slice(0, 10)
+
+  return [legacyImages[0], ...videos, ...legacyImages.slice(1)].slice(0, 10)
 }
 
 export function getApprovedProductImageUrls(artwork: { productMedia?: unknown } | null | undefined) {

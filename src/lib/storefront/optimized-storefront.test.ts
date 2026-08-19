@@ -197,6 +197,8 @@ test("optimized storefront restores product detail presentation", async () => {
   assert.match(productGallery, /previouslyFocused\.focus/)
   assert.match(purchasePanel, /optimized-purchase-panel/)
   assert.match(purchasePanel, /meson-purchase-stack/)
+  assert.match(purchasePanel, /<select/)
+  assert.match(purchasePanel, /formatSizeSelectLabel/)
   assert.doesNotMatch(purchasePanel, /people saved this|sold in last|shipping and tariffs included/i)
   assert.match(artworkPage, /isArtworkCheckoutAvailable/)
   assert.match(artworkPage, /buildProductDetailCopy/)

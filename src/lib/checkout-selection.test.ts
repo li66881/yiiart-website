@@ -122,6 +122,23 @@ test("authoritative checkout preserves a numeric zero configured price delta", (
   assert.equal(selection.priceCny, 2600)
 })
 
+test("authoritative checkout prices stretched canvas from the catalog formula when only rolled is stored", () => {
+  const selection = resolveCheckoutSelection({
+    _id: "catalog-stretched",
+    productionModel: "hand_painted_to_order",
+    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 2600 }],
+    frameOptions: [{ _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 }],
+  }, {
+    id: "catalog-stretched",
+    quantity: 1,
+    sizeId: "80x100",
+    finishId: "stretched",
+  })
+
+  assert.equal(selection.finishId, "stretched")
+  assert.equal(selection.priceCny, 4420)
+})
+
 test("rejects an unknown made-to-order size", () => {
   assert.throws(() => resolveCheckoutSelection({
     _id: "catalog-1",

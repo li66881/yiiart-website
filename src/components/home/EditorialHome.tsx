@@ -6,7 +6,7 @@ import HomeProductCard from "@/components/home/HomeProductCard"
 import { PriceDisclosure } from "@/components/PriceText"
 import { normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
-import { buildEditorialHomeEdit, resolveVisualImage } from "@/lib/storefront/visual-content"
+import { buildEditorialHomeEdit, getArtworkVideo, resolveVisualImage } from "@/lib/storefront/visual-content"
 import styles from "./editorial-home.module.css"
 
 type EditorialHomeProps = {
@@ -66,15 +66,20 @@ const trustIcons = [
 export default function EditorialHome({ artworks }: EditorialHomeProps) {
   const { featured, newArrivals: newestCatalogArtworks, artistCollection } = buildEditorialHomeEdit(artworks)
   const withImages = artworks.filter(hasArtworkImage)
-  const featuredArtworks = uniqueArtworks([...featured, ...withImages]).slice(0, 12)
-  const newArrivals = newestCatalogArtworks.filter(hasArtworkImage).slice(0, 12)
+  const featuredArtworks = uniqueArtworks([...featured, ...withImages]).slice(0, 16)
+  const newArrivals = newestCatalogArtworks.filter(hasArtworkImage).slice(0, 24)
   const heroArtworks = uniqueArtworks([...newArrivals, ...featuredArtworks, ...withImages]).slice(0, 3)
-  const heroSlides: HeroSlide[] = heroArtworks.map((artwork, index) => ({
-    imageUrl: getArtworkImageUrl(artwork, { width: 1800, height: 1200 }) || "",
-    imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} styled for a modern interior`,
-    shopHref: `/artwork/${artwork.slug?.current || artwork._id}`,
-    ...heroMessages[index % heroMessages.length],
-  }))
+  const heroSlides: HeroSlide[] = heroArtworks.map((artwork, index) => {
+    const video = getArtworkVideo(artwork)
+    return {
+      imageUrl: getArtworkImageUrl(artwork, { width: 1800, height: 1200 }) || "",
+      imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} styled for a modern interior`,
+      shopHref: `/artwork/${artwork.slug?.current || artwork._id}`,
+      videoUrl: video?.url,
+      videoPosterUrl: video?.posterUrl,
+      ...heroMessages[index % heroMessages.length],
+    }
+  })
   const visualPool = withImages.map((artwork) => getArtworkImageUrl(artwork, { width: 1400, height: 900 })).filter(Boolean)
 
   return (
@@ -105,7 +110,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
               const image = matchedArtwork ? getArtworkImageUrl(matchedArtwork, { width: 1200, height: 900 }) : resolveVisualImage(visualPool.slice(index))
               return (
                 <Link key={style.title} href={style.href} className={`${styles.mosaicTile} ${index === 0 ? styles.mosaicFeature : ""}`}>
-                  {image ? <Image src={image} alt={`${style.title} collection`} fill sizes="(min-width: 960px) 40vw, 100vw" /> : null}
+                  {image ? <HomeSurfaceMedia image={image} artwork={matchedArtwork} alt={`${style.title} collection`} sizes="(min-width: 960px) 40vw, 100vw" /> : null}
                   <span className={styles.mosaicLabel}>
                     <small>0{index + 1}</small>
                     <strong>{style.title}</strong>
@@ -122,7 +127,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
           const image = resolveVisualImage(visualPool.slice(index + 1))
           return (
             <Link key={room.title} href={room.href} className={styles.roomShow}>
-              {image ? <Image src={image} alt={`${room.title} wall art`} fill sizes="100vw" /> : null}
+              {image ? <HomeSurfaceMedia image={image} artwork={withImages[index + 1]} alt={`${room.title} wall art`} sizes="100vw" /> : null}
               <span className={styles.roomShowCopy}>
                 <small>Shop by room</small>
                 <strong>{room.title}</strong>
@@ -160,7 +165,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
               const image = resolveVisualImage(visualPool.slice(index + 3))
               return (
                 <Link key={item.title} href={item.href} className={styles.orientCard}>
-                  {image ? <Image src={image} alt={`${item.title} paintings`} fill sizes="(min-width: 960px) 33vw, 100vw" /> : null}
+                  {image ? <HomeSurfaceMedia image={image} artwork={withImages[index + 3]} alt={`${item.title} paintings`} sizes="(min-width: 960px) 33vw, 100vw" /> : null}
                   <span>{item.title}</span>
                 </Link>
               )
@@ -244,6 +249,36 @@ function EmptyArtworkState() {
 
 function uniqueArtworks(artworks: any[]) {
   return Array.from(new Map(artworks.filter(Boolean).map((artwork) => [artwork._id, artwork])).values())
+}
+
+function HomeSurfaceMedia({
+  image,
+  artwork,
+  alt,
+  sizes,
+}: {
+  image: string
+  artwork?: any
+  alt: string
+  sizes: string
+}) {
+  const video = artwork ? getArtworkVideo(artwork) : null
+  if (video?.url) {
+    return (
+      <video
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        muted
+        loop
+        playsInline
+        poster={video.posterUrl || image}
+        src={video.url}
+        aria-label={alt}
+      />
+    )
+  }
+
+  return <Image src={image} alt={alt} fill sizes={sizes} />
 }
 
 function artworkSearchText(artwork: any) {
