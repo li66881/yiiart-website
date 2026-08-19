@@ -1,6 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import HeroSection, { type HeroSlide } from "@/components/HeroSection"
+import AutoplayVideo from "@/components/storefront/AutoplayVideo"
 import BestSellerTabs from "@/components/home/BestSellerTabs"
 import HomeProductCard from "@/components/home/HomeProductCard"
 import { PriceDisclosure } from "@/components/PriceText"
@@ -72,7 +73,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
   const heroSlides: HeroSlide[] = heroArtworks.map((artwork, index) => {
     const video = getArtworkVideo(artwork)
     return {
-      imageUrl: getArtworkImageUrl(artwork, { width: 1800, height: 1200 }) || "",
+      imageUrl: getArtworkImageUrl(artwork, { width: 2560, height: 1600 }) || "",
       imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} styled for a modern interior`,
       shopHref: `/artwork/${artwork.slug?.current || artwork._id}`,
       videoUrl: video?.url,
@@ -80,7 +81,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
       ...heroMessages[index % heroMessages.length],
     }
   })
-  const visualPool = withImages.map((artwork) => getArtworkImageUrl(artwork, { width: 1400, height: 900 })).filter(Boolean)
+  const visualPool = withImages.map((artwork) => getArtworkImageUrl(artwork, { width: 1800, height: 1200 })).filter(Boolean)
 
   return (
     <main className={styles.home}>
@@ -107,7 +108,7 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
           <div className={styles.mosaic}>
             {popularPaths.map((style, index) => {
               const matchedArtwork = withImages.find((artwork) => style.match.some((term) => artworkSearchText(artwork).includes(term)))
-              const image = matchedArtwork ? getArtworkImageUrl(matchedArtwork, { width: 1200, height: 900 }) : resolveVisualImage(visualPool.slice(index))
+              const image = matchedArtwork ? getArtworkImageUrl(matchedArtwork, { width: 1600, height: 1200 }) : resolveVisualImage(visualPool.slice(index))
               return (
                 <Link key={style.title} href={style.href} className={`${styles.mosaicTile} ${index === 0 ? styles.mosaicFeature : ""}`}>
                   {image ? <HomeSurfaceMedia image={image} artwork={matchedArtwork} alt={`${style.title} collection`} sizes="(min-width: 960px) 40vw, 100vw" /> : null}
@@ -265,12 +266,8 @@ function HomeSurfaceMedia({
   const video = artwork ? getArtworkVideo(artwork) : null
   if (video?.url) {
     return (
-      <video
+      <AutoplayVideo
         className="absolute inset-0 h-full w-full object-cover"
-        autoPlay
-        muted
-        loop
-        playsInline
         poster={video.posterUrl || image}
         src={video.url}
         aria-label={alt}
@@ -278,7 +275,7 @@ function HomeSurfaceMedia({
     )
   }
 
-  return <Image src={image} alt={alt} fill sizes={sizes} />
+  return <Image src={image} alt={alt} fill quality={90} sizes={sizes} />
 }
 
 function artworkSearchText(artwork: any) {

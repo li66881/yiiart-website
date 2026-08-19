@@ -58,6 +58,15 @@ test("ranks artworks with hang-on-wall video ahead of still images", () => {
   assert.deepEqual(edit.featured.map((item) => item.id), ["video", "still"])
 })
 
+test("inline videos play only when visible and motion is allowed", async () => {
+  const { shouldPlayInlineVideo } = await import("./visual-content")
+
+  assert.equal(shouldPlayInlineVideo({ isIntersecting: true, intersectionRatio: 0.5, prefersReducedMotion: false }), true)
+  assert.equal(shouldPlayInlineVideo({ isIntersecting: true, intersectionRatio: 0.1, prefersReducedMotion: false }), false)
+  assert.equal(shouldPlayInlineVideo({ isIntersecting: false, intersectionRatio: 1, prefersReducedMotion: false }), false)
+  assert.equal(shouldPlayInlineVideo({ isIntersecting: true, intersectionRatio: 0.8, prefersReducedMotion: true }), false)
+})
+
 test("carousel autoplay stops for user pause, hover, or reduced motion", async () => {
   const visualContent = await import("./visual-content")
   const shouldAutoplay = (visualContent as any).shouldAutoplayCarousel

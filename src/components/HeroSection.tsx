@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import AutoplayVideo from "@/components/storefront/AutoplayVideo"
 import { shouldAutoplayCarousel } from "@/lib/storefront/visual-content"
 
 export type HeroSlide = {
@@ -87,13 +88,10 @@ export default function HeroSection({
             className={`absolute inset-0 transition-opacity duration-700 ease-out motion-reduce:transition-none ${index === activeIndex ? "opacity-100" : "pointer-events-none opacity-0"}`}
             aria-hidden={index !== activeIndex}
           >
-            {slide.videoUrl ? (
-              <video
+            {slide.videoUrl && index === activeIndex ? (
+              <AutoplayVideo
                 className="absolute inset-0 h-full w-full object-cover object-center"
-                autoPlay
-                muted
-                loop
-                playsInline
+                preload="auto"
                 poster={slide.videoPosterUrl || slide.imageUrl}
                 src={slide.videoUrl}
               />
@@ -103,6 +101,7 @@ export default function HeroSection({
                 alt={slide.imageAlt}
                 fill
                 priority={index === 0}
+                quality={90}
                 sizes="100vw"
                 className="object-cover object-center"
               />
@@ -110,7 +109,7 @@ export default function HeroSection({
           </div>
         ))}
 
-        <div className="absolute inset-0 bg-black/25" />
+        <div className="absolute inset-0 bg-black/16" />
 
         <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-6 px-5 pb-10 sm:px-10 lg:px-16">
           <div className="max-w-xl text-white">

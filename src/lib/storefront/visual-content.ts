@@ -65,6 +65,19 @@ export function shouldAutoplayCarousel({
   return slideCount > 1 && !userPaused && !hoverPaused && !prefersReducedMotion
 }
 
+export function shouldPlayInlineVideo({
+  isIntersecting,
+  intersectionRatio,
+  prefersReducedMotion,
+}: {
+  isIntersecting: boolean
+  intersectionRatio: number
+  prefersReducedMotion: boolean
+}) {
+  if (prefersReducedMotion) return false
+  return isIntersecting && intersectionRatio >= 0.2
+}
+
 export function editorialHomeSequence() {
   return ["discover", "place", "process", "customize", "trust"] as const
 }
