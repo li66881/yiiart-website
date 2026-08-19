@@ -21,7 +21,7 @@
   "dependencies": {
     "@auth/core": "0.41.3",
     "@aws-sdk/client-s3": "^3.1073.0",
-    "@aws-sdk/s3-request-presigner": "^3.1112.0",
+    "@aws-sdk/s3-request-presigner": "^3.1113.0",
     "@neondatabase/serverless": "^1.1.0",
     "@phosphor-icons/react": "^2.1.10",
     "@sanity/cli": "^6.3.1",
