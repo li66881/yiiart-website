@@ -12,6 +12,7 @@ import ChatWidget from '@/components/ChatWidget'
 import MiniCartDrawer from '@/components/MiniCartDrawer'
 import CookieConsent from '@/components/CookieConsent'
 import MarketingPixels from '@/components/MarketingPixels'
+import NavigationRecovery from '@/components/NavigationRecovery'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
@@ -152,6 +153,7 @@ export default async function RootLayout({
           }}
         />
         <Providers>
+          <NavigationRecovery />
           <CatalogNavigationProvider navigationState={navigationState}>
             <LanguageProvider>
               <CurrencyProvider>
