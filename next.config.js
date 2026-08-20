@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    loader: 'custom',
+    loaderFile: './src/lib/next-image-loader.ts',
     qualities: [75, 90],
     remotePatterns: [
       {
