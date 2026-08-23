@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
+import { customsIntro, customsMarketGuidance, returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -50,6 +50,11 @@ const shippingReturnFaqs = [
     answer: "Tracking information is shared when the selected carrier service provides it.",
   },
   {
+    question: "Will I have to pay customs duties or taxes?",
+    answer:
+      "Duties and local taxes may be charged by the destination country. YiiArt does not currently collect them at checkout. Many destinations charge no customs duty on original hand-painted paintings, but the United Kingdom, EU, Canada, and Australia still often collect import VAT or GST through the courier. See the Shipping page for destination notes.",
+  },
+  {
     question: "What if the painting arrives damaged?",
     answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
@@ -88,14 +93,21 @@ export default function ShippingReturnsPage() {
               <h1 className="text-5xl font-light leading-tight md:text-6xl">Shipping, returns, and damage support for handmade art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-               These policies are written for hand-painted paintings, ready-made canvas art, and custom artwork requests.
-              Exact handling can vary by artwork size, surface, destination, and confirmed order terms.
+              These policies are written for hand-painted paintings, ready-made canvas art, and custom artwork requests.
+              Exact handling can vary by artwork size, surface, destination, and confirmed order terms. Duties and local
+              taxes may be charged by the destination country.
             </p>
           </div>
         </section>
 
         <PolicySection eyebrow="Processing Time" title="Preparation happens before carrier transit." items={processingItems} />
         <PolicySection eyebrow="Shipping" title="Worldwide shipping with careful packaging." items={shippingItems} />
+        <PolicySection
+          eyebrow="Import charges"
+          title="Duty is often zero. Import VAT usually is not."
+          intro={customsIntro}
+          items={customsMarketGuidance.map((item) => ({ title: item.region, text: item.text }))}
+        />
         <PolicySection eyebrow="Damage Protection" title="What to do if artwork arrives damaged." items={damageItems} />
         <PolicySection eyebrow="Returns" title="Ready-made and custom artwork have different conditions." items={returnItems} />
 
@@ -144,10 +156,12 @@ export default function ShippingReturnsPage() {
 function PolicySection({
   eyebrow,
   title,
+  intro,
   items,
 }: {
   eyebrow: string
   title: string
+  intro?: string
   items: Array<{ title: string; text: string }>
 }) {
   return (
@@ -156,6 +170,7 @@ function PolicySection({
         <div className="mb-10 max-w-3xl">
           <p className="mb-3 text-sm uppercase text-stone-500">{eyebrow}</p>
           <h2 className="text-4xl font-light leading-tight">{title}</h2>
+          {intro ? <p className="mt-4 text-sm leading-6 text-stone-600">{intro}</p> : null}
         </div>
         <div className="grid gap-5 md:grid-cols-3">
           {items.map((item) => (

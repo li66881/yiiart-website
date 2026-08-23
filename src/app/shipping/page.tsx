@@ -1,13 +1,13 @@
 import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { shippingHighlights } from "@/lib/policy-content"
+import { customsIntro, customsMarketGuidance, shippingHighlights } from "@/lib/policy-content"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
   title: "Shipping Hand-Painted Artwork",
   description:
-    "YiiArt offers worldwide delivery options for hand-painted artwork with destination-specific guidance.",
+    "YiiArt shipping for hand-painted artwork, including destination notes on customs duty and import VAT.",
   path: "/shipping",
 })
 
@@ -24,7 +24,8 @@ export default function ShippingPage() {
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
               Delivery timing and format are confirmed by destination, size, finish, and carrier route. Tracking
-              information is shared when the selected carrier service provides it.
+              information is shared when the selected carrier service provides it. Duties and local taxes may be charged
+              by the destination country and are not collected in the YiiArt checkout total.
             </p>
           </section>
 
@@ -35,6 +36,19 @@ export default function ShippingPage() {
           </section>
 
           <section className="grid gap-10 border-y border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Import charges</p>
+              <h2 className="text-4xl font-light leading-tight">Duty is often zero. Import VAT usually is not.</h2>
+            </div>
+            <div className="grid gap-4">
+              <p className="text-sm leading-6 text-stone-600">{customsIntro}</p>
+              {customsMarketGuidance.map((item) => (
+                <Timeline key={item.region} title={item.region} text={item.text} />
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-10 border-b border-stone-200 py-14 lg:grid-cols-[0.7fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Timeline</p>
               <h2 className="text-4xl font-light leading-tight">Preparation first, then carrier transit.</h2>
