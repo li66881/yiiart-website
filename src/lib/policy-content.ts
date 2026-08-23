@@ -9,7 +9,7 @@ export const trustPrinciples = [
   },
   {
     title: "Worldwide delivery options",
-    text: "Available delivery methods depend on destination, artwork size, finish, carrier route, and customs requirements.",
+    text: "Available delivery methods depend on destination, artwork size, finish, carrier route, and customs requirements. Duties and local taxes may be charged by the destination country; YiiArt does not currently collect them at checkout.",
   },
   {
     title: "Damage support",
@@ -33,6 +33,40 @@ export const shippingHighlights = [
   {
     title: "Careful packaging",
     text: "Packaging is selected for the artwork size, finish, texture, and carrier route.",
+  },
+]
+
+export const customsIntro =
+  "Duties and local taxes may be charged by the destination country. Customs duty and import VAT are different charges. YiiArt ships original hand-painted paintings and does not currently collect these at checkout. The notes below are typical for qualifying original paintings and can change with classification, origin, and local rules. Courier clearance fees can apply even when duty is zero."
+
+/**
+ * Destination customs notes for original hand-painted paintings.
+ * Duty vs import VAT are separate. Rates and classification can change; YiiArt does not collect these at checkout.
+ */
+export const customsMarketGuidance = [
+  {
+    region: "United States",
+    text: "There is no federal import VAT. Original hand-painted paintings are typically entered duty-free when accepted as original artwork. Courier handling fees can still apply. Extra U.S. tariffs may apply depending on origin and current rules; YiiArt does not collect them at checkout.",
+  },
+  {
+    region: "United Kingdom",
+    text: "Qualifying original paintings are typically free of customs duty. Import VAT is often charged at a reduced art rate (commonly 5%) by the carrier before delivery, plus any clearance fee.",
+  },
+  {
+    region: "European Union",
+    text: "Qualifying original paintings are typically free of customs duty. Import VAT is charged in the destination member state, often at that country’s reduced art rate, plus carrier clearance fees.",
+  },
+  {
+    region: "Canada",
+    text: "Originals by artists are typically free of customs duty. GST (5%) and any provincial tax may still be assessed on import, along with courier fees.",
+  },
+  {
+    region: "Australia",
+    text: "Qualifying original paintings are typically free of customs duty. GST at 10% is usually payable on importation (goods value plus international freight), which is why Australian deliveries often show a separate carrier bill.",
+  },
+  {
+    region: "Hong Kong",
+    text: "Artwork imports generally have no customs duty and no GST/VAT. Courier handling fees can still apply.",
   },
 ]
 
@@ -89,7 +123,7 @@ export const faqItems = [
   },
   {
     question: "Will I have to pay customs duties or taxes?",
-    answer: "Import duties, VAT, and local taxes depend on the destination and carrier process. Confirm the current destination guidance before the order is finalized.",
+    answer: "Duties and local taxes may be charged by the destination country. YiiArt does not currently collect import VAT, GST, or customs fees at checkout. For original hand-painted paintings, many destinations charge no customs duty, but the United Kingdom, EU, Canada, and Australia still often collect import VAT or GST through the courier. The United States has no federal import VAT; duty is typically not charged on accepted original paintings, though courier fees and origin-based tariffs can still apply. See the Shipping page for destination notes. Classification and rates can change.",
   },
   {
     question: "How is artwork packaged?",
