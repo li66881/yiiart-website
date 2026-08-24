@@ -10,9 +10,11 @@ export default function SocialLinks({ variant = "light" }: { variant?: "light" |
   }
 
   const className = variant === "dark"
-    ? "space-y-2 text-sm text-white/62"
-    : "space-y-2 text-sm text-gray-500"
-  const linkClassName = variant === "dark" ? "hover:text-white" : "hover:text-black"
+    ? "flex flex-wrap gap-x-4 gap-y-2 text-sm text-white/80"
+    : "flex flex-wrap gap-x-4 gap-y-2 text-sm text-stone-700"
+  const linkClassName = variant === "dark"
+    ? "underline underline-offset-4 hover:text-white"
+    : "underline underline-offset-4 hover:text-black"
 
   return (
     <ul className={className}>
