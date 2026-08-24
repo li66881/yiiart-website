@@ -18,7 +18,7 @@ export default function SocialLinks({ variant = "light" }: { variant?: "light" |
     <ul className={className}>
       {profiles.map((profile) => (
         <li key={profile.label}>
-          <a href={profile.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+          <a href={profile.href} target="_blank" rel="me noopener noreferrer" className={linkClassName}>
             {profile.label}
           </a>
         </li>

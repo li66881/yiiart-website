@@ -17,6 +17,7 @@ type SeoMetadataInput = {
   path: string
   image?: string
   imageAlt?: string
+  keywords?: string[]
   robots?: Metadata["robots"]
 }
 
@@ -31,14 +32,17 @@ export function buildSeoMetadata({
   path,
   image = defaultOgImage,
   imageAlt = title,
+  keywords,
   robots,
 }: SeoMetadataInput): Metadata {
   const url = absoluteUrl(path)
   const imageUrl = absoluteUrl(image)
+  const twitterSite = process.env.NEXT_PUBLIC_TWITTER_HANDLE
 
   return {
     title,
     description,
+    keywords: keywords?.filter(Boolean),
     alternates: {
       canonical: url,
     },
@@ -62,6 +66,7 @@ export function buildSeoMetadata({
       title,
       description,
       images: [imageUrl],
+      site: twitterSite || undefined,
     },
     robots,
   }

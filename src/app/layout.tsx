@@ -16,6 +16,7 @@ import NavigationRecovery from '@/components/NavigationRecovery'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
+import { getSocialProfiles } from '@/lib/site'
 import { getCatalogNavigationState } from '@/lib/storefront/collection-catalog'
 
 const poppins = localFont({
@@ -140,6 +141,7 @@ export default async function RootLayout({
                   name: siteName,
                   url: siteUrl,
                   logo: `${siteUrl}/brand/yiiart-logo.svg`,
+                  sameAs: getSocialProfiles().map((profile) => profile.href),
                 },
                 {
                   "@type": "WebSite",

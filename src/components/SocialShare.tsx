@@ -1,52 +1,65 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useMemo, useState } from "react"
 import { useLanguage } from "@/context/LanguageContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
+import { siteUrl } from "@/lib/seo"
+import { buildSocialShareCaption, withCampaignParams } from "@/lib/social"
 
 type SocialShareProps = {
   title: string
+  path: string
   image?: string
+  caption?: string
+  artistName?: string
 }
 
-export default function SocialShare({ title, image }: SocialShareProps) {
+export default function SocialShare({ title, path, image, caption, artistName }: SocialShareProps) {
   const { t } = useLanguage()
   const [copied, setCopied] = useState(false)
-  const [pageUrl, setPageUrl] = useState("")
+  const shareText = buildSocialShareCaption({ title, artistName, caption })
+  const shareUrl = useMemo(
+    () =>
+      withCampaignParams(path, {
+        source: "share",
+        medium: "social",
+        campaign: "artwork_page",
+        content: path.replace(/^\//, "").replace(/\W+/g, "-"),
+      }),
+    [path],
+  )
 
-  useEffect(() => {
-    setPageUrl(window.location.href)
-  }, [])
-
-  const encodedUrl = encodeURIComponent(pageUrl)
-  const encodedTitle = encodeURIComponent(title)
-  const encodedImage = encodeURIComponent(image || "")
+  const encodedUrl = encodeURIComponent(shareUrl)
+  const encodedTitle = encodeURIComponent(shareText)
+  const encodedImage = encodeURIComponent(image ? (/^https?:\/\//.test(image) ? image : `${siteUrl}${image}`) : "")
 
   const shareLinks = [
     {
-      label: "Facebook",
-      href: pageUrl ? `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}` : "#",
+      label: "Pinterest",
+      href: `https://www.pinterest.com/pin/create/button/?url=${encodedUrl}&media=${encodedImage}&description=${encodedTitle}`,
     },
     {
-      label: "Pinterest",
-      href: pageUrl ? `https://www.pinterest.com/pin/create/button/?url=${encodedUrl}&media=${encodedImage}&description=${encodedTitle}` : "#",
+      label: "Facebook",
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+    },
+    {
+      label: "WhatsApp",
+      href: `https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`,
     },
     {
       label: "X",
-      href: pageUrl ? `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}` : "#",
+      href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
     },
     {
       label: "Email",
-      href: pageUrl ? `mailto:?subject=${encodedTitle}&body=${encodedUrl}` : "#",
+      href: `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`,
     },
   ]
 
   const copyLink = async () => {
-    if (!pageUrl) return
-
-    await navigator.clipboard.writeText(pageUrl)
+    await navigator.clipboard.writeText(`${shareText}\n${shareUrl}`)
     trackMarketingEvent("Share", {
-      method: "copy_link",
+      method: "copy_caption",
       content_name: title,
     })
     setCopied(true)

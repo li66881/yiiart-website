@@ -2,8 +2,9 @@ import type { MetadataRoute } from 'next'
 import { marketingCollections } from '@/lib/collections'
 import { client } from '@/lib/sanity'
 import { PUBLIC_ARTWORK_GROQ_FILTER } from '@/lib/artwork-publication'
+import { siteUrl } from '@/lib/seo'
 
-const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yiiart.com').replace(/\/$/, '')
+const baseUrl = siteUrl
 
 const routes = [
   { path: '', priority: 1 },

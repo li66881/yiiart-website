@@ -158,6 +158,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     path: `/artwork/${slug}`,
     image: imageUrl,
     imageAlt: `${title} by ${artistName}, original handmade artwork`,
+    keywords: Array.isArray(artwork.seoKeywords)
+      ? artwork.seoKeywords.filter((keyword: unknown): keyword is string => typeof keyword === "string" && keyword.trim().length > 0)
+      : undefined,
   })
 }
 
@@ -406,7 +409,13 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   )}
                   <ProductDisclosure productionModel={storefrontProduct.productionModel} />
                   <div className={storefrontStyles.productDetailShare}>
-                    <SocialShare title={title} image={imageUrl} />
+                    <SocialShare
+                      title={title}
+                      path={`/artwork/${slug}`}
+                      image={imageUrl}
+                      caption={pickEnglish(artwork.socialCaption)}
+                      artistName={artistName}
+                    />
                   </div>
                 </div>
 

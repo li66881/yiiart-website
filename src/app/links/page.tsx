@@ -8,6 +8,7 @@ import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildSeoMetadata } from "@/lib/seo"
+import { campaignSearch } from "@/lib/social"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const dynamic = "force-dynamic"
@@ -40,6 +41,7 @@ async function getShareableArtworks() {
 
 export default async function LinksPage() {
   const artworks = await getShareableArtworks()
+  const bio = campaignSearch({ source: "link_in_bio", medium: "social", campaign: "bio" })
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -52,13 +54,13 @@ export default async function LinksPage() {
               Hand-painted art for calm, modern spaces.
             </h1>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/artworks" className="bg-black px-5 py-3 text-sm text-white">
+              <Link href={`/artworks${bio}`} className="bg-black px-5 py-3 text-sm text-white">
                 Browse available artworks
               </Link>
-              <Link href="/collections/abstract-art-for-living-room" className="border px-5 py-3 text-sm">
+              <Link href={`/collections/abstract-art-for-living-room${bio}`} className="border px-5 py-3 text-sm">
                 Living room abstracts
               </Link>
-              <Link href="/contact" className="border px-5 py-3 text-sm">
+              <Link href={`/contact${bio}`} className="border px-5 py-3 text-sm">
                 Ask about a piece
               </Link>
             </div>
@@ -94,7 +96,7 @@ export default async function LinksPage() {
                 const image = getArtworkImageUrl(artwork, { width: 700 })
 
                 return (
-                  <Link key={artwork._id} href={`/artwork/${artwork.slug.current}`} className="group">
+                  <Link key={artwork._id} href={`/artwork/${artwork.slug.current}${bio}`} className="group">
                     <div className="relative mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
                       {image ? (
                         <Image
