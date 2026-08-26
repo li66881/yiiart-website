@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { useEffect, useRef, useState, type WheelEvent } from "react"
 import type { ProductMediaItem } from "@/lib/artwork-media"
+import { isRoomSceneMedia } from "@/lib/artwork-media"
 import { buildProductGalleryLabelModel } from "@/lib/storefront/product-gallery-labels"
 import styles from "./storefront.module.css"
 
@@ -10,8 +11,6 @@ type Props = {
   media: ProductMediaItem[]
   alt: string
 }
-
-const roomSceneRoles = new Set(["living_room", "bedroom", "dining_room"])
 
 export default function ProductGallery({ media, alt }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -97,7 +96,7 @@ export default function ProductGallery({ media, alt }: Props) {
               key={item.id}
               aria-label={galleryLabels.thumbnailLabels[index]}
               aria-pressed={selectedIndex === index}
-              data-room-scene={roomSceneRoles.has(item.role) || undefined}
+              data-room-scene={isRoomSceneMedia(item) || undefined}
               onClick={() => selectMedia(index)}
             >
               {item.type === "video" ? (

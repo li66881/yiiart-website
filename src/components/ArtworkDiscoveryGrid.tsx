@@ -245,7 +245,7 @@ function ArtworkTile({
             alt={buildArtworkTileAlt(artwork, translateOption)}
             fill
             sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-            className="object-cover transition-opacity duration-300"
+            className="object-contain p-3 transition-opacity duration-300"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-stone-400">Artwork</div>

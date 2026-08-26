@@ -4,11 +4,9 @@ import Image from "next/image"
 import Link from "next/link"
 import type { MouseEvent } from "react"
 import { PriceText } from "@/components/PriceText"
-import AutoplayVideo from "@/components/storefront/AutoplayVideo"
 import { useWishlist } from "@/context/WishlistContext"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
-import { getArtworkVideo } from "@/lib/storefront/visual-content"
 
 type Props = {
   artwork: any
@@ -23,10 +21,9 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
   const href = `/artwork/${slug}`
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const artist = pickEnglish(artwork.artist?.name, "YiiArt")
-  const images = getArtworkImageUrls(artwork, { width: 1400, height: 1750 })
-  const primary = images[0] || getArtworkImageUrl(artwork, { width: 1400, height: 1750 })
+  const images = getArtworkImageUrls(artwork, { width: 1400 })
+  const primary = images[0] || getArtworkImageUrl(artwork, { width: 1400 })
   const secondary = images[1]
-  const video = getArtworkVideo(artwork)
   const meta = [normalizeCategory(artwork.category), normalizeMedium(artwork.medium)].filter(Boolean).join(" / ")
   const saved = isInWishlist(id)
   const fromPrice = typeof artwork.price === "number"
@@ -48,36 +45,26 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
   return (
     <article className="group min-w-0">
       <Link href={href} className="block">
-        <div className="relative aspect-[4/5] overflow-hidden bg-[#f0eee8]">
+        <div className="relative aspect-[4/5] overflow-hidden bg-[#f3f1eb]">
           {primary ? (
             <>
-              {video?.url ? (
-                <AutoplayVideo
-                  className="absolute inset-0 h-full w-full object-cover"
-                  poster={video.posterUrl || primary}
-                  src={video.url}
+              <Image
+                src={primary}
+                alt={`${title}, hand-painted canvas art`}
+                fill
+                quality={90}
+                sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                className={`object-contain p-3 transition-opacity duration-300 ${secondary ? "group-hover:opacity-0" : ""}`}
+              />
+              {secondary && (
+                <Image
+                  src={secondary}
+                  alt={`${title}, room view`}
+                  fill
+                  quality={90}
+                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
+                  className="object-contain p-3 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                 />
-              ) : (
-                <>
-                  <Image
-                    src={primary}
-                    alt={`${title}, hand-painted canvas art`}
-                    fill
-                    quality={90}
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                    className={`object-cover transition-opacity duration-300 ${secondary ? "group-hover:opacity-0" : "transition-transform duration-500 group-hover:scale-[1.02]"}`}
-                  />
-                  {secondary && (
-                    <Image
-                      src={secondary}
-                      alt={`${title}, alternate view`}
-                      fill
-                      quality={90}
-                      sizes="(min-width: 1024px) 25vw, (min-width: 640px) 33vw, 50vw"
-                      className="object-cover opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    />
-                  )}
-                </>
               )}
             </>
           ) : (

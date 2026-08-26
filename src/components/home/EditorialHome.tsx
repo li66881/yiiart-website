@@ -7,7 +7,14 @@ import HomeProductCard from "@/components/home/HomeProductCard"
 import { PriceDisclosure } from "@/components/PriceText"
 import { normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
-import { buildEditorialHomeEdit, getArtworkVideo, resolveVisualImage } from "@/lib/storefront/visual-content"
+import {
+  buildEditorialHomeEdit,
+  getArtworkVideo,
+  pickArtworkSceneStill,
+  pickHomepageHeroArtworks,
+  pickHomepageStudioVideo,
+  resolveVisualImage,
+} from "@/lib/storefront/visual-content"
 import styles from "./editorial-home.module.css"
 
 type EditorialHomeProps = {
@@ -69,19 +76,21 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
   const withImages = artworks.filter(hasArtworkImage)
   const featuredArtworks = uniqueArtworks([...featured, ...withImages]).slice(0, 16)
   const newArrivals = newestCatalogArtworks.filter(hasArtworkImage).slice(0, 24)
-  const heroArtworks = uniqueArtworks([...newArrivals, ...featuredArtworks, ...withImages]).slice(0, 3)
+  const heroArtworks = pickHomepageHeroArtworks(uniqueArtworks([...newArrivals, ...featuredArtworks, ...withImages]), 3)
   const heroSlides: HeroSlide[] = heroArtworks.map((artwork, index) => {
-    const video = getArtworkVideo(artwork)
+    const scene = pickArtworkSceneStill(artwork)
     return {
-      imageUrl: getArtworkImageUrl(artwork, { width: 2560, height: 1600 }) || "",
+      imageUrl: scene?.url || getArtworkImageUrl(artwork, { width: 2560 }) || "",
       imageAlt: `${pickEnglish(artwork.title, "YiiArt painting")} styled for a modern interior`,
       shopHref: `/artwork/${artwork.slug?.current || artwork._id}`,
-      videoUrl: video?.url,
-      videoPosterUrl: video?.posterUrl,
       ...heroMessages[index % heroMessages.length],
     }
   })
-  const visualPool = withImages.map((artwork) => getArtworkImageUrl(artwork, { width: 1800, height: 1200 })).filter(Boolean)
+  const studioVideoArtwork = pickHomepageStudioVideo(uniqueArtworks([...featuredArtworks, ...newArrivals, ...withImages]))
+  const studioVideo = studioVideoArtwork ? getArtworkVideo(studioVideoArtwork) : null
+  const visualPool = withImages
+    .map((artwork) => pickArtworkSceneStill(artwork)?.url || getArtworkImageUrl(artwork, { width: 1800, height: 1200 }))
+    .filter(Boolean)
 
   return (
     <main className={styles.home}>
@@ -240,6 +249,27 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
           </div>
         </div>
       </section>
+
+      {studioVideo?.url ? (
+        <section className={styles.studioFilm} aria-label="Artwork on the wall">
+          <div className={styles.shell}>
+            <div className={styles.sectionHeading}>
+              <h2>On the wall</h2>
+              {studioVideoArtwork?.slug?.current ? (
+                <Link href={`/artwork/${studioVideoArtwork.slug.current}`} className={styles.textLink}>Shop this look</Link>
+              ) : null}
+            </div>
+            <div className={styles.studioFilmStage}>
+              <AutoplayVideo
+                className={styles.studioFilmVideo}
+                poster={studioVideo.posterUrl || pickArtworkSceneStill(studioVideoArtwork)?.url || undefined}
+                src={studioVideo.url}
+                aria-label={`${pickEnglish(studioVideoArtwork?.title, "YiiArt painting")} hanging in a room`}
+              />
+            </div>
+          </div>
+        </section>
+      ) : null}
     </main>
   )
 }
@@ -254,7 +284,6 @@ function uniqueArtworks(artworks: any[]) {
 
 function HomeSurfaceMedia({
   image,
-  artwork,
   alt,
   sizes,
 }: {
@@ -263,19 +292,7 @@ function HomeSurfaceMedia({
   alt: string
   sizes: string
 }) {
-  const video = artwork ? getArtworkVideo(artwork) : null
-  if (video?.url) {
-    return (
-      <AutoplayVideo
-        className="absolute inset-0 h-full w-full object-cover"
-        poster={video.posterUrl || image}
-        src={video.url}
-        aria-label={alt}
-      />
-    )
-  }
-
-  return <Image src={image} alt={alt} fill quality={90} sizes={sizes} />
+  return <Image src={image} alt={alt} fill quality={90} sizes={sizes} className="object-cover object-center" />
 }
 
 function artworkSearchText(artwork: any) {

@@ -63,6 +63,13 @@ export const productMediaRoleLabels: Record<ProductMediaRole, string> = {
   other: "Additional view",
 }
 
+export const roomSceneRoles = new Set<ProductMediaRole>([
+  "living_room",
+  "bedroom",
+  "dining_room",
+  "scale",
+])
+
 export function getApprovedProductMedia(artwork: { productMedia?: unknown } | null | undefined) {
   const inputs = Array.isArray(artwork?.productMedia) ? artwork.productMedia : []
 
@@ -86,8 +93,8 @@ export function getApprovedProductMedia(artwork: { productMedia?: unknown } | nu
         url,
         posterUrl: cleanMediaUrl(media.posterUrl) || undefined,
         alt: cleanString(media.alt) || productMediaRoleLabels[role],
-        width: positiveNumber(media.width) || undefined,
-        height: positiveNumber(media.height) || undefined,
+        width: positiveNumber(media.width) || dimensionsFromUrl(url)?.width,
+        height: positiveNumber(media.height) || dimensionsFromUrl(url)?.height,
         sortOrder: explicitOrder || roleOrder[role] + index / 100,
       }]
     })
@@ -107,23 +114,116 @@ export function buildProductGalleryMedia(
     role: index === 0 ? "front" : index === 1 ? "original" : "detail",
     url,
     alt: index === 0 ? fallbackAlt : `${fallbackAlt}, view ${index + 1}`,
+    width: dimensionsFromUrl(url)?.width,
+    height: dimensionsFromUrl(url)?.height,
   }))
 
-  if (structuredMedia.length === 0) return legacyImages
+  if (structuredMedia.length === 0) return orderProductGalleryMedia(legacyImages)
 
-  const hasStructuredImage = structuredMedia.some((item) => item.type === "image")
-  if (hasStructuredImage) return structuredMedia.slice(0, 10)
-
-  const videos = structuredMedia.filter((item) => item.type === "video")
-  if (legacyImages.length === 0) return videos.slice(0, 10)
-
-  return [legacyImages[0], ...videos, ...legacyImages.slice(1)].slice(0, 10)
+  const knownUrls = new Set(structuredMedia.map((item) => mediaUrlKey(item.url)))
+  const extraLegacy = legacyImages.filter((item) => !knownUrls.has(mediaUrlKey(item.url)))
+  return orderProductGalleryMedia([...structuredMedia, ...extraLegacy]).slice(0, 10)
 }
 
 export function getApprovedProductImageUrls(artwork: { productMedia?: unknown } | null | undefined) {
-  return getApprovedProductMedia(artwork)
+  return orderProductGalleryMedia(getApprovedProductMedia(artwork))
     .filter((media) => media.type === "image")
     .map((media) => media.url)
+}
+
+export function isRoomSceneMedia(item: ProductMediaItem) {
+  if (item.type !== "image") return false
+  if (roomSceneRoles.has(item.role)) return true
+  return looksLikeSceneCopy(`${item.url} ${item.alt}`)
+}
+
+export function getHeroSceneStill(media: ProductMediaItem[]) {
+  const images = media.filter((item) => item.type === "image")
+  return images.find((item) => isRoomSceneMedia(item))
+    || images.find((item) => item.role !== "front" && inferAspect(item) === "landscape")
+    || images[1]
+    || images[0]
+    || null
+}
+
+export function orderProductGalleryMedia(items: ProductMediaItem[]) {
+  const images = items.filter((item) => item.type === "image")
+  const videos = items.filter((item) => item.type === "video")
+  if (images.length === 0) return videos.slice(0, 10)
+
+  const lead = images.find((item) => item.role === "front") || images[0]
+  const remaining = images.filter((item) => mediaUrlKey(item.url) !== mediaUrlKey(lead.url))
+  const namedScenes = remaining.filter((item) => isRoomSceneMedia(item))
+  const namedSceneUrls = new Set(namedScenes.map((item) => mediaUrlKey(item.url)))
+  const landscapeScenes = remaining
+    .filter((item) => !namedSceneUrls.has(mediaUrlKey(item.url)) && inferAspect(item) === "landscape")
+    .slice()
+    .reverse()
+  const landscapeUrls = new Set(landscapeScenes.map((item) => mediaUrlKey(item.url)))
+  const otherImages = remaining.filter((item) => {
+    const key = mediaUrlKey(item.url)
+    return !namedSceneUrls.has(key) && !landscapeUrls.has(key)
+  })
+  const scenes = [...namedScenes, ...landscapeScenes]
+  const usedUrls = new Set([mediaUrlKey(lead.url), ...scenes.map((item) => mediaUrlKey(item.url))])
+
+  const posterScenes: ProductMediaItem[] = []
+  for (const video of videos) {
+    if (scenes.length + posterScenes.length >= 2) break
+    if (scenes.length > 0) break
+    const posterUrl = video.posterUrl
+    if (!posterUrl || usedUrls.has(mediaUrlKey(posterUrl))) continue
+    const poster: ProductMediaItem = {
+      id: `${video.id}-poster`,
+      type: "image",
+      role: "living_room",
+      url: posterUrl,
+      alt: video.alt || "Room view",
+      width: dimensionsFromUrl(posterUrl)?.width,
+      height: dimensionsFromUrl(posterUrl)?.height,
+    }
+    if (inferAspect(poster) === "portrait" && scenes.length > 0) continue
+    posterScenes.push(poster)
+    usedUrls.add(mediaUrlKey(posterUrl))
+  }
+
+  return uniqueMedia([lead, ...scenes, ...posterScenes, ...otherImages, ...videos]).slice(0, 10)
+}
+
+function uniqueMedia(items: ProductMediaItem[]) {
+  const seen = new Set<string>()
+  return items.filter((item) => {
+    const key = `${item.type}:${mediaUrlKey(item.url)}`
+    if (seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+function mediaUrlKey(url: string) {
+  return url.split("?")[0]
+}
+
+function looksLikeSceneCopy(value: string) {
+  return /room|scene|hang|interior|living|bedroom|dining|lifestyle|on-the-wall|wall-mock/i.test(value)
+}
+
+function inferAspect(item: Pick<ProductMediaItem, "url" | "width" | "height">) {
+  const width = item.width || dimensionsFromUrl(item.url)?.width || 0
+  const height = item.height || dimensionsFromUrl(item.url)?.height || 0
+  if (!width || !height) return "unknown"
+  if (width / height >= 1.12) return "landscape"
+  if (height / width >= 1.12) return "portrait"
+  return "square"
+}
+
+function dimensionsFromUrl(url: string) {
+  const match = url.match(/-(\d+)x(\d+)(?:\.\w+)?(?:\?|$)/)
+  if (!match) return null
+  const width = Number(match[1])
+  const height = Number(match[2])
+  if (!width || !height) return null
+  return { width, height }
 }
 
 function normalizeMediaType(value?: string, contentType?: string): ProductMediaType {

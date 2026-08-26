@@ -56,12 +56,14 @@ test("keeps listing photos when only a hang-on-wall video is approved", () => {
     "Dawn Peak painting",
   )
 
-  assert.equal(media.length, 3)
+  assert.equal(media.length, 4)
   assert.equal(media[0].type, "image")
   assert.equal(media[0].url, "https://assets.yiiart.com/main.jpg")
-  assert.equal(media[1].type, "video")
-  assert.equal(media[1].url, "https://assets.yiiart.com/hang.mp4")
+  assert.equal(media[1].url, "https://assets.yiiart.com/poster.jpg")
+  assert.equal(media[1].role, "living_room")
   assert.equal(media[2].url, "https://assets.yiiart.com/detail.jpg")
+  assert.equal(media[3].type, "video")
+  assert.equal(media[3].url, "https://assets.yiiart.com/hang.mp4")
 })
 
 test("keeps a dining-room scene distinct from a generic additional view", () => {
@@ -76,4 +78,23 @@ test("keeps a dining-room scene distinct from a generic additional view", () => 
   })
 
   assert.equal(media[0].role, "dining_room")
+})
+
+test("puts room scenes after the studio photo and keeps video last", () => {
+  const media = buildProductGalleryMedia(
+    {
+      productMedia: [
+        { _key: "front", mediaType: "image", role: "front", url: "https://cdn.sanity.io/images/zlh03v8i/production/front-1024x1536.jpg", approvedForStorefront: true },
+        { _key: "video", mediaType: "video", role: "process", url: "https://assets.yiiart.com/hang.mp4", posterUrl: "https://assets.yiiart.com/poster.jpg", approvedForStorefront: true },
+        { _key: "scene-a", mediaType: "image", role: "detail", url: "https://cdn.sanity.io/images/zlh03v8i/production/scene-a-1536x1024.jpg", approvedForStorefront: true },
+        { _key: "scene-b", mediaType: "image", role: "detail", url: "https://cdn.sanity.io/images/zlh03v8i/production/scene-b-1536x1024.jpg", approvedForStorefront: true },
+      ],
+    },
+    [],
+    "Dawn Peak painting",
+  )
+
+  assert.deepEqual(media.map((item) => item.id), ["front", "scene-a", "scene-b", "video"])
+  assert.equal(media[1].type, "image")
+  assert.equal(media[3].type, "video")
 })

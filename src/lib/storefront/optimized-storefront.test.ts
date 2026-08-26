@@ -192,7 +192,7 @@ test("optimized storefront restores product detail presentation", async () => {
 
   assert.match(productGallery, /aria-label="Artwork gallery"/)
   assert.match(productGallery, /aria-label="Open image viewer"/)
-  assert.match(productGallery, /dining_room/)
+  assert.match(productGallery, /isRoomSceneMedia/)
   assert.match(productGallery, /event\.key === "Tab"/)
   assert.match(productGallery, /previouslyFocused\.focus/)
   assert.match(purchasePanel, /optimized-purchase-panel/)

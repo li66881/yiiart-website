@@ -37,7 +37,7 @@ test("builds featured and new-arrival edits from explicit catalog data", () => {
   assert.deepEqual(edit.artistCollection.map((item) => item.id), ["artist-1"])
 })
 
-test("ranks artworks with hang-on-wall video ahead of still images", () => {
+test("does not promote hang videos ahead of still images on the homepage edit", () => {
   const edit = buildEditorialHomeEdit([
     { id: "still", collectionType: "new_collection", featured: true, _createdAt: "2026-08-12T00:00:00.000Z" },
     {
@@ -54,8 +54,8 @@ test("ranks artworks with hang-on-wall video ahead of still images", () => {
     },
   ])
 
-  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["video", "still"])
-  assert.deepEqual(edit.featured.map((item) => item.id), ["video", "still"])
+  assert.deepEqual(edit.newArrivals.map((item) => item.id), ["still", "video"])
+  assert.deepEqual(edit.featured.map((item) => item.id), ["still", "video"])
 })
 
 test("inline videos play only when visible and motion is allowed", async () => {

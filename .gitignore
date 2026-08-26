@@ -36,3 +36,6 @@ Thumbs.db
 .worktrees/
 
 .vercel
+
+# Local social/video scratch files
+tmp-social/
