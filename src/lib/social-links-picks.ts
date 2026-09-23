@@ -1,6 +1,22 @@
+export type FeaturedSocialArtwork = {
+  _id?: string
+  title?: { en?: string; zh?: string } | string | null
+  slug?: { current?: string } | string | null
+  availability?: string | null
+  standardSizes?: Array<{ priceCny?: number; price?: number } | null> | null
+  price?: number | null
+  dimensions?: string | null
+  widthCm?: number | null
+  heightCm?: number | null
+}
+
 export type SocialLinkPick = {
   slug: string
   pairingNote: string
+}
+
+export function featuredArtworkSlug(artwork: Pick<FeaturedSocialArtwork, "slug">) {
+  return typeof artwork.slug === "string" ? artwork.slug : artwork.slug?.current || ""
 }
 
 export const FEATURED_SOCIAL_LINK_PICKS: SocialLinkPick[] = [
@@ -26,12 +42,7 @@ export const FEATURED_SOCIAL_LINK_PICKS: SocialLinkPick[] = [
   },
 ]
 
-export function orderSocialLinkPicks<
-  T extends {
-    slug?: { current?: string } | string | null
-    availability?: string | null
-  },
->(
+export function orderSocialLinkPicks<T extends FeaturedSocialArtwork>(
   artworks: T[],
   picks = FEATURED_SOCIAL_LINK_PICKS,
 ) {

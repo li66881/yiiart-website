@@ -7,7 +7,12 @@ import { PriceText } from "@/components/PriceText"
 import { client } from "@/lib/sanity"
 import { formatArtworkDimensions, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
-import { FEATURED_SOCIAL_LINK_PICKS, orderSocialLinkPicks } from "@/lib/social-links-picks"
+import {
+  FEATURED_SOCIAL_LINK_PICKS,
+  featuredArtworkSlug,
+  orderSocialLinkPicks,
+  type FeaturedSocialArtwork,
+} from "@/lib/social-links-picks"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { buildSeoMetadata } from "@/lib/seo"
 import { campaignSearch } from "@/lib/social"
@@ -24,7 +29,7 @@ export const metadata = buildSeoMetadata({
 async function getFeaturedArtworks() {
   try {
     const slugs = FEATURED_SOCIAL_LINK_PICKS.map((pick) => pick.slug)
-    const artworks = await client.fetch(
+    const artworks = await client.fetch<FeaturedSocialArtwork[]>(
       `*[_type == "artwork" && slug.current in $slugs && ${PUBLIC_ARTWORK_GROQ_FILTER}]{
         _id,
         title,
@@ -103,12 +108,12 @@ export default async function LinksPage() {
                 const image = getArtworkImageUrl(artwork, { width: 700 })
                 const fromPrice = Array.isArray(artwork.standardSizes)
                   ? artwork.standardSizes
-                    .map((size: { priceCny?: number; price?: number }) => Number(size.priceCny || size.price))
-                    .find((price: number) => price > 0)
+                    .map((size) => Number(size?.priceCny || size?.price))
+                    .find((price) => price > 0)
                   : Number(artwork.price || 0)
 
                 return (
-                  <Link key={artwork._id} href={`/artwork/${artwork.slug.current}${bio}`} className="group">
+                  <Link key={artwork._id} href={`/artwork/${featuredArtworkSlug(artwork)}${bio}`} className="group">
                     <div className="relative mb-4 aspect-[4/5] overflow-hidden bg-gray-100">
                       {image ? (
                         <Image
