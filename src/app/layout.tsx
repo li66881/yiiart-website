@@ -11,6 +11,7 @@ import { CurrencyProvider } from '@/context/CurrencyContext'
 import ChatWidget from '@/components/ChatWidget'
 import MiniCartDrawer from '@/components/MiniCartDrawer'
 import CookieConsent from '@/components/CookieConsent'
+import AttributionCapture from '@/components/AttributionCapture'
 import MarketingPixels from '@/components/MarketingPixels'
 import NavigationRecovery from '@/components/NavigationRecovery'
 import VercelInsights from '@/components/VercelInsights'
@@ -165,6 +166,7 @@ export default async function RootLayout({
                     <MiniCartDrawer />
                     <ChatWidget />
                     <CookieConsent />
+                    <AttributionCapture />
                   </CartProvider>
                 </WishlistProvider>
               </CurrencyProvider>

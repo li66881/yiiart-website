@@ -42,6 +42,26 @@ export default defineType({
     }),
     defineField({ name: "submittedAt", title: "Submitted at", type: "datetime" }),
     defineField({ name: "source", title: "Source", type: "string" }),
+    defineField({
+      name: "intent",
+      title: "Enquiry intent",
+      type: "string",
+      options: {
+        list: [
+          { title: "Size advice", value: "size-advice" },
+          { title: "Custom painting", value: "custom" },
+          { title: "Project enquiry", value: "project" },
+        ],
+      },
+    }),
+    defineField({ name: "artworkSlug", title: "Artwork slug", type: "string" }),
+    defineField({ name: "artworkTitle", title: "Artwork or project", type: "string" }),
+    defineField({ name: "sourcePage", title: "Source page", type: "string" }),
+    defineField({ name: "landingPath", title: "Landing path", type: "string" }),
+    defineField({ name: "utmSource", title: "UTM source", type: "string" }),
+    defineField({ name: "utmMedium", title: "UTM medium", type: "string" }),
+    defineField({ name: "utmCampaign", title: "UTM campaign", type: "string" }),
+    defineField({ name: "utmContent", title: "UTM content", type: "string" }),
   ],
   preview: {
     select: { title: "name", subtitle: "email" },

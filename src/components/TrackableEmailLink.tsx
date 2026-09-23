@@ -20,7 +20,7 @@ export default function TrackableEmailLink({
     <a
       href={`mailto:${email}`}
       className={className}
-      onClick={() => trackMarketingEvent("Lead", { lead_type: leadType })}
+      onClick={() => trackMarketingEvent("Contact", { location: leadType })}
     >
       {children || email}
     </a>

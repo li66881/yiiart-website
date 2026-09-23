@@ -2,6 +2,11 @@ import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import CustomPaintingRequestForm from "@/components/CustomPaintingRequestForm"
+import TrackableWhatsAppLink from "@/components/TrackableWhatsAppLink"
+import { parseEnquiryIntent } from "@/lib/enquiry-intent"
+import { pickEnglish } from "@/lib/artwork-display"
+import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { client } from "@/lib/sanity"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
 
@@ -78,10 +83,33 @@ const faqs = [
   },
 ]
 
-export default function CustomPaintingPage() {
+type Props = {
+  searchParams: Promise<{ intent?: string; artwork?: string }>
+}
+
+export default async function CustomPaintingPage({ searchParams }: Props) {
+  const params = await searchParams
+  const intent = parseEnquiryIntent(params.intent)
+  const artworkSlug = params.artwork?.trim() || ""
+  const artworkTitle = artworkSlug ? await getArtworkTitle(artworkSlug) : ""
+  const compact = intent === "size-advice"
   const whatsappUrl = getWhatsAppUrl(
-    "Hello YiiArt, I would like to start a custom painting request. I can share my room size, photos, and preferred colors."
+    compact
+      ? `Hello YiiArt, I would like size advice${artworkTitle ? ` for ${artworkTitle}` : ""}. I can share a room photo and wall width.`
+      : intent === "project"
+        ? "Hello YiiArt, I would like to discuss art for a design or hospitality project."
+        : "Hello YiiArt, I would like to start a custom painting request. I can share my room size, photos, and preferred colors.",
   )
+  const heading = compact
+    ? "Need help choosing the right size?"
+    : intent === "project"
+      ? "Project art enquiries"
+      : "Custom Painting Made for Your Space"
+  const intro = compact
+    ? "Send a room photo and your wall width for a size recommendation. Email and the artwork you are considering are enough for a first reply."
+    : intent === "project"
+      ? "Share the space, programme, or collection you are planning. YiiArt can advise on size, palette, and made-to-order options."
+      : "Choose your size, color palette, and style. Our studio creates a handmade artwork tailored to your room."
 
   return (
     <div className="flex min-h-screen flex-col bg-[#fbfaf6] text-stone-950">
@@ -90,18 +118,18 @@ export default function CustomPaintingPage() {
         <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Custom Painting Service</p>
-              <h1 className="text-5xl font-light leading-tight md:text-6xl">Custom Painting Made for Your Space</h1>
+              <p className="mb-3 text-sm uppercase text-stone-500">{compact ? "Size advice" : intent === "project" ? "Project enquiry" : "Custom Painting Service"}</p>
+              <h1 className="text-5xl font-light leading-tight md:text-6xl">{heading}</h1>
             </div>
             <div>
               <p className="max-w-3xl text-base leading-8 text-stone-600">
-                Choose your size, color palette, and style. Our studio creates a handmade artwork tailored to your room.
+                {intro}
               </p>
               <a
                 href="#custom-request"
                 className="mt-8 inline-flex bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800"
               >
-                Start Custom Request
+                {compact ? "Request size advice" : intent === "project" ? "Start project enquiry" : "Start Custom Request"}
               </a>
             </div>
           </div>
@@ -143,21 +171,28 @@ export default function CustomPaintingPage() {
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Request Form</p>
-              <h2 className="text-4xl font-light leading-tight">Tell us what your room needs.</h2>
+              <h2 className="text-4xl font-light leading-tight">{compact ? "A short first note is enough." : "Tell us what your room needs."}</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">
-                Share your wall size, room photos, and the mood you want. YiiArt replies as soon as practical with sizing,
-                palette, and pricing guidance, and confirms the full scope with you before any payment is taken.
+                {compact
+                  ? "Email, the artwork you saw, and optional wall width or a room photo. Budget, destination, and framing can wait until a quote."
+                  : "Share your wall size, room photos, and the mood you want. YiiArt replies as soon as practical with sizing, palette, and pricing guidance, and confirms the full scope with you before any payment is taken."}
               </p>
-              <a
+              <TrackableWhatsAppLink
                 href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                location="custom_painting_page"
+                contentName={artworkSlug || intent}
                 className="mt-6 inline-flex border border-stone-300 px-5 py-3 text-sm transition hover:border-black"
               >
                 Open WhatsApp instead
-              </a>
+              </TrackableWhatsAppLink>
             </div>
-            <CustomPaintingRequestForm contactEmail={contactEmail} whatsappNumber={whatsappNumber} />
+            <CustomPaintingRequestForm
+              contactEmail={contactEmail}
+              whatsappNumber={whatsappNumber}
+              intent={intent}
+              artworkSlug={artworkSlug}
+              artworkTitle={artworkTitle}
+            />
           </div>
         </section>
 
@@ -217,4 +252,16 @@ function InfoBlock({ title, text }: { title: string; text: string }) {
       <p className="mt-3 text-sm leading-6 text-stone-600">{text}</p>
     </div>
   )
+}
+
+async function getArtworkTitle(slug: string) {
+  try {
+    const artwork = await client.fetch(
+      `*[_type == "artwork" && slug.current == $slug && ${PUBLIC_ARTWORK_GROQ_FILTER}][0]{ title }`,
+      { slug },
+    )
+    return pickEnglish(artwork?.title, "")
+  } catch {
+    return ""
+  }
 }

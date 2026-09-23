@@ -199,19 +199,31 @@ export default function ProductPurchasePanel({
             Add to Cart — <PriceText amountCny={selection.priceCny * quantity} />
           </button>
         ) : (
-          <a className={styles.primaryAction} href={invoiceUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            className={styles.primaryAction}
+            href={invoiceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackMarketingEvent("WhatsAppClick", { location: "pdp_invoice", content_name: product.slug })}
+          >
             Request invoice
           </a>
         )}
       </div>
 
       <div className={styles.secondaryActions}>
-        <Link href={`/custom-painting?artwork=${encodeURIComponent(product.slug)}`}>
+        <Link
+          href={`/custom-painting?intent=size-advice&artwork=${encodeURIComponent(product.slug)}`}
+          onClick={() => trackMarketingEvent("Contact", { location: "pdp_size_advice", content_name: product.slug })}
+        >
+          Need help choosing the right size?
+        </Link>
+        <Link
+          href={`/custom-painting?intent=custom&artwork=${encodeURIComponent(product.slug)}`}
+          onClick={() => trackMarketingEvent("Contact", { location: "pdp_custom_request", content_name: product.slug })}
+        >
           Request custom size or color
         </Link>
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
-          Ask an art advisor
-        </a>
       </div>
 
       <div className={styles.purchaseTrust} aria-label="Purchase support">
@@ -222,9 +234,22 @@ export default function ProductPurchasePanel({
       </div>
 
       <div className={styles.artAdvisory}>
-        <strong>Complimentary art advisory</strong>
-        <p>Send a room photo and wall measurement. The studio will help confirm scale before you order.</p>
-        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
+        <strong>Need help choosing the right size?</strong>
+        <p>Send a room photo and your wall width for a size recommendation.</p>
+        <Link
+          href={`/custom-painting?intent=size-advice&artwork=${encodeURIComponent(product.slug)}`}
+          onClick={() => trackMarketingEvent("Contact", { location: "pdp_size_advice_box", content_name: product.slug })}
+        >
+          Request size advice
+        </Link>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackMarketingEvent("WhatsAppClick", { location: "pdp_advisory", content_name: product.slug })}
+        >
+          Ask on WhatsApp
+        </a>
       </div>
 
       <div className={styles.purchaseDetails}>

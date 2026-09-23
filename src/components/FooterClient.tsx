@@ -7,6 +7,7 @@ import NewsletterSignup from "@/components/NewsletterSignup"
 import PaymentBadges from "@/components/PaymentBadges"
 import SocialLinks from "@/components/SocialLinks"
 import TrackableEmailLink from "@/components/TrackableEmailLink"
+import TrackableWhatsAppLink from "@/components/TrackableWhatsAppLink"
 import { siteAssetUrl } from "@/lib/assets"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import type { CatalogNavigationState } from "@/lib/storefront/catalog-navigation"
@@ -33,6 +34,7 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
     shopLinks,
     [
       { title: t("footer.contactUs"), href: "/contact" },
+      { title: "Get size advice", href: "/custom-painting?intent=size-advice" },
       { title: t("footer.reviews"), href: "/reviews" },
       { title: t("footer.artInRealHomes"), href: "/art-in-real-homes" },
       { title: "Wall Art Guide", href: "/guides/home-wall-art-pairing-guide" },
@@ -63,14 +65,13 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
               <TrackableEmailLink email={contactEmail} className="block text-sm text-stone-600 transition-colors hover:text-black" leadType="footer_email">
                 {contactEmail}
               </TrackableEmailLink>
-              <a
+              <TrackableWhatsAppLink
                 href={getWhatsAppUrl("Hello YiiArt, I found you from the website footer.")}
-                target="_blank"
-                rel="noopener noreferrer"
+                location="footer"
                 className="block text-sm text-stone-600 transition-colors hover:text-black"
               >
                 WhatsApp +{whatsappNumber}
-              </a>
+              </TrackableWhatsAppLink>
             </div>
           </div>
 

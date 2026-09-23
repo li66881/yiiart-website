@@ -1,10 +1,16 @@
 "use client"
 
-import { ChangeEvent, FormEvent, useMemo, useRef, useState } from "react"
+import { ChangeEvent, FormEvent, useEffect, useMemo, useRef, useState } from "react"
+import { ATTRIBUTION_STORAGE_KEY, parseEnquiryAttribution, type EnquiryAttribution } from "@/lib/attribution"
+import { parseEnquiryIntent, type EnquiryIntent } from "@/lib/enquiry-intent"
+import { trackMarketingEvent } from "@/lib/marketing-events"
 
 type CustomPaintingRequestFormProps = {
   contactEmail: string
   whatsappNumber: string
+  intent?: string
+  artworkSlug?: string
+  artworkTitle?: string
 }
 
 const roomTypes = ["Living room", "Bedroom", "Dining room", "Office", "Entryway", "Hospitality space"]
@@ -15,15 +21,37 @@ const MAX_PHOTO_BYTES = 10 * 1024 * 1024
 export default function CustomPaintingRequestForm({
   contactEmail,
   whatsappNumber,
+  intent: intentProp,
+  artworkSlug = "",
+  artworkTitle = "",
 }: CustomPaintingRequestFormProps) {
+  const intent = parseEnquiryIntent(intentProp)
   const [status, setStatus] = useState("")
   const [error, setError] = useState("")
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [photoNames, setPhotoNames] = useState<string[]>([])
+  const [attribution, setAttribution] = useState<EnquiryAttribution | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
-
   const whatsappBaseUrl = useMemo(() => `https://wa.me/${whatsappNumber}`, [whatsappNumber])
+  const compact = intent === "size-advice"
+
+  useEffect(() => {
+    try {
+      const storedRaw = window.sessionStorage.getItem(ATTRIBUTION_STORAGE_KEY)
+      const stored = storedRaw ? JSON.parse(storedRaw) : null
+      setAttribution(parseEnquiryAttribution({
+        currentPath: `${window.location.pathname}${window.location.search}`,
+        search: window.location.search,
+        stored,
+      }))
+    } catch {
+      setAttribution(parseEnquiryAttribution({
+        currentPath: window.location.pathname,
+        search: window.location.search,
+      }))
+    }
+  }, [])
 
   const handlePhotoChange = (event: ChangeEvent<HTMLInputElement>) => {
     setError("")
@@ -65,14 +93,20 @@ export default function CustomPaintingRequestForm({
 
       if (response.ok) {
         setSubmitted(true)
-        setStatus("Request received. YiiArt replies as soon as practical with sizing, palette, and pricing guidance.")
+        setStatus(compact
+          ? "Request received. YiiArt will reply with a size recommendation when the studio has reviewed your details."
+          : "Request received. YiiArt replies as soon as practical with sizing, palette, and pricing guidance.")
+        trackMarketingEvent("Lead", {
+          lead_type: "form_submit",
+          intent,
+          content_name: artworkSlug || artworkTitle || undefined,
+        })
         formElement.reset()
         setPhotoNames([])
         return
       }
 
       if (response.status === 503) {
-        // Online submission not configured yet - fall back to the email app flow.
         openMailFallback(form)
         return
       }
@@ -87,45 +121,87 @@ export default function CustomPaintingRequestForm({
   }
 
   const openMailFallback = (form: FormData) => {
-    const message = buildRequestMessage(form)
-    const subject = encodeURIComponent("YiiArt custom painting request")
+    const message = buildRequestMessage(form, intent)
+    const subject = encodeURIComponent(intent === "project" ? "YiiArt project art enquiry" : compact ? "YiiArt size advice request" : "YiiArt custom painting request")
     const body = encodeURIComponent(message)
 
-    setStatus("Opening your email app with the custom request details. Please attach your room photos in the email.")
+    setStatus("Opening your email app with the request details. Please attach your room photos in the email.")
     window.location.href = `mailto:${contactEmail}?subject=${subject}&body=${body}`
   }
 
   const handleWhatsApp = () => {
     const form = document.getElementById("custom-painting-form") as HTMLFormElement | null
     const formData = form ? new FormData(form) : new FormData()
-    const message = encodeURIComponent(buildRequestMessage(formData))
+    const message = encodeURIComponent(buildRequestMessage(formData, intent))
+    trackMarketingEvent("WhatsAppClick", {
+      location: "custom_request_form",
+      intent,
+      content_name: artworkSlug || undefined,
+    })
     window.open(`${whatsappBaseUrl}?text=${message}`, "_blank", "noopener,noreferrer")
   }
 
   return (
     <form id="custom-painting-form" onSubmit={handleSubmit} className="border border-stone-200 bg-[#fbfaf6] p-6 md:p-8">
+      <input type="hidden" name="intent" value={intent} />
+      <input type="hidden" name="artworkSlug" value={artworkSlug} />
+      <input type="hidden" name="sourcePage" value={attribution?.sourcePage || ""} />
+      <input type="hidden" name="landingPath" value={attribution?.landingPath || ""} />
+      <input type="hidden" name="utmSource" value={attribution?.utmSource || ""} />
+      <input type="hidden" name="utmMedium" value={attribution?.utmMedium || ""} />
+      <input type="hidden" name="utmCampaign" value={attribution?.utmCampaign || ""} />
+      <input type="hidden" name="utmContent" value={attribution?.utmContent || ""} />
+
       <div className="grid gap-5 md:grid-cols-2">
-        <TextField name="name" label="Name" required />
+        {!compact && <TextField name="name" label="Name" />}
         <TextField name="email" label="Email" type="email" required />
-        <TextField name="artworkSize" label="Artwork size" placeholder="e.g. 120 x 180 cm" />
-        <TextField name="preferredColors" label="Preferred colors" placeholder="Warm neutral, black and white..." />
-        <SelectField name="roomType" label="Room type" options={roomTypes} />
-        <SelectField name="budget" label="Budget" options={budgets} />
+        <TextField
+          name="artworkTitle"
+          label="Artwork or project"
+          defaultValue={artworkTitle}
+          placeholder={intent === "project" ? "Project, room, or collection" : "Artwork you saw"}
+        />
+        <TextField
+          name="artworkSize"
+          label={compact ? "Wall width (optional)" : "Artwork size"}
+          placeholder={compact ? "e.g. 180 cm wall" : "e.g. 120 x 180 cm"}
+        />
+        {!compact && (
+          <>
+            <TextField name="preferredColors" label="Preferred colors" placeholder="Warm neutral, black and white..." />
+            <SelectField name="roomType" label="Room type" options={roomTypes} />
+            <SelectField name="budget" label="Budget (optional)" options={budgets} />
+          </>
+        )}
       </div>
 
-      <label className="mt-5 block">
-        <span className="text-sm font-medium">Message</span>
-        <textarea
-          name="message"
-          rows={6}
-          className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
-          placeholder="Tell us about your wall, room mood, style direction, deadline, shipping country, or reference ideas."
-        />
-      </label>
+      {!compact && (
+        <label className="mt-5 block">
+          <span className="text-sm font-medium">Message</span>
+          <textarea
+            name="message"
+            rows={6}
+            className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
+            placeholder="Tell us about your wall, room mood, style direction, deadline, shipping country, or reference ideas. Budget and framing can wait until the quote."
+          />
+        </label>
+      )}
+
+      {compact && (
+        <label className="mt-5 block">
+          <span className="text-sm font-medium">Anything else? (optional)</span>
+          <textarea
+            name="message"
+            rows={3}
+            className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
+            placeholder="Room mood, furniture, or which size you are considering."
+          />
+        </label>
+      )}
 
       <label className="mt-5 block">
-        <span className="text-sm font-medium">Room or reference photos</span>
-        <span className="mt-1 block text-xs text-stone-500">Up to {MAX_PHOTOS} photos, 10MB each. Wall photos help us confirm size and palette.</span>
+        <span className="text-sm font-medium">Room photo (optional)</span>
+        <span className="mt-1 block text-xs text-stone-500">Up to {MAX_PHOTOS} photos, 10MB each. A wall photo with width noted is enough for a first size recommendation.</span>
         <input
           ref={fileInputRef}
           name="photos"
@@ -146,7 +222,7 @@ export default function CustomPaintingRequestForm({
           disabled={submitting || submitted}
           className="bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
         >
-          {submitting ? "Sending..." : submitted ? "Request sent" : "Send Request"}
+          {submitting ? "Sending..." : submitted ? "Request sent" : compact ? "Request size advice" : "Send Request"}
         </button>
         <button
           type="button"
@@ -168,12 +244,14 @@ function TextField({
   type = "text",
   required = false,
   placeholder,
+  defaultValue,
 }: {
   name: string
   label: string
   type?: string
   required?: boolean
   placeholder?: string
+  defaultValue?: string
 }) {
   return (
     <label className="block">
@@ -182,6 +260,7 @@ function TextField({
         name={name}
         type={type}
         required={required}
+        defaultValue={defaultValue}
         placeholder={placeholder}
         className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
       />
@@ -206,13 +285,14 @@ function SelectField({ name, label, options }: { name: string; label: string; op
   )
 }
 
-function buildRequestMessage(form: FormData) {
+function buildRequestMessage(form: FormData, intent: EnquiryIntent) {
   return [
-    "Custom Painting Request",
+    intent === "size-advice" ? "Size advice request" : intent === "project" ? "Project art enquiry" : "Custom painting request",
     "",
     `Name: ${field(form, "name")}`,
     `Email: ${field(form, "email")}`,
-    `Artwork size: ${field(form, "artworkSize")}`,
+    `Artwork: ${field(form, "artworkTitle")}`,
+    `Size or wall width: ${field(form, "artworkSize")}`,
     `Preferred colors: ${field(form, "preferredColors")}`,
     `Room type: ${field(form, "roomType")}`,
     `Budget: ${field(form, "budget")}`,
@@ -220,7 +300,7 @@ function buildRequestMessage(form: FormData) {
     "Message:",
     field(form, "message"),
     "",
-    "Note: I will share room photos or reference images separately.",
+    "Note: I will share room photos or reference images separately if needed.",
   ].join("\n")
 }
 

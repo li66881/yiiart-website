@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { createClient } from "@sanity/client"
+import { sanitizeEnquiryAttribution } from "@/lib/attribution"
+import { enquirySourceLabel, parseEnquiryIntent } from "@/lib/enquiry-intent"
 import { isR2Configured, uploadR2Object } from "@/lib/r2"
 
 export const runtime = "nodejs"
@@ -23,10 +25,19 @@ export async function POST(request: NextRequest) {
   try {
     const form = await request.formData()
 
-    const name = stringField(form, "name")
+    const intent = parseEnquiryIntent(stringField(form, "intent"))
     const email = stringField(form, "email")
+    const submittedName = stringField(form, "name")
+    const name = submittedName || (intent === "size-advice" ? "Size advice enquiry" : "")
+    const attribution = sanitizeEnquiryAttribution(form)
+    const artworkSlug = stringField(form, "artworkSlug").slice(0, 120)
+    const artworkTitle = stringField(form, "artworkTitle").slice(0, 160)
 
-    if (!name || !isValidEmail(email)) {
+    if (!isValidEmail(email)) {
+      return NextResponse.json({ error: "Please provide a valid email." }, { status: 400 })
+    }
+
+    if (intent !== "size-advice" && !submittedName) {
       return NextResponse.json({ error: "Please provide your name and a valid email." }, { status: 400 })
     }
 
@@ -79,11 +90,20 @@ export async function POST(request: NextRequest) {
       roomType: stringField(form, "roomType"),
       budget: stringField(form, "budget"),
       message: stringField(form, "message"),
+      intent,
+      artworkSlug: artworkSlug || undefined,
+      artworkTitle: artworkTitle || undefined,
       photos: photos.length > 0 ? photos : undefined,
       cloudflarePhotos: cloudflarePhotos.length > 0 ? cloudflarePhotos : undefined,
       status: "new",
       submittedAt: new Date().toISOString(),
-      source: "custom-painting-page",
+      source: enquirySourceLabel(intent, attribution.sourcePage),
+      sourcePage: attribution.sourcePage || undefined,
+      landingPath: attribution.landingPath || undefined,
+      utmSource: attribution.utmSource || undefined,
+      utmMedium: attribution.utmMedium || undefined,
+      utmCampaign: attribution.utmCampaign || undefined,
+      utmContent: attribution.utmContent || undefined,
     })
 
     return NextResponse.json({ success: true })

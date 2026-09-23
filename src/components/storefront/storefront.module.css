@@ -874,6 +874,10 @@
   text-underline-offset: 4px;
 }
 
+.artAdvisory a + a {
+  margin-left: 1rem;
+}
+
 .purchaseDetails {
   border-bottom: 1px solid #ded8ce;
 }

@@ -19,8 +19,8 @@ export default function ChatWidget() {
   const mobileVisibility = showOnMobile ? "flex" : "hidden md:flex"
   const mobilePanelVisibility = showOnMobile ? "block" : "hidden md:block"
 
-  const trackWhatsAppLead = (leadType: string) => {
-    trackMarketingEvent("Lead", { lead_type: leadType, channel: "whatsapp" })
+  const trackWhatsAppClick = (location: string) => {
+    trackMarketingEvent("WhatsAppClick", { location, channel: "whatsapp" })
   }
 
   if (!isOpen) {
@@ -63,7 +63,7 @@ export default function ChatWidget() {
           href={defaultUrl}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => trackWhatsAppLead("whatsapp_main")}
+          onClick={() => trackWhatsAppClick("chat_widget_main")}
           className="block w-full bg-black px-4 py-3 text-center text-sm text-white transition hover:bg-stone-800"
         >
           {t("chat.openWhatsApp")}
@@ -76,7 +76,7 @@ export default function ChatWidget() {
               href={getWhatsAppUrl(t(`chat.quick.${key}.message`))}
               target="_blank"
               rel="noopener noreferrer"
-              onClick={() => trackWhatsAppLead("whatsapp_quick_reply")}
+              onClick={() => trackWhatsAppClick("chat_widget_quick_reply")}
               className="block border border-stone-200 px-3 py-2 text-sm text-stone-700 transition hover:border-black"
             >
               {t(`chat.quick.${key}.label`)}
