@@ -18,6 +18,11 @@ export function getAdminConfigStatus() {
     paypalConfigured: payment.paypal.configured,
     paypalWebhook: payment.paypal.webhookConfigured,
     newsletter: Boolean(process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY || process.env.SANITY_WRITE_TOKEN),
+    projectEnquiryNotifications: Boolean(
+      (process.env.RESEND_API_KEY || process.env.SENDGRID_API_KEY)
+      && (process.env.PROJECT_ENQUIRY_FROM_EMAIL || process.env.NEWSLETTER_FROM_EMAIL)
+      && (process.env.PROJECT_ENQUIRY_TO_EMAIL || process.env.CONTACT_EMAIL || process.env.NEWSLETTER_TO_EMAIL)
+    ),
     r2MediaPublic: Boolean(process.env.NEXT_PUBLIC_CLOUDFLARE_ASSET_BASE_URL || process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "https://assets.yiiart.com"),
     r2MediaUpload: Boolean(
       (

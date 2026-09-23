@@ -23,10 +23,10 @@ type EditorialHomeProps = {
 
 const heroMessages = [
   {
-    eyebrow: "New collection",
-    title: "Art for the room you live in.",
-    ctaHref: "/artworks?sort=newest",
-    ctaLabel: "Shop new arrivals",
+    eyebrow: "For interior designers",
+    title: "Art for the spaces you design.",
+    ctaHref: "/trade",
+    ctaLabel: "Explore project art",
   },
   {
     eyebrow: "Hand-painted to order",
@@ -95,6 +95,17 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
   return (
     <main className={styles.home}>
       <HeroSection slides={heroSlides} />
+
+      <section className="border-b border-stone-200 bg-[#fbfaf6] px-4 py-12 sm:px-6 lg:px-10">
+        <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-6 md:flex-row md:items-center">
+          <div>
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">For design projects</p>
+            <h2 className="mt-2 font-serif text-3xl text-stone-950">Artwork selected for your space.</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Discuss coordinated artwork, custom sizes, and palette direction for an interior project. Each quote is confirmed for the brief.</p>
+          </div>
+          <Link href="/trade" className="inline-flex shrink-0 justify-center border border-stone-900 px-6 py-4 text-sm font-medium text-stone-950 hover:bg-stone-950 hover:text-white">For Designers</Link>
+        </div>
+      </section>
 
       <section id="featured-works" className={`${styles.section} ${styles.featured}`}>
         <div className={styles.shell}>

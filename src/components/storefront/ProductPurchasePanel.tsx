@@ -224,6 +224,12 @@ export default function ProductPurchasePanel({
         >
           Request custom size or color
         </Link>
+        <Link
+          href={`/custom-painting?intent=project&artwork=${encodeURIComponent(product.slug)}`}
+          onClick={() => trackMarketingEvent("Contact", { location: "pdp_project_enquiry", content_name: product.slug })}
+        >
+          Ask about this work for a project
+        </Link>
       </div>
 
       <div className={styles.purchaseTrust} aria-label="Purchase support">

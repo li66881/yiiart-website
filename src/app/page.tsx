@@ -52,18 +52,18 @@ export async function generateMetadata() {
     const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
     return buildSeoMetadata({
-      title: "Handmade Modern Paintings & Custom Canvas Art",
+      title: "Hand-Painted Art for Interior Design Projects & Homes",
       description:
-        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
+        "Explore hand-painted artwork for interior design projects and homes. Discuss coordinated selections, custom sizes, palettes, and made-to-order canvas art with YiiArt.",
       path: "/",
       image,
       imageAlt: artwork ? `${pickEnglish(artwork.title, "Original YiiArt painting")} by YiiArt` : undefined,
     })
   } catch {
     return buildSeoMetadata({
-      title: "Handmade Modern Paintings & Custom Canvas Art",
+      title: "Hand-Painted Art for Interior Design Projects & Homes",
       description:
-        "Shop original handmade modern paintings, large wall art, and custom canvas art for living rooms, bedrooms, offices, and interior design projects.",
+        "Explore hand-painted artwork for interior design projects and homes. Discuss coordinated selections, custom sizes, palettes, and made-to-order canvas art with YiiArt.",
       path: "/",
     })
   }

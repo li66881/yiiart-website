@@ -89,6 +89,7 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
             </FooterColumn>
 
             <FooterColumn title={t("footer.company")}>
+              <FooterLink href="/trade">For Designers</FooterLink>
               <FooterLink href="/about">{t("footer.aboutUs")}</FooterLink>
               <FooterLink href="/links">{t("footer.socialLinks")}</FooterLink>
               <FooterLink href="/privacy">{t("footer.privacy")}</FooterLink>

@@ -82,6 +82,9 @@ export default async function LinksPage() {
                 Project art enquiries
               </Link>
             </div>
+            <Link href={`/trade${bio}`} className="mt-5 inline-flex text-sm underline underline-offset-4">
+              See how YiiArt works with designers
+            </Link>
             <p className="mt-6 max-w-2xl text-sm leading-6 text-stone-600">
               Need help choosing the right size? Send a room photo and your wall width for a size recommendation.
             </p>

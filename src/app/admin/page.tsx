@@ -6,6 +6,12 @@ export const dynamic = "force-dynamic"
 
 const tools = [
   {
+    title: "Review enquiries",
+    description: "Read recent project, custom painting, and size advice requests saved in Sanity.",
+    href: "/admin/requests",
+    external: false,
+  },
+  {
     title: "Create artwork",
     description: "Upload artwork images and publish a saleable product to Sanity.",
     href: "/admin/artwork-new",
@@ -113,6 +119,11 @@ export default function AdminPage() {
       label: "Newsletter email",
       ready: status.newsletter,
       detail: "Ready when Resend, SendGrid, or Sanity subscriber storage is configured.",
+    },
+    {
+      label: "Project enquiry notifications",
+      ready: status.projectEnquiryNotifications,
+      detail: "Stored in Sanity when its write token works. Email alerts require Resend or SendGrid plus a sender and recipient address.",
     },
     {
       label: "R2 media domain",

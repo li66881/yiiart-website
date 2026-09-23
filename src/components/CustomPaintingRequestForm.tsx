@@ -15,6 +15,7 @@ type CustomPaintingRequestFormProps = {
 
 const roomTypes = ["Living room", "Bedroom", "Dining room", "Office", "Entryway", "Hospitality space"]
 const budgets = ["Under $500", "$500 - $1,000", "$1,000 - $2,000", "$2,000 - $5,000", "$5,000+"]
+const projectRoles = ["Interior designer", "Architect", "Art consultant", "Hospitality buyer", "Property developer", "Showroom or retailer", "Other"]
 const MAX_PHOTOS = 5
 const MAX_PHOTO_BYTES = 10 * 1024 * 1024
 
@@ -33,6 +34,7 @@ export default function CustomPaintingRequestForm({
   const [photoNames, setPhotoNames] = useState<string[]>([])
   const [attribution, setAttribution] = useState<EnquiryAttribution | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
+  const requestIdRef = useRef("")
   const whatsappBaseUrl = useMemo(() => `https://wa.me/${whatsappNumber}`, [whatsappNumber])
   const compact = intent === "size-advice"
 
@@ -82,6 +84,8 @@ export default function CustomPaintingRequestForm({
 
     const formElement = event.currentTarget
     const form = new FormData(formElement)
+    if (!requestIdRef.current) requestIdRef.current = window.crypto.randomUUID()
+    form.set("requestId", requestIdRef.current)
 
     setSubmitting(true)
 
@@ -95,6 +99,8 @@ export default function CustomPaintingRequestForm({
         setSubmitted(true)
         setStatus(compact
           ? "Request received. YiiArt will reply with a size recommendation when the studio has reviewed your details."
+          : intent === "project"
+            ? "Project enquiry received. YiiArt will review your brief and reply with the next steps."
           : "Request received. YiiArt replies as soon as practical with sizing, palette, and pricing guidance.")
         trackMarketingEvent("Lead", {
           lead_type: "form_submit",
@@ -153,11 +159,20 @@ export default function CustomPaintingRequestForm({
       <input type="hidden" name="utmContent" value={attribution?.utmContent || ""} />
 
       <div className="grid gap-5 md:grid-cols-2">
-        {!compact && <TextField name="name" label="Name" />}
+        {!compact && <TextField name="name" label="Name" required />}
         <TextField name="email" label="Email" type="email" required />
+        {intent === "project" && (
+          <>
+            <SelectField name="clientRole" label="Your role" options={projectRoles} required />
+            <TextField name="company" label="Company or studio (optional)" />
+            <TextField name="destinationCountry" label="Delivery country or region" required />
+            <TextField name="artworkQuantity" label="Approximate artwork quantity (optional)" placeholder="e.g. 3 works or not decided yet" />
+            <TextField name="projectTiming" label="Project timing (optional)" placeholder="e.g. Summer 2027 or not decided yet" />
+          </>
+        )}
         <TextField
           name="artworkTitle"
-          label="Artwork or project"
+          label={intent === "project" ? "Project name or artwork (optional)" : "Artwork or project"}
           defaultValue={artworkTitle}
           placeholder={intent === "project" ? "Project, room, or collection" : "Artwork you saw"}
         />
@@ -170,19 +185,22 @@ export default function CustomPaintingRequestForm({
           <>
             <TextField name="preferredColors" label="Preferred colors" placeholder="Warm neutral, black and white..." />
             <SelectField name="roomType" label="Room type" options={roomTypes} />
-            <SelectField name="budget" label="Budget (optional)" options={budgets} />
+            {intent === "project"
+              ? <TextField name="budget" label="Estimated project budget (optional)" placeholder="Amount and currency, or not decided yet" />
+              : <SelectField name="budget" label="Budget (optional)" options={budgets} />}
           </>
         )}
       </div>
 
       {!compact && (
         <label className="mt-5 block">
-          <span className="text-sm font-medium">Message</span>
+          <span className="text-sm font-medium">{intent === "project" ? "Project brief" : "Message"}</span>
           <textarea
             name="message"
             rows={6}
+            required={intent === "project"}
             className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
-            placeholder="Tell us about your wall, room mood, style direction, deadline, shipping country, or reference ideas. Budget and framing can wait until the quote."
+            placeholder={intent === "project" ? "Describe the space, artwork needs, and any style references. A short brief is enough." : "Tell us about your wall, room mood, style direction, deadline, shipping country, or reference ideas. Budget and framing can wait until the quote."}
           />
         </label>
       )}
@@ -200,8 +218,8 @@ export default function CustomPaintingRequestForm({
       )}
 
       <label className="mt-5 block">
-        <span className="text-sm font-medium">Room photo (optional)</span>
-        <span className="mt-1 block text-xs text-stone-500">Up to {MAX_PHOTOS} photos, 10MB each. A wall photo with width noted is enough for a first size recommendation.</span>
+        <span className="text-sm font-medium">{intent === "project" ? "Room or project reference images (optional)" : "Room photo (optional)"}</span>
+        <span className="mt-1 block text-xs text-stone-500">Up to {MAX_PHOTOS} images, 10MB each. {intent === "project" ? "A room photo or mood reference can help us understand the brief." : "A wall photo with width noted is enough for a first size recommendation."}</span>
         <input
           ref={fileInputRef}
           name="photos"
@@ -222,7 +240,7 @@ export default function CustomPaintingRequestForm({
           disabled={submitting || submitted}
           className="bg-black px-6 py-4 text-sm font-medium text-white transition hover:bg-stone-800 disabled:cursor-not-allowed disabled:bg-stone-400"
         >
-          {submitting ? "Sending..." : submitted ? "Request sent" : compact ? "Request size advice" : "Send Request"}
+          {submitting ? "Sending..." : submitted ? "Request sent" : compact ? "Request size advice" : intent === "project" ? "Send project enquiry" : "Send Request"}
         </button>
         <button
           type="button"
@@ -268,12 +286,13 @@ function TextField({
   )
 }
 
-function SelectField({ name, label, options }: { name: string; label: string; options: string[] }) {
+function SelectField({ name, label, options, required = false }: { name: string; label: string; options: string[]; required?: boolean }) {
   return (
     <label className="block">
       <span className="text-sm font-medium">{label}</span>
       <select
         name={name}
+        required={required}
         className="mt-2 w-full border border-stone-300 bg-white px-4 py-3 text-sm outline-none focus:border-black"
       >
         <option value="">Select one</option>
@@ -291,6 +310,13 @@ function buildRequestMessage(form: FormData, intent: EnquiryIntent) {
     "",
     `Name: ${field(form, "name")}`,
     `Email: ${field(form, "email")}`,
+    ...(intent === "project" ? [
+      `Role: ${field(form, "clientRole")}`,
+      `Company or studio: ${field(form, "company")}`,
+      `Delivery country or region: ${field(form, "destinationCountry")}`,
+      `Approximate artwork quantity: ${field(form, "artworkQuantity")}`,
+      `Project timing: ${field(form, "projectTiming")}`,
+    ] : []),
     `Artwork: ${field(form, "artworkTitle")}`,
     `Size or wall width: ${field(form, "artworkSize")}`,
     `Preferred colors: ${field(form, "preferredColors")}`,

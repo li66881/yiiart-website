@@ -12,6 +12,11 @@ export default defineType({
     defineField({ name: "roomType", title: "Room type", type: "string" }),
     defineField({ name: "budget", title: "Budget", type: "string" }),
     defineField({ name: "message", title: "Message", type: "text" }),
+    defineField({ name: "clientRole", title: "Client role", type: "string" }),
+    defineField({ name: "company", title: "Company or studio", type: "string" }),
+    defineField({ name: "destinationCountry", title: "Delivery country or region", type: "string" }),
+    defineField({ name: "artworkQuantity", title: "Approximate artwork quantity", type: "string" }),
+    defineField({ name: "projectTiming", title: "Project timing", type: "string" }),
     defineField({
       name: "photos",
       title: "Room / reference photos",

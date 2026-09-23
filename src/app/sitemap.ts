@@ -10,6 +10,7 @@ const routes = [
   { path: '', priority: 1 },
   { path: '/artworks', priority: 0.9 },
   { path: '/links', priority: 0.8 },
+  { path: '/trade', priority: 0.8 },
   { path: '/reviews', priority: 0.8 },
   { path: '/art-in-real-homes', priority: 0.8 },
   { path: '/custom-painting', priority: 0.8 },

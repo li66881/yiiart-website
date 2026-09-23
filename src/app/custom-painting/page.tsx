@@ -36,6 +36,13 @@ const steps = [
   },
 ]
 
+const projectSteps = [
+  { title: "Share the brief", text: "Tell us about the spaces, artwork quantity, destination, and timing. A short outline is enough to start." },
+  { title: "Discuss the selection", text: "Review suitable listed works, sizes, and palette directions for the project." },
+  { title: "Confirm the quote", text: "Specifications, pricing, sampling if needed, and production guidance are agreed before work begins." },
+  { title: "Produce and deliver", text: "After approval, the studio makes the artwork. Packing and delivery are planned for the confirmed destination." },
+]
+
 const options = [
   "Size",
   "Color palette",
@@ -44,6 +51,8 @@ const options = [
   "Diptych / triptych",
   "Matching set",
 ]
+
+const projectOptions = ["Coordinated selection", "Custom size", "Color direction", "Orientation", "Frame", "Diptych / triptych"]
 
 const trustItems = [
   {
@@ -83,6 +92,13 @@ const faqs = [
   },
 ]
 
+const projectFaqs = [
+  { question: "Can I enquire before I know the exact quantity?", answer: "Yes. Share the room or project type and your current estimate. The selection and quote can be refined as the brief becomes clearer." },
+  { question: "Can artwork be adapted to a project palette?", answer: "Share palette and room references. YiiArt will confirm which changes are feasible for the selected composition before quoting." },
+  { question: "When is pricing confirmed?", answer: "Pricing depends on the artwork, size, quantity, presentation, destination, and any sampling. A project quote follows a review of these details." },
+  { question: "How are timing and delivery handled?", answer: "Production and delivery timing are confirmed for the agreed specifications and destination before an order is finalized." },
+]
+
 type Props = {
   searchParams: Promise<{ intent?: string; artwork?: string }>
 }
@@ -108,7 +124,7 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
   const intro = compact
     ? "Send a room photo and your wall width for a size recommendation. Email and the artwork you are considering are enough for a first reply."
     : intent === "project"
-      ? "Share the space, programme, or collection you are planning. YiiArt can advise on size, palette, and made-to-order options."
+      ? "Tell us about your space, artwork quantity, destination, and timing. YiiArt can discuss a coordinated selection, custom sizes or palette direction, and a quote for your brief."
       : "Choose your size, color palette, and style. Our studio creates a handmade artwork tailored to your room."
 
   return (
@@ -137,9 +153,9 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
 
         <section className="border-b border-stone-200 bg-white px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-[1440px]">
-            <SectionIntro eyebrow="How It Works" title="From room idea to finished canvas" />
+            <SectionIntro eyebrow="How It Works" title={intent === "project" ? "From project brief to finished artwork" : "From room idea to finished canvas"} />
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-              {steps.map((step, index) => (
+              {(intent === "project" ? projectSteps : steps).map((step, index) => (
                 <div key={step.title} className="border-t border-stone-300 pt-5">
                   <p className="text-sm text-stone-400">Step {index + 1}</p>
                   <h2 className="mt-5 text-xl font-medium">{step.title}</h2>
@@ -154,11 +170,11 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
           <div className="mx-auto max-w-[1440px]">
             <SectionIntro
               eyebrow="Custom Options"
-              title="Plan the painting around your wall, palette, and room"
-              text="Use these options to describe what should be made. If you are unsure, YiiArt can help choose a practical direction from your room photo."
+              title={intent === "project" ? "Shape the artwork around your project" : "Plan the painting around your wall, palette, and room"}
+              text={intent === "project" ? "Use these options to describe the selection you need. Feasible specifications are confirmed for each work and project." : "Use these options to describe what should be made. If you are unsure, YiiArt can help choose a practical direction from your room photo."}
             />
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {options.map((option) => (
+              {(intent === "project" ? projectOptions : options).map((option) => (
                 <div key={option} className="border border-stone-200 bg-white p-5">
                   <h2 className="text-xl font-light">{option}</h2>
                 </div>
@@ -171,10 +187,12 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">Request Form</p>
-              <h2 className="text-4xl font-light leading-tight">{compact ? "A short first note is enough." : "Tell us what your room needs."}</h2>
+              <h2 className="text-4xl font-light leading-tight">{compact ? "A short first note is enough." : intent === "project" ? "Tell us about the project." : "Tell us what your room needs."}</h2>
               <p className="mt-5 text-sm leading-6 text-stone-600">
                 {compact
                   ? "Email, the artwork you saw, and optional wall width or a room photo. Budget, destination, and framing can wait until a quote."
+                  : intent === "project"
+                    ? "A short brief is enough to begin. Include the space, delivery country, and any artwork or room references. We will confirm feasibility, scope, and pricing with you before production."
                   : "Share your wall size, room photos, and the mood you want. YiiArt replies as soon as practical with sizing, palette, and pricing guidance, and confirms the full scope with you before any payment is taken."}
               </p>
               <TrackableWhatsAppLink
@@ -211,10 +229,10 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr]">
             <div>
               <p className="mb-3 text-sm uppercase text-stone-500">FAQ</p>
-              <h2 className="text-4xl font-light leading-tight">Custom painting questions</h2>
+              <h2 className="text-4xl font-light leading-tight">{intent === "project" ? "Project art questions" : "Custom painting questions"}</h2>
             </div>
             <div className="divide-y divide-stone-200 border-y border-stone-200">
-              {faqs.map((item) => (
+              {(intent === "project" ? projectFaqs : faqs).map((item) => (
                 <details key={item.question} className="group py-5">
                   <summary className="cursor-pointer list-none font-medium">
                     <span className="inline-flex w-full items-center justify-between gap-4">

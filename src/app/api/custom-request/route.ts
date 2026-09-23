@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
+import { randomUUID } from "node:crypto"
 import { createClient } from "@sanity/client"
 import { sanitizeEnquiryAttribution } from "@/lib/attribution"
 import { enquirySourceLabel, parseEnquiryIntent } from "@/lib/enquiry-intent"
@@ -32,6 +33,17 @@ export async function POST(request: NextRequest) {
     const attribution = sanitizeEnquiryAttribution(form)
     const artworkSlug = stringField(form, "artworkSlug").slice(0, 120)
     const artworkTitle = stringField(form, "artworkTitle").slice(0, 160)
+    const clientRole = stringField(form, "clientRole").slice(0, 80)
+    const company = stringField(form, "company").slice(0, 160)
+    const destinationCountry = stringField(form, "destinationCountry").slice(0, 120)
+    const artworkQuantity = stringField(form, "artworkQuantity").slice(0, 120)
+    const projectTiming = stringField(form, "projectTiming").slice(0, 120)
+    const message = stringField(form, "message").slice(0, 5000)
+    const submittedId = stringField(form, "requestId")
+    const requestId = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(submittedId)
+      ? submittedId.toLowerCase()
+      : randomUUID()
+    const documentId = `customRequest-${requestId}`
 
     if (!isValidEmail(email)) {
       return NextResponse.json({ error: "Please provide a valid email." }, { status: 400 })
@@ -39,6 +51,14 @@ export async function POST(request: NextRequest) {
 
     if (intent !== "size-advice" && !submittedName) {
       return NextResponse.json({ error: "Please provide your name and a valid email." }, { status: 400 })
+    }
+
+    if (intent === "project" && (!clientRole || !destinationCountry || !message)) {
+      return NextResponse.json({ error: "Please add your role, delivery country, and a short project brief." }, { status: 400 })
+    }
+
+    if (await writeClient.getDocument(documentId)) {
+      return NextResponse.json({ success: true, requestId })
     }
 
     const photos = []
@@ -81,7 +101,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    await writeClient.create({
+    await writeClient.createIfNotExists({
+      _id: documentId,
       _type: "customRequest",
       name,
       email,
@@ -89,7 +110,12 @@ export async function POST(request: NextRequest) {
       preferredColors: stringField(form, "preferredColors"),
       roomType: stringField(form, "roomType"),
       budget: stringField(form, "budget"),
-      message: stringField(form, "message"),
+      message,
+      clientRole: intent === "project" ? clientRole : undefined,
+      company: intent === "project" ? company || undefined : undefined,
+      destinationCountry: intent === "project" ? destinationCountry : undefined,
+      artworkQuantity: intent === "project" ? artworkQuantity || undefined : undefined,
+      projectTiming: intent === "project" ? projectTiming || undefined : undefined,
       intent,
       artworkSlug: artworkSlug || undefined,
       artworkTitle: artworkTitle || undefined,
@@ -106,10 +132,72 @@ export async function POST(request: NextRequest) {
       utmContent: attribution.utmContent || undefined,
     })
 
-    return NextResponse.json({ success: true })
+    if (intent === "project") {
+      await notifyProjectEnquiry({ requestId, name, email, clientRole, company, destinationCountry, artworkQuantity, projectTiming, artworkTitle, message })
+    }
+
+    return NextResponse.json({ success: true, requestId })
   } catch (error) {
     console.error("Custom request submit error:", error)
     return NextResponse.json({ error: "Your request could not be submitted right now." }, { status: 500 })
+  }
+}
+
+type ProjectNotification = {
+  requestId: string
+  name: string
+  email: string
+  clientRole: string
+  company: string
+  destinationCountry: string
+  artworkQuantity: string
+  projectTiming: string
+  artworkTitle: string
+  message: string
+}
+
+async function notifyProjectEnquiry(enquiry: ProjectNotification) {
+  const from = process.env.PROJECT_ENQUIRY_FROM_EMAIL || process.env.NEWSLETTER_FROM_EMAIL
+  const to = process.env.PROJECT_ENQUIRY_TO_EMAIL || process.env.CONTACT_EMAIL || process.env.NEWSLETTER_TO_EMAIL
+  if (!from || !to) return
+
+  const body = [
+    `New YiiArt project enquiry: ${enquiry.requestId}`,
+    `Name: ${enquiry.name}`,
+    `Email: ${enquiry.email}`,
+    `Role: ${enquiry.clientRole}`,
+    `Company: ${enquiry.company || "Not provided"}`,
+    `Destination: ${enquiry.destinationCountry}`,
+    `Quantity: ${enquiry.artworkQuantity || "Not decided"}`,
+    `Timing: ${enquiry.projectTiming || "Not decided"}`,
+    `Artwork or project: ${enquiry.artworkTitle || "Not provided"}`,
+    `Brief: ${enquiry.message}`,
+  ].join("\n")
+
+  try {
+    if (process.env.RESEND_API_KEY) {
+      const response = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from, to, subject: "New YiiArt project enquiry", text: body }),
+      })
+      if (!response.ok) throw new Error(`Resend notification returned ${response.status}`)
+    } else if (process.env.SENDGRID_API_KEY) {
+      const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${process.env.SENDGRID_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          personalizations: [{ to: [{ email: to }] }],
+          from: { email: from },
+          subject: "New YiiArt project enquiry",
+          content: [{ type: "text/plain", value: body }],
+        }),
+      })
+      if (!response.ok) throw new Error(`SendGrid notification returned ${response.status}`)
+    }
+  } catch (error) {
+    // The enquiry is already stored. A mail provider failure must not invite a duplicate submission.
+    console.error("Project enquiry notification error:", error)
   }
 }
 
