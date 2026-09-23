@@ -26,7 +26,12 @@ export const FEATURED_SOCIAL_LINK_PICKS: SocialLinkPick[] = [
   },
 ]
 
-export function orderSocialLinkPicks<T extends { slug?: { current?: string } | string | null }>(
+export function orderSocialLinkPicks<
+  T extends {
+    slug?: { current?: string } | string | null
+    availability?: string | null
+  },
+>(
   artworks: T[],
   picks = FEATURED_SOCIAL_LINK_PICKS,
 ) {
