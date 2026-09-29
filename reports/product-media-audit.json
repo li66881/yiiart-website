@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-07-29T15:42:04.561Z",
+  "generatedAt": "2026-09-29T16:16:33.611Z",
   "summary": {
     "folderCount": 46,
     "fileCount": 272,
     "completeFolderCount": 39,
     "suspiciousFolderCount": 1,
-    "highConfidenceMatches": 41,
+    "highConfidenceMatches": 44,
     "readyForUpload": 38,
-    "needsReview": 5,
+    "needsReview": 2,
     "unmatched": 0,
-    "sanityArtworkCount": 63
+    "sanityArtworkCount": 163
   },
   "folders": [
     {
@@ -123,36 +123,36 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
           "slug": "mint-field",
           "title": "Mint Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -226,45 +226,45 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
           "slug": "mint-field",
           "title": "Mint Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
           "slug": "nocturne-diptych",
           "title": "Nocturne Diptych",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -359,53 +359,63 @@
         }
       ],
       "originalPixelSize": null,
-      "matchConfidence": "review",
+      "matchConfidence": "high",
       "readyForUpload": false,
-      "suggestedMatch": null,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+        "slug": "mint-field",
+        "title": "Mint Field",
+        "score": 190,
+        "reasons": [
+          "catalog code",
+          "real artwork size"
+        ]
+      },
       "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
+          "slug": "mint-field",
+          "title": "Mint Field",
+          "score": 190,
+          "reasons": [
+            "catalog code",
+            "real artwork size"
+          ]
+        },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
-          ]
-        },
-        {
-          "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
-          "slug": "mint-field",
-          "title": "Mint Field",
-          "score": 60,
-          "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
           "slug": "nocturne-diptych",
           "title": "Nocturne Diptych",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -487,10 +497,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZqRI",
         "slug": "violet-moss",
         "title": "Violet Moss",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -498,46 +509,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZqRI",
           "slug": "violet-moss",
           "title": "Violet Moss",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
           "slug": "mint-field",
           "title": "Mint Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -604,10 +616,10 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
         "slug": "magenta-cloud-garden",
         "title": "Magenta Cloud Garden",
-        "score": 160,
+        "score": 170,
         "reasons": [
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -615,46 +627,46 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 160,
+          "score": 170,
           "reasons": [
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
           "slug": "mint-field",
           "title": "Mint Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
           "slug": "nocturne-diptych",
           "title": "Nocturne Diptych",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -727,53 +739,63 @@
         }
       ],
       "originalPixelSize": null,
-      "matchConfidence": "review",
+      "matchConfidence": "high",
       "readyForUpload": false,
-      "suggestedMatch": null,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+        "slug": "nocturne-diptych",
+        "title": "Nocturne Diptych",
+        "score": 190,
+        "reasons": [
+          "catalog code",
+          "real artwork size"
+        ]
+      },
       "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
+          "slug": "nocturne-diptych",
+          "title": "Nocturne Diptych",
+          "score": 190,
+          "reasons": [
+            "catalog code",
+            "real artwork size"
+          ]
+        },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZq5g",
           "slug": "green-rain-study",
           "title": "Green Rain Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqVc",
           "slug": "lime-blossom-field",
           "title": "Lime Blossom Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqA0",
           "slug": "magenta-cloud-garden",
           "title": "Magenta Cloud Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqMy",
           "slug": "mint-field",
           "title": "Mint Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
-          ]
-        },
-        {
-          "artworkId": "OfsmPgN5lUDWsUtL2tZqIe",
-          "slug": "nocturne-diptych",
-          "title": "Nocturne Diptych",
-          "score": 60,
-          "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -855,10 +877,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZq1M",
         "slug": "night-particles",
         "title": "Night Particles",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -866,46 +889,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZq1M",
           "slug": "night-particles",
           "title": "Night Particles",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -987,10 +1011,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZew4",
         "slug": "purple-line-gesture",
         "title": "Purple Line Gesture",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -998,46 +1023,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZew4",
           "slug": "purple-line-gesture",
           "title": "Purple Line Gesture",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1119,10 +1145,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrU8",
         "slug": "striped-lotus-field",
         "title": "Striped Lotus Field",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -1130,46 +1157,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrU8",
           "slug": "striped-lotus-field",
           "title": "Striped Lotus Field",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1251,10 +1279,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrYS",
         "slug": "indigo-bloom",
         "title": "Indigo Bloom",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -1262,46 +1291,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrYS",
           "slug": "indigo-bloom",
           "title": "Indigo Bloom",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1383,10 +1413,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrcm",
         "slug": "pink-rain-field",
         "title": "Pink Rain Field",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -1394,46 +1425,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrcm",
           "slug": "pink-rain-field",
           "title": "Pink Rain Field",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1515,10 +1547,11 @@
         "artworkId": "XK7N94x9IeMzLuOXBWSkkr",
         "slug": "soft-signal-meadow",
         "title": "Soft Signal Meadow",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -1526,46 +1559,47 @@
           "artworkId": "XK7N94x9IeMzLuOXBWSkkr",
           "slug": "soft-signal-meadow",
           "title": "Soft Signal Meadow",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1647,10 +1681,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZenQ",
         "slug": "sea-foam-field",
         "title": "Sea Foam Field",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -1658,46 +1693,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZenQ",
           "slug": "sea-foam-field",
           "title": "Sea Foam Field",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1766,56 +1802,67 @@
         "width": 1276,
         "height": 1280
       },
-      "matchConfidence": "review",
+      "matchConfidence": "high",
       "readyForUpload": false,
-      "suggestedMatch": null,
+      "suggestedMatch": {
+        "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+        "slug": "earth-song",
+        "title": "Earth Song",
+        "score": 290,
+        "reasons": [
+          "catalog code",
+          "Sanity main image pixels",
+          "real artwork size"
+        ]
+      },
       "candidates": [
+        {
+          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
+          "slug": "earth-song",
+          "title": "Earth Song",
+          "score": 290,
+          "reasons": [
+            "catalog code",
+            "Sanity main image pixels",
+            "real artwork size"
+          ]
+        },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 160,
+          "score": 170,
           "reasons": [
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 160,
+          "score": 170,
           "reasons": [
             "Sanity main image pixels",
-            "listed artwork size"
-          ]
-        },
-        {
-          "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
-          "slug": "earth-song",
-          "title": "Earth Song",
-          "score": 160,
-          "reasons": [
-            "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZrHA",
           "slug": "green-reflection",
           "title": "Green Reflection",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -1889,45 +1936,45 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZrHA",
           "slug": "green-reflection",
           "title": "Green Reflection",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2009,10 +2056,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZr4C",
         "slug": "lavender-meadow",
         "title": "Lavender Meadow",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2020,46 +2068,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZr4C",
           "slug": "lavender-meadow",
           "title": "Lavender Meadow",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2141,10 +2190,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrCq",
         "slug": "pale-leaves",
         "title": "Pale Leaves",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2152,46 +2202,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrCq",
           "slug": "pale-leaves",
           "title": "Pale Leaves",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZr8W",
           "slug": "aqua-city-garden",
           "title": "Aqua City Garden",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqia",
           "slug": "blue-mineral-cloud",
           "title": "Blue Mineral Cloud",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqmu",
           "slug": "blue-rain-veil",
           "title": "Blue Rain Veil",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZerk",
           "slug": "earth-song",
           "title": "Earth Song",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2273,10 +2324,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
         "slug": "river-stripe-study",
         "title": "River Stripe Study",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2284,28 +2336,29 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
           "slug": "river-stripe-study",
           "title": "River Stripe Study",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
           "slug": "green-river-horizon",
           "title": "Green River Horizon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
           "slug": "quiet-green-panel",
           "title": "Quiet Green Panel",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2387,10 +2440,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
         "slug": "quiet-green-panel",
         "title": "Quiet Green Panel",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2398,28 +2452,29 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
           "slug": "quiet-green-panel",
           "title": "Quiet Green Panel",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
           "slug": "green-river-horizon",
           "title": "Green River Horizon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
           "slug": "river-stripe-study",
           "title": "River Stripe Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2501,10 +2556,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
         "slug": "green-river-horizon",
         "title": "Green River Horizon",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2512,28 +2568,29 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZfHg",
           "slug": "green-river-horizon",
           "title": "Green River Horizon",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoHI",
           "slug": "quiet-green-panel",
           "title": "Quiet Green Panel",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZqeG",
           "slug": "river-stripe-study",
           "title": "River Stripe Study",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2615,10 +2672,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
         "slug": "rose-hat-figure",
         "title": "Rose Hat Figure",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2626,46 +2684,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
           "slug": "rose-hat-figure",
           "title": "Rose Hat Figure",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZops",
           "slug": "bright-fuchsia-dress",
           "title": "Bright Fuchsia Dress",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
           "slug": "fuchsia-silhouette",
           "title": "Fuchsia Silhouette",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
           "slug": "hill-garden-afternoon",
           "title": "Hill Garden Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
           "slug": "rose-profile",
           "title": "Rose Profile",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2747,10 +2806,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
         "slug": "hill-garden-afternoon",
         "title": "Hill Garden Afternoon",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2758,46 +2818,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
           "slug": "hill-garden-afternoon",
           "title": "Hill Garden Afternoon",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZops",
           "slug": "bright-fuchsia-dress",
           "title": "Bright Fuchsia Dress",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
           "slug": "fuchsia-silhouette",
           "title": "Fuchsia Silhouette",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
           "slug": "rose-hat-figure",
           "title": "Rose Hat Figure",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
           "slug": "rose-profile",
           "title": "Rose Profile",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -2879,10 +2940,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
         "slug": "rose-profile",
         "title": "Rose Profile",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -2890,46 +2952,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
           "slug": "rose-profile",
           "title": "Rose Profile",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZops",
           "slug": "bright-fuchsia-dress",
           "title": "Bright Fuchsia Dress",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
           "slug": "fuchsia-silhouette",
           "title": "Fuchsia Silhouette",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
           "slug": "hill-garden-afternoon",
           "title": "Hill Garden Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
           "slug": "rose-hat-figure",
           "title": "Rose Hat Figure",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3011,10 +3074,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZocu",
         "slug": "rose-wing-profile",
         "title": "Rose Wing Profile",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3022,46 +3086,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZocu",
           "slug": "rose-wing-profile",
           "title": "Rose Wing Profile",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZops",
           "slug": "bright-fuchsia-dress",
           "title": "Bright Fuchsia Dress",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
           "slug": "fuchsia-silhouette",
           "title": "Fuchsia Silhouette",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
           "slug": "hill-garden-afternoon",
           "title": "Hill Garden Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
           "slug": "rose-hat-figure",
           "title": "Rose Hat Figure",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3143,10 +3208,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZops",
         "slug": "bright-fuchsia-dress",
         "title": "Bright Fuchsia Dress",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3154,46 +3220,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZops",
           "slug": "bright-fuchsia-dress",
           "title": "Bright Fuchsia Dress",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpFo",
           "slug": "fuchsia-silhouette",
           "title": "Fuchsia Silhouette",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpK8",
           "slug": "hill-garden-afternoon",
           "title": "Hill Garden Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZp7A",
           "slug": "rose-hat-figure",
           "title": "Rose Hat Figure",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpOS",
           "slug": "rose-profile",
           "title": "Rose Profile",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3275,10 +3342,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoPw",
         "slug": "rose-garden-signals",
         "title": "Rose Garden Signals",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3286,46 +3354,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoPw",
           "slug": "rose-garden-signals",
           "title": "Rose Garden Signals",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
           "slug": "afternoon",
           "title": "Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
           "slug": "afternoon2",
           "title": "Afternoon II",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
           "slug": "electric-pink-meadow",
           "title": "Electric Pink Meadow",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
           "slug": "garden-house",
           "title": "Garden House",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3407,10 +3476,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrLU",
         "slug": "violet-garden-mist",
         "title": "Violet Garden Mist",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3418,46 +3488,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrLU",
           "slug": "violet-garden-mist",
           "title": "Violet Garden Mist",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
           "slug": "afternoon",
           "title": "Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
           "slug": "afternoon2",
           "title": "Afternoon II",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
           "slug": "electric-pink-meadow",
           "title": "Electric Pink Meadow",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
           "slug": "garden-house",
           "title": "Garden House",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3539,10 +3610,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
         "slug": "electric-pink-meadow",
         "title": "Electric Pink Meadow",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3550,46 +3622,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
           "slug": "electric-pink-meadow",
           "title": "Electric Pink Meadow",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
           "slug": "afternoon",
           "title": "Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
           "slug": "afternoon2",
           "title": "Afternoon II",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
           "slug": "garden-house",
           "title": "Garden House",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf0O",
           "slug": "green-canopy-afternoon",
           "title": "Green Canopy Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3671,10 +3744,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZqrE",
         "slug": "pastel-signal-field",
         "title": "Pastel Signal Field",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3682,46 +3756,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZqrE",
           "slug": "pastel-signal-field",
           "title": "Pastel Signal Field",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "ne76bOCY4CzrHeNu2dIVM1",
           "slug": "afternoon",
           "title": "Afternoon",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "g9NIpMgyqSiJdvpr3pqoKI",
           "slug": "afternoon2",
           "title": "Afternoon II",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZrPo",
           "slug": "electric-pink-meadow",
           "title": "Electric Pink Meadow",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZfDM",
           "slug": "garden-house",
           "title": "Garden House",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3803,10 +3878,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoCy",
         "slug": "garden-keeper",
         "title": "Garden Keeper",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3814,46 +3890,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoCy",
           "slug": "garden-keeper",
           "title": "Garden Keeper",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -3935,10 +4012,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoYa",
         "slug": "pink-dress-study",
         "title": "Pink Dress Study",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -3946,46 +4024,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoYa",
           "slug": "pink-dress-study",
           "title": "Pink Dress Study",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4067,10 +4146,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpBU",
         "slug": "garden-crown",
         "title": "Garden Crown",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4078,46 +4158,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpBU",
           "slug": "garden-crown",
           "title": "Garden Crown",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4199,10 +4280,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpsi",
         "slug": "weathered-passage",
         "title": "Weathered Passage",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4210,46 +4292,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpsi",
           "slug": "weathered-passage",
           "title": "Weathered Passage",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4331,10 +4414,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
         "slug": "blue-violet-texture",
         "title": "Blue Violet Texture",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4342,46 +4426,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
           "slug": "crimson-slipper-no-2",
           "title": "Crimson Slipper No. 2",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4463,10 +4548,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZfM0",
         "slug": "light-rail-geometry",
         "title": "Light Rail Geometry",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4474,46 +4560,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZfM0",
           "slug": "light-rail-geometry",
           "title": "Light Rail Geometry",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4595,10 +4682,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
         "slug": "crimson-slipper-fragment",
         "title": "Crimson Slipper Fragment",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4606,46 +4694,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
           "slug": "crimson-slipper-no-2",
           "title": "Crimson Slipper No. 2",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4727,10 +4816,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpSm",
         "slug": "floating-glass-notes",
         "title": "Floating Glass Notes",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4738,46 +4828,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpSm",
           "slug": "floating-glass-notes",
           "title": "Floating Glass Notes",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4859,10 +4950,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
         "slug": "crimson-slipper-no-2",
         "title": "Crimson Slipper No. 2",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -4870,46 +4962,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
           "slug": "crimson-slipper-no-2",
           "title": "Crimson Slipper No. 2",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -4991,10 +5084,11 @@
         "artworkId": "XK7N94x9IeMzLuOXBWSeJm",
         "slug": "red-figure-in-stone",
         "title": "Red Figure in Stone",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5002,46 +5096,47 @@
           "artworkId": "XK7N94x9IeMzLuOXBWSeJm",
           "slug": "red-figure-in-stone",
           "title": "Red Figure in Stone",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5123,10 +5218,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
         "slug": "blue-crossing",
         "title": "Blue Crossing",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5134,46 +5230,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZohE",
           "slug": "crimson-slipper-no-2",
           "title": "Crimson Slipper No. 2",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5255,10 +5352,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpbQ",
         "slug": "paper-boat-garden",
         "title": "Paper Boat Garden",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5266,46 +5364,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpbQ",
           "slug": "paper-boat-garden",
           "title": "Paper Boat Garden",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5387,10 +5486,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpfk",
         "slug": "ribbon-boat",
         "title": "Ribbon Boat",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5398,46 +5498,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpfk",
           "slug": "ribbon-boat",
           "title": "Ribbon Boat",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5519,10 +5620,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZpk4",
         "slug": "white-boat-on-grey",
         "title": "White Boat on Grey",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5530,46 +5632,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZpk4",
           "slug": "white-boat-on-grey",
           "title": "White Boat on Grey",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5651,10 +5754,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZouC",
         "slug": "paper-boat-memory",
         "title": "Paper Boat Memory",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5662,46 +5766,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZouC",
           "slug": "paper-boat-memory",
           "title": "Paper Boat Memory",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
@@ -5783,10 +5888,11 @@
         "artworkId": "OfsmPgN5lUDWsUtL2tZoyW",
         "slug": "quiet-vase-and-birds",
         "title": "Quiet Vase and Birds",
-        "score": 160,
+        "score": 290,
         "reasons": [
+          "catalog code",
           "Sanity main image pixels",
-          "listed artwork size"
+          "real artwork size"
         ]
       },
       "candidates": [
@@ -5794,46 +5900,47 @@
           "artworkId": "OfsmPgN5lUDWsUtL2tZoyW",
           "slug": "quiet-vase-and-birds",
           "title": "Quiet Vase and Birds",
-          "score": 160,
+          "score": 290,
           "reasons": [
+            "catalog code",
             "Sanity main image pixels",
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZpoO",
           "slug": "blue-crossing",
           "title": "Blue Crossing",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZf92",
           "slug": "blue-violet-texture",
           "title": "Blue Violet Texture",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoLc",
           "slug": "candy-field",
           "title": "Candy Field",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         },
         {
           "artworkId": "OfsmPgN5lUDWsUtL2tZoUG",
           "slug": "crimson-slipper-fragment",
           "title": "Crimson Slipper Fragment",
-          "score": 60,
+          "score": 70,
           "reasons": [
-            "listed artwork size"
+            "real artwork size"
           ]
         }
       ]
