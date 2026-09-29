@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:unit": "tsx --test src/**/*.test.ts",
+    "test:unit": "tsx --test src/lib/**/*.test.ts src/sanity/**/*.test.ts",
     "test": "npm run test:unit && npm run test:integration && npm run copy:check",
     "test:integration": "vitest run src/components/storefront/purchase-overlay.integration.test.tsx src/app/api/custom-request/route.integration.test.ts",
     "copy:check": "node scripts/check-public-copy.mjs",
