@@ -1,5 +1,16 @@
+import { matchesArtistIdentity } from "./artist-identity"
+
 export type SitemapSlugRecord = { slug?: { current?: string } | null; _updatedAt?: string | null }
-export type SitemapArtistRecord = { slug?: { current?: string } | null; _updatedAt?: string | null }
+export type SitemapArtistRecord = {
+  _id: string
+  slug?: { current?: string } | null
+  _updatedAt?: string | null
+  name?: { en?: string | null; zh?: string | null } | null
+}
+export type SitemapArtworkRecord = SitemapSlugRecord & {
+  artistRefId?: string | null
+  artist?: { name?: { en?: string | null; zh?: string | null } | null } | null
+}
 
 function parseLastModified(value?: string | null) {
   if (!value) return undefined
@@ -7,7 +18,7 @@ function parseLastModified(value?: string | null) {
   return Number.isNaN(date.getTime()) ? undefined : date
 }
 
-export function mapArtworkSitemapRoutes(artworks: SitemapSlugRecord[], origin: string) {
+export function mapArtworkSitemapRoutes(artworks: SitemapArtworkRecord[], origin: string) {
   return artworks.flatMap((artwork) => {
     const slug = artwork.slug?.current?.trim()
     if (!slug) return []
@@ -21,11 +32,13 @@ export function mapArtworkSitemapRoutes(artworks: SitemapSlugRecord[], origin: s
   })
 }
 
-export function filterSitemapArtists(artists: SitemapArtistRecord[], publicArtistSlugs: string[]) {
-  const publicSlugs = new Set(publicArtistSlugs)
+export function filterSitemapArtists(artists: SitemapArtistRecord[], artworks: SitemapArtworkRecord[]) {
   return artists.filter((artist) => {
     const slug = artist.slug?.current?.trim()
-    return Boolean(slug && publicSlugs.has(slug))
+    return Boolean(slug && artworks.some((artwork) => matchesArtistIdentity(
+      { id: artist._id, name: artist.name },
+      { id: artwork.artistRefId, name: artwork.artist?.name },
+    )))
   })
 }
 

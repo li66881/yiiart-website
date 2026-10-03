@@ -21,11 +21,34 @@ async function getArtist(slug: string) {
   }
 }
 
-async function getArtistArtworks(artistId: string) {
+async function getArtistArtworks(artist: any) {
   try {
+    const hasBilingualName = Boolean(artist.name?.en && artist.name?.zh)
+    const artistFilter = hasBilingualName
+      ? `(artist._ref == $artistId || (artist->name.en == $artistNameEn && artist->name.zh == $artistNameZh))`
+      : `artist._ref == $artistId`
+
     return await client.fetch(
-      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && artist._ref == $artistId] | order(_createdAt desc)`,
-      { artistId }
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && ${artistFilter}] | order(_createdAt desc){
+        _id,
+        title,
+        slug,
+        artist->{_id, name},
+        price,
+        dimensions,
+        widthCm,
+        heightCm,
+        medium,
+        category,
+        cloudflareImages,
+        productMedia,
+        images
+      }`,
+      {
+        artistId: artist._id,
+        artistNameEn: artist.name?.en,
+        artistNameZh: artist.name?.zh,
+      }
     )
   } catch (error) {
     console.error("Artist artworks fetch error:", error)
@@ -80,7 +103,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
     )
   }
 
-  const artworks = await getArtistArtworks(artist._id)
+  const artworks = await getArtistArtworks(artist)
   const artistName = pickEnglish(artist.name, "YiiArt")
   const styles = Array.isArray(artist.style) ? artist.style : []
 

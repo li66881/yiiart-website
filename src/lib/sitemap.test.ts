@@ -16,12 +16,12 @@ test("artwork sitemap routes use valid slugs and CMS update times", () => {
   assert.equal(routes[0].lastModified?.toISOString(), "2026-09-01T10:00:00.000Z")
 })
 
-test("artist sitemap includes only slugged artists with publicly visible artworks", () => {
+test("artist sitemap matches public works through an exact duplicate bilingual identity", () => {
   const artists = filterSitemapArtists([
-    { slug: { current: "artist-one" } },
-    { slug: { current: "artist-two" } },
-    { slug: null },
-  ], ["artist-one"])
+    { _id: "profile-id", slug: { current: "artist-one" }, name: { en: "Huang Liang", zh: "黄亮" } },
+    { _id: "other-id", slug: { current: "artist-two" }, name: { en: "Alex Lee", zh: "李明" } },
+    { _id: "legacy-id", slug: null, name: { en: "Huang Liang", zh: "黄亮" } },
+  ], [{ artistRefId: "legacy-id", artist: { name: { en: "Huang Liang", zh: "黄亮" } } }])
   const routes = mapArtistSitemapRoutes(artists, baseUrl)
 
   assert.deepEqual(routes.map((route) => route.url), [`${baseUrl}/artist/artist-one`])
