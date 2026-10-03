@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react"
 import Link from "next/link"
 import Header from "@/components/Header"
+import { ARTWORK_CATEGORIES } from "@/lib/artwork-categories"
 
 type Artist = {
   _id: string
@@ -33,7 +34,7 @@ type FinishDraft = {
 }
 
 const mediums = ["Oil on Canvas", "Acrylic on Canvas", "Oil on Panel", "Mixed Media"]
-const categories = ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi", "Minimalist"]
+const categories = [...ARTWORK_CATEGORIES]
 const roomTypeOptions = ["Living room", "Bedroom", "Dining room", "Entryway", "Office", "Hospitality space"]
 const colorFamilyOptions = ["Neutral", "White", "Black", "Gray", "Blue", "Green", "Red", "Pink", "Yellow", "Orange", "Earth tone", "Multicolor"]
 const orientationOptions = ["Portrait", "Landscape", "Square"]
@@ -54,7 +55,7 @@ export default function NewArtworkPage() {
   const [widthCm, setWidthCm] = useState("")
   const [heightCm, setHeightCm] = useState("")
   const [medium, setMedium] = useState(mediums[0])
-  const [category, setCategory] = useState(categories[0])
+  const [category, setCategory] = useState<string>(categories[0])
   const [roomTypes, setRoomTypes] = useState<string[]>([])
   const [colorFamilies, setColorFamilies] = useState<string[]>([])
   const [orientation, setOrientation] = useState("")
