@@ -51,14 +51,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   try {
-    const [artworks, artists, publicArtistSlugs] = await Promise.all([
-      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && defined(slug.current)]{slug, _updatedAt}`),
-      client.fetch(`*[_type == "artist" && defined(slug.current)]{slug, _updatedAt}`),
-      client.fetch(`array::unique(*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && defined(artist->slug.current)].artist->slug.current)`),
+    const [artworks, artists] = await Promise.all([
+      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{slug, _updatedAt, "artistRefId": artist._ref, "artist": artist->{name}}`),
+      client.fetch(`*[_type == "artist" && defined(slug.current)]{_id, slug, _updatedAt, name}`),
     ])
 
     const artworkRoutes = mapArtworkSitemapRoutes(artworks, baseUrl)
-    const eligibleArtists = filterSitemapArtists(artists, publicArtistSlugs)
+    const eligibleArtists = filterSitemapArtists(artists, artworks)
     const artistRoutes = mapArtistSitemapRoutes(eligibleArtists, baseUrl)
 
     return [...staticRoutes, ...categoryRoutes, ...collectionRoutes, ...artworkRoutes, ...artistRoutes]
