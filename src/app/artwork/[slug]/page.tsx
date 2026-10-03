@@ -28,6 +28,7 @@ import {
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
+import { buildProductOfferJsonLd } from "@/lib/product-offer-schema"
 import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
 import {
   buildProductDetailContentModel,
@@ -243,42 +244,16 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const invoiceUrl = getWhatsAppUrl(
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
   )
-  const priceValidUntil = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000)
-    .toISOString()
-    .slice(0, 10)
-  const offer: Record<string, any> = {
-    "@type": "Offer",
+  const availability = getSchemaAvailability(artwork, directCheckoutAvailable)
+  const offer = buildProductOfferJsonLd({
     url: `${baseUrl}/artwork/${slug}`,
     sku: artwork.sku || slug,
     priceCurrency: currency,
-    priceValidUntil,
-    availability: getSchemaAvailability(artwork, directCheckoutAvailable),
-    itemCondition: "https://schema.org/NewCondition",
-    shippingDetails: {
-      "@type": "OfferShippingDetails",
-      shippingRate: {
-        "@type": "MonetaryAmount",
-        value: "0",
-        currency,
-      },
-      shippingDestination: {
-        "@type": "DefinedRegion",
-        addressCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
-      },
-    },
-    hasMerchantReturnPolicy: {
-      "@type": "MerchantReturnPolicy",
-      applicableCountry: ["US", "CA", "GB", "DE", "FR", "AU"],
-      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
-      merchantReturnDays: 30,
-      returnMethod: "https://schema.org/ReturnByMail",
-      returnFees: "https://schema.org/ReturnShippingFees",
-    },
-  }
+    availability,
+    price: priceCny > 0 ? offerPrice.toFixed(2) : undefined,
+  })
 
-  if (priceCny > 0) {
-    offer.price = offerPrice.toFixed(2)
-  } else if (offer.availability === "https://schema.org/InStock") {
+  if (!priceCny && availability === "https://schema.org/InStock") {
     // An InStock offer without a price fails rich-result validation; downgrade it.
     offer.availability = "https://schema.org/LimitedAvailability"
   }
