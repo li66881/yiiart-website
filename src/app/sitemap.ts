@@ -3,7 +3,7 @@ import { marketingCollections } from '@/lib/collections'
 import { client } from '@/lib/sanity'
 import { PUBLIC_ARTWORK_GROQ_FILTER } from '@/lib/artwork-publication'
 import { siteUrl } from '@/lib/seo'
-import { filterSitemapArtists, mapArtistSitemapRoutes, mapArtworkSitemapRoutes } from '@/lib/sitemap'
+import { filterSitemapArtists, mapArtistSitemapRoutes, mapArtworkSitemapRoutes, mapCategorySitemapRoutes } from '@/lib/sitemap'
 
 const baseUrl = siteUrl
 
@@ -29,8 +29,6 @@ const routes = [
   { path: '/terms', priority: 0.3 },
 ]
 
-const categories = ['Abstract', 'Landscape', 'Portrait', 'Texture', 'Wabi-sabi', 'Minimalist']
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = routes.map((route) => ({
     url: `${baseUrl}${route.path}`,
@@ -38,11 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: route.priority,
   }))
 
-  const categoryRoutes = categories.map((category) => ({
-    url: `${baseUrl}/artworks?category=${encodeURIComponent(category)}`,
-    changeFrequency: 'weekly' as const,
-    priority: 0.7,
-  }))
+  const categoryRoutes = mapCategorySitemapRoutes(baseUrl)
 
   const collectionRoutes = marketingCollections.map((collection) => ({
     url: `${baseUrl}/collections/${collection.slug}`,

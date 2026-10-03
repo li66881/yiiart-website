@@ -1,4 +1,5 @@
 import { matchesArtistIdentity } from "./artist-identity"
+import { ARTWORK_CATEGORIES } from "./artwork-categories"
 
 export type SitemapSlugRecord = { slug?: { current?: string } | null; _updatedAt?: string | null }
 export type SitemapArtistRecord = {
@@ -40,6 +41,14 @@ export function filterSitemapArtists(artists: SitemapArtistRecord[], artworks: S
       { id: artwork.artistRefId, name: artwork.artist?.name },
     )))
   })
+}
+
+export function mapCategorySitemapRoutes(origin: string) {
+  return ARTWORK_CATEGORIES.map((category) => ({
+    url: `${origin}/artworks?category=${encodeURIComponent(category)}`,
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
+  }))
 }
 
 export function mapArtistSitemapRoutes(artists: SitemapArtistRecord[], origin: string) {
