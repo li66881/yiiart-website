@@ -30,6 +30,7 @@ import {
 import { buildStorefrontProduct } from "@/lib/storefront/product"
 import { buildProductOfferJsonLd } from "@/lib/product-offer-schema"
 import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
+import { buildArtworkContentCopy } from "@/lib/artwork-content-copy"
 import {
   buildProductDetailContentModel,
   productDetailStoryLayout,
@@ -142,8 +143,20 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const dimensions = formatArtworkDimensions(artwork)
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
+  const contentCopy = buildArtworkContentCopy({
+    title,
+    artistName,
+    category,
+    medium,
+    colorFamilies: normalizeList(artwork.colorFamilies),
+    roomTypes: normalizeList(artwork.roomTypes),
+    sizeCount: Array.isArray(artwork.standardSizes) ? artwork.standardSizes.length : 0,
+    description: pickEnglish(artwork.description),
+    shortDescription: pickEnglish(artwork.shortDescription),
+    artworkStory: pickEnglish(artwork.artworkStory),
+  })
   const description =
-    pickEnglish(artwork.description) ||
+    contentCopy.metaDescription ||
     buildArtworkMetaDescription({
       title,
       artistName,
@@ -191,8 +204,9 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
   const dimensions = formatArtworkDimensions(artwork)
-  const description = pickEnglish(artwork.description)
-  const artworkStory = pickEnglish(artwork.artworkStory)
+  const originalDescription = pickEnglish(artwork.description)
+  const originalShortDescription = pickEnglish(artwork.shortDescription)
+  const originalArtworkStory = pickEnglish(artwork.artworkStory)
   const roomTypes = normalizeList(artwork.roomTypes)
   const colorFamilies = normalizeList(artwork.colorFamilies)
   const orientation = artwork.orientation || inferOrientation(dimensions)
@@ -226,6 +240,22 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
       kind: index === 0 ? "artwork" as const : "detail" as const,
     })),
   )
+  const contentCopy = buildArtworkContentCopy({
+    title,
+    artistName,
+    category,
+    medium,
+    colorFamilies,
+    roomTypes,
+    sizeCount: storefrontProduct.sizes.length,
+    description: originalDescription,
+    shortDescription: originalShortDescription || storefrontProduct.shortDescription,
+    artworkStory: originalArtworkStory,
+  })
+  const displayProduct = {
+    ...storefrontProduct,
+    shortDescription: contentCopy.shortDescription || storefrontProduct.shortDescription,
+  }
   const detailCopy = buildProductDetailCopy({
     creationWindow: storefrontProduct.creationWindow,
     shippingProfile,
@@ -263,7 +293,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     "@type": "Product",
     name: buildArtworkSeoTitle(artwork),
     image: galleryImages.slice(0, 10),
-    description: description || `${title} is an original hand-painted artwork by ${artistName}.`,
+    description: contentCopy.about || originalDescription || `${title} is an original hand-painted artwork by ${artistName}.`,
     brand: {
       "@type": "Brand",
       name: "YiiArt",
@@ -358,7 +388,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
             <div className="lg:sticky lg:top-[calc(var(--yiiart-header-offset)+18px)] lg:self-start">
               <ProductPurchasePanel
-                product={storefrontProduct}
+                product={displayProduct}
                 directCheckoutAvailable={directCheckoutAvailable}
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
@@ -377,10 +407,10 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
                   <p className={storefrontStyles.productDetailEyebrow}>Artwork story</p>
                   <h2>About the artwork</h2>
                   <p className="whitespace-pre-line">
-                    {description || `${title} is a physical hand-painted artwork by ${artistName}.`}
+                    {contentCopy.about || `${title} is a physical hand-painted artwork by ${artistName}.`}
                   </p>
-                  {artworkStory && artworkStory !== description && (
-                    <p className="whitespace-pre-line">{artworkStory}</p>
+                  {contentCopy.artworkStory && contentCopy.artworkStory !== contentCopy.about && (
+                    <p className="whitespace-pre-line">{contentCopy.artworkStory}</p>
                   )}
                   <ProductDisclosure productionModel={storefrontProduct.productionModel} />
                   <div className={storefrontStyles.productDetailShare}>
