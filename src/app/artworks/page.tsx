@@ -8,6 +8,7 @@ import { buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
+import { buildArtworkCategorySeoMetadata, getArtworkCategorySeo } from "@/lib/artwork-category-seo"
 
 export const revalidate = 600
 
@@ -56,18 +57,16 @@ async function getSeoImage(category?: string) {
 
 export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = normalizeCategory(firstQueryValue(params.category))
+  const requestedCategory = firstQueryValue(params.category)
+  const categoryMetadata = buildArtworkCategorySeoMetadata(requestedCategory)
+  const activeCategory = categoryMetadata.category || normalizeCategory(requestedCategory)
   const seoImage = await getSeoImage(activeCategory)
-  const title = activeCategory ? `${activeCategory} Hand-Painted Paintings` : "Hand-Painted Paintings"
-  const description = activeCategory
-    ? `Browse ${activeCategory.toLowerCase()} hand-painted paintings from YiiArt, with size, palette, and delivery guidance confirmed before ordering.`
-    : "Browse abstract, landscape, portrait, textured, and minimalist paintings hand-painted on canvas."
-  const path = activeCategory ? `/artworks?category=${encodeURIComponent(activeCategory)}` : "/artworks"
 
   return buildSeoMetadata({
-    title,
-    description,
-    path,
+    title: categoryMetadata.title,
+    description: categoryMetadata.description,
+    path: categoryMetadata.path,
+    robots: categoryMetadata.robots,
     image: seoImage?.image,
     imageAlt: seoImage?.alt,
   })
@@ -75,7 +74,8 @@ export async function generateMetadata({ searchParams }: Props) {
 
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
-  const activeCategory = normalizeCategory(firstQueryValue(params.category))
+  const requestedCategory = firstQueryValue(params.category)
+  const activeCategory = getArtworkCategorySeo(requestedCategory)?.category || normalizeCategory(requestedCategory)
   const initialDiscovery = buildArtworkDiscoveryInitialState(params)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
