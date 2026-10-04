@@ -224,6 +224,12 @@ describe("purchase overlay integration", () => {
     expect(screen.getByText("A quiet hand-painted work.")).not.toBeNull()
     expect(screen.queryByRole("button", { name: /Read more|Show less/ })).toBeNull()
   })
+
+  it("links the artist byline to the artist profile when a route is available", () => {
+    renderStorefront(1440, 1000, { ...product, artistName: "Sofie Lindberg", artistHref: "/artist/sofie-lindberg" })
+
+    expect(screen.getByRole("link", { name: "Sofie Lindberg" }).getAttribute("href")).toBe("/artist/sofie-lindberg")
+  })
 })
 
 function renderStorefront(
