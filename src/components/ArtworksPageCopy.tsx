@@ -1,16 +1,23 @@
 "use client"
 
 import { useLanguage } from "@/context/LanguageContext"
+import { getArtworkCategorySeo } from "@/lib/artwork-category-seo"
 
 type ArtworksPageCopyProps = {
   activeCategory?: string
 }
 
 export function ArtworksPageHeroCopy({ activeCategory }: ArtworksPageCopyProps) {
-  const { t } = useLanguage()
+  const { t, locale } = useLanguage()
+  const categorySeo = getArtworkCategorySeo(activeCategory)
   const title = activeCategory
-    ? `${translateDiscoveryOption(t, activeCategory)} ${t("common.artworks")}`
+    ? locale === "en" && categorySeo
+      ? categorySeo.title.replace(/ \| YiiArt$/, "")
+      : `${translateDiscoveryOption(t, activeCategory)} ${t("common.artworks")}`
     : t("artworksPage.allTitle")
+  const description = locale === "en" && categorySeo
+    ? categorySeo.description
+    : t("artworksPage.description")
 
   return (
     <div className="mb-7 grid gap-3 border-b border-stone-200 pb-7 md:grid-cols-[minmax(0,0.75fr)_minmax(340px,1.25fr)] md:items-end">
@@ -19,7 +26,7 @@ export function ArtworksPageHeroCopy({ activeCategory }: ArtworksPageCopyProps) 
         <h1 className="max-w-[14ch] text-4xl font-light leading-none md:text-5xl">{title}</h1>
       </div>
       <p className="max-w-2xl text-sm leading-7 text-stone-600 md:justify-self-end">
-        {t("artworksPage.description")}
+        {description}
       </p>
     </div>
   )
