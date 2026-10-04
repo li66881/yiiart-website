@@ -49,18 +49,36 @@ export function buildArtworkContentCopy(input: ArtworkContentCopyInput) {
     }
   }
 
-  const category = input.category.toLowerCase()
+  const artForm = formatArtworkType(input.category)
   const medium = input.medium.toLowerCase()
   const palette = formatList(colors.map(formatColor))
   const roomList = formatList(rooms.map(formatRoom))
-  const about = `${input.title} is a made-to-order ${category} painting in ${medium} by ${input.artistName}. Its catalog palette is ${palette}. YiiArt recommends it for ${roomList}. Choose from ${input.sizeCount} listed sizes, checking your wall and furniture measurements before ordering.`
+  const about = `${input.title} is a made-to-order ${artForm} in ${medium} by ${input.artistName}. Its catalog palette is ${palette}. YiiArt recommends it for ${roomList}. Choose from ${input.sizeCount} listed sizes, checking your wall and furniture measurements before ordering.`
 
   return {
     about,
-    shortDescription: `${input.category} painting in ${medium}, hand-painted to order by ${input.artistName}. Listed palette: ${palette}; recommended for ${roomList}.`,
+    shortDescription: `${capitalize(artForm)} in ${medium}, hand-painted to order by ${input.artistName}. Listed palette: ${palette}; recommended for ${roomList}.`,
     artworkStory: hasStoryTemplate(artworkStory) ? "" : artworkStory,
-    metaDescription: `Explore ${input.title}, a hand-painted ${category} in ${medium} by ${input.artistName}. Compare ${input.sizeCount} sizes; listed palette: ${palette}.`,
+    metaDescription: `Explore ${input.title}, a hand-painted ${artForm} in ${medium} by ${input.artistName}. Compare ${input.sizeCount} sizes; listed palette: ${palette}.`,
   }
+}
+
+function formatArtworkType(category: string) {
+  const normalized = category.trim().toLowerCase()
+  const knownTypes: Record<string, string> = {
+    abstract: "abstract painting",
+    landscape: "landscape painting",
+    portrait: "portrait painting",
+    figurative: "figurative painting",
+    texture: "textured painting",
+    "wabi-sabi": "wabi-sabi painting",
+    minimalist: "minimalist painting",
+  }
+  return knownTypes[normalized] || `${normalized} painting`
+}
+
+function capitalize(value: string) {
+  return value.charAt(0).toUpperCase() + value.slice(1)
 }
 
 function formatList(values: string[]) {
