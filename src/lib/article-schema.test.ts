@@ -7,4 +7,6 @@ test("links guide author and publisher to the site Organization entity", async (
 
   assert.match(guidePage, /author:\s*\{[\s\S]*?"@id": absoluteUrl\("\/#organization"\)/)
   assert.match(guidePage, /publisher:\s*\{\s*"@id": absoluteUrl\("\/#organization"\)/)
+  assert.match(guidePage, /By YiiArt Studio/)
+  assert.doesNotMatch(guidePage, /dateModified:/)
 })
