@@ -15,6 +15,7 @@ test("every sitemap artwork category has distinct, natural English metadata", ()
 
 test("category resolution is case-insensitive and rejects unknown URL values", () => {
   assert.equal(getArtworkCategorySeo(" texture ")?.category, "Texture")
+  assert.equal(getArtworkCategorySeo("肌理")?.category, "Texture")
   assert.equal(getArtworkCategorySeo("made-up-category"), undefined)
 })
 
