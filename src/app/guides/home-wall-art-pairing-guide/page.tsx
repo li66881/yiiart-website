@@ -46,7 +46,7 @@ const roomGuides = [
 const sizeRules = [
   {
     title: "Above a sofa",
-    text: "A practical starting point is artwork around 60%-75% of the sofa width, adjusted for ceiling height and side furniture.",
+    text: "Let the sofa anchor the composition, then compare the full artwork arrangement with both the furniture and clear wall space.",
   },
   {
     title: "Above a bed",
@@ -95,9 +95,9 @@ const mistakes = [
 
 const faqs = [
   {
-    question: "What size wall art should I choose for a living room?",
+    question: "How should wall art relate to living-room furniture?",
     answer:
-      "For artwork above a sofa, a helpful starting point is about 60%-75% of the sofa width. The final choice should also consider ceiling height, side tables, lamps, and how far away the artwork is viewed.",
+      "Compare the artwork with the sofa and usable wall width, then account for ceiling height, side tables, lamps, and viewing distance. The size guide includes a sofa-width chart and a step-by-step measuring checklist.",
   },
   {
     question: "Is original wall art better than prints?",
@@ -127,7 +127,7 @@ const articleJsonLd = {
   headline: title,
   description,
   datePublished: "2026-06-24",
-  dateModified: "2026-06-24",
+  dateModified: "2026-10-04",
   author: {
     "@type": "Organization",
     name: "YiiArt",
@@ -242,6 +242,11 @@ export default function HomeWallArtPairingGuidePage() {
               </div>
             ))}
           </div>
+          <p className="mt-7">
+            <Link href="/size-guide" className="font-medium underline underline-offset-4">
+              Use the wall art size guide for sofa-width examples and measuring steps
+            </Link>
+          </p>
           <p>
             If the room is difficult to judge from measurements alone, tape paper to the wall in the proposed size and
             photograph it from the main viewing angle. YiiArt can review room photos, wall width, ceiling height, and
