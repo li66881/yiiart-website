@@ -1,18 +1,14 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { usePathname, useSearchParams } from "next/navigation"
 import Script from "next/script"
-import { shouldTrackPageView, trackPageView } from "@/lib/marketing-events"
+import { shouldTrackPageView, subscribeToLocationChanges, trackPageView } from "@/lib/marketing-events"
 
 const CONSENT_KEY = "yiiart-cookie-consent"
 
 export default function MarketingPixels() {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
   const trackedUrlRef = useRef<string | null>(null)
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
-  const search = searchParams.toString()
   const gaId = process.env.NEXT_PUBLIC_GA_ID || process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || "G-8B8R7YY67Q"
   const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID
   const pinterestTagId = process.env.NEXT_PUBLIC_PINTEREST_TAG_ID
@@ -28,6 +24,14 @@ export default function MarketingPixels() {
 
     return () => window.removeEventListener("yiiart:cookie-consent", updateConsent)
   }, [])
+
+  useEffect(() => subscribeToLocationChanges(window, () => {
+    if (!analyticsAllowed) return
+    const currentUrl = window.location.href
+    if (!shouldTrackPageView(true, trackedUrlRef.current, currentUrl)) return
+    trackedUrlRef.current = currentUrl
+    trackPageView(currentUrl)
+  }), [analyticsAllowed])
 
   useEffect(() => {
     if (!analyticsAllowed) return
@@ -45,7 +49,7 @@ export default function MarketingPixels() {
 
     trackedUrlRef.current = currentUrl
     trackPageView(currentUrl)
-  }, [analyticsAllowed, gaId, pathname, search])
+  }, [analyticsAllowed, gaId])
 
   if (!analyticsAllowed) {
     return null
