@@ -9,8 +9,8 @@ test("every sitemap artwork category has distinct, natural English metadata", ()
   assert.equal(pages.every(Boolean), true)
   assert.equal(new Set(pages.map((page) => page?.title)).size, ARTWORK_CATEGORIES.length)
   assert.equal(new Set(pages.map((page) => page?.description)).size, ARTWORK_CATEGORIES.length)
-  assert.equal(getArtworkCategorySeo("Texture")?.title, "Textured Wall Art & Paintings | YiiArt")
-  assert.equal(getArtworkCategorySeo("Landscape")?.title, "Landscape Paintings | YiiArt")
+  assert.equal(getArtworkCategorySeo("Texture")?.title, "Textured Wall Art & Paintings")
+  assert.equal(getArtworkCategorySeo("Landscape")?.title, "Landscape Paintings")
 })
 
 test("category resolution is case-insensitive and rejects unknown URL values", () => {
@@ -21,7 +21,7 @@ test("category resolution is case-insensitive and rejects unknown URL values", (
 test("only recognized category filters get indexable category canonicals", () => {
   assert.deepEqual(buildArtworkCategorySeoMetadata("Texture"), {
     category: "Texture",
-    title: "Textured Wall Art & Paintings | YiiArt",
+    title: "Textured Wall Art & Paintings",
     description: getArtworkCategorySeo("Texture")?.description,
     path: "/artworks?category=Texture",
     robots: undefined,

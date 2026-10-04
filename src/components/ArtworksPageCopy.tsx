@@ -12,7 +12,7 @@ export function ArtworksPageHeroCopy({ activeCategory }: ArtworksPageCopyProps) 
   const categorySeo = getArtworkCategorySeo(activeCategory)
   const title = activeCategory
     ? locale === "en" && categorySeo
-      ? categorySeo.title.replace(/ \| YiiArt$/, "")
+      ? categorySeo.title
       : `${translateDiscoveryOption(t, activeCategory)} ${t("common.artworks")}`
     : t("artworksPage.allTitle")
   const description = locale === "en" && categorySeo
