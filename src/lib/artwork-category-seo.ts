@@ -1,4 +1,5 @@
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
+import { normalizeCategory } from "./artwork-display"
 
 const categorySeoCopy = {
   Abstract: {
@@ -42,11 +43,16 @@ const allArtworkDescription =
   "Browse hand-painted paintings from YiiArt across abstract, landscape, portrait, textured, and minimalist styles. Filter by room, color, size, and orientation."
 
 export function getArtworkCategorySeo(category?: string) {
+  const normalizedCategory = normalizeCategory(category)
   const normalized = ARTWORK_CATEGORIES.find(
-    (item) => item.toLowerCase() === category?.trim().toLowerCase(),
+    (item) => item.toLowerCase() === normalizedCategory.toLowerCase(),
   )
 
   return normalized ? { category: normalized, ...categorySeoCopy[normalized] } : undefined
+}
+
+export function resolveArtworkCategoryFilter(category?: string) {
+  return getArtworkCategorySeo(category)?.category
 }
 
 export function buildArtworkCategorySeoMetadata(category?: string) {

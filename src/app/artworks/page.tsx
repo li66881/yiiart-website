@@ -8,7 +8,7 @@ import { buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
-import { buildArtworkCategorySeoMetadata, getArtworkCategorySeo } from "@/lib/artwork-category-seo"
+import { buildArtworkCategorySeoMetadata, resolveArtworkCategoryFilter } from "@/lib/artwork-category-seo"
 
 export const revalidate = 600
 
@@ -59,7 +59,7 @@ export async function generateMetadata({ searchParams }: Props) {
   const params = await searchParams
   const requestedCategory = firstQueryValue(params.category)
   const categoryMetadata = buildArtworkCategorySeoMetadata(requestedCategory)
-  const activeCategory = categoryMetadata.category || normalizeCategory(requestedCategory)
+  const activeCategory = categoryMetadata.category || (categoryMetadata.robots ? undefined : normalizeCategory(requestedCategory))
   const seoImage = await getSeoImage(activeCategory)
 
   return buildSeoMetadata({
@@ -75,7 +75,7 @@ export async function generateMetadata({ searchParams }: Props) {
 export default async function ArtworksPage({ searchParams }: Props) {
   const params = await searchParams
   const requestedCategory = firstQueryValue(params.category)
-  const activeCategory = getArtworkCategorySeo(requestedCategory)?.category || normalizeCategory(requestedCategory)
+  const activeCategory = resolveArtworkCategoryFilter(requestedCategory) || ""
   const initialDiscovery = buildArtworkDiscoveryInitialState(params)
   const artworks = await getCategoryArtworks(activeCategory).catch(() => [])
   const artworkItems = artworks.map((artwork: any) => {
