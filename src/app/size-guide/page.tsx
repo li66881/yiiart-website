@@ -6,9 +6,9 @@ import { buildSeoMetadata } from "@/lib/seo"
 import { sofaArtworkSizeExamples } from "@/lib/wall-art-sizing"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "Wall Art Size Guide for Sofas, Beds & Rooms",
+  title: "Wall Art Size Guide: Sofa, Bed & Room Sizes",
   description:
-    "Find the right wall art size for your sofa, bed, or room. Compare artwork width ranges, measure your wall, and choose a canvas with confidence.",
+    "Find the right wall art size for a sofa, bed, or room. Use the 60%-75% sofa-width starting point, compare size examples, and measure your clear wall space.",
   path: "/size-guide",
 })
 
@@ -87,6 +87,22 @@ export default function SizeGuidePage() {
               practical starting points, not fixed rules; ceiling height, side furniture, and viewing distance all affect
               the final fit.
             </p>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 bg-white px-4 py-10 sm:px-6 lg:px-10">
+          <div className="mx-auto grid max-w-[1440px] gap-4 md:grid-cols-[0.7fr_1fr] md:items-start">
+            <h2 className="text-2xl font-light leading-tight">What size wall art should go above a sofa?</h2>
+            <div className="space-y-3 text-sm leading-6 text-stone-600">
+              <p>
+                A useful starting range is artwork or a complete group about 60%-75% of the sofa's width. For an
+                84-inch sofa, that is roughly 50-63 inches (127-160 cm) wide.
+              </p>
+              <p>
+                Measure the clear wall and include gaps between pieces. If windows, lamps, or an off-center sofa limit
+                the space, fit the artwork to the usable area instead of treating the ratio as a rule.
+              </p>
+            </div>
           </div>
         </section>
 
