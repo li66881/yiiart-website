@@ -133,9 +133,15 @@ export function formatStorePrice(priceCny?: number | null, currency = getStoreCu
   }
 
   const amount = convertCnyToStoreAmount(numericPrice, currency)
-  const roundedAmount = Math.round(amount)
+  const fractionDigits = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).resolvedOptions().maximumFractionDigits
+  const formattedAmount = amount.toLocaleString("en-US", {
+    maximumFractionDigits: fractionDigits,
+  })
 
-  return `${getCurrencyOption(currency).symbol}${roundedAmount.toLocaleString("en-US")} ${currency}`
+  return `${getCurrencyOption(currency).symbol}${formattedAmount} ${currency}`
 }
 
 export function getPriceDisclosure(currency = getStoreCurrency(), checkoutCurrency = getStoreCurrency()) {
