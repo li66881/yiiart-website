@@ -27,6 +27,35 @@ test("replaces catalog boilerplate with confirmed product attributes", () => {
   assert.equal(copy.artworkStory, "")
 })
 
+test("uses grammatical artwork nouns for every supported style category", () => {
+  const categories = [
+    ["Abstract", "abstract painting"],
+    ["Landscape", "landscape painting"],
+    ["Portrait", "portrait painting"],
+    ["Figurative", "figurative painting"],
+    ["Texture", "textured painting"],
+    ["Wabi-sabi", "wabi-sabi painting"],
+    ["Minimalist", "minimalist painting"],
+  ]
+
+  for (const [category, artForm] of categories) {
+    const copy = buildArtworkContentCopy({
+      title: "Test Artwork",
+      artistName: "Test Artist",
+      category,
+      medium: "Acrylic on canvas",
+      colorFamilies: ["Blue"],
+      roomTypes: ["Living room"],
+      sizeCount: 4,
+      ...templateCopy,
+    })
+
+    assert.ok(copy.about.includes(`made-to-order ${artForm}`), category)
+    assert.ok(copy.shortDescription.includes(`${artForm[0].toUpperCase()}${artForm.slice(1)} in acrylic`), category)
+    assert.ok(copy.metaDescription.includes(`hand-painted ${artForm} in acrylic`), category)
+  }
+})
+
 test("preserves distinct editorial copy without rewriting it", () => {
   const authored = {
     description: "A quiet shoreline built from broken blue strokes and a narrow band of pale sky.",
