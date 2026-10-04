@@ -127,7 +127,6 @@ const articleJsonLd = {
   headline: title,
   description,
   datePublished: "2026-06-24",
-  dateModified: "2026-10-04",
   author: {
     "@type": "Organization",
     "@id": absoluteUrl("/#organization"),
@@ -166,6 +165,7 @@ export default function HomeWallArtPairingGuidePage() {
               </Link>
               <p className="mb-3 text-sm uppercase tracking-wider text-stone-500">Wall Art Guide</p>
               <h1 className="text-5xl font-light leading-tight md:text-6xl">{title}</h1>
+              <p className="mt-4 text-sm text-stone-500">By YiiArt Studio</p>
             </div>
             <div>
               <p className="max-w-3xl text-base leading-8 text-stone-600">
