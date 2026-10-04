@@ -135,7 +135,11 @@ export default function ProductPurchasePanel({
       </div>
 
       <h1 id="product-title">{product.title}</h1>
-      <p className={styles.artist}>By {product.artistName}</p>
+      <p className={styles.artist}>
+        By {product.artistHref
+          ? <Link href={product.artistHref}>{product.artistName}</Link>
+          : product.artistName}
+      </p>
       <ProductDescription description={product.shortDescription} />
 
       <div className={styles.priceBlock}>

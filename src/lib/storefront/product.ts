@@ -42,6 +42,7 @@ export type StorefrontProduct = {
   slug: string
   title: string
   artistName: string
+  artistHref?: string
   collectionType: StorefrontCollectionType
   productionModel: StorefrontProductionModel
   rightsStatus: StorefrontRightsStatus
@@ -65,7 +66,7 @@ type StorefrontArtworkInput = {
   _id?: string
   title?: LocalizedText
   slug?: { current?: string }
-  artist?: { name?: LocalizedText }
+  artist?: { name?: LocalizedText; slug?: { current?: string } | null }
   price?: number | string | null
   dimensions?: string | null
   widthCm?: number | string | null
@@ -100,12 +101,14 @@ export function buildStorefrontProduct(
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const category = normalizeCategory(artwork.category)
   const medium = normalizeMedium(artwork.medium)
+  const artistSlug = cleanString(artwork.artist?.slug?.current)
 
   return {
     id: cleanString(artwork._id) || cleanString(artwork.slug?.current) || slugify(title),
     slug: cleanString(artwork.slug?.current) || cleanString(artwork._id) || slugify(title),
     title,
     artistName: pickEnglish(artwork.artist?.name, "YiiArt Studio"),
+    artistHref: artistSlug ? `/artist/${artistSlug}` : undefined,
     collectionType: normalizeCollectionType(artwork.collectionType),
     productionModel,
     rightsStatus: normalizeRightsStatus(artwork.rightsStatus),

@@ -26,6 +26,24 @@ test("defaults legacy artwork to the artist collection and original model", () =
   assert.equal(product.images[0].src, "https://cdn.example/quiet-field.jpg")
 })
 
+test("maps a valid linked artist slug to its internal profile route", () => {
+  const product = buildStorefrontProduct({
+    title: { en: "Quiet Field" },
+    artist: { name: { en: "Studio Artist" }, slug: { current: "studio-artist" } },
+  }, [])
+
+  assert.equal(product.artistHref, "/artist/studio-artist")
+})
+
+test("does not create an artist profile route when the artist has no slug", () => {
+  const product = buildStorefrontProduct({
+    title: { en: "Quiet Field" },
+    artist: { name: { en: "Studio Artist" }, slug: { current: "  " } },
+  }, [])
+
+  assert.equal(product.artistHref, undefined)
+})
+
 test("maps made-to-order sizes and finishes without accepting invalid prices", () => {
   const product = buildStorefrontProduct({
     _id: "catalog-1",
