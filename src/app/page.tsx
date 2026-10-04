@@ -4,29 +4,10 @@ import EditorialHome from "@/components/home/EditorialHome"
 import { client } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
-import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
+import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const revalidate = 600
-
-const faqs = [
-  {
-    question: "Is each painting handmade?",
-    answer: "Physical hand-painted artwork, not a printed reproduction. Each listed design is recreated by studio artists, with natural variations in brushwork and color.",
-  },
-  {
-    question: "Can I customize the size?",
-    answer: "Yes. Custom paintings can be planned around your wall size, preferred orientation, room photo, and color direction before production starts.",
-  },
-  {
-    question: "How long does shipping take?",
-    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route. Tracking information is shared when the selected carrier service provides it.",
-  },
-  {
-    question: "What if the artwork arrives damaged?",
-    answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
-  },
-]
 
 async function getData() {
   try {
@@ -79,11 +60,6 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(buildBreadcrumbJsonLd([{ name: "Home", path: "/" }])) }}
       />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqJsonLd(faqs)) }}
-      />
-
       <EditorialHome artworks={artworks} />
 
       <Footer />
