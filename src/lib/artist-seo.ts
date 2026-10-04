@@ -1,5 +1,15 @@
 const metaDescriptionLimit = 160
 
+const catalogBackedArtistBiographies: Record<string, string> = {
+  "sofie-lindberg":
+    "The YiiArt collection by Sofie Lindberg spans landscapes, botanical still lifes, abstracts, and textured compositions. Each listed design is hand-painted to order, so brushwork and surface details vary.",
+}
+
+export function getPublicArtistBiography(slug: string, biography?: string | null) {
+  const catalogBackedBiography = catalogBackedArtistBiographies[slug.trim().toLowerCase()]
+  return catalogBackedBiography || biography?.trim() || ""
+}
+
 export function buildArtistMetaDescription(artistName: string, biography?: string | null) {
   const cleanBiography = biography?.replace(/\s+/g, " ").trim()
   if (!cleanBiography) {

@@ -52,8 +52,8 @@ async function officialCopyAndHomepage(videoCodes: unknown[]) {
   transaction.patch(ARTIST_ID, (patch) => patch.set({
     featured: true,
     bio: {
-      en: "Sofie Lindberg (b. 1981, Helsingør) paints from a north-facing loft studio in Copenhagen. After studies at the Royal Danish Academy of Fine Arts, she spent several winters in Lisbon, where dry light and plaster walls still show in her palettes. Her work moves between landscape, botanical still life, and constructed texture. Each YiiArt listing is a finished composition available hand-painted to order; brushwork, edge, and pigment density vary from piece to piece.",
-      zh: "索菲·林德伯格，1981年生于丹麦赫尔辛格，现于哥本哈根北向阁楼工作室作画。毕业于丹麦皇家美术学院，曾在里斯本过冬，干爽光线与灰泥墙面仍出现在她的色调里。作品在风景、植物与建构肌理之间切换。YiiArt 上的每件都是可按尺寸手绘订制的正式作品；笔触、边缘与颜料厚度会因画而异。",
+      en: "The YiiArt collection by Sofie Lindberg spans landscapes, botanical still lifes, abstracts, and textured compositions. Each listed design is hand-painted to order, so brushwork and surface details vary.",
+      zh: "YiiArt 中的 Sofie Lindberg 系列包含风景、植物静物、抽象与肌理作品。每幅均按需手绘，因此笔触与表面细节会有所不同。",
     },
   }))
 

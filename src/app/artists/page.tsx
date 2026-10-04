@@ -5,6 +5,7 @@ import Footer from "@/components/Footer"
 import TranslatedText, { TranslatedOption } from "@/components/TranslatedText"
 import { client, urlFor } from "@/lib/sanity"
 import { pickEnglish } from "@/lib/artwork-display"
+import { getPublicArtistBiography } from "@/lib/artist-seo"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const dynamic = "force-dynamic"
@@ -44,6 +45,7 @@ export default async function ArtistsPage() {
             {artists.length > 0 ? artists.map((artist: any) => {
               const artistHref = `/artist/${artist.slug?.current || artist._id}`
               const styles = Array.isArray(artist.style) ? artist.style : []
+              const biography = getPublicArtistBiography(artist.slug?.current || "", pickEnglish(artist.bio))
 
               return (
                 <Link key={artist._id} href={artistHref}>
@@ -66,7 +68,7 @@ export default async function ArtistsPage() {
                     <h3 className="text-xl font-medium">{pickEnglish(artist.name, "YiiArt")}</h3>
                     <p className="text-gray-500">{artist.location}</p>
                     <p className="mt-3 line-clamp-3 text-sm text-gray-600">
-                      {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
+                      {biography || <TranslatedText k="artist.biographyComingSoon" />}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
                       {styles.map((style: string) => (
