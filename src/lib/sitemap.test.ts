@@ -4,16 +4,16 @@ import { filterSitemapArtists, mapArtworkSitemapRoutes, mapArtistSitemapRoutes }
 
 const baseUrl = "https://www.yiiart.com"
 
-test("artwork sitemap routes use valid slugs and CMS update times", () => {
+test("artwork sitemap routes include valid slugs without unverifiable last-modified dates", () => {
   const routes = mapArtworkSitemapRoutes([
-    { slug: { current: "weathered-passage" }, _updatedAt: "2026-09-01T10:00:00Z" },
+    { slug: { current: "weathered-passage" }, _updatedAt: "2026-10-04T10:00:00Z" },
     { slug: { current: "" }, _updatedAt: "2026-09-02T10:00:00Z" },
     { slug: null, _updatedAt: "2026-09-03T10:00:00Z" },
   ], baseUrl)
 
   assert.equal(routes.length, 1)
   assert.equal(routes[0].url, `${baseUrl}/artwork/weathered-passage`)
-  assert.equal(routes[0].lastModified?.toISOString(), "2026-09-01T10:00:00.000Z")
+  assert.equal("lastModified" in routes[0], false)
 })
 
 test("artist sitemap matches public works through an exact duplicate bilingual identity", () => {
@@ -27,13 +27,18 @@ test("artist sitemap matches public works through an exact duplicate bilingual i
   assert.deepEqual(routes.map((route) => route.url), [`${baseUrl}/artist/artist-one`])
 })
 
-test("invalid or absent CMS dates do not become fabricated current timestamps", () => {
+test("artist sitemap routes also omit unrelated CMS update times", () => {
   const routes = mapArtworkSitemapRoutes([
     { slug: { current: "no-date" }, _updatedAt: undefined },
     { slug: { current: "bad-date" }, _updatedAt: "not-a-date" },
   ], baseUrl)
 
   assert.equal(routes.length, 2)
-  assert.equal(routes[0].lastModified, undefined)
-  assert.equal(routes[1].lastModified, undefined)
+  assert.equal("lastModified" in routes[0], false)
+  assert.equal("lastModified" in routes[1], false)
+
+  const artists = mapArtistSitemapRoutes([
+    { _id: "artist-1", slug: { current: "artist-one" }, _updatedAt: "2026-10-04T00:00:00Z", name: { en: "Artist One" } },
+  ], baseUrl)
+  assert.equal("lastModified" in artists[0], false)
 })

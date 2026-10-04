@@ -13,12 +13,6 @@ export type SitemapArtworkRecord = SitemapSlugRecord & {
   artist?: { name?: { en?: string | null; zh?: string | null } | null } | null
 }
 
-function parseLastModified(value?: string | null) {
-  if (!value) return undefined
-  const date = new Date(value)
-  return Number.isNaN(date.getTime()) ? undefined : date
-}
-
 export function mapArtworkSitemapRoutes(artworks: SitemapArtworkRecord[], origin: string) {
   return artworks.flatMap((artwork) => {
     const slug = artwork.slug?.current?.trim()
@@ -26,8 +20,7 @@ export function mapArtworkSitemapRoutes(artworks: SitemapArtworkRecord[], origin
 
     return [{
       url: `${origin}/artwork/${slug}`,
-      lastModified: parseLastModified(artwork._updatedAt),
-      changeFrequency: 'weekly' as const,
+      changeFrequency: "weekly" as const,
       priority: 0.8,
     }]
   })
@@ -58,8 +51,7 @@ export function mapArtistSitemapRoutes(artists: SitemapArtistRecord[], origin: s
 
     return [{
       url: `${origin}/artist/${slug}`,
-      lastModified: parseLastModified(artist._updatedAt),
-      changeFrequency: 'monthly' as const,
+      changeFrequency: "monthly" as const,
       priority: 0.6,
     }]
   })
