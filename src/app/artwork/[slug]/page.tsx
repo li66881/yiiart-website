@@ -291,6 +291,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const productJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
+    sku: artwork.sku || slug,
     name: buildArtworkSeoTitle(artwork),
     image: galleryImages.slice(0, 10),
     description: contentCopy.about || originalDescription || `${title} is an original hand-painted artwork by ${artistName}.`,

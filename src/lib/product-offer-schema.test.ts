@@ -1,6 +1,16 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFile } from "node:fs/promises"
 import { buildProductOfferJsonLd } from "./product-offer-schema"
+
+test("places the artwork SKU on the Product entity", async () => {
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(
+    artworkPage,
+    /const productJsonLd[\s\S]*?"@type": "Product",[\s\S]*?sku: artwork\.sku \|\| slug/
+  )
+})
 
 test("builds a priced product offer without unsupported shipping or return promises", () => {
   const offer = buildProductOfferJsonLd({
