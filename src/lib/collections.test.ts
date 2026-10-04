@@ -21,6 +21,8 @@ test("collection page metadata uses each collection's authored search descriptio
   const page = await readFile("src/app/collections/[slug]/page.tsx", "utf8")
 
   assert.match(page, /description:\s*collection\.metaDescription/)
+  assert.match(page, /title:\s*collection\.title/)
+  assert.doesNotMatch(page, /collection\.title\}\s*for Modern Interiors/)
 })
 
 test("collection hero summaries do not repeat the separate buying-guide or custom sections", async () => {

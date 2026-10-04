@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const artworkWithImage = artworks.find(hasArtworkImage) as any
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
   return buildSeoMetadata({
-    title: `${collection.title} for Modern Interiors`,
+    title: collection.title,
     description: collection.metaDescription,
     path: `/collections/${slug}`,
     image,
