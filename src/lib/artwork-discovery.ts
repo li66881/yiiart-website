@@ -5,6 +5,7 @@ import {
   parseArtworkDimensionsCm,
   pickEnglish,
 } from "@/lib/artwork-display"
+import { ARTWORK_CATEGORIES } from "@/lib/artwork-categories"
 
 export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
 export type ArtworkCollectionTab = "all" | "new_collection" | "artist_collection"
@@ -47,7 +48,7 @@ export const artworkFilterGroups: ArtworkFilterGroup[] = [
   {
     key: "styles",
     label: "Style",
-    options: ["Abstract", "Landscape", "Portrait", "Texture", "Wabi-sabi", "Minimalist"],
+    options: [...ARTWORK_CATEGORIES],
   },
   {
     key: "rooms",

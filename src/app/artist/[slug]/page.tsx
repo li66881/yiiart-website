@@ -7,6 +7,7 @@ import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTempl
 import { client, urlFor } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
+import { buildArtistMetaDescription } from "@/lib/artist-seo"
 import { buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
@@ -21,11 +22,34 @@ async function getArtist(slug: string) {
   }
 }
 
-async function getArtistArtworks(artistId: string) {
+async function getArtistArtworks(artist: any) {
   try {
+    const hasBilingualName = Boolean(artist.name?.en && artist.name?.zh)
+    const artistFilter = hasBilingualName
+      ? `(artist._ref == $artistId || (artist->name.en == $artistNameEn && artist->name.zh == $artistNameZh))`
+      : `artist._ref == $artistId`
+
     return await client.fetch(
-      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && artist._ref == $artistId] | order(_createdAt desc)`,
-      { artistId }
+      `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && ${artistFilter}] | order(_createdAt desc){
+        _id,
+        title,
+        slug,
+        artist->{_id, name},
+        price,
+        dimensions,
+        widthCm,
+        heightCm,
+        medium,
+        category,
+        cloudflareImages,
+        productMedia,
+        images
+      }`,
+      {
+        artistId: artist._id,
+        artistNameEn: artist.name?.en,
+        artistNameZh: artist.name?.zh,
+      }
     )
   } catch (error) {
     console.error("Artist artworks fetch error:", error)
@@ -51,10 +75,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return buildSeoMetadata({
     title: `${artistName} Artist Profile`,
-    description: pickEnglish(
-      artist.bio,
-      `View available original paintings by ${artistName}, with artist details, worldwide delivery, and YiiArt collector support.`
-    ),
+    description: buildArtistMetaDescription(artistName, pickEnglish(artist.bio)),
     path: `/artist/${slug}`,
     image,
     imageAlt: artistName,
@@ -80,7 +101,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
     )
   }
 
-  const artworks = await getArtistArtworks(artist._id)
+  const artworks = await getArtistArtworks(artist)
   const artistName = pickEnglish(artist.name, "YiiArt")
   const styles = Array.isArray(artist.style) ? artist.style : []
 

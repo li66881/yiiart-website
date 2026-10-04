@@ -28,6 +28,7 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
     { title: t("footer.texture"), href: "/artworks?category=Texture" },
     { title: t("footer.livingRoomArt"), href: "/collections/abstract-art-for-living-room" },
     { title: t("footer.texturedWallArt"), href: "/collections/textured-wall-art" },
+    { title: "Wabi-Sabi Wall Art", href: "/collections/wabi-sabi-wall-art" },
     { title: t("common.artists"), href: "/artists" },
   ]
   const footerNavigation = getFooterNavigationModel(
