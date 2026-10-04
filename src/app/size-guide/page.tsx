@@ -3,38 +3,39 @@ import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { buildSeoMetadata } from "@/lib/seo"
+import { sofaArtworkSizeExamples } from "@/lib/wall-art-sizing"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "Artwork Size Guide",
+  title: "Wall Art Size Guide for Sofas, Beds & Rooms",
   description:
-    "Choose the right wall art size for sofas, beds, dining rooms, entryways, offices, large walls, and custom canvas paintings.",
+    "Find the right wall art size for your sofa, bed, or room. Compare artwork width ranges, measure your wall, and choose a canvas with confidence.",
   path: "/size-guide",
 })
 
 const sceneGuides = [
   {
     title: "Above Sofa",
-    advice: "Choose artwork about 60%-75% of the sofa width.",
+    advice: "A useful starting range is 60%-75% of the sofa width. Compare the dimensions below, then check the clear wall space.",
     shape: "sofa",
   },
   {
     title: "Above Bed",
-    advice: "Choose artwork slightly narrower than the headboard.",
+    advice: "Relate the artwork width to the headboard and leave visible space at both sides; check lamps and wall lights too.",
     shape: "bed",
   },
   {
     title: "Dining Room",
-    advice: "Large horizontal pieces usually work well.",
+    advice: "If the work hangs above a sideboard, compare its width with the furniture. Keep enough clearance for chairs and lighting.",
     shape: "dining",
   },
   {
     title: "Entryway",
-    advice: "Vertical or medium-sized artwork is recommended.",
+    advice: "Measure the usable wall between doors, trim, and switches. A vertical work can suit a narrow entry wall.",
     shape: "entryway",
   },
   {
     title: "Office",
-    advice: "Choose calm colors and balanced compositions.",
+    advice: "Check the viewing distance and screen glare as well as the desk width; surface details are best seen up close.",
     shape: "office",
   },
 ]
@@ -43,22 +44,22 @@ const sizeBands = [
   {
     label: "Small",
     range: "Under 60 cm",
-    use: "Best for shelves, compact walls, side corners, narrow entries, or grouped arrangements.",
+    use: "Longest side under 60 cm. Suits shelves, compact walls, narrow entries, or a grouped arrangement.",
   },
   {
     label: "Medium",
     range: "60-100 cm",
-    use: "Works well in bedrooms, entryways, home offices, reading corners, and smaller sofa walls.",
+    use: "Longest side 60-100 cm. Works well in bedrooms, entryways, home offices, reading corners, and smaller furniture walls.",
   },
   {
     label: "Large",
     range: "100-150 cm",
-    use: "A strong choice above sofas, beds, dining room walls, and calm feature walls.",
+    use: "Longest side 100-150 cm. Compare the width with sofas, beds, dining furniture, and the clear wall area.",
   },
   {
     label: "Oversized",
     range: "150 cm+",
-    use: "Designed for large wall art moments, open living rooms, offices, studios, and hospitality spaces.",
+    use: "Longest side over 150 cm. Measure access, hanging clearance, and delivery format for open living rooms, offices, and feature walls.",
   },
 ]
 
@@ -78,12 +79,85 @@ export default function SizeGuidePage() {
         <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
           <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr] lg:items-end">
             <div>
-              <p className="mb-3 text-sm uppercase text-stone-500">Size Guide</p>
-              <h1 className="text-5xl font-light leading-tight md:text-6xl">Artwork Size Guide</h1>
+              <p className="mb-3 text-sm uppercase text-stone-500">Wall Art Size Guide</p>
+              <h1 className="text-5xl font-light leading-tight md:text-6xl">What size wall art fits your room?</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              Choosing the right size is one of the most important parts of buying wall art online.
+              Start with the furniture and usable wall width, then compare the artwork dimensions. The ranges below are
+              practical starting points, not fixed rules; ceiling height, side furniture, and viewing distance all affect
+              the final fit.
             </p>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 bg-[#fbfaf6] px-4 py-16 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="mb-8 max-w-3xl">
+              <p className="mb-3 text-sm uppercase text-stone-500">Above the sofa</p>
+              <h2 className="text-4xl font-light leading-tight">Use sofa width to estimate artwork width.</h2>
+              <p className="mt-4 text-base leading-7 text-stone-600">
+                A common starting point is an artwork or grouped arrangement about 60%-75% as wide as the sofa. Measure
+                the full arrangement, including gaps between pieces, and keep it inside the usable wall area.
+              </p>
+            </div>
+            <div className="border-y border-stone-300 bg-white">
+              <table className="w-full table-fixed border-collapse text-left text-sm">
+                <caption className="sr-only">Suggested total artwork width by sofa width</caption>
+                <thead className="bg-stone-100 text-stone-700">
+                  <tr>
+                    <th scope="col" className="w-[35%] px-4 py-3 font-medium">Sofa width</th>
+                    <th scope="col" className="w-[65%] px-4 py-3 font-medium">Artwork width (cm / in)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sofaArtworkSizeExamples.map((row) => (
+                    <tr key={row.furnitureWidthCm} className="border-t border-stone-200">
+                      <th scope="row" className="px-4 py-3 font-medium text-stone-900">{row.furnitureWidthCm} cm</th>
+                      <td className="px-4 py-3 text-stone-700">
+                        <span>{row.minArtworkWidthCm}-{row.maxArtworkWidthCm} cm</span>
+                        <span className="block text-xs text-stone-500">{row.minArtworkWidthIn}-{row.maxArtworkWidthIn} in</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="mt-4 max-w-4xl text-sm leading-6 text-stone-600">
+              For example, a 180 cm sofa gives a starting artwork-width range of about 108-135 cm. If the wall is narrow,
+              the sofa sits off-center, or lamps occupy the ends, use the clear wall width instead of forcing the full range.
+            </p>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
+          <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.72fr_1fr]">
+            <div>
+              <p className="mb-3 text-sm uppercase text-stone-500">Measure before you choose</p>
+              <h2 className="text-4xl font-light leading-tight">Four checks for a better fit.</h2>
+            </div>
+            <ol className="grid gap-5 sm:grid-cols-2">
+              <li className="border-t border-stone-300 pt-4">
+                <h3 className="font-medium">1. Measure the furniture</h3>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Record the full sofa, headboard, or sideboard width, including its outer edges.</p>
+              </li>
+              <li className="border-t border-stone-300 pt-4">
+                <h3 className="font-medium">2. Measure clear wall width</h3>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Subtract space occupied by windows, doors, sconces, shelves, or cabinetry.</p>
+              </li>
+              <li className="border-t border-stone-300 pt-4">
+                <h3 className="font-medium">3. Compare the full composition</h3>
+                <p className="mt-2 text-sm leading-6 text-stone-600">For multiple pieces, add every artwork width and the gaps between them before comparing with furniture.</p>
+              </li>
+              <li className="border-t border-stone-300 pt-4">
+                <h3 className="font-medium">4. Test the outline on the wall</h3>
+                <p className="mt-2 text-sm leading-6 text-stone-600">Use painter's tape to mark the outer dimensions and view them from the main seat or doorway.</p>
+              </li>
+            </ol>
+          </div>
+          <div className="mx-auto mt-10 max-w-[1440px] border-l-2 border-stone-400 pl-5 text-sm leading-6 text-stone-600">
+            Above a sofa or bed, leave a comfortable visual gap rather than aligning artwork to a universal height. Start
+            around 15-30 cm (6-12 in) above the furniture, then adjust for the artwork's height, ceiling, wall features,
+            and seated sightline.
           </div>
         </section>
 
