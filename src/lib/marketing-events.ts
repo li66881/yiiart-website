@@ -14,6 +14,34 @@ type MarketingEventParams = Record<string, string | number | boolean | undefined
 
 const CONSENT_KEY = "yiiart-cookie-consent"
 
+export function shouldTrackPageView(consentGranted: boolean, previousUrl: string | null, currentUrl: string) {
+  return consentGranted && previousUrl !== currentUrl
+}
+
+type LocationChangeTarget = Pick<Window, "addEventListener" | "removeEventListener"> & {
+  history: Pick<History, "pushState" | "replaceState">
+}
+
+export function subscribeToLocationChanges(target: LocationChangeTarget, onChange: () => void) {
+  const { pushState, replaceState } = target.history
+
+  target.history.pushState = function (...args) {
+    pushState.apply(this, args)
+    onChange()
+  }
+  target.history.replaceState = function (...args) {
+    replaceState.apply(this, args)
+    onChange()
+  }
+  target.addEventListener("popstate", onChange)
+
+  return () => {
+    target.history.pushState = pushState
+    target.history.replaceState = replaceState
+    target.removeEventListener("popstate", onChange)
+  }
+}
+
 const gaEventNames: Record<MarketingEventName, string> = {
   ViewContent: "view_item",
   AddToCart: "add_to_cart",
