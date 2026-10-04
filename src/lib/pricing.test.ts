@@ -1,6 +1,12 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { formatStorePrice } from "./pricing"
+import { formatStoreAmount, formatStorePrice } from "./pricing"
+
+test("formats structured prices to the visible currency precision without grouping", () => {
+  assert.equal(formatStoreAmount(264.716, "USD"), "264.72")
+  assert.equal(formatStoreAmount(3333.7, "JPY"), "3334")
+  assert.equal(formatStoreAmount(2500.75, "KRW"), "2501")
+})
 
 test("formats checkout-currency prices to minor-unit precision", () => {
   const previousRate = process.env.NEXT_PUBLIC_CNY_PER_USD

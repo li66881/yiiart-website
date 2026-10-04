@@ -12,6 +12,12 @@ test("places the artwork SKU on the Product entity", async () => {
   )
 })
 
+test("formats Product offer prices to the selected currency precision", async () => {
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(artworkPage, /price: priceCny > 0 \? formatStoreAmount\(offerPrice, currency\) : undefined/)
+})
+
 test("builds a priced product offer without unsupported shipping or return promises", () => {
   const offer = buildProductOfferJsonLd({
     url: "https://www.yiiart.com/artwork/quiet-field",
