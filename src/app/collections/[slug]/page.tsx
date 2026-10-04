@@ -37,11 +37,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const artworks = await getCollectionArtworks(slug)
   const artworkWithImage = artworks.find(hasArtworkImage) as any
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
-  const description = buildCollectionMetaDescription(collection)
-
   return buildSeoMetadata({
     title: `${collection.title} for Modern Interiors`,
-    description,
+    description: collection.metaDescription,
     path: `/collections/${slug}`,
     image,
     imageAlt: artworkWithImage ? `${pickEnglish(artworkWithImage.title, collection.title)} from ${collection.title}` : collection.title,
@@ -252,15 +250,6 @@ function buildCollectionHeroCopy(collection: {
   ].join(" ")
 
   return trimWords(base, 180)
-}
-
-function buildCollectionMetaDescription(collection: {
-  description: string
-  rooms?: string[]
-}) {
-  const base = collection.description.replace(/\.$/, "")
-  const rooms = collection.rooms?.length ? ` for ${collection.rooms.slice(0, 2).join(" and ")}` : ""
-  return `${base}${rooms}. Compare handmade paintings by size, room fit, palette, and custom canvas options.`
 }
 
 function trimWords(text: string, maxWords: number) {

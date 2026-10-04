@@ -1,4 +1,5 @@
 import assert from "node:assert/strict"
+import { readFile } from "node:fs/promises"
 import test from "node:test"
 import { getFooterNavigationModel, getHeaderNavigationModel } from "./catalog-presentation"
 
@@ -42,4 +43,16 @@ test("filters Footer shop links while retaining Footer support links", () => {
 
   assert.deepEqual(model.shop.map((link) => link.label), ["All Artworks", "Abstract Art", "Large Wall Art", "Custom Painting"])
   assert.deepEqual(model.support.map((link) => link.label), ["Contact", "Reviews"])
+})
+
+test("Wabi-Sabi collection has a crawlable footer link when its catalog is eligible", async () => {
+  const footer = await readFile("src/components/FooterClient.tsx", "utf8")
+  const model = getFooterNavigationModel(
+    [{ href: "/collections/wabi-sabi-wall-art", label: "Wabi-Sabi Wall Art" }],
+    [],
+    { visibleCollectionSlugs: ["wabi-sabi-wall-art"], visibleCategories: [] },
+  )
+
+  assert.match(footer, /href: "\/collections\/wabi-sabi-wall-art"/)
+  assert.deepEqual(model.shop, [{ href: "/collections/wabi-sabi-wall-art", label: "Wabi-Sabi Wall Art" }])
 })

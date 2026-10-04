@@ -7,6 +7,7 @@ import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTempl
 import { client, urlFor } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
+import { buildArtistMetaDescription } from "@/lib/artist-seo"
 import { buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
@@ -74,10 +75,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return buildSeoMetadata({
     title: `${artistName} Artist Profile`,
-    description: pickEnglish(
-      artist.bio,
-      `View available original paintings by ${artistName}, with artist details, worldwide delivery, and YiiArt collector support.`
-    ),
+    description: buildArtistMetaDescription(artistName, pickEnglish(artist.bio)),
     path: `/artist/${slug}`,
     image,
     imageAlt: artistName,
