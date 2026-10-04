@@ -7,7 +7,7 @@ import TranslatedText, { TranslatedOption, TranslatedOptionList, TranslatedTempl
 import { client, urlFor } from "@/lib/sanity"
 import { formatArtworkDimensions, normalizeCategory, normalizeMedium, pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
-import { buildArtistMetaDescription } from "@/lib/artist-seo"
+import { buildArtistMetaDescription, getPublicArtistBiography } from "@/lib/artist-seo"
 import { buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
@@ -71,11 +71,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   const artistName = pickEnglish(artist.name, "YiiArt")
+  const biography = getPublicArtistBiography(artist.slug?.current || slug, pickEnglish(artist.bio))
   const image = artist.image ? urlFor(artist.image).width(1200).height(630).url() : undefined
 
   return buildSeoMetadata({
     title: `${artistName} Artist Profile`,
-    description: buildArtistMetaDescription(artistName, pickEnglish(artist.bio)),
+    description: buildArtistMetaDescription(artistName, biography),
     path: `/artist/${slug}`,
     image,
     imageAlt: artistName,
@@ -103,6 +104,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
 
   const artworks = await getArtistArtworks(artist)
   const artistName = pickEnglish(artist.name, "YiiArt")
+  const biography = getPublicArtistBiography(artist.slug?.current || slug, pickEnglish(artist.bio))
   const styles = Array.isArray(artist.style) ? artist.style : []
 
   return (
@@ -142,7 +144,7 @@ export default async function ArtistPage({ params }: { params: Promise<{ slug: s
               <div className="border-t pt-8">
                 <h2 className="mb-4 text-lg font-medium"><TranslatedText k="artist.biography" /></h2>
                 <p className="whitespace-pre-line text-gray-600">
-                  {pickEnglish(artist.bio, "") || <TranslatedText k="artist.biographyComingSoon" />}
+                  {biography || <TranslatedText k="artist.biographyComingSoon" />}
                 </p>
               </div>
             </div>
