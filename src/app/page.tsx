@@ -9,6 +9,10 @@ import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 
 export const revalidate = 600
 
+const homepageSeoTitle = "Hand-Painted Wall Art & Original Canvas Art | YiiArt"
+const homepageSeoDescription =
+  "Shop hand-painted wall art for living rooms, bedrooms, and design projects. Explore abstract, textured, and large canvas paintings, or request custom artwork for your space."
+
 async function getData() {
   try {
     const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(_createdAt desc){
@@ -33,18 +37,16 @@ export async function generateMetadata() {
     const image = getArtworkImageUrl(artwork, { width: 1200, height: 630 })
 
     return buildSeoMetadata({
-      title: "Hand-Painted Art for Interior Design Projects & Homes",
-      description:
-        "Explore hand-painted artwork for interior design projects and homes. Discuss coordinated selections, custom sizes, palettes, and made-to-order canvas art with YiiArt.",
+      title: homepageSeoTitle,
+      description: homepageSeoDescription,
       path: "/",
       image,
       imageAlt: artwork ? `${pickEnglish(artwork.title, "Original YiiArt painting")} by YiiArt` : undefined,
     })
   } catch {
     return buildSeoMetadata({
-      title: "Hand-Painted Art for Interior Design Projects & Homes",
-      description:
-        "Explore hand-painted artwork for interior design projects and homes. Discuss coordinated selections, custom sizes, palettes, and made-to-order canvas art with YiiArt.",
+      title: homepageSeoTitle,
+      description: homepageSeoDescription,
       path: "/",
     })
   }
