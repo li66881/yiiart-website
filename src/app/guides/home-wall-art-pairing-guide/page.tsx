@@ -130,11 +130,11 @@ const articleJsonLd = {
   dateModified: "2026-10-04",
   author: {
     "@type": "Organization",
+    "@id": absoluteUrl("/#organization"),
     name: "YiiArt",
   },
   publisher: {
-    "@type": "Organization",
-    name: "YiiArt",
+    "@id": absoluteUrl("/#organization"),
   },
   mainEntityOfPage: absoluteUrl(pagePath),
   image: absoluteUrl("/og-image"),
