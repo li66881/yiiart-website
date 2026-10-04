@@ -4,15 +4,20 @@ import ReviewPhotoGrid from "@/components/ReviewPhotoGrid"
 import ReviewTrustBadge from "@/components/ReviewTrustBadge"
 import { buildSeoMetadata } from "@/lib/seo"
 import { getRealHomeReviews } from "@/lib/reviews"
+import { realHomesGalleryRobots } from "@/lib/real-homes-seo"
 
 export const dynamic = "force-dynamic"
 
-export const metadata = buildSeoMetadata({
-  title: "Art in Real Homes",
-  description:
-    "See how YiiArt original paintings look in real living rooms, bedrooms, offices, and curated interiors.",
-  path: "/art-in-real-homes",
-})
+export async function generateMetadata() {
+  const reviews = await getRealHomeReviews()
+  return buildSeoMetadata({
+    title: "Art in Real Homes",
+    description:
+      "See how YiiArt original paintings look in real living rooms, bedrooms, offices, and curated interiors.",
+    path: "/art-in-real-homes",
+    robots: realHomesGalleryRobots(reviews.length),
+  })
+}
 
 export default async function ArtInRealHomesPage() {
   const reviews = await getRealHomeReviews()
@@ -28,7 +33,9 @@ export default async function ArtInRealHomesPage() {
             <p className="mt-5 max-w-3xl text-gray-600">
               See how YiiArt original paintings look in real living rooms, bedrooms, offices, and curated interiors.
             </p>
-            <p className="mt-3 text-sm text-gray-500">These photos are shared by collectors with permission.</p>
+            {reviews.length > 0 && (
+              <p className="mt-3 text-sm text-gray-500">These photos are shared by collectors with permission.</p>
+            )}
           </div>
         </section>
 
