@@ -4,6 +4,7 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import ArtworkDiscoveryGrid from "@/components/ArtworkDiscoveryGrid"
 import { getMarketingCollection } from "@/lib/collections"
+import { buildCollectionHeroCopy } from "@/lib/collection-hero-copy"
 import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
@@ -229,33 +230,6 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
       <Footer />
     </div>
   )
-}
-
-function buildCollectionHeroCopy(collection: {
-  title: string
-  intro?: string
-  description?: string
-  sizeAdvice?: string
-  customPrompt?: string
-  rooms?: string[]
-}) {
-  const rooms = collection.rooms?.length ? collection.rooms.join(", ") : "living rooms, bedrooms, offices, and modern interiors"
-  const base = [
-    collection.intro || collection.description || `Explore ${collection.title} selected for modern interiors and original canvas art collectors.`,
-    collection.sizeAdvice || "Start with wall width, furniture scale, viewing distance, and the mood of the room before choosing a painting.",
-    `This collection is useful for ${rooms}, with attention to scale, surface, palette, and how the artwork will feel in daily use.`,
-    "Use the filters below to compare room fit, color family, size, and orientation without changing the collection URL.",
-    "Each product card leads to a detailed artwork page with dimensions, material notes, shipping guidance, and custom request options when you need a closer match.",
-    collection.customPrompt || "If a listed work is close but not exact, YiiArt can discuss a custom canvas based on your wall measurements and room photos.",
-  ].join(" ")
-
-  return trimWords(base, 180)
-}
-
-function trimWords(text: string, maxWords: number) {
-  const words = text.split(/\s+/).filter(Boolean)
-  if (words.length <= maxWords) return text
-  return `${words.slice(0, maxWords).join(" ")}.`
 }
 
 function Info({ title, text }: { title: string; text: string }) {
