@@ -126,6 +126,19 @@ export function convertCnyToStoreAmount(priceCny: number, currency = getStoreCur
   return priceCny / rate
 }
 
+export function formatStoreAmount(amount: number, currency = getStoreCurrency(), useGrouping = false) {
+  if (!Number.isFinite(amount) || amount <= 0) return ""
+  const fractionDigits = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency,
+  }).resolvedOptions().maximumFractionDigits
+
+  return amount.toLocaleString("en-US", {
+    useGrouping,
+    maximumFractionDigits: fractionDigits,
+  })
+}
+
 export function formatStorePrice(priceCny?: number | null, currency = getStoreCurrency()) {
   const numericPrice = Number(priceCny)
   if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
@@ -133,13 +146,7 @@ export function formatStorePrice(priceCny?: number | null, currency = getStoreCu
   }
 
   const amount = convertCnyToStoreAmount(numericPrice, currency)
-  const fractionDigits = new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
-  }).resolvedOptions().maximumFractionDigits
-  const formattedAmount = amount.toLocaleString("en-US", {
-    maximumFractionDigits: fractionDigits,
-  })
+  const formattedAmount = formatStoreAmount(amount, currency, true)
 
   return `${getCurrencyOption(currency).symbol}${formattedAmount} ${currency}`
 }

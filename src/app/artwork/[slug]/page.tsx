@@ -25,6 +25,7 @@ import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
 import { buildProductGalleryMedia } from "@/lib/artwork-media"
 import {
   convertCnyToStoreAmount,
+  formatStoreAmount,
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
@@ -280,7 +281,7 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
     sku: artwork.sku || slug,
     priceCurrency: currency,
     availability,
-    price: priceCny > 0 ? offerPrice.toFixed(2) : undefined,
+    price: priceCny > 0 ? formatStoreAmount(offerPrice, currency) : undefined,
   })
 
   if (!priceCny && availability === "https://schema.org/InStock") {
