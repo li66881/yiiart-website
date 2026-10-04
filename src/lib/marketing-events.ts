@@ -14,6 +14,10 @@ type MarketingEventParams = Record<string, string | number | boolean | undefined
 
 const CONSENT_KEY = "yiiart-cookie-consent"
 
+export function shouldTrackPageView(consentGranted: boolean, previousUrl: string | null, currentUrl: string) {
+  return consentGranted && previousUrl !== currentUrl
+}
+
 const gaEventNames: Record<MarketingEventName, string> = {
   ViewContent: "view_item",
   AddToCart: "add_to_cart",
