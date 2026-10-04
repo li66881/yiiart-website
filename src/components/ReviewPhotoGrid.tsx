@@ -17,7 +17,7 @@ export default function ReviewPhotoGrid({ reviews }: ReviewPhotoGridProps) {
   if (items.length === 0) {
     return (
       <div className="border p-8 text-center text-gray-600">
-        Explore collector reviews or contact YiiArt for recent room references.
+        Collector room photos are not available to display yet. Browse verified collector reviews or contact YiiArt for current room references.
       </div>
     )
   }

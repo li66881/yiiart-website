@@ -4,6 +4,8 @@ import { client } from '@/lib/sanity'
 import { PUBLIC_ARTWORK_GROQ_FILTER } from '@/lib/artwork-publication'
 import { siteUrl } from '@/lib/seo'
 import { filterSitemapArtists, mapArtistSitemapRoutes, mapArtworkSitemapRoutes, mapCategorySitemapRoutes } from '@/lib/sitemap'
+import { getRealHomeReviews } from '@/lib/reviews'
+import { filterRealHomesSitemapRoutes } from '@/lib/real-homes-seo'
 
 const baseUrl = siteUrl
 
@@ -30,11 +32,13 @@ const routes = [
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticRoutes = routes.map((route) => ({
-    url: `${baseUrl}${route.path}`,
-    changeFrequency: route.path === '' ? ('weekly' as const) : ('monthly' as const),
-    priority: route.priority,
-  }))
+  const galleryReviews = await getRealHomeReviews().catch(() => [])
+  const staticRoutes = filterRealHomesSitemapRoutes(routes, galleryReviews.length)
+    .map((route) => ({
+      url: `${baseUrl}${route.path}`,
+      changeFrequency: route.path === '' ? ('weekly' as const) : ('monthly' as const),
+      priority: route.priority,
+    }))
 
   const categoryRoutes = mapCategorySitemapRoutes(baseUrl)
 
