@@ -287,7 +287,7 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
     "@context": "https://schema.org",
     "@type": "Product",
     sku: artwork.sku || slug,
-    name: buildArtworkSeoTitle(artwork),
+    name: title,
     image: galleryImages.slice(0, 10),
     description: contentCopy.about || originalDescription || `${title} is an original hand-painted artwork by ${artistName}.`,
     brand: {
