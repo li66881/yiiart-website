@@ -15,11 +15,14 @@ import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchas
 import { getProductSelection } from "@/lib/storefront/selection"
 import ProductDescription from "./ProductDescription"
 import { ProductFinishSelector } from "./ProductFinishSelector"
+import { ProductVariantUrlSync } from "./ProductVariantUrlSync"
 import { ProductStickyPurchaseBar } from "./ProductStickyPurchaseBar"
 import styles from "./storefront.module.css"
 
 type Props = {
   product: StorefrontProduct
+  initialSize?: string
+  initialFinish?: string
   directCheckoutAvailable: boolean
   invoiceUrl: string
   whatsappUrl: string
@@ -27,14 +30,16 @@ type Props = {
 
 export default function ProductPurchasePanel({
   product,
+  initialSize,
+  initialFinish,
   directCheckoutAvailable,
   invoiceUrl,
   whatsappUrl,
 }: Props) {
-  const initialSize = product.sizes[0]?.id || ""
-  const initialFinish = product.finishes[0]?.id || ""
-  const [sizeId, setSizeId] = useState(initialSize)
-  const [finishId, setFinishId] = useState(initialFinish)
+  const defaultSize = initialSize || product.sizes[0]?.id || ""
+  const defaultFinish = initialFinish || product.finishes[0]?.id || ""
+  const [sizeId, setSizeId] = useState(defaultSize)
+  const [finishId, setFinishId] = useState(defaultFinish)
   const [quantity, setQuantity] = useState(1)
   const [confirmation, setConfirmation] = useState("")
   const [mainActionPassed, setMainActionPassed] = useState(false)
@@ -123,6 +128,7 @@ export default function ProductPurchasePanel({
 
   return (
     <section className={`${styles.purchasePanel} optimized-purchase-panel meson-purchase-stack`} aria-labelledby="product-title">
+      <ProductVariantUrlSync sizeId={sizeId} finishId={finishId} />
       <div className={styles.kickerRow}>
         <p className={styles.eyebrow}>
           {madeToOrder

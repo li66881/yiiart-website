@@ -3,12 +3,13 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import CustomPaintingRequestForm from "@/components/CustomPaintingRequestForm"
 import TrackableWhatsAppLink from "@/components/TrackableWhatsAppLink"
-import { parseEnquiryIntent } from "@/lib/enquiry-intent"
+import { isEnquiryIntent, parseEnquiryIntent } from "@/lib/enquiry-intent"
 import { pickEnglish } from "@/lib/artwork-display"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { client } from "@/lib/sanity"
 import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
+import { permanentRedirect } from "next/navigation"
 
 export const metadata: Metadata = buildSeoMetadata({
   title: "Custom Painting Made for Your Space",
@@ -105,6 +106,13 @@ type Props = {
 
 export default async function CustomPaintingPage({ searchParams }: Props) {
   const params = await searchParams
+  if (params.intent !== undefined && !isEnquiryIntent(params.intent)) {
+    const query = new URLSearchParams()
+    if (params.artwork?.trim()) query.set("artwork", params.artwork.trim())
+    const suffix = query.size ? `?${query.toString()}` : ""
+    permanentRedirect(`/custom-painting${suffix}`)
+  }
+
   const intent = parseEnquiryIntent(params.intent)
   const artworkSlug = params.artwork?.trim() || ""
   const artworkTitle = artworkSlug ? await getArtworkTitle(artworkSlug) : ""

@@ -1,10 +1,11 @@
 export type EnquiryIntent = "size-advice" | "custom" | "project"
 
+export function isEnquiryIntent(value?: string | null): value is EnquiryIntent {
+  return value === "size-advice" || value === "project" || value === "custom"
+}
+
 export function parseEnquiryIntent(value?: string | null): EnquiryIntent {
-  if (value === "size-advice" || value === "project" || value === "custom") {
-    return value
-  }
-  return "custom"
+  return isEnquiryIntent(value) ? value : "custom"
 }
 
 export function enquirySourceLabel(intent: EnquiryIntent, sourcePage?: string) {
