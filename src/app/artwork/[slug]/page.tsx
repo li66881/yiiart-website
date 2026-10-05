@@ -1,8 +1,11 @@
 import Image from "next/image"
 import Link from "next/link"
+import { notFound } from "next/navigation"
+import { Suspense } from "react"
 import type { ReactNode } from "react"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import ArtworkPageLoading from "./loading-state"
 import ProductGallery from "@/components/storefront/ProductGallery"
 import ProductDisclosure from "@/components/storefront/ProductDisclosure"
 import ProductDetailNavigation from "@/components/storefront/ProductDetailNavigation"
@@ -94,7 +97,7 @@ async function getArtwork(slug: string) {
     )
   } catch (error) {
     console.error("Artwork fetch error:", error)
-    return null
+    throw error
   }
 }
 
@@ -131,12 +134,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const artwork = await getArtwork(slug)
 
   if (!artwork) {
-    return buildSeoMetadata({
-      title: "Artwork Not Found",
-      description: "This YiiArt artwork could not be found.",
-      path: `/artwork/${slug}`,
-      robots: { index: false, follow: true },
-    })
+    notFound()
   }
 
   const title = pickEnglish(artwork.title, "Original artwork")
@@ -184,21 +182,17 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
   const artwork = await getArtwork(slug)
 
   if (!artwork) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Header />
-        <main className="flex flex-1 items-center justify-center pt-24">
-          <div className="text-center">
-            <h1 className="mb-4 text-2xl"><TranslatedText k="product.notFound" /></h1>
-            <Link href="/artworks" className="text-gray-500 hover:text-black">
-              <TranslatedText k="product.backToArtworks" />
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </div>
-    )
+    notFound()
   }
+
+  return (
+    <Suspense fallback={<ArtworkPageLoading />}>
+      <ArtworkContent slug={slug} artwork={artwork} />
+    </Suspense>
+  )
+}
+
+async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any }) {
 
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
