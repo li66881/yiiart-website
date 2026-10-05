@@ -1,6 +1,6 @@
 import Header from "@/components/Header"
 
-export default function Loading() {
+export default function ArtworkPageLoading() {
   return (
     <>
       <Header />
