@@ -10,6 +10,7 @@ import { getArtworkImageUrl, hasArtworkImage } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { buildArtworkDiscoveryItem } from "@/lib/artwork-discovery"
 import { filterCatalogLinks, getCatalogNavigationState, getCollectionArtworks } from "@/lib/storefront/collection-catalog"
+import { shouldIndexMarketingCollection } from "@/lib/storefront/catalog-rules"
 
 export const revalidate = 600
 
@@ -19,6 +20,8 @@ const internalCollectionLinks = [
   { title: "Textured Wall Art", href: "/collections/textured-wall-art" },
   { title: "Neutral Wall Art", href: "/collections/neutral-canvas-art" },
   { title: "Living Room Art", href: "/collections/abstract-art-for-living-room" },
+  { title: "Dining Room Art", href: "/collections/dining-room-wall-art" },
+  { title: "Office Wall Art", href: "/collections/office-wall-art" },
   { title: "Custom Paintings", href: "/custom-painting" },
 ]
 
@@ -38,12 +41,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const artworks = await getCollectionArtworks(slug)
   const artworkWithImage = artworks.find(hasArtworkImage) as any
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
+  const indexable = shouldIndexMarketingCollection(collection, artworks.length)
   return buildSeoMetadata({
     title: collection.title,
     description: collection.metaDescription,
     path: `/collections/${slug}`,
     image,
     imageAlt: artworkWithImage ? `${pickEnglish(artworkWithImage.title, collection.title)} from ${collection.title}` : collection.title,
+    ...(!indexable ? { robots: { index: false, follow: true } } : {}),
   })
 }
 

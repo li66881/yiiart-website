@@ -3,7 +3,7 @@ import { marketingCollections } from '@/lib/collections'
 import { client } from '@/lib/sanity'
 import { PUBLIC_ARTWORK_GROQ_FILTER } from '@/lib/artwork-publication'
 import { siteUrl } from '@/lib/seo'
-import { filterSitemapArtists, mapArtistSitemapRoutes, mapArtworkSitemapRoutes, mapCategorySitemapRoutes } from '@/lib/sitemap'
+import { filterSitemapArtists, mapArtistSitemapRoutes, mapArtworkSitemapRoutes, mapCategorySitemapRoutes, mapCollectionSitemapRoutes, type SitemapCollectionArtwork } from '@/lib/sitemap'
 import { getApprovedReviews, getRealHomeReviews } from '@/lib/reviews'
 import { filterReviewSitemapRoutes } from '@/lib/real-homes-seo'
 
@@ -45,24 +45,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const categoryRoutes = mapCategorySitemapRoutes(baseUrl)
 
-  const collectionRoutes = marketingCollections.map((collection) => ({
-    url: `${baseUrl}/collections/${collection.slug}`,
-    changeFrequency: 'weekly' as const,
-    priority: 0.8,
-  }))
+  const nonRoomCollectionRoutes = mapCollectionSitemapRoutes(
+    marketingCollections.filter((collection) => collection.group !== 'room'),
+    null,
+    baseUrl,
+  )
 
   try {
-    const [artworks, artists] = await Promise.all([
+    const [artworks, artists, collectionInventory] = await Promise.all([
       client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{slug, "artistRefId": artist._ref, "artist": artist->{name}}`),
       client.fetch(`*[_type == "artist" && defined(slug.current)]{_id, slug, name}`),
+      client.fetch<SitemapCollectionArtwork[]>(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{category, roomTypes, dimensions, widthCm, heightCm, seriesSlug}`).catch(() => null),
     ])
 
     const artworkRoutes = mapArtworkSitemapRoutes(artworks, baseUrl)
     const eligibleArtists = filterSitemapArtists(artists, artworks)
     const artistRoutes = mapArtistSitemapRoutes(eligibleArtists, baseUrl)
+    const collectionRoutes = mapCollectionSitemapRoutes(marketingCollections, collectionInventory, baseUrl)
 
     return [...staticRoutes, ...categoryRoutes, ...collectionRoutes, ...artworkRoutes, ...artistRoutes]
   } catch {
-    return [...staticRoutes, ...categoryRoutes, ...collectionRoutes]
+    return [...staticRoutes, ...categoryRoutes, ...nonRoomCollectionRoutes]
   }
 }

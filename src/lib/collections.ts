@@ -6,6 +6,7 @@ export type MarketingCollection = {
   metaDescription: string
   intro: string
   categories?: string[]
+  roomTypes?: string[]
   seriesSlug?: string
   keywords: string[]
   rooms: string[]
@@ -27,10 +28,11 @@ export const marketingCollections: MarketingCollection[] = [
     description:
       "Browse hand-painted abstract paintings selected for calm living rooms, open-plan spaces, and modern interiors.",
     metaDescription:
-      "Shop hand-painted abstract wall art for living rooms and open-plan homes. Compare original paintings by size, palette, and room fit.",
+      "Shop hand-painted abstract art for living rooms and open-plan homes. Compare original paintings by size, palette, and room fit.",
     intro:
       "A focused edit of hand-painted abstract paintings with balanced color, strong surface presence, and sizes that hold a room without overwhelming it.",
     categories: ["Abstract"],
+    roomTypes: ["Living room"],
     keywords: ["abstract wall art", "living room art", "hand-painted canvas painting"],
     rooms: ["Living rooms", "Open-plan apartments", "Quiet statement walls"],
     buyerGuide: [
@@ -181,7 +183,7 @@ export const marketingCollections: MarketingCollection[] = [
       "Find hand-painted bedroom wall art in calm colors and soft textures. Compare original paintings by scale, orientation, and room fit.",
     intro:
       "Bedroom works should support the room instead of dominating it. This collection favors softer color, balanced scale, and quieter surfaces.",
-    categories: ["Abstract", "Landscape", "Texture", "Wabi-sabi"],
+    roomTypes: ["Bedroom"],
     keywords: ["bedroom wall art", "calm hand-painted painting", "soft abstract art"],
     rooms: ["Bedrooms", "Guest rooms", "Private sitting areas"],
     buyerGuide: [
@@ -206,6 +208,54 @@ export const marketingCollections: MarketingCollection[] = [
         question: "Can I use large art in a small bedroom?",
         answer: "Yes, if the wall and furniture proportions support it. Send measurements if you are unsure.",
       },
+    ],
+    group: "room",
+  },
+  {
+    slug: "dining-room-wall-art",
+    title: "Dining Room Wall Art",
+    shortTitle: "Dining Room Art",
+    description: "Browse original hand-painted art selected for dining rooms, breakfast areas, and relaxed open-plan entertaining spaces.",
+    metaDescription: "Shop original dining room wall art chosen for welcoming meals and open-plan homes. Compare hand-painted works by size, color, and room fit.",
+    intro: "Choose dining room art that gives the table a clear focal point while keeping conversation and everyday meals comfortable.",
+    roomTypes: ["Dining room"],
+    keywords: ["dining room wall art", "dining room paintings", "art above dining table"],
+    rooms: ["Dining rooms", "Breakfast areas", "Open-plan dining spaces"],
+    buyerGuide: [
+      "Measure the table and wall together so the artwork relates to the dining zone rather than the entire open-plan room.",
+      "Choose a palette that works in both daylight and evening lighting, when dining spaces can feel noticeably different.",
+      "Leave enough space around chairs, sconces, and cabinets so the painting remains the focal point without crowding the room.",
+    ],
+    sizeAdvice: "Above a dining table, choose a work around one-half to two-thirds of the table width and account for chair movement and pendant lights.",
+    customPrompt: "For a dining wall with unusual proportions or a specific table palette, share its measurements and a room photo when requesting a custom painting.",
+    faqs: [
+      { question: "How wide should dining room art be?", answer: "A useful starting point is about one-half to two-thirds of the table width, adjusted for the wall and nearby lighting." },
+      { question: "What art works above a dining table?", answer: "Choose a composition with a comfortable viewing distance and a palette that works in both daytime and evening light." },
+      { question: "Can I choose dining room art for an open-plan space?", answer: "Yes. Relate the artwork to the dining table and repeat one or two colors from nearby furnishings to connect the zones." },
+    ],
+    group: "room",
+  },
+  {
+    slug: "office-wall-art",
+    title: "Office Wall Art",
+    shortTitle: "Office Wall Art",
+    description: "Explore original hand-painted office art for focused workspaces, home offices, studios, and considered professional interiors.",
+    metaDescription: "Find original office wall art for focused home and professional workspaces. Compare hand-painted paintings by scale, palette, and placement.",
+    intro: "Office art can bring personality to a working space without competing with screens, shelves, or the task at hand.",
+    roomTypes: ["Office"],
+    keywords: ["office wall art", "home office paintings", "art for workspace"],
+    rooms: ["Home offices", "Studios", "Professional workspaces"],
+    buyerGuide: [
+      "Consider what appears behind you on video calls and how the artwork reads from the desk and doorway.",
+      "Use calmer compositions near a screen or focused work area; a stronger focal piece can suit a meeting or reception wall.",
+      "Check glare from windows and task lighting before choosing a glossy or heavily textured surface.",
+    ],
+    sizeAdvice: "For a desk wall, select a width that relates to the desk while preserving space for monitors, shelving, and adjustable task lighting.",
+    customPrompt: "Share a workspace photo, desk width, and viewing distance if you need a painting planned around a specific office layout.",
+    faqs: [
+      { question: "What artwork is suitable for an office?", answer: "Choose work that suits the room's purpose and viewing distance, with enough character to personalize the space without distracting from tasks." },
+      { question: "How large should art be above a desk?", answer: "Relate the artwork to the desk width and leave room for monitors, shelves, and lighting." },
+      { question: "Can office art work on video calls?", answer: "Yes. Check the background from your camera position and avoid placing strong reflections behind you." },
     ],
     group: "room",
   },

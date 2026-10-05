@@ -1,8 +1,33 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { filterSitemapArtists, mapArtworkSitemapRoutes, mapArtistSitemapRoutes } from "./sitemap"
+import { filterSitemapArtists, mapArtworkSitemapRoutes, mapArtistSitemapRoutes, mapCollectionSitemapRoutes } from "./sitemap"
+import { marketingCollections } from "./collections"
 
 const baseUrl = "https://www.yiiart.com"
+
+test("collection sitemap requires four matching public artworks for room routes", () => {
+  const dining = marketingCollections.find(({ slug }) => slug === "dining-room-wall-art")!
+  const office = marketingCollections.find(({ slug }) => slug === "office-wall-art")!
+  const style = marketingCollections.find(({ slug }) => slug === "textured-wall-art")!
+  const routes = mapCollectionSitemapRoutes([dining, office, style], [
+    ...Array.from({ length: 4 }, () => ({ roomTypes: ["Dining room"] })),
+    { roomTypes: ["Office"] },
+  ], baseUrl)
+
+  assert.deepEqual(routes.map(({ url }) => url), [
+    `${baseUrl}/collections/dining-room-wall-art`,
+    `${baseUrl}/collections/textured-wall-art`,
+  ])
+})
+
+test("collection sitemap distinguishes failed inventory from successful empty inventory", () => {
+  const dining = marketingCollections.find(({ slug }) => slug === "dining-room-wall-art")!
+  const style = marketingCollections.find(({ slug }) => slug === "textured-wall-art")!
+  for (const inventory of [null, []]) {
+    const routes = mapCollectionSitemapRoutes([dining, style], inventory, baseUrl)
+    assert.deepEqual(routes.map(({ url }) => url), [`${baseUrl}/collections/textured-wall-art`])
+  }
+})
 
 test("artwork sitemap routes include valid slugs without unverifiable last-modified dates", () => {
   const routes = mapArtworkSitemapRoutes([

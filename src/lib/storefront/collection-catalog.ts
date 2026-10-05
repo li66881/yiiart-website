@@ -9,12 +9,13 @@ import { getCatalogNavigationStateFromLoader } from "./catalog-navigation-loader
 
 export { filterCatalogLinks } from "./catalog-navigation"
 export type { CatalogNavigationState } from "./catalog-navigation"
-export { matchesMarketingCollection, visibleCollectionSlugs } from "./catalog-rules"
+export { matchesMarketingCollection, visibleCollectionSlugs, ROOM_COLLECTION_MINIMUM_PRODUCTS, shouldIndexMarketingCollection } from "./catalog-rules"
 
 export type CollectionArtwork = {
   _id?: string
   slug?: { current?: string }
   category?: string | null
+  roomTypes?: string[] | null
   dimensions?: string | null
   widthCm?: number | string | null
   heightCm?: number | string | null
@@ -26,6 +27,7 @@ const publicCollectionInventoryQuery = `*[_type == "artwork" && ${PUBLIC_ARTWORK
   _id,
   slug,
   category,
+  roomTypes,
   dimensions,
   widthCm,
   heightCm,
@@ -35,7 +37,7 @@ const publicCollectionInventoryQuery = `*[_type == "artwork" && ${PUBLIC_ARTWORK
 
 const fetchPublicCollectionInventory = unstable_cache(
   async () => client.fetch<CollectionArtwork[]>(publicCollectionInventoryQuery),
-  ["public-collection-inventory-v1"],
+  ["public-collection-inventory-v2"],
   { revalidate: 600 },
 )
 

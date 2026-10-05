@@ -1,5 +1,7 @@
 import { matchesArtistIdentity } from "./artist-identity"
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
+import type { MarketingCollection } from "./collections"
+import { matchesMarketingCollection, shouldIndexMarketingCollection } from "./storefront/catalog-rules"
 
 export type SitemapSlugRecord = { slug?: { current?: string } | null; _updatedAt?: string | null }
 export type SitemapArtistRecord = {
@@ -11,6 +13,33 @@ export type SitemapArtistRecord = {
 export type SitemapArtworkRecord = SitemapSlugRecord & {
   artistRefId?: string | null
   artist?: { name?: { en?: string | null; zh?: string | null } | null } | null
+}
+export type SitemapCollectionArtwork = {
+  category?: string | null
+  roomTypes?: string[] | null
+  dimensions?: string | null
+  widthCm?: number | string | null
+  heightCm?: number | string | null
+  seriesSlug?: string | null
+}
+
+export function mapCollectionSitemapRoutes(
+  collections: MarketingCollection[],
+  inventory: SitemapCollectionArtwork[] | null,
+  origin: string,
+) {
+  return collections.flatMap((collection) => {
+    if (collection.group === "room") {
+      if (!inventory) return []
+      const count = inventory.filter((artwork) => matchesMarketingCollection(artwork, collection)).length
+      if (!shouldIndexMarketingCollection(collection, count)) return []
+    }
+    return [{
+      url: `${origin}/collections/${collection.slug}`,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }]
+  })
 }
 
 export function mapArtworkSitemapRoutes(artworks: SitemapArtworkRecord[], origin: string) {
