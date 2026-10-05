@@ -11,9 +11,9 @@ import { buildSeoMetadata } from "@/lib/seo"
 export const dynamic = "force-dynamic"
 
 export const metadata = buildSeoMetadata({
-  title: "Independent Chinese Artists",
+  title: "Artist Profiles",
   description:
-    "Meet the artists behind YiiArt's original paintings and browse available works by abstract, landscape, textured, and minimalist painters.",
+    "Explore artist profiles and hand-painted works available at YiiArt, with each artist's listed location, styles, and paintings.",
   path: "/artists",
 })
 
