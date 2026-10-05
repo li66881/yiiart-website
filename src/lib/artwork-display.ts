@@ -25,6 +25,16 @@ const mediumMap: Record<string, string> = {
   "油画布": "Oil on canvas",
 }
 
+const artworkSeoCategoryLabels: Record<string, string> = {
+  Abstract: "Abstract Painting",
+  Figurative: "Figurative Painting",
+  Landscape: "Landscape Painting",
+  Minimalist: "Minimalist Painting",
+  Portrait: "Portrait Painting",
+  Texture: "Textured Wall Art",
+  "Wabi-sabi": "Wabi-Sabi Painting",
+}
+
 export function pickEnglish(value?: LocalizedText | string | null, fallback = "") {
   if (!value) return fallback
   if (typeof value === "string") return normalizeDisplayText(value) || fallback
@@ -130,18 +140,12 @@ function isPlausibleArtworkSizeCm(width: number, height: number) {
 export function buildArtworkSeoTitle(artwork: {
   title?: LocalizedText
   category?: string
-  medium?: string
-  dimensions?: string
-  widthCm?: number | string | null
-  heightCm?: number | string | null
 }) {
   const title = pickEnglish(artwork.title, "Original artwork")
   const category = normalizeCategory(artwork.category)
-  const medium = normalizeMedium(artwork.medium)
-  const dimensions = formatArtworkDimensions(artwork)
-  const details = [category, medium, dimensions].filter(Boolean).join(", ")
+  const categoryTitle = artworkSeoCategoryLabels[category] || (category ? `${category} Art` : "Original Artwork")
 
-  return details ? `${title} - ${details}` : title
+  return `${title} | ${categoryTitle}`
 }
 
 export function normalizeDisplayText(value: string) {

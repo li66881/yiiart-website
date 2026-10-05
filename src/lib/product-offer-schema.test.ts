@@ -12,6 +12,12 @@ test("places the artwork SKU on the Product entity", async () => {
   )
 })
 
+test("uses the visible artwork name for Product structured data", async () => {
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(artworkPage, /const productJsonLd[\s\S]*?name: title/)
+})
+
 test("returns a real 404 when an artwork slug is missing and propagates fetch errors", async () => {
   const [artworkPage, nextConfig] = await Promise.all([
     readFile("src/app/artwork/[slug]/page.tsx", "utf8"),
