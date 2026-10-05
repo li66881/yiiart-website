@@ -6,6 +6,8 @@ YiiArt's SEO focus is English first. Other languages may follow later; this chan
 
 The current collection matcher supports category, series, and large-format rules, but not room tags. As a result, `/collections/abstract-art-for-living-room` currently selects by Abstract category alone, and `/collections/bedroom-wall-art` selects a set of categories rather than artworks explicitly tagged for bedrooms. Public Sanity inventory evidence shows 163 eligible artworks, including 155 explicitly tagged Living room, 137 Bedroom, 50 Dining room, and 116 Office. Abstract + Living room has 79 items. Entryway has 9 and Hospitality space has 2.
 
+Public discovery evidence also supports prioritizing these fixes: the homepage's Living Room and Bedroom entries point to collection pages, while Dining Room and Office point to `/artworks?room=...` filter URLs. Search results recently showed 80 products for the existing Living Room Abstracts page and inconsistent room-filter counts on that page. This indicates that existing room-specific collection membership is not a reliable source of room intent, and that Dining/Office lack dedicated editorial destinations. Search-result snapshots can lag; exact live inventory must be rechecked before release.
+
 ## User-approved direction
 
 - English is the primary SEO language; localization is a later phase.
