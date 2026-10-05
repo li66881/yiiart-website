@@ -8,14 +8,14 @@ test("places the artwork SKU on the Product entity", async () => {
 
   assert.match(
     artworkPage,
-    /const productJsonLd[\s\S]*?"@type": "Product",[\s\S]*?sku: artwork\.sku \|\| slug/
+    /const productJsonLd[\s\S]*?"@type": "Product",[\s\S]*?sku: offerIdentity\.sku/
   )
 })
 
 test("uses the visible artwork name for Product structured data", async () => {
   const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
 
-  assert.match(artworkPage, /const productJsonLd[\s\S]*?name: title/)
+  assert.match(artworkPage, /const productJsonLd[\s\S]*?name: selectedVariant \? `\$\{title\} - \$\{selectedVariant\.size\.label\} - \$\{selectedVariant\.finish\.label\}` : title/)
 })
 
 test("returns a real 404 when an artwork slug is missing and propagates fetch errors", async () => {
@@ -34,10 +34,12 @@ test("returns a real 404 when an artwork slug is missing and propagates fetch er
   await assert.rejects(access("src/app/artwork/[slug]/loading.tsx"))
 })
 
-test("formats Product offer prices to the selected currency precision", async () => {
+test("formats the selected Product offer in the server-rendered schema currency", async () => {
   const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
 
-  assert.match(artworkPage, /price: priceCny > 0 \? formatStoreAmount\(offerPrice, currency\) : undefined/)
+  assert.match(artworkPage, /price: priceCny > 0[\s\S]*?formatStoreAmount\(convertCnyToStoreAmount\(priceCny, schemaCurrency\), schemaCurrency\)/)
+  assert.match(artworkPage, /buildProductOfferIdentity\([\s\S]*?initialVariant\.isValid/)
+  assert.match(artworkPage, /url: offerIdentity\.url/)
 })
 
 test("builds a priced product offer without unsupported shipping or return promises", () => {

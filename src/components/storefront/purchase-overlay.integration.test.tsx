@@ -11,10 +11,14 @@ import ProductPurchasePanel from "./ProductPurchasePanel"
 
 const navigationState = vi.hoisted(() => ({
   pathname: "/artwork/ink-garden-01",
+  query: "",
+  replace: vi.fn(),
 }))
 
 vi.mock("next/navigation", () => ({
   usePathname: () => navigationState.pathname,
+  useRouter: () => ({ replace: navigationState.replace }),
+  useSearchParams: () => new URLSearchParams(navigationState.query),
 }))
 
 type Observation = {
@@ -95,6 +99,8 @@ const product = buildStorefrontProduct({
 
 describe("purchase overlay integration", () => {
   beforeEach(() => {
+    navigationState.query = ""
+    navigationState.replace.mockClear()
     navigationState.pathname = "/artwork/ink-garden-01"
     ControlledIntersectionObserver.instances = []
     vi.stubGlobal("IntersectionObserver", ControlledIntersectionObserver)
@@ -229,6 +235,32 @@ describe("purchase overlay integration", () => {
     renderStorefront(1440, 1000, { ...product, artistName: "Sofie Lindberg", artistHref: "/artist/sofie-lindberg" })
 
     expect(screen.getByRole("link", { name: "Sofie Lindberg" }).getAttribute("href")).toBe("/artist/sofie-lindberg")
+  })
+
+  it("keeps the selected size and finish shareable in the URL", () => {
+    const multiOptionProduct = buildStorefrontProduct({
+      _id: "overlay-variants",
+      title: { en: "Variant artwork" },
+      slug: { current: "variant-artwork" },
+      productionModel: "hand_painted_to_order",
+      standardSizes: [
+        { _key: "80x100", label: "80 x 100 cm", priceCny: 2600 },
+        { _key: "100x120", label: "100 x 120 cm", priceCny: 3400 },
+      ],
+      frameOptions: [
+        { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
+        { _key: "black-frame", label: "Black float frame", priceDeltaCny: 600 },
+      ],
+    }, [{ src: "/variant-artwork.webp" }])
+
+    renderStorefront(1440, 1000, multiOptionProduct)
+    fireEvent.change(screen.getByLabelText("Select a size"), { target: { value: "100x120" } })
+    fireEvent.click(screen.getByRole("radio", { name: /Black float frame/ }))
+
+    expect(navigationState.replace).toHaveBeenLastCalledWith(
+      "/artwork/ink-garden-01?size=100x120&finish=black-frame",
+      { scroll: false },
+    )
   })
 })
 

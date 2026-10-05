@@ -32,6 +32,14 @@ import {
   getStoreCurrency,
 } from "@/lib/pricing"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
+import {
+  buildProductOfferIdentity,
+  buildProductVariantGroup,
+  buildProductVariantSku,
+  buildProductVariantUrl,
+  getProductSelection,
+  resolveProductVariantIds,
+} from "@/lib/storefront/selection"
 import { buildProductOfferJsonLd } from "@/lib/product-offer-schema"
 import { buildProductDetailCopy } from "@/lib/storefront/product-detail-copy"
 import { buildArtworkContentCopy } from "@/lib/artwork-content-copy"
@@ -177,8 +185,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
 }
 
-export default async function ArtworkPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
+export default async function ArtworkPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>
+  searchParams: Promise<{ size?: string | string[]; finish?: string | string[] }>
+}) {
+  const [{ slug }, variantParams] = await Promise.all([params, searchParams])
   const artwork = await getArtwork(slug)
 
   if (!artwork) {
@@ -187,12 +201,20 @@ export default async function ArtworkPage({ params }: { params: Promise<{ slug: 
 
   return (
     <Suspense fallback={<ArtworkPageLoading />}>
-      <ArtworkContent slug={slug} artwork={artwork} />
+      <ArtworkContent slug={slug} artwork={artwork} variantParams={variantParams} />
     </Suspense>
   )
 }
 
-async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any }) {
+async function ArtworkContent({
+  slug,
+  artwork,
+  variantParams,
+}: {
+  slug: string
+  artwork: any
+  variantParams: { size?: string | string[]; finish?: string | string[] }
+}) {
 
   const title = pickEnglish(artwork.title, "Untitled artwork")
   const artistName = pickEnglish(artwork.artist?.name, "YiiArt")
@@ -251,12 +273,19 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
     ...storefrontProduct,
     shortDescription: contentCopy.shortDescription || storefrontProduct.shortDescription,
   }
+  const initialVariant = resolveProductVariantIds(storefrontProduct, variantParams)
+  const selectedVariant = getProductSelection(
+    storefrontProduct,
+    initialVariant.sizeId,
+    initialVariant.finishId,
+  )
   const detailCopy = buildProductDetailCopy({
     creationWindow: storefrontProduct.creationWindow,
     shippingProfile,
   })
-  const priceCny = storefrontProduct.sizes[0]?.priceCny || Number(artwork.price || 0)
+  const priceCny = selectedVariant?.priceCny || storefrontProduct.sizes[0]?.priceCny || Number(artwork.price || 0)
   const currency = getStoreCurrency()
+  const schemaCurrency = currency
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
   const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkCheckoutAvailable(artwork)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
@@ -270,12 +299,23 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
     `Hello YiiArt, I would like to confirm availability and request an invoice for ${title}.`
   )
   const availability = getSchemaAvailability(artwork, directCheckoutAvailable)
+  const baseProductUrl = `${baseUrl}/artwork/${slug}`
+  const productSku = artwork.sku || slug
+  const offerIdentity = buildProductOfferIdentity(
+    baseProductUrl,
+    productSku,
+    storefrontProduct,
+    initialVariant,
+    initialVariant.isValid,
+  )
   const offer = buildProductOfferJsonLd({
-    url: `${baseUrl}/artwork/${slug}`,
-    sku: artwork.sku || slug,
-    priceCurrency: currency,
+    url: offerIdentity.url,
+    sku: offerIdentity.sku,
+    priceCurrency: schemaCurrency,
     availability,
-    price: priceCny > 0 ? formatStoreAmount(offerPrice, currency) : undefined,
+    price: priceCny > 0
+      ? formatStoreAmount(convertCnyToStoreAmount(priceCny, schemaCurrency), schemaCurrency)
+      : undefined,
   })
 
   if (!priceCny && availability === "https://schema.org/InStock") {
@@ -286,8 +326,8 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
   const productJsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "Product",
-    sku: artwork.sku || slug,
-    name: title,
+    sku: offerIdentity.sku,
+    name: selectedVariant ? `${title} - ${selectedVariant.size.label} - ${selectedVariant.finish.label}` : title,
     image: galleryImages.slice(0, 10),
     description: contentCopy.about || originalDescription || `${title} is an original hand-painted artwork by ${artistName}.`,
     brand: {
@@ -296,9 +336,10 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
     },
     category: category || "Original artwork",
     material: medium ? inferMaterial(medium) : undefined,
-    size: dimensions || undefined,
+    size: selectedVariant?.size.label || dimensions || undefined,
     additionalProperty: [
       dimensions ? { "@type": "PropertyValue", name: "Dimensions", value: dimensions } : null,
+      selectedVariant ? { "@type": "PropertyValue", name: "Presentation", value: selectedVariant.finish.label } : null,
       medium ? { "@type": "PropertyValue", name: "Medium", value: medium } : null,
       category ? { "@type": "PropertyValue", name: "Style", value: category } : null,
       orientation ? { "@type": "PropertyValue", name: "Orientation", value: orientation } : null,
@@ -307,6 +348,23 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
     ].filter(Boolean),
     offers: offer,
   }
+
+  const productGroupJsonLd = directCheckoutAvailable
+    ? buildProductVariantGroup({
+        id: artwork._id || slug,
+        title,
+        description: productJsonLd.description,
+        brand: "YiiArt",
+        baseUrl: baseProductUrl,
+        images: galleryImages.slice(0, 10),
+        sizes: storefrontProduct.sizes,
+        finishes: storefrontProduct.finishes,
+        sku: productSku,
+        priceCurrency: schemaCurrency,
+        availability,
+        formatPrice: (price) => formatStoreAmount(convertCnyToStoreAmount(price, schemaCurrency), schemaCurrency),
+      })
+    : null
 
   if (reviewStats.count > 0) {
     productJsonLd.aggregateRating = {
@@ -339,6 +397,12 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
       />
+      {productGroupJsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productGroupJsonLd) }}
+        />
+      )}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -385,6 +449,8 @@ async function ArtworkContent({ slug, artwork }: { slug: string; artwork: any })
             <div className="lg:sticky lg:top-[calc(var(--yiiart-header-offset)+18px)] lg:self-start">
               <ProductPurchasePanel
                 product={displayProduct}
+                initialSize={initialVariant.sizeId}
+                initialFinish={initialVariant.finishId}
                 directCheckoutAvailable={directCheckoutAvailable}
                 invoiceUrl={invoiceUrl}
                 whatsappUrl={whatsappUrl}
