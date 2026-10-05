@@ -10,6 +10,14 @@ test("artist metadata summarizes rather than publishing an unbounded biography",
   assert.match(page, /getPublicArtistBiography\(/)
 })
 
+test("artist directory metadata describes the full international artist roster", async () => {
+  const directory = await readFile("src/app/artists/page.tsx", "utf8")
+
+  assert.match(directory, /title:\s*"Artist Profiles"/)
+  assert.match(directory, /artist profiles and hand-painted works available at YiiArt/i)
+  assert.doesNotMatch(directory, /Independent Chinese Artists/)
+})
+
 test("artist directory and catalog update template use the public artist biography", async () => {
   const [directory, patchCatalog] = await Promise.all([
     readFile("src/app/artists/page.tsx", "utf8"),
