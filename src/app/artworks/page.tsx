@@ -35,7 +35,7 @@ async function getCategoryArtworks(category?: string) {
   }
 
   return client.fetch(
-    `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc)[0...12]{
+    `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc){
       ...,
       artist->{name}
     }`,

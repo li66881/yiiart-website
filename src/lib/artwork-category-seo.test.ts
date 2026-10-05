@@ -1,5 +1,6 @@
 import assert from "node:assert/strict"
 import test from "node:test"
+import { readFile } from "node:fs/promises"
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
 import { buildArtworkCategorySeoMetadata, getArtworkCategorySeo } from "./artwork-category-seo"
 
@@ -31,4 +32,11 @@ test("only recognized category filters get indexable category canonicals", () =>
   const unknownCategory = buildArtworkCategorySeoMetadata("unknown-style")
   assert.equal(unknownCategory.path, "/artworks")
   assert.deepEqual(unknownCategory.robots, { index: false, follow: true })
+})
+
+test("indexable artwork category pages load the full matching catalog", async () => {
+  const artworksPage = await readFile("src/app/artworks/page.tsx", "utf8")
+
+  assert.match(artworksPage, /category in \$categories\] \| order\(featured desc, _createdAt desc\)\{/)
+  assert.doesNotMatch(artworksPage, /category in \$categories\][^`]*\[0\.\.\./)
 })
