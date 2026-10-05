@@ -41,6 +41,12 @@ Use a shared minimum inventory threshold of four matching public products for ro
 
 Add contextual internal links to the Dining Room and Office pages from the home-wall-art pairing guide. Update relevant collection and size-guide links where they add a natural next step; do not add sitewide links solely to increase keyword repetition. Preserve the current links for Living Room and Bedroom. Do not add translated routes in this scope.
 
+### English-first and localization boundary
+
+The current application has English, Chinese, German, French, and Arabic message dictionaries, but locale selection is stored in browser `localStorage`; routes do not vary by language, the server-rendered document starts with `lang="en"`, and no `hreflang` alternates are emitted. This work keeps the indexable collection experience English-first and does not add language alternates to the same URL.
+
+If YiiArt later wants organic landing pages in other languages, treat that as a separate localization phase: publish distinct locale URLs, render the complete translated page and metadata on the server, use a self-canonical per locale, and add reciprocal `hreflang` annotations only among real equivalent localized pages. Do not use client-only text switching as a substitute for crawlable localized URLs. This follows [Google's multilingual-site guidance](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites).
+
 ### Data and error handling
 
 Room inventory is read from the existing public artwork query and cached collection inventory where the current architecture allows. Only publicly eligible artworks count. If Sanity data is absent or a fetch fails, do not fabricate room matches. Existing catalog error behavior remains empty results; page metadata must fail closed for indexability, and sitemap generation must omit room pages whose eligibility cannot be established. Do not broaden this work into unrelated sitemap failure handling for product or artist URLs.
