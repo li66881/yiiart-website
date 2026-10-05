@@ -32,12 +32,18 @@ const roomGuides = [
   {
     title: "Dining Room Art",
     text: "A dining wall can take stronger color or a wider horizontal composition, especially when the artwork sits above a sideboard or long table.",
-    link: "/artworks",
-    label: "Browse artworks",
+    link: "/collections/dining-room-wall-art",
+    label: "Shop dining room art",
   },
   {
-    title: "Office and Hospitality Art",
-    text: "Offices, studios, hotels, and reception walls often need larger works with enough presence from across the room and a professional, settled palette.",
+    title: "Office Wall Art",
+    text: "Home offices and studios benefit from art that suits the desk, viewing distance, and screen setup without distracting from focused work.",
+    link: "/collections/office-wall-art",
+    label: "Shop office art",
+  },
+  {
+    title: "Hospitality Wall Art",
+    text: "Hotels, studios, and reception walls often need larger works with presence from across the room and a professional, settled palette.",
     link: "/collections/large-canvas-art",
     label: "View large canvas art",
   },

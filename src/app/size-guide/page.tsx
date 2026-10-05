@@ -69,6 +69,8 @@ const links = [
   { title: "Large Wall Art", href: "/collections/large-canvas-art" },
   { title: "Living Room Art", href: "/collections/abstract-art-for-living-room" },
   { title: "Bedroom Wall Art", href: "/collections/bedroom-wall-art" },
+  { title: "Dining Room Art", href: "/collections/dining-room-wall-art" },
+  { title: "Office Wall Art", href: "/collections/office-wall-art" },
 ]
 
 export default function SizeGuidePage() {
