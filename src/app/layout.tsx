@@ -17,7 +17,8 @@ import NavigationRecovery from '@/components/NavigationRecovery'
 import VercelInsights from '@/components/VercelInsights'
 import { siteAssetUrl } from '@/lib/assets'
 import { defaultOgImage, defaultSeoDescription, siteName, siteUrl } from '@/lib/seo'
-import { getSocialProfiles } from '@/lib/site'
+import { buildSiteIdentityJsonLd } from '@/lib/site-identity-schema'
+import { contactEmail, getSocialProfiles, whatsappNumber } from '@/lib/site'
 import { getCatalogNavigationState } from '@/lib/storefront/collection-catalog'
 
 const poppins = localFont({
@@ -133,26 +134,14 @@ export default async function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              "@context": "https://schema.org",
-              "@graph": [
-                {
-                  "@type": "Organization",
-                  "@id": `${siteUrl}/#organization`,
-                  name: siteName,
-                  url: siteUrl,
-                  logo: `${siteUrl}/brand/yiiart-logo.svg`,
-                  sameAs: getSocialProfiles().map((profile) => profile.href),
-                },
-                {
-                  "@type": "WebSite",
-                  "@id": `${siteUrl}/#website`,
-                  name: siteName,
-                  url: siteUrl,
-                  publisher: { "@id": `${siteUrl}/#organization` },
-                },
-              ],
-            }),
+            __html: JSON.stringify(buildSiteIdentityJsonLd({
+              siteName,
+              siteUrl,
+              logoUrl: `${siteUrl}/brand/yiiart-mark.svg`,
+              sameAs: getSocialProfiles().map((profile) => profile.href),
+              contactEmail,
+              contactTelephone: whatsappNumber ? `+${whatsappNumber}` : undefined,
+            })),
           }}
         />
         <Providers>
