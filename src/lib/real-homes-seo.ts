@@ -22,6 +22,7 @@ export function filterReviewSitemapRoutes<T extends { path: string }>(routes: T[
   return routes.filter((route) => {
     if (route.path === "/reviews") return shouldIndexReviewsPage(reviewCount)
     if (route.path === "/art-in-real-homes") return shouldIndexRealHomesGallery(photoCount)
+    if (["/shipping-returns", "/privacy", "/terms"].includes(route.path)) return false
     return true
   })
 }

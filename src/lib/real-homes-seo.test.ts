@@ -33,3 +33,26 @@ test("only index the reviews page and list it in the sitemap when public reviews
   assert.deepEqual(filterReviewSitemapRoutes(routes, 1, 0), [{ path: "/reviews" }, { path: "/about" }])
   assert.deepEqual(filterReviewSitemapRoutes(routes, 0, 1), [{ path: "/art-in-real-homes" }, { path: "/about" }])
 })
+
+test("keeps support and legal pages out of the search sitemap", () => {
+  const routes = [
+    { path: "/" },
+    { path: "/contact" },
+    { path: "/faq" },
+    { path: "/shipping" },
+    { path: "/returns" },
+    { path: "/shipping-returns" },
+    { path: "/privacy" },
+    { path: "/terms" },
+    { path: "/trade" },
+  ]
+
+  assert.deepEqual(filterReviewSitemapRoutes(routes, 0, 0), [
+    { path: "/" },
+    { path: "/contact" },
+    { path: "/faq" },
+    { path: "/shipping" },
+    { path: "/returns" },
+    { path: "/trade" },
+  ])
+})
