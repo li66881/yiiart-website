@@ -28,6 +28,21 @@ test("organizes the guide directory around hospitality, abstract art, and sizing
   assert.match(index, /\/size-guide/)
 })
 
+test("publishes a distinct hotel artwork procurement brief and links it into discovery", async () => {
+  const brief = await readFile("src/app/guides/hotel-artwork-project-brief/page.tsx", "utf8")
+  const index = await readFile("src/app/guides/page.tsx", "utf8")
+  const sitemap = await readFile("src/app/sitemap.ts", "utf8")
+
+  assert.match(brief, /Hotel Artwork Project Brief: A Buyer’s Checklist/)
+  assert.match(brief, /Room and wall schedule/)
+  assert.match(brief, /Build a coordinated abstract art direction/)
+  assert.match(brief, /Questions to settle in the quote/)
+  assert.match(brief, /production, pricing, packing, and delivery depend on the selected work/i)
+  assert.match(brief, /custom-painting\?intent=project/)
+  assert.match(index, /hotel-artwork-project-brief/)
+  assert.match(sitemap, /hotel-artwork-project-brief/)
+})
+
 test("qualifies U.S. artwork duty guidance by classification and origin", async () => {
   const policy = await readFile("src/lib/policy-content.ts", "utf8")
 
