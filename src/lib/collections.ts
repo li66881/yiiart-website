@@ -1,6 +1,7 @@
 export type MarketingCollection = {
   slug: string
   title: string
+  seoTitle: string
   shortTitle: string
   description: string
   metaDescription: string
@@ -24,6 +25,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "abstract-art-for-living-room",
     title: "Abstract Art for Living Rooms",
+    seoTitle: "Abstract Art for Living Rooms & Modern Homes",
     shortTitle: "Living Room Abstracts",
     description:
       "Browse hand-painted abstract paintings selected for calm living rooms, open-plan spaces, and modern interiors.",
@@ -63,6 +65,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "textured-wall-art",
     title: "Textured Wall Art",
+    seoTitle: "Textured Wall Art & Mixed-Media Paintings",
     shortTitle: "Textured Wall Art",
     description:
       "Explore hand-painted textured paintings and mixed-media canvas works with tactile surfaces for modern homes.",
@@ -101,6 +104,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "large-canvas-art",
     title: "Large Canvas Art",
+    seoTitle: "Large Canvas Wall Art for Homes & Hotels",
     shortTitle: "Large Canvas Art",
     description:
       "Shop large hand-painted canvas paintings for feature walls, collector homes, offices, and hospitality spaces.",
@@ -138,6 +142,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "wabi-sabi-wall-art",
     title: "Wabi-sabi Wall Art",
+    seoTitle: "Wabi-Sabi Wall Art & Textured Canvas",
     shortTitle: "Wabi-sabi Art",
     description:
       "Browse hand-painted wabi-sabi and textured paintings with grounded palettes, quiet movement, and imperfect surfaces.",
@@ -176,6 +181,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "bedroom-wall-art",
     title: "Bedroom Wall Art",
+    seoTitle: "Bedroom Wall Art for Calm, Restful Spaces",
     shortTitle: "Bedroom Art",
     description:
       "Hand-painted paintings selected for bedrooms, private spaces, and calm rooms that need measured color and texture.",
@@ -214,6 +220,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "dining-room-wall-art",
     title: "Dining Room Wall Art",
+    seoTitle: "Dining Room Wall Art for Welcoming Spaces",
     shortTitle: "Dining Room Art",
     description: "Browse original hand-painted art selected for dining rooms, breakfast areas, and relaxed open-plan entertaining spaces.",
     metaDescription: "Shop original dining room wall art chosen for welcoming meals and open-plan homes. Compare hand-painted works by size, color, and room fit.",
@@ -238,6 +245,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "office-wall-art",
     title: "Office Wall Art",
+    seoTitle: "Office Wall Art for Home & Workspaces",
     shortTitle: "Office Wall Art",
     description: "Explore original hand-painted office art for focused workspaces, home offices, studios, and considered professional interiors.",
     metaDescription: "Find original office wall art for focused home and professional workspaces. Compare hand-painted paintings by scale, palette, and placement.",
@@ -262,6 +270,7 @@ export const marketingCollections: MarketingCollection[] = [
   {
     slug: "neutral-canvas-art",
     title: "Neutral Canvas Art",
+    seoTitle: "Neutral Canvas Art & Textured Paintings",
     shortTitle: "Neutral Art",
     description:
       "Explore hand-painted neutral canvas paintings, textured works, and minimalist pieces for restrained modern interiors.",

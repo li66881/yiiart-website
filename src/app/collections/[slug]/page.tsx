@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const image = getArtworkImageUrl(artworkWithImage, { width: 1200, height: 630 })
   const indexable = shouldIndexMarketingCollection(collection, artworks.length)
   return buildSeoMetadata({
-    title: collection.title,
+    title: collection.seoTitle,
     description: collection.metaDescription,
     path: `/collections/${slug}`,
     image,
