@@ -18,6 +18,13 @@ test("uses the visible artwork name for Product structured data", async () => {
   assert.match(artworkPage, /const productJsonLd[\s\S]*?name: selectedVariant \? `\$\{title\} - \$\{selectedVariant\.size\.label\} - \$\{selectedVariant\.finish\.label\}` : title/)
 })
 
+test("labels source artwork dimensions separately from the selected product variant", async () => {
+  const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+
+  assert.match(artworkPage, /size: selectedVariant\?\.size\.label \|\| dimensions \|\| undefined/)
+  assert.match(artworkPage, /name: selectedVariant \? "Original artwork dimensions" : "Dimensions", value: dimensions/)
+})
+
 test("returns a real 404 when an artwork slug is missing and propagates fetch errors", async () => {
   const [artworkPage, nextConfig] = await Promise.all([
     readFile("src/app/artwork/[slug]/page.tsx", "utf8"),
