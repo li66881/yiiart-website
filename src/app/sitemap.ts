@@ -19,6 +19,7 @@ const routes = [
   { path: '/custom-painting', priority: 0.8 },
   { path: '/guides', priority: 0.7 },
   { path: '/guides/home-wall-art-pairing-guide', priority: 0.7 },
+  { path: '/guides/hotel-restaurant-wall-art-planning', priority: 0.7 },
   { path: '/size-guide', priority: 0.7 },
   { path: '/artists', priority: 0.8 },
   { path: '/about', priority: 0.6 },

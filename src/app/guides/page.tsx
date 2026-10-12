@@ -18,6 +18,12 @@ const guides = [
     href: "/guides/home-wall-art-pairing-guide",
     topic: "Wall Art Guide",
   },
+  {
+    title: "How to Plan Wall Art for Hotels and Restaurants",
+    text: "A practical framework for artwork zoning, scale, abstract palettes, coordinated selections, custom commissions, and project briefs.",
+    href: "/guides/hotel-restaurant-wall-art-planning",
+    topic: "Hospitality Art Guide",
+  },
 ]
 
 const quickLinks = [

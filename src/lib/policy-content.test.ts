@@ -14,6 +14,7 @@ test("states that import tax is not collected at checkout", () => {
 test("separates US federal VAT from UK and Australian import tax", () => {
   const byRegion = Object.fromEntries(customsMarketGuidance.map((item) => [item.region, item.text]))
   assert.match(byRegion["United States"], /no federal import VAT/i)
+  assert.match(byRegion["United States"], /classification, country of origin, additional trade measures/i)
   assert.match(byRegion["United Kingdom"], /5%/)
   assert.match(byRegion["Australia"], /10%/)
   assert.match(byRegion["Hong Kong"], /no GST\/VAT/i)
