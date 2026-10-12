@@ -98,6 +98,9 @@ export default async function TradePage() {
               <p className="max-w-xl text-lg leading-8 text-stone-600">
                 Find artwork for hotel rooms, lobbies, restaurants, and other guest spaces. Explore existing paintings or discuss coordinated selections, custom sizes, and palette directions for your project. We confirm scope, pricing, production timing, and delivery options before an order is finalized.
               </p>
+              <p className="mt-4 max-w-xl text-sm leading-6 text-stone-600">
+                Preparing an enquiry? Use the <Link href="/guides/hotel-artwork-project-brief" className="underline underline-offset-4">hotel artwork project brief checklist</Link> to organize room schedules, measurements, artwork direction, and quote questions.
+              </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link href="/custom-painting?intent=project" className="inline-flex bg-stone-950 px-6 py-4 text-sm font-medium text-white hover:bg-stone-800">
                   Enquire about project artwork

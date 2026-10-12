@@ -63,6 +63,9 @@ export default function HotelArtworkProjectBriefPage() {
                 Explore hotel and restaurant art
               </Link>
             </div>
+            <p className="mt-5 text-sm leading-6 text-stone-600">
+              See the <Link href="/trade" className="underline underline-offset-4">hotel and restaurant artwork service</Link> for coordinated selections, project enquiries, and artwork options for guest spaces.
+            </p>
           </div>
         </section>
 
