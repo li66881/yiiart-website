@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import Script from 'next/script'
 import localFont from 'next/font/local'
 import './globals.css'
@@ -152,6 +153,9 @@ export default async function RootLayout({
                 <WishlistProvider>
                   <CartProvider>
                     {children}
+                    <nav aria-label="Business artwork" className="sr-only">
+                      <Link href="/trade">Hotel and restaurant artwork projects</Link>
+                    </nav>
                     <MiniCartDrawer />
                     <ChatWidget />
                     <CookieConsent />

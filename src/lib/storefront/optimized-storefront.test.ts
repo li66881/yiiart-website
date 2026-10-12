@@ -167,6 +167,13 @@ test("production layout uses local fonts without a build-time Google Fonts reque
   assert.doesNotMatch(layout, /next\/font\/google/)
 })
 
+test("global server-rendered shell exposes a crawlable hospitality project link", async () => {
+  const layout = await readFile("src/app/layout.tsx", "utf8")
+
+  assert.match(layout, /import Link from 'next\/link'/)
+  assert.match(layout, /<nav aria-label="Business artwork" className="sr-only">\s*<Link href="\/trade">Hotel and restaurant artwork projects<\/Link>/)
+})
+
 test("optimized storefront restores artwork and collection discovery", async () => {
   const discoveryGrid = await readFile("src/components/ArtworkDiscoveryGrid.tsx", "utf8")
   const storefrontControls = await readFile("src/components/StorefrontControls.tsx", "utf8")
