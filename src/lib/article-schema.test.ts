@@ -6,7 +6,8 @@ test("links guide author and publisher to the site Organization entity", async (
   const guidePage = await readFile("src/app/guides/home-wall-art-pairing-guide/page.tsx", "utf8")
 
   assert.match(guidePage, /author:\s*\{[\s\S]*?"@id": absoluteUrl\("\/#organization"\)/)
-  assert.match(guidePage, /publisher:\s*\{\s*"@id": absoluteUrl\("\/#organization"\)/)
+  assert.match(guidePage, /author:\s*\{[\s\S]*?logo:\s*absoluteUrl\("\/brand\/yiiart-mark\.svg"\)/)
+  assert.match(guidePage, /publisher:\s*\{[\s\S]*?"@id": absoluteUrl\("\/#organization"\)[\s\S]*?logo:\s*absoluteUrl\("\/brand\/yiiart-mark\.svg"\)/)
   assert.match(guidePage, /By YiiArt Studio/)
   assert.doesNotMatch(guidePage, /dateModified:/)
 })
