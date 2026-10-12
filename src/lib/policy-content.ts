@@ -46,7 +46,7 @@ export const customsIntro =
 export const customsMarketGuidance = [
   {
     region: "United States",
-    text: "There is no federal import VAT. Original hand-painted paintings are typically entered duty-free when accepted as original artwork. Courier handling fees can still apply. Extra U.S. tariffs may apply depending on origin and current rules; YiiArt does not collect them at checkout.",
+    text: "There is no federal import VAT in the United States. Certain original paintings executed entirely by hand may qualify for a free general customs duty rate under HTSUS heading 9701, but classification, country of origin, additional trade measures, and entry rules can affect the amount due. Carrier or customs-clearance fees may also apply. YiiArt does not collect import charges at checkout; confirm current requirements with your customs broker or U.S. Customs and Border Protection before ordering. See the current USITC tariff schedule.",
   },
   {
     region: "United Kingdom",
@@ -123,7 +123,7 @@ export const faqItems = [
   },
   {
     question: "Will I have to pay customs duties or taxes?",
-    answer: "Duties and local taxes may be charged by the destination country. YiiArt does not currently collect import VAT, GST, or customs fees at checkout. For original hand-painted paintings, many destinations charge no customs duty, but the United Kingdom, EU, Canada, and Australia still often collect import VAT or GST through the courier. The United States has no federal import VAT; duty is typically not charged on accepted original paintings, though courier fees and origin-based tariffs can still apply. See the Shipping page for destination notes. Classification and rates can change.",
+    answer: "Duties and local taxes may be charged by the destination country. YiiArt does not currently collect import VAT, GST, or customs fees at checkout. For original hand-painted paintings, some destinations may apply no customs duty, while import VAT or GST and carrier-clearance fees may still be due. The United Kingdom, European Union, Canada, and Australia may charge import VAT or GST under local rules. There is no federal import VAT in the United States; certain original paintings executed entirely by hand may qualify for a free general duty rate under HTSUS heading 9701, but classification, country of origin, additional trade measures, and entry rules can affect charges. Check the current tariff schedule and confirm with your customs broker or the relevant customs authority before ordering. See the Shipping page for destination notes. Rules and rates can change.",
   },
   {
     question: "How is artwork packaged?",
