@@ -23,8 +23,8 @@ type EditorialHomeProps = {
 
 const heroMessages = [
   {
-    eyebrow: "For interior designers",
-    title: "Art for the spaces you design.",
+    eyebrow: "For hotels and restaurants",
+    title: "Hand-painted art for hospitality spaces.",
     ctaHref: "/trade",
     ctaLabel: "Explore project art",
   },
@@ -99,11 +99,11 @@ export default function EditorialHome({ artworks }: EditorialHomeProps) {
       <section className="border-b border-stone-200 bg-[#fbfaf6] px-4 py-12 sm:px-6 lg:px-10">
         <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-6 md:flex-row md:items-center">
           <div>
-            <p className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">For design projects</p>
-            <h2 className="mt-2 font-serif text-3xl text-stone-950">Artwork selected for your space.</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Discuss coordinated artwork, custom sizes, and palette direction for an interior project. Each quote is confirmed for the brief.</p>
+            <p className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">For hotels and restaurants</p>
+            <h2 className="mt-2 font-serif text-3xl text-stone-950">Artwork selected for hospitality spaces.</h2>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Discuss coordinated artwork, custom sizes, and palette direction for guest rooms, lobbies, and dining spaces. Each quote is confirmed for the brief.</p>
           </div>
-          <Link href="/trade" className="inline-flex shrink-0 justify-center border border-stone-900 px-6 py-4 text-sm font-medium text-stone-950 hover:bg-stone-950 hover:text-white">For Designers</Link>
+          <Link href="/trade" className="inline-flex shrink-0 justify-center border border-stone-900 px-6 py-4 text-sm font-medium text-stone-950 hover:bg-stone-950 hover:text-white">Explore hospitality art</Link>
         </div>
       </section>
 
