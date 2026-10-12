@@ -15,6 +15,19 @@ test("publishes a distinct hotel and restaurant artwork planning guide", async (
   assert.match(sitemap, /hotel-restaurant-wall-art-planning/)
 })
 
+test("organizes the guide directory around hospitality, abstract art, and sizing journeys", async () => {
+  const index = await readFile("src/app/guides/page.tsx", "utf8")
+
+  assert.match(index, /Wall Art Guides for Homes, Hotels & Restaurants/)
+  assert.match(index, /Find the right starting point/)
+  assert.match(index, /Planning art for a hotel or restaurant/)
+  assert.match(index, /Choosing abstract art for a room/)
+  assert.match(index, /Checking scale before you buy/)
+  assert.match(index, /\/trade/)
+  assert.match(index, /\/custom-painting/)
+  assert.match(index, /\/size-guide/)
+})
+
 test("qualifies U.S. artwork duty guidance by classification and origin", async () => {
   const policy = await readFile("src/lib/policy-content.ts", "utf8")
 
