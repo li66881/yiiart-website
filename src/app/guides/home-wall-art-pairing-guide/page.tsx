@@ -137,9 +137,13 @@ const articleJsonLd = {
     "@type": "Organization",
     "@id": absoluteUrl("/#organization"),
     name: "YiiArt",
+    logo: absoluteUrl("/brand/yiiart-mark.svg"),
   },
   publisher: {
+    "@type": "Organization",
     "@id": absoluteUrl("/#organization"),
+    name: "YiiArt",
+    logo: absoluteUrl("/brand/yiiart-mark.svg"),
   },
   mainEntityOfPage: absoluteUrl(pagePath),
   image: absoluteUrl("/og-image"),
