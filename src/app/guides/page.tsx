@@ -5,9 +5,9 @@ import Footer from "@/components/Footer"
 import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "Wall Art Guides",
+  title: "Wall Art Guides for Homes, Hotels & Restaurants",
   description:
-    "Helpful YiiArt guides for choosing original wall art, large canvas paintings, custom canvas art, size, color, and room fit.",
+    "Practical guides to original wall art for homes and hospitality spaces, including abstract art, room sizing, custom painting, and project planning.",
   path: "/guides",
 })
 
@@ -31,6 +31,35 @@ const quickLinks = [
   { title: "Large Canvas Art", href: "/collections/large-canvas-art" },
   { title: "Custom Painting", href: "/custom-painting" },
   { title: "Shipping & Returns", href: "/shipping-returns" },
+]
+
+const readingPaths = [
+  {
+    title: "Planning art for a hotel or restaurant",
+    text: "Start with guest-room and public-space zones, wall measurements, coordinated abstract palettes, quantities, and a project brief.",
+    links: [
+      { title: "Hospitality project planning guide", href: "/guides/hotel-restaurant-wall-art-planning" },
+      { title: "Hotel & restaurant artwork service", href: "/trade" },
+      { title: "Dining room wall art", href: "/collections/dining-room-wall-art" },
+    ],
+  },
+  {
+    title: "Choosing abstract art for a room",
+    text: "Compare the painting with the wall, furniture, natural light, and materials before choosing a ready-made or custom canvas.",
+    links: [
+      { title: "Home wall art pairing guide", href: "/guides/home-wall-art-pairing-guide" },
+      { title: "Abstract art for living rooms", href: "/collections/abstract-art-for-living-room" },
+      { title: "Request a custom painting", href: "/custom-painting" },
+    ],
+  },
+  {
+    title: "Checking scale before you buy",
+    text: "Measure the wall and the furniture below it, then compare artwork width, orientation, and viewing distance.",
+    links: [
+      { title: "Artwork size guide", href: "/size-guide" },
+      { title: "Large canvas art", href: "/collections/large-canvas-art" },
+    ],
+  },
 ]
 
 export default function GuidesPage() {
@@ -57,6 +86,33 @@ export default function GuidesPage() {
               Practical buying guidance for original paintings, large wall art, custom canvas art, room sizing, color
               matching, and international artwork delivery.
             </p>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="max-w-3xl">
+              <p className="mb-3 text-sm uppercase tracking-wider text-stone-500">Browse by project</p>
+              <h2 className="text-3xl font-light leading-tight sm:text-4xl">Find the right starting point</h2>
+              <p className="mt-4 text-base leading-7 text-stone-600">
+                Use these reading paths to move from room-planning questions to relevant artwork, sizing advice, or a custom project enquiry.
+              </p>
+            </div>
+            <div className="mt-10 grid gap-10 md:grid-cols-3">
+              {readingPaths.map((path) => (
+                <section key={path.title} className="border-t border-stone-300 pt-5">
+                  <h3 className="text-xl font-medium">{path.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-stone-600">{path.text}</p>
+                  <ul className="mt-5 grid gap-3 text-sm">
+                    {path.links.map((item) => (
+                      <li key={item.href}>
+                        <Link href={item.href} className="underline decoration-stone-300 underline-offset-4 hover:decoration-black">{item.title}</Link>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
           </div>
         </section>
 
