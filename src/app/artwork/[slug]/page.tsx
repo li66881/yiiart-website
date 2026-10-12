@@ -338,7 +338,7 @@ async function ArtworkContent({
     material: medium ? inferMaterial(medium) : undefined,
     size: selectedVariant?.size.label || dimensions || undefined,
     additionalProperty: [
-      dimensions ? { "@type": "PropertyValue", name: "Dimensions", value: dimensions } : null,
+      dimensions ? { "@type": "PropertyValue", name: selectedVariant ? "Original artwork dimensions" : "Dimensions", value: dimensions } : null,
       selectedVariant ? { "@type": "PropertyValue", name: "Presentation", value: selectedVariant.finish.label } : null,
       medium ? { "@type": "PropertyValue", name: "Medium", value: medium } : null,
       category ? { "@type": "PropertyValue", name: "Style", value: category } : null,
