@@ -26,11 +26,18 @@ test("marketing collections have concise, unique, page-specific search descripti
   }
 })
 
+test("marketing collections have distinct, descriptive SEO titles within the site title limit", () => {
+  const titles = marketingCollections.map((collection) => `${collection.seoTitle} | YiiArt`)
+
+  assert.equal(new Set(titles).size, marketingCollections.length)
+  assert.ok(titles.every((title) => title.length >= 40 && title.length <= 60))
+})
+
 test("collection page metadata uses each collection's authored search description", async () => {
   const page = await readFile("src/app/collections/[slug]/page.tsx", "utf8")
 
   assert.match(page, /description:\s*collection\.metaDescription/)
-  assert.match(page, /title:\s*collection\.title/)
+  assert.match(page, /title:\s*collection\.seoTitle/)
   assert.doesNotMatch(page, /collection\.title\}\s*for Modern Interiors/)
 })
 
