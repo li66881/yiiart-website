@@ -12,9 +12,9 @@ import { buildSeoMetadata } from "@/lib/seo"
 import { permanentRedirect } from "next/navigation"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "Custom Painting Made for Your Space",
+  title: "Custom Abstract Painting Made for Your Space",
   description:
-    "Request a handmade custom painting from YiiArt. Choose size, color palette, orientation, frame direction, and room style for a canvas artwork made for your space.",
+    "Request a handmade custom abstract painting from YiiArt. Choose size, color palette, orientation, and style for a canvas artwork planned around your room.",
   path: "/custom-painting",
 })
 
@@ -128,7 +128,7 @@ export default async function CustomPaintingPage({ searchParams }: Props) {
     ? "Need help choosing the right size?"
     : intent === "project"
       ? "Project art enquiries"
-      : "Custom Painting Made for Your Space"
+      : "Custom Abstract Painting Made for Your Space"
   const intro = compact
     ? "Send a room photo and your wall width for a size recommendation. Email and the artwork you are considering are enough for a first reply."
     : intent === "project"
