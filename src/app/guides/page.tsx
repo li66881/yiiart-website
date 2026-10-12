@@ -24,6 +24,12 @@ const guides = [
     href: "/guides/hotel-restaurant-wall-art-planning",
     topic: "Hospitality Art Guide",
   },
+  {
+    title: "Hotel Artwork Project Brief: A Buyer’s Checklist",
+    text: "Prepare room schedules, measurements, abstract palette references, quantities, delivery details, and questions to settle in a project quote.",
+    href: "/guides/hotel-artwork-project-brief",
+    topic: "Hospitality Buyer Checklist",
+  },
 ]
 
 const quickLinks = [
