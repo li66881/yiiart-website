@@ -11,7 +11,7 @@ export const revalidate = 600
 
 const homepageSeoTitle = "Hand-Painted Wall Art & Original Canvas Art | YiiArt"
 const homepageSeoDescription =
-  "Shop hand-painted wall art for living rooms, bedrooms, and design projects. Explore abstract, textured, and large canvas paintings, or request custom artwork for your space."
+  "Shop hand-painted wall art for living rooms, bedrooms, and design projects. Browse abstract, textured, and large canvas paintings or request custom artwork."
 
 async function getData() {
   try {

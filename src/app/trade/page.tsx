@@ -13,7 +13,7 @@ export const revalidate = 600
 export const metadata = buildSeoMetadata({
   title: "Hotel & Restaurant Artwork for Hospitality Projects",
   description:
-    "Explore hand-painted artwork for hotels and restaurants. Discuss coordinated selections, custom sizes, palettes, delivery destinations, and a project quote with YiiArt.",
+    "Explore hand-painted art for hotels and restaurants. Discuss coordinated selections, custom sizes, palettes, delivery, and project quotes with YiiArt.",
   path: "/trade",
 })
 
