@@ -7,7 +7,7 @@ import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 const pagePath = "/guides/hotel-restaurant-wall-art-planning"
 const title = "How to Plan Wall Art for Hotels and Restaurants"
 const description =
-  "Plan artwork for hotel rooms, lobbies, restaurants, and guest spaces with practical guidance on zoning, scale, abstract palettes, coordinated selections, custom commissions, and project briefs."
+  "Plan hotel and restaurant wall art with practical guidance on space planning, artwork scale, abstract palettes, coordinated selections, and custom projects."
 
 export const metadata: Metadata = buildSeoMetadata({ title, description, path: pagePath })
 
