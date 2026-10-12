@@ -34,6 +34,19 @@ test("collection page metadata uses each collection's authored search descriptio
   assert.doesNotMatch(page, /collection\.title\}\s*for Modern Interiors/)
 })
 
+test("hospitality landing page links to relevant indexed collections and receives contextual links back", async () => {
+  const tradePage = await readFile("src/app/trade/page.tsx", "utf8")
+  const collectionPage = await readFile("src/app/collections/[slug]/page.tsx", "utf8")
+
+  for (const slug of ["dining-room-wall-art", "large-canvas-art", "abstract-art-for-living-room"]) {
+    assert.ok(marketingCollections.some((collection) => collection.slug === slug), `${slug} must be an existing collection`)
+    assert.ok(tradePage.includes(`/collections/${slug}`), `/trade must link to ${slug}`)
+  }
+
+  assert.match(collectionPage, /const hospitalityCollectionSlugs = new Set\([\s\S]*?"dining-room-wall-art"[\s\S]*?"large-canvas-art"/)
+  assert.match(collectionPage, /hospitalityCollectionSlugs\.has\(slug\)[\s\S]*?href="\/trade"/)
+})
+
 test("room collections have authored buying guidance and explicit room tags", () => {
   const roomCollections = marketingCollections.filter((collection) => collection.group === "room")
   assert.deepEqual(roomCollections.map(({ slug }) => slug).sort(), [

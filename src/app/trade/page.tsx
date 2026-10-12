@@ -65,6 +65,12 @@ const faqs = [
   { question: "Can I start a project enquiry before all details are decided?", answer: "Yes. A room photo, reference, approximate quantity, or short brief is enough to begin a conversation. Specifications and quote can be refined as the project develops." },
 ]
 
+const projectCollectionLinks = [
+  { title: "Dining room wall art", href: "/collections/dining-room-wall-art", description: "Compare hand-painted works for restaurant dining rooms and shared guest spaces." },
+  { title: "Large canvas art", href: "/collections/large-canvas-art", description: "Explore statement-scale paintings for lobbies, lounges, and feature walls." },
+  { title: "Abstract art for living rooms", href: "/collections/abstract-art-for-living-room", description: "Browse abstract palettes that can inform suites and other relaxed interiors." },
+]
+
 export default async function TradePage() {
   const artworks = await getSelectedArtworks()
 
@@ -115,6 +121,24 @@ export default async function TradePage() {
               <div className="border-t border-stone-300 pt-5"><h3 className="text-lg font-medium">Hotel and restaurant selections</h3><p className="mt-3 leading-7 text-stone-600">Review works for guest rooms, lobbies, dining rooms, and other spaces by scale, color, and visual rhythm.</p></div>
               <div className="border-t border-stone-300 pt-5"><h3 className="text-lg font-medium">Coordinated artwork</h3><p className="mt-3 leading-7 text-stone-600">Discuss a consistent palette or a related selection across multiple rooms, while keeping each space’s brief in view.</p></div>
               <div className="border-t border-stone-300 pt-5"><h3 className="text-lg font-medium">Custom sizes and project quotes</h3><p className="mt-3 leading-7 text-stone-600">Share quantities, dimensions, destination, and timing so feasible specifications and a project quote can be confirmed.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-stone-200 px-4 py-16 sm:px-6 lg:px-10">
+          <div className="mx-auto max-w-[1440px]">
+            <div className="max-w-2xl">
+              <p className="text-xs font-medium uppercase tracking-[0.16em] text-stone-500">Browse by space and scale</p>
+              <h2 className="mt-3 font-serif text-3xl sm:text-4xl">Explore artwork for your project brief</h2>
+              <p className="mt-4 leading-7 text-stone-600">Use these collections to compare current works. For coordinated selections, custom sizes, or a project quote, share your hospitality brief with YiiArt.</p>
+            </div>
+            <div className="mt-8 grid gap-6 md:grid-cols-3">
+              {projectCollectionLinks.map((item) => (
+                <Link key={item.href} href={item.href} className="border-t border-stone-300 pt-5 hover:border-stone-950">
+                  <h3 className="text-lg font-medium">{item.title}</h3>
+                  <p className="mt-3 leading-7 text-stone-600">{item.description}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

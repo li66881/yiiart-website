@@ -25,6 +25,12 @@ const internalCollectionLinks = [
   { title: "Custom Paintings", href: "/custom-painting" },
 ]
 
+const hospitalityCollectionSlugs = new Set([
+  "abstract-art-for-living-room",
+  "dining-room-wall-art",
+  "large-canvas-art",
+])
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const collection = getMarketingCollection(slug)
@@ -125,6 +131,21 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
             ))}
           </div>
         </section>
+
+        {hospitalityCollectionSlugs.has(slug) && (
+          <section className="border-b border-stone-200 bg-[#f2eee7] py-12">
+            <div className="mx-auto flex max-w-[1440px] flex-col justify-between gap-6 px-4 sm:px-6 md:flex-row md:items-center lg:px-10">
+              <div>
+                <p className="text-xs font-semibold uppercase text-[#75432f]">For hotels and restaurants</p>
+                <h2 className="mt-2 text-2xl font-medium">Planning artwork for a hospitality project?</h2>
+                <p className="mt-3 max-w-2xl text-sm leading-6 text-stone-600">Discuss coordinated selections, custom sizes, and delivery options for your guest spaces.</p>
+              </div>
+              <Link href="/trade" className="inline-flex shrink-0 justify-center border border-stone-900 px-6 py-4 text-sm font-medium text-stone-950 hover:bg-stone-950 hover:text-white">
+                Explore hospitality art
+              </Link>
+            </div>
+          </section>
+        )}
 
         <section className="border-b border-stone-200 bg-stone-950 py-14 text-white">
           <div className="mx-auto grid max-w-[1440px] gap-8 px-4 sm:px-6 md:grid-cols-[1fr_0.55fr] md:items-center lg:px-10">
