@@ -31,6 +31,12 @@ const guides = [
     topic: "Hospitality Buyer Checklist",
   },
   {
+    title: "Custom Abstract Paintings for Hotels: A Planning Guide",
+    text: "Plan a coordinated abstract art commission by space, palette, size, quantity, and delivery requirements.",
+    href: "/guides/custom-abstract-painting-for-hotels",
+    topic: "Custom Hotel Art Guide",
+  },
+  {
     title: "Restaurant Wall Art: Plan Paintings for Dining Spaces",
     text: "Choose paintings by dining zone, sightline, lighting, scale, and palette before planning a coordinated restaurant project.",
     href: "/guides/restaurant-wall-art-planning",
