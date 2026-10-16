@@ -67,6 +67,7 @@ const faqs = [
 
 const projectCollectionLinks = [
   { title: "Dining room wall art", href: "/collections/dining-room-wall-art", description: "Compare hand-painted works for restaurant dining rooms and shared guest spaces." },
+  { title: "Restaurant art planning guide", href: "/guides/restaurant-wall-art-planning", description: "Plan artwork by dining zone, sightline, lighting, and palette before requesting a quote." },
   { title: "Large canvas art", href: "/collections/large-canvas-art", description: "Explore statement-scale paintings for lobbies, lounges, and feature walls." },
   { title: "Abstract art for living rooms", href: "/collections/abstract-art-for-living-room", description: "Browse abstract palettes that can inform suites and other relaxed interiors." },
 ]
