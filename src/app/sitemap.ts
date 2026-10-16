@@ -22,6 +22,7 @@ const routes = [
   { path: '/guides/hotel-restaurant-wall-art-planning', priority: 0.7 },
   { path: '/guides/hotel-artwork-project-brief', priority: 0.7 },
   { path: '/guides/custom-abstract-painting-for-hotels', priority: 0.7 },
+  { path: '/guides/restaurant-wall-art-planning', priority: 0.7 },
   { path: '/size-guide', priority: 0.7 },
   { path: '/artists', priority: 0.8 },
   { path: '/about', priority: 0.6 },

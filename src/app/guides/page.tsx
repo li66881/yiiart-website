@@ -36,6 +36,12 @@ const guides = [
     href: "/guides/custom-abstract-painting-for-hotels",
     topic: "Custom Hotel Art Guide",
   },
+  {
+    title: "Restaurant Wall Art: Plan Paintings for Dining Spaces",
+    text: "Choose paintings by dining zone, sightline, lighting, scale, and palette before planning a coordinated restaurant project.",
+    href: "/guides/restaurant-wall-art-planning",
+    topic: "Restaurant Art Guide",
+  },
 ]
 
 const quickLinks = [
@@ -53,6 +59,7 @@ const readingPaths = [
       { title: "Hospitality project planning guide", href: "/guides/hotel-restaurant-wall-art-planning" },
       { title: "Hotel & restaurant artwork service", href: "/trade" },
       { title: "Dining room wall art", href: "/collections/dining-room-wall-art" },
+      { title: "Restaurant wall art planning", href: "/guides/restaurant-wall-art-planning" },
     ],
   },
   {
