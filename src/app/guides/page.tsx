@@ -30,6 +30,12 @@ const guides = [
     href: "/guides/hotel-artwork-project-brief",
     topic: "Hospitality Buyer Checklist",
   },
+  {
+    title: "Custom Abstract Paintings for Hotels: A Planning Guide",
+    text: "Plan a coordinated abstract art commission by space, palette, size, quantity, and delivery requirements.",
+    href: "/guides/custom-abstract-painting-for-hotels",
+    topic: "Custom Hotel Art Guide",
+  },
 ]
 
 const quickLinks = [
