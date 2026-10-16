@@ -5,7 +5,7 @@ import Footer from "@/components/Footer"
 import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 const pagePath = "/guides/hotel-restaurant-wall-art-planning"
-const title = "How to Plan Wall Art for Hotels and Restaurants"
+const title = "How to Choose Art for Hotels and Restaurants"
 const description =
   "Plan hotel and restaurant wall art with practical guidance on space planning, artwork scale, abstract palettes, coordinated selections, and custom projects."
 
@@ -14,10 +14,11 @@ export const metadata: Metadata = buildSeoMetadata({ title, description, path: p
 const sections = [
   {
     number: "01",
-    title: "Map the guest experience before choosing artwork",
+    title: "How to choose art for hotels and restaurants",
     paragraphs: [
-      "Start with a simple floor plan or room list. Mark the places where guests pause, gather, dine, check in, or move through the property. A lobby focal wall has a different job from a guest-room headboard wall or a restaurant banquette.",
-      "For each zone, note the wall width and height, furniture below it, viewing distance, lighting, and whether guests will see the work briefly or spend time near it. Photos taken straight-on are useful when a plan is not available.",
+      "Start with the guest experience and the role of each space. A hotel lobby can use a larger, expressive painting to create a focal point; guest rooms often benefit from calmer compositions that work with the headboard, lighting, and overall color scheme. Corridors call for a considered rhythm of works that guests can view at close range.",
+      "Before choosing hotel art, record each wall's clear width and height, furniture below it, viewing distance, natural and evening light, and any fixtures or access requirements. For restaurants, include dining zones, waiting areas, and sightlines from the entrance. Straight-on room photos or a floor plan help compare scale and palette with the actual interior.",
+      "For a multi-room project, choose a visual thread—such as a shared palette, texture, or framing direction—then vary the composition or scale by zone. This keeps the property cohesive without repeating the same painting in every room. Consider custom abstract paintings when standard sizes or available colors do not fit the space.",
     ],
     bullets: ["Guest rooms and suites", "Lobby, reception, and lounge", "Restaurant dining and waiting areas", "Corridors, meeting rooms, and other shared spaces"],
   },
@@ -92,7 +93,7 @@ export default function HospitalityArtPlanningGuide() {
             </nav>
             <p className="mb-4 text-sm uppercase text-stone-500">YiiArt Project Guide</p>
             <h1 className="max-w-4xl font-serif text-4xl font-normal leading-tight sm:text-5xl">
-              How to Plan Wall Art for Hotels and Restaurants
+              How to Choose Art for Hotels and Restaurants
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-stone-600">
               A practical starting point for selecting original abstract paintings across guest rooms, lobbies, dining spaces, and other hospitality interiors.
