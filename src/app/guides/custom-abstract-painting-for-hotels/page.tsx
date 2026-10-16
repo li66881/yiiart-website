@@ -5,7 +5,7 @@ import Footer from "@/components/Footer"
 import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 const path = "/guides/custom-abstract-painting-for-hotels"
-const title = "Custom Abstract Paintings for Hotels: A Planning Guide"
+const title = "Custom Hotel Abstract Paintings: A Planning Guide"
 
 export const metadata: Metadata = buildSeoMetadata({
   title,
