@@ -9,6 +9,7 @@ import {
   markOrderPaymentFailed,
   markOrderRefunded,
   recordPaymentEvent,
+  releaseFailedPaymentEvent,
 } from "@/lib/orders"
 
 export const runtime = "nodejs"
@@ -67,6 +68,7 @@ async function handleStripeEvent(event: Stripe.Event) {
 
   if (!recorded) return
 
+  try {
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session
     const sessionOrderId = session.metadata?.orderId || session.client_reference_id
@@ -106,6 +108,10 @@ async function handleStripeEvent(event: Stripe.Event) {
     if (!paymentIntentId) return
     const order = await findOrderByProviderPayment("stripe", paymentIntentId)
     if (order) await markOrderDisputed(order.id)
+  }
+  } catch (error) {
+    await releaseFailedPaymentEvent("stripe", event.id)
+    throw error
   }
 }
 

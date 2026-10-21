@@ -47,6 +47,7 @@ type Order = {
 export default function OrdersPage() {
   const { t } = useLanguage()
   const [email, setEmail] = useState("")
+  const [orderNumber, setOrderNumber] = useState("")
   const [orders, setOrders] = useState<Order[]>([])
   const [loading, setLoading] = useState(false)
   const [searched, setSearched] = useState(false)
@@ -57,23 +58,22 @@ export default function OrdersPage() {
     const savedEmail = localStorage.getItem("yiiart-order-email")
     if (savedEmail) {
       setEmail(savedEmail)
-      void loadOrders(savedEmail)
     }
   }, [])
 
   async function loadOrders(lookupEmail: string) {
     const normalizedEmail = lookupEmail.trim().toLowerCase()
-    if (!normalizedEmail) return
+    if (!normalizedEmail || !orderNumber.trim()) return
 
     setLoading(true)
     setError("")
     setSearched(true)
 
     try {
-      const response = await fetch(`/api/orders?email=${encodeURIComponent(normalizedEmail)}`)
+      const response = await fetch(`/api/orders?order_number=${encodeURIComponent(orderNumber.trim())}&email=${encodeURIComponent(normalizedEmail)}`)
       const data = await response.json()
       if (!response.ok) throw new Error(data.error || "Could not load orders.")
-      setOrders(data.orders || [])
+      setOrders(data.order ? [data.order] : [])
       localStorage.setItem("yiiart-order-email", normalizedEmail)
     } catch (loadError) {
       setOrders([])
@@ -97,6 +97,8 @@ export default function OrdersPage() {
           <h1 className="text-3xl font-light mb-8">My Orders</h1>
 
           <form onSubmit={handleSubmit} className="mb-8 border bg-white p-5">
+            <label className="block text-sm font-medium mb-2">Order number</label>
+            <input type="text" required value={orderNumber} onChange={(event) => setOrderNumber(event.target.value)} className="mb-4 w-full border px-3 py-2 focus:outline-none focus:ring-1 focus:ring-black" placeholder="YA-YYYYMMDD-XXXXXX" />
             <label className="block text-sm font-medium mb-2">Email used at checkout</label>
             <div className="flex flex-col gap-3 sm:flex-row">
               <input
@@ -120,7 +122,7 @@ export default function OrdersPage() {
             </div>
           ) : orders.length === 0 ? (
             <div className="text-center py-20 bg-gray-50">
-              <p className="text-gray-500 mb-4">{searched ? "No orders found for this email" : "Enter your checkout email to view orders"}</p>
+              <p className="text-gray-500 mb-4">{searched ? "No matching order found" : "Enter your order number and checkout email"}</p>
               <Link href="/artworks" className="px-6 py-2 bg-black text-white hover:bg-gray-800">
                 Browse Artworks
               </Link>

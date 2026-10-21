@@ -298,6 +298,11 @@ export async function recordPaymentEvent(input: {
   }
 }
 
+export async function releaseFailedPaymentEvent(provider: PaymentProvider, eventId: string) {
+  const sql = getOrderSql()
+  await sql`delete from payment_events where provider = ${provider} and event_id = ${eventId}`
+}
+
 export async function markOrderPaid(input: {
   orderId: string
   provider: PaymentProvider

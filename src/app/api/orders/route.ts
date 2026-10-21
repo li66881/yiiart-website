@@ -21,12 +21,12 @@ export async function GET(request: Request) {
   try {
     if (sessionId) {
       const order = await findOrderByProviderCheckout("stripe", sessionId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order: order ? toConfirmation(order) : null })
     }
 
     if (paypalOrderId) {
       const order = await findOrderByProviderCheckout("paypal", paypalOrderId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order: order ? toConfirmation(order) : null })
     }
 
     if (orderNumber) {
@@ -41,5 +41,17 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Order lookup error:", error)
     return NextResponse.json({ error: "Could not load orders." }, { status: 500 })
+  }
+}
+
+function toConfirmation(order: Awaited<ReturnType<typeof findOrderByProviderCheckout>>) {
+  if (!order) return null
+  return {
+    orderNumber: order.orderNumber,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    totalAmount: order.totalAmount,
+    currency: order.currency,
+    items: order.items.map(({ quantity }) => ({ quantity })),
   }
 }

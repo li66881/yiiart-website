@@ -9,6 +9,7 @@ import {
   markOrderPaymentFailed,
   markOrderRefunded,
   recordPaymentEvent,
+  releaseFailedPaymentEvent,
 } from "@/lib/orders"
 import { verifyPayPalWebhookSignature } from "@/lib/paypal"
 
@@ -71,6 +72,7 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
 
   if (!recorded || !orderId) return
 
+  try {
   if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
     await markOrderPaid({
       orderId,
@@ -91,6 +93,10 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
 
   if (event.event_type === "PAYMENT.CAPTURE.REFUNDED") {
     await markOrderRefunded(orderId)
+  }
+  } catch (error) {
+    await releaseFailedPaymentEvent("paypal", eventId)
+    throw error
   }
 }
 
