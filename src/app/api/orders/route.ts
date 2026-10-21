@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import {
   findOrderByNumber,
   findOrderByProviderCheckout,
-  listOrdersByEmail,
 } from "@/lib/orders"
 import { isOrderStorageConfigured } from "@/lib/order-storage"
 
@@ -36,11 +35,6 @@ export async function GET(request: Request) {
       }
       const order = await findOrderByNumber(orderNumber, email)
       return NextResponse.json({ order })
-    }
-
-    if (email) {
-      const orders = await listOrdersByEmail(email)
-      return NextResponse.json({ orders })
     }
 
     return NextResponse.json({ error: "Provide an order lookup parameter." }, { status: 400 })

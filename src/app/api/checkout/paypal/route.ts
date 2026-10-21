@@ -100,7 +100,7 @@ export async function POST(request: Request) {
               landing_page: "LOGIN",
               shipping_preference: "SET_PROVIDED_ADDRESS",
               user_action: "PAY_NOW",
-              return_url: `${baseUrl}/api/checkout/paypal/capture?internal_order_id=${encodeURIComponent(order.id)}`,
+              return_url: `${baseUrl}/api/checkout/paypal/capture`,
               cancel_url: `${baseUrl}/cart`,
             },
           },
