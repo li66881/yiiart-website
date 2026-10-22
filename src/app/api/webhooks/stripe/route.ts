@@ -4,11 +4,13 @@ import { getStripe } from "@/lib/stripe"
 import { getOrderStorageProvider, isOrderStorageConfigured } from "@/lib/order-storage"
 import {
   findOrderByProviderPayment,
+  findOrderByProviderCheckout,
   markOrderDisputed,
   markOrderPaid,
   markOrderPaymentFailed,
   markOrderRefunded,
   recordPaymentEvent,
+  releaseFailedPaymentEvent,
 } from "@/lib/orders"
 
 export const runtime = "nodejs"
@@ -67,10 +69,18 @@ async function handleStripeEvent(event: Stripe.Event) {
 
   if (!recorded) return
 
-  if (event.type === "checkout.session.completed") {
+  try {
+  if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object as Stripe.Checkout.Session
     const sessionOrderId = session.metadata?.orderId || session.client_reference_id
     if (!sessionOrderId) throw new Error("Stripe session missing orderId metadata.")
+    if (session.payment_status !== "paid") return
+    const order = await findOrderByProviderCheckout("stripe", session.id)
+    if (!order || order.id !== sessionOrderId) throw new Error("Stripe session does not match a stored order.")
+    if (session.currency?.toUpperCase() !== order.currency.toUpperCase()
+      || session.amount_total !== Math.round(order.totalAmount * 100)) {
+      throw new Error("Stripe payment amount or currency does not match the stored order.")
+    }
 
     await markOrderPaid({
       orderId: sessionOrderId,
@@ -106,6 +116,10 @@ async function handleStripeEvent(event: Stripe.Event) {
     if (!paymentIntentId) return
     const order = await findOrderByProviderPayment("stripe", paymentIntentId)
     if (order) await markOrderDisputed(order.id)
+  }
+  } catch (error) {
+    await releaseFailedPaymentEvent("stripe", event.id)
+    throw error
   }
 }
 

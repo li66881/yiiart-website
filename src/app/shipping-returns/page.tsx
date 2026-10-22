@@ -39,7 +39,7 @@ const returnItems = returnHighlights
 const shippingReturnFaqs = [
   {
     question: "How much does shipping cost?",
-    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route.",
+    answer: "Standard shipping is included in the listed artwork price; no separate shipping charge is added at checkout. Delivery timing and format depend on destination, size, finish, and carrier route. Import taxes and customs charges are separate and may be collected by the destination country.",
   },
   {
     question: "How is the painting packed?",

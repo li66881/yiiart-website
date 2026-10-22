@@ -19,6 +19,10 @@ export const trustPrinciples = [
 
 export const shippingHighlights = [
   {
+    title: "Shipping included in the price",
+    text: "Standard shipping is included in the listed artwork price, with no separate shipping charge at checkout. Destination import taxes and customs charges are not included.",
+  },
+  {
     title: "Processing confirmed per order",
     text: "Preparation and production timing depends on the selected size, finish, surface, and current studio workload.",
   },

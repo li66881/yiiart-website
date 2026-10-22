@@ -6,12 +6,11 @@ import Header from "@/components/Header"
 import Footer from "@/components/Footer"
 import { useCart } from "@/context/CartContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
-import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
 
 function CheckoutSuccessContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { clearCart, items, subtotal } = useCart()
+  const { clearCart } = useCart()
   const purchaseTrackedRef = useRef(false)
   const sessionId = searchParams.get("session_id")
   const paypalOrderId = searchParams.get("paypal_order_id")
@@ -19,27 +18,19 @@ function CheckoutSuccessContent() {
   const [orderLoading, setOrderLoading] = useState(true)
 
   useEffect(() => {
-    if (purchaseTrackedRef.current) return
+    if (!order || order.paymentStatus !== "paid" || purchaseTrackedRef.current) return
     purchaseTrackedRef.current = true
-
-    const storedItems = items.length > 0 ? items : readStoredCartItems()
-    const trackedSubtotal =
-      items.length > 0
-        ? subtotal
-        : storedItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
-
-    if (storedItems.length > 0) {
-      const currency = getStoreCurrency()
-      trackMarketingEvent("Purchase", {
-        transaction_id: sessionId || paypalOrderId || "unknown",
-        currency,
-        value: convertCnyToStoreAmount(trackedSubtotal, currency),
-        num_items: storedItems.reduce((count, item) => count + item.quantity, 0),
-      })
-    }
-
+    const trackingKey = `yiiart-purchase-${order.orderNumber}`
+    if (localStorage.getItem(trackingKey)) return
+    trackMarketingEvent("Purchase", {
+      transaction_id: order.orderNumber,
+      currency: order.currency,
+      value: order.totalAmount,
+      num_items: order.items.reduce((count, item) => count + item.quantity, 0),
+    })
+    localStorage.setItem(trackingKey, "1")
     clearCart()
-  }, [clearCart, items, paypalOrderId, sessionId, subtotal])
+  }, [clearCart, order])
 
   useEffect(() => {
     const params = sessionId
@@ -60,9 +51,6 @@ function CheckoutSuccessContent() {
         if (cancelled) return
         const loadedOrder = data?.order || null
         setOrder(loadedOrder)
-        if (loadedOrder?.customerEmail) {
-          localStorage.setItem("yiiart-order-email", loadedOrder.customerEmail)
-        }
       })
       .catch(() => {
         if (!cancelled) setOrder(null)
@@ -142,15 +130,6 @@ function CheckoutSuccessContent() {
   )
 }
 
-function readStoredCartItems() {
-  try {
-    const savedCart = localStorage.getItem("yiiart-cart")
-    return savedCart ? JSON.parse(savedCart) as Array<{ price: number; quantity: number }> : []
-  } catch {
-    return []
-  }
-}
-
 function formatMoney(amount: number, currency: string) {
   return new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -165,9 +144,10 @@ function formatStatus(status: string) {
 type SuccessOrder = {
   orderNumber: string
   status: string
+  paymentStatus: string
   totalAmount: number
   currency: string
-  customerEmail?: string
+  items: Array<{ quantity: number }>
 }
 
 export default function CheckoutSuccessPage() {

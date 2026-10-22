@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import {
   findOrderByNumber,
   findOrderByProviderCheckout,
-  listOrdersByEmail,
 } from "@/lib/orders"
 import { isOrderStorageConfigured } from "@/lib/order-storage"
 
@@ -22,12 +21,12 @@ export async function GET(request: Request) {
   try {
     if (sessionId) {
       const order = await findOrderByProviderCheckout("stripe", sessionId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order: order ? toConfirmation(order) : null })
     }
 
     if (paypalOrderId) {
       const order = await findOrderByProviderCheckout("paypal", paypalOrderId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order: order ? toConfirmation(order) : null })
     }
 
     if (orderNumber) {
@@ -38,14 +37,21 @@ export async function GET(request: Request) {
       return NextResponse.json({ order })
     }
 
-    if (email) {
-      const orders = await listOrdersByEmail(email)
-      return NextResponse.json({ orders })
-    }
-
     return NextResponse.json({ error: "Provide an order lookup parameter." }, { status: 400 })
   } catch (error) {
     console.error("Order lookup error:", error)
     return NextResponse.json({ error: "Could not load orders." }, { status: 500 })
+  }
+}
+
+function toConfirmation(order: Awaited<ReturnType<typeof findOrderByProviderCheckout>>) {
+  if (!order) return null
+  return {
+    orderNumber: order.orderNumber,
+    status: order.status,
+    paymentStatus: order.paymentStatus,
+    totalAmount: order.totalAmount,
+    currency: order.currency,
+    items: order.items.map(({ quantity }) => ({ quantity })),
   }
 }
