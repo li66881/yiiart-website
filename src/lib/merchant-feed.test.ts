@@ -2,7 +2,7 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { buildMerchantFeed } from "./merchant-feed"
 
-test("merchant feed exports eligible originals with escaped text and included US shipping", () => {
+test("merchant feed exports priced original artwork with escaped text and included US shipping", () => {
   const xml = buildMerchantFeed([
     {
       _id: "original-1",
@@ -14,19 +14,50 @@ test("merchant feed exports eligible originals with escaped text and included US
       availability: "available",
       cloudflareImages: [{ url: "https://assets.yiiart.com/blue.webp" }],
     },
-    {
-      _id: "made-to-order-1",
-      slug: { current: "reproduction" },
-      title: { en: "Reproduction" },
-      price: 720,
-      productionModel: "hand_painted_to_order",
-      cloudflareImages: [{ url: "https://assets.yiiart.com/copy.webp" }],
-    },
   ])
 
   assert.match(xml, /Blue &amp; Stillness/)
   assert.match(xml, /Original &lt;canvas&gt;/)
   assert.match(xml, /<g:price>100\.00 USD<\/g:price>/)
   assert.match(xml, /<g:country>US<\/g:country><g:price>0\.00 USD<\/g:price>/)
-  assert.doesNotMatch(xml, /made-to-order-1/)
+  assert.match(xml, /<g:brand>YiiArt<\/g:brand>/)
+})
+
+test("merchant feed exports priced made-to-order size and finish variants", () => {
+  const xml = buildMerchantFeed([{
+    _id: "made-to-order-1",
+    slug: { current: "blue-sky" },
+    title: { en: "Blue Sky" },
+    productionModel: "hand_painted_to_order",
+    shippingProfile: "Ships rolled",
+    standardSizes: [
+      { _key: "small", label: "50 x 75 cm", priceCny: 720 },
+      { _key: "large", label: "60 x 90 cm", priceCny: 1440 },
+    ],
+    frameOptions: [
+      { _key: "rolled", label: "Rolled canvas", priceDeltaCny: 0 },
+      { _key: "framed", label: "Framed canvas", priceDeltaCny: 72 },
+    ],
+    cloudflareImages: [{ url: "https://assets.yiiart.com/blue-sky.webp" }],
+  }])
+
+  assert.equal((xml.match(/<item>/g) || []).length, 4)
+  assert.match(xml, /<g:price>100\.00 USD<\/g:price>/)
+  assert.match(xml, /<g:price>110\.00 USD<\/g:price>/)
+  assert.match(xml, /size=small&amp;finish=framed/)
+  assert.match(xml, /<g:item_group_id>yiiart-[a-f0-9]{24}<\/g:item_group_id>/)
+  assert.match(xml, /<g:variant_option><g:name>Presentation<\/g:name><g:value>Framed canvas<\/g:value><\/g:variant_option>/)
+})
+
+test("merchant feed matches checkout's as-listed original price", () => {
+  const xml = buildMerchantFeed([{
+    _id: "framed-original",
+    slug: { current: "framed-original" },
+    title: { en: "Framed original" },
+    price: 720,
+    productionModel: "original",
+    cloudflareImages: [{ url: "https://assets.yiiart.com/framed.webp" }],
+  }])
+
+  assert.match(xml, /<g:price>100\.00 USD<\/g:price>/)
 })

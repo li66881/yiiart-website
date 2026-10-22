@@ -6,7 +6,7 @@ export const revalidate = 600
 
 export async function GET() {
   try {
-    const artworks = await client.fetch(`*[_type == "artwork" && defined(slug.current) && ${PUBLIC_ARTWORK_GROQ_FILTER}]{_id, slug, title, shortDescription, description, price, productionModel, allowCheckout, availability, reservedUntil, images, cloudflareImages, productMedia}`)
+    const artworks = await client.fetch(`*[_type == "artwork" && defined(slug.current) && ${PUBLIC_ARTWORK_GROQ_FILTER}]{_id, slug, title, shortDescription, description, price, dimensions, standardSizes, frameOptions, productionModel, allowCheckout, availability, reservedUntil, shippingProfile, images, cloudflareImages, productMedia}`)
     return new Response(buildMerchantFeed(artworks), { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, s-maxage=600" } })
   } catch (error) {
     console.error("Merchant feed error:", error)
