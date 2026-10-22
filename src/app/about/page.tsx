@@ -12,7 +12,7 @@ import { getFeaturedReviews } from "@/lib/reviews"
 export const dynamic = "force-dynamic"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "About YiiArt",
+  title: "About Our Hand-Painted Artwork",
   description:
     "Learn how YiiArt supports hand-painted artwork with clear guidance for size, production, and worldwide delivery options.",
   path: "/about",
