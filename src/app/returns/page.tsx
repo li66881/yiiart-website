@@ -8,7 +8,7 @@ import { buildSeoMetadata } from "@/lib/seo"
 export const metadata: Metadata = buildSeoMetadata({
   title: "Returns and Refunds",
   description:
-    "YiiArt reviews return conditions by order and provides damage support for hand-painted artwork.",
+    "Request standard-size painting returns within 7 days of delivery, with return shipping covered by YiiArt. Review custom painting photo-approval conditions.",
   path: "/returns",
 })
 
@@ -24,8 +24,9 @@ export default function ReturnsPage() {
               <h1 className="text-5xl font-light leading-tight">Clear return conditions for hand-painted art.</h1>
             </div>
             <p className="max-w-3xl text-base leading-8 text-stone-600">
-              Standard and custom orders may have different conditions; contact YiiArt with the order details before
-              returning artwork. Production timing and custom conditions are confirmed before the order is finalized.
+              Standard-size made-to-order paintings can be returned for a change of mind within 7 days of delivery,
+              with return shipping covered by YiiArt. Custom sizes or colors receive photos for approval before
+              dispatch; after approval, change-of-mind returns are not accepted. Contact YiiArt before returning artwork.
             </p>
           </section>
 

@@ -23,8 +23,8 @@ export const shippingHighlights = [
     text: "Standard shipping is included in the listed artwork price, with no separate shipping charge at checkout. Destination import taxes and customs charges are not included.",
   },
   {
-    title: "Processing confirmed per order",
-    text: "Preparation and production timing depends on the selected size, finish, surface, and current studio workload.",
+    title: "Production and photos within 10 days",
+    text: "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional. Custom sizes or colors require photo approval before dispatch.",
   },
   {
     title: "Worldwide delivery options",
@@ -76,16 +76,16 @@ export const customsMarketGuidance = [
 
 export const returnHighlights = [
   {
-    title: "Eligibility reviewed by order",
-    text: "Return conditions depend on whether the work is standard, custom, already produced, or personalized.",
+    title: "7-day standard-size returns",
+    text: "Standard-size made-to-order paintings can be returned for a change of mind. Contact YiiArt within 7 days of delivery to request a return. YiiArt covers return shipping.",
   },
   {
     title: "Contact YiiArt first",
     text: "Include the order reference, artwork title, reason, and current condition so the available next step can be confirmed.",
   },
   {
-    title: "Custom work has separate conditions",
-    text: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
+    title: "Custom photo approval",
+    text: "For custom sizes or colors, YiiArt sends photos before dispatch. After you approve those photos, change-of-mind returns are not accepted. Contact YiiArt about damage or an item that does not match the agreed order.",
   },
   {
     title: "Damage review",
@@ -139,11 +139,11 @@ export const faqItems = [
   },
   {
     question: "What is the return policy?",
-    answer: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.",
+    answer: "For standard-size made-to-order paintings, request a change-of-mind return within 7 days of delivery. YiiArt covers return shipping. Contact YiiArt before sending the artwork back.",
   },
   {
     question: "Are custom paintings returnable?",
-    answer: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
+    answer: "Custom sizes or colors are photographed for your approval before dispatch. After photo approval, change-of-mind returns are not accepted. Contact YiiArt about damage or an item that does not match the agreed order.",
   },
   {
     question: "Can I commission a custom artwork?",

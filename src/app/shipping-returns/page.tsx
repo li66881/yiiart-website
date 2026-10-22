@@ -14,12 +14,12 @@ export const metadata: Metadata = buildSeoMetadata({
 
 const processingItems = [
   {
-    title: "Processing confirmed per order",
-    text: "Preparation and production timing depends on the selected size, finish, surface, and current studio workload.",
+    title: "Production and photos within 10 days",
+    text: "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional.",
   },
   {
-    title: "Production timing",
-    text: "Production timing is confirmed before the order is finalized.",
+    title: "Custom photo approval",
+    text: "Custom sizes or colors are photographed for your approval before dispatch.",
   },
   {
     title: "Hand-painted artwork",
@@ -59,12 +59,12 @@ const shippingReturnFaqs = [
     answer: "Keep the artwork and all packaging and send clear photos so YiiArt can review the issue and available carrier process.",
   },
   {
-    question: "Who pays for return shipping, and when do I get my refund?",
-    answer: "Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork.",
+    question: "Who pays for return shipping?",
+    answer: "YiiArt covers return shipping for standard-size made-to-order paintings. Request a change-of-mind return within 7 days of delivery and contact YiiArt before sending the artwork back.",
   },
   {
     question: "Can I return a custom painting?",
-    answer: "Custom sizes, colors, and compositions may have different cancellation and return conditions confirmed before production.",
+    answer: "For custom sizes or colors, YiiArt sends photos for approval before dispatch. After photo approval, change-of-mind returns are not accepted. Contact YiiArt about damage or an item that does not match the agreed order.",
   },
 ]
 
