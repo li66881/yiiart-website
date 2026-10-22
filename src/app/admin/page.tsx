@@ -6,6 +6,12 @@ export const dynamic = "force-dynamic"
 
 const tools = [
   {
+    title: "Original artwork inventory",
+    description: "Review original works and record pieces sold in the store.",
+    href: "/admin/inventory",
+    external: false,
+  },
+  {
     title: "Review enquiries",
     description: "Read recent project, custom painting, and size advice requests saved in Sanity.",
     href: "/admin/requests",

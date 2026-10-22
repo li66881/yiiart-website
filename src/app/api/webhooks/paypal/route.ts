@@ -59,7 +59,7 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
   const order = providerCheckoutId
     ? await findOrderByProviderCheckout("paypal", providerCheckoutId)
     : null
-  const orderId = order?.id || event.resource?.custom_id || null
+  const orderId = order?.id || null
   const eventId = event.id || `${event.event_type}-${providerCheckoutId || Date.now()}`
 
   const recorded = await recordPaymentEvent({
@@ -70,10 +70,20 @@ async function handlePayPalEvent(event: PayPalWebhookEvent) {
     payload: event,
   })
 
-  if (!recorded || !orderId) return
+  if (!recorded) return
 
   try {
+  if (!orderId && event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+    throw new Error("PayPal capture has no matching stored order.")
+  }
+  if (!orderId) return
   if (event.event_type === "PAYMENT.CAPTURE.COMPLETED") {
+    if (event.resource?.status !== "COMPLETED"
+      || event.resource?.amount?.currency_code?.toUpperCase() !== order?.currency.toUpperCase()
+      || Number(event.resource?.amount?.value) !== order?.totalAmount
+      || (event.resource?.custom_id && event.resource.custom_id !== orderId)) {
+      throw new Error("PayPal capture does not match the stored order.")
+    }
     await markOrderPaid({
       orderId,
       provider: "paypal",
@@ -112,6 +122,8 @@ type PayPalWebhookEvent = {
   resource?: {
     id?: string
     custom_id?: string
+    status?: string
+    amount?: { currency_code?: string; value?: string }
     invoice_id?: string
     supplementary_data?: {
       related_ids?: {
