@@ -7,7 +7,7 @@ import { contactEmail, getWhatsAppUrl, whatsappNumber } from "@/lib/site"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
-  title: "Contact YiiArt",
+  title: "Contact Us for Artwork and Custom Painting Enquiries",
   description:
     "Contact YiiArt for artwork questions, collector support, shipping help, commissions, and room-size recommendations.",
   path: "/contact",
