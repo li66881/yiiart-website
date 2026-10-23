@@ -3,6 +3,19 @@ import test from "node:test"
 import { access, readFile } from "node:fs/promises"
 import { buildProductOfferJsonLd } from "./product-offer-schema"
 
+test("publishes confirmed standard-size US returns only when explicitly applicable", () => {
+  const input = { url: "https://www.yiiart.com/artwork/standard", sku: "standard", priceCurrency: "USD", price: "250", availability: "https://schema.org/InStock" }
+  assert.equal(buildProductOfferJsonLd(input).hasMerchantReturnPolicy, undefined)
+  assert.deepEqual(buildProductOfferJsonLd({ ...input, standardSizeReturns: true }).hasMerchantReturnPolicy, {
+    "@type": "MerchantReturnPolicy",
+    applicableCountry: "US",
+    returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+    merchantReturnDays: 7,
+    returnFees: "https://schema.org/FreeReturn",
+    merchantReturnLink: "https://www.yiiart.com/returns",
+  })
+})
+
 test("places the artwork SKU on the Product entity", async () => {
   const artworkPage = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
 

@@ -312,6 +312,7 @@ async function ArtworkContent({
     url: offerIdentity.url,
     sku: offerIdentity.sku,
     priceCurrency: schemaCurrency,
+    standardSizeReturns: storefrontProduct.productionModel === "hand_painted_to_order" && directCheckoutAvailable && initialVariant.isValid,
     availability,
     price: priceCny > 0
       ? formatStoreAmount(convertCnyToStoreAmount(priceCny, schemaCurrency), schemaCurrency)
