@@ -576,10 +576,10 @@ async function ArtworkContent({
               </div>
 
               <div className={storefrontStyles.productDetailCards}>
-                <InfoBlock title="Production guidance" text={detailCopy.processingTime} />
+                <InfoBlock title="Production guidance" text={storefrontProduct.productionModel === "hand_painted_to_order" ? "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional. Custom sizes or colors require photo approval before dispatch." : detailCopy.processingTime} />
                 <InfoBlock title="Dispatch" text={detailCopy.dispatch} />
                 <InfoBlock title="Tracking" text="Tracking information is shared when the selected carrier service provides it." />
-                <InfoBlock title="Returns" text="Standard and custom orders may have different conditions; contact YiiArt with the order details before returning artwork." />
+                <InfoBlock title="Returns" text="Standard-size made-to-order paintings: request a change-of-mind return within 7 days of delivery; YiiArt covers return shipping. Custom sizes or colors: no change-of-mind returns after pre-dispatch photo approval. Contact YiiArt about damage or an item that does not match the agreed order." />
                 {productPackagingItems.map((item) => (
                   <InfoBlock key={item.title} title={item.title} text={item.text} />
                 ))}
