@@ -4,6 +4,7 @@ type ProductOfferInput = {
   priceCurrency: string
   price?: string
   availability: string
+  standardSizeReturns?: boolean
 }
 
 export function buildProductOfferJsonLd({
@@ -12,8 +13,9 @@ export function buildProductOfferJsonLd({
   priceCurrency,
   price,
   availability,
+  standardSizeReturns = false,
 }: ProductOfferInput) {
-  const offer: Record<string, string> = {
+  const offer: Record<string, unknown> = {
     "@type": "Offer",
     url,
     sku,
@@ -23,6 +25,16 @@ export function buildProductOfferJsonLd({
   }
 
   if (price) offer.price = price
+  if (standardSizeReturns) {
+    offer.hasMerchantReturnPolicy = {
+      "@type": "MerchantReturnPolicy",
+      applicableCountry: "US",
+      returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+      merchantReturnDays: 7,
+      returnFees: "https://schema.org/FreeReturn",
+      merchantReturnLink: new URL("/returns", url).toString(),
+    }
+  }
 
   return offer
 }
