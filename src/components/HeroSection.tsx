@@ -91,6 +91,7 @@ export default function HeroSection({
                 alt={slide.imageAlt}
                 fill
                 priority={index === 0}
+                fetchPriority={index === 0 ? "high" : "low"}
                 quality={90}
                 sizes="100vw"
                 className="object-contain object-center"
