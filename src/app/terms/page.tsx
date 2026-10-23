@@ -33,7 +33,7 @@ export default function TermsPage() {
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Returns</h2>
-              <p>Return conditions depend on the order. Contact YiiArt with the order details before returning artwork.</p>
+              <p>For standard-size made-to-order paintings, request a change-of-mind return within 7 days of delivery. YiiArt covers return shipping. For custom sizes or colors, photos are provided for approval before dispatch; after approval, change-of-mind returns are not accepted. Contact YiiArt before returning artwork, or about damage or an item that does not match the agreed order.</p>
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Intellectual Property</h2>
