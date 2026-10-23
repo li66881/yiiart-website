@@ -127,12 +127,9 @@ export function buildStorefrontProduct(
     orientation: normalizeOrientation(artwork.orientation, artwork.widthCm, artwork.heightCm, dimensions),
     sizes: buildSizes(artwork, productionModel, dimensions),
     finishes: buildNormalizedFinishOptions(artwork.frameOptions, productionModel),
-    creationWindow: pickEnglish(
-      artwork.creationWindow,
-      productionModel === "hand_painted_to_order"
-        ? "Production timing is confirmed before checkout."
-        : "Availability and dispatch timing are confirmed before checkout.",
-    ),
+    creationWindow: productionModel === "hand_painted_to_order"
+      ? "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional."
+      : pickEnglish(artwork.creationWindow, "Availability and dispatch timing are confirmed before checkout."),
     images: imageInputs
       .filter((image) => Boolean(cleanString(image.src)))
       .map((image, index) => ({
