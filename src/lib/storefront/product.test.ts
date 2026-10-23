@@ -98,6 +98,7 @@ test("uses catalog presentation choices when a made-to-order product has no conf
 test("uses safe made-to-order copy and normalized discovery facets", () => {
   const product = buildStorefrontProduct({
     _id: "catalog-2",
+    creationWindow: { en: "Painted in 7-12 business days after size confirmation." },
     title: { zh: "静水" },
     slug: { current: "still-water" },
     productionModel: "hand_painted_to_order",
@@ -112,5 +113,6 @@ test("uses safe made-to-order copy and normalized discovery facets", () => {
   assert.deepEqual(product.styleTags, ["Abstract"])
   assert.deepEqual(product.roomTags, ["Living room", "Office"])
   assert.deepEqual(product.colorTags, ["Blue", "Neutral"])
-  assert.match(product.creationWindow, /confirmed/i)
+  assert.match(product.creationWindow, /within 10 calendar days/)
+  assert.doesNotMatch(product.creationWindow, /7-12 business days/)
 })
