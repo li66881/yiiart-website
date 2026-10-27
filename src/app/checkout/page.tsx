@@ -26,11 +26,13 @@ type CheckoutConfig = {
     configured: boolean
     webhookConfigured: boolean
     environment: "sandbox" | "live"
+    currency: StoreCurrency
   }
   stripe: {
     enabled: boolean
     configured: boolean
     webhookConfigured: boolean
+    currency: StoreCurrency
   }
 }
 
@@ -50,11 +52,17 @@ export default function CheckoutPage() {
     phone: "",
     address: "",
     city: "",
+    state: "",
     postalCode: "",
     country: "US",
     notes: "",
   })
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("invoice")
+  const paymentCurrency: StoreCurrency = paymentMethod === "paypal"
+    ? checkoutConfig.paypal.currency
+    : paymentMethod === "card"
+      ? checkoutConfig.stripe.currency
+      : currency
 
   useEffect(() => {
     if (ready && items.length === 0) {
@@ -132,7 +140,7 @@ export default function CheckoutPage() {
             finishId: item.finishId,
           })),
           shippingAddress,
-          displayCurrency: currency,
+          displayCurrency: paymentCurrency,
         }),
       })
       const data = await response.json()
@@ -215,6 +223,14 @@ export default function CheckoutPage() {
                       value={shippingAddress.city}
                       onChange={(value) => setShippingAddress({ ...shippingAddress, city: value })}
                     />
+                    {shippingAddress.country === "US" && (
+                      <TextField
+                        label="State"
+                        required
+                        value={shippingAddress.state}
+                        onChange={(value) => setShippingAddress({ ...shippingAddress, state: value })}
+                      />
+                    )}
                     <TextField
                       label="Postal code"
                       required
@@ -316,6 +332,7 @@ export default function CheckoutPage() {
                     <p>{shippingAddress.phone}</p>
                     <p>{shippingAddress.address}</p>
                     <p>{shippingAddress.city}, {shippingAddress.postalCode}</p>
+                    {shippingAddress.state && <p>{shippingAddress.state}</p>}
                     <p>{shippingAddress.country}</p>
                     {shippingAddress.notes && <p className="mt-2 text-sm text-gray-500">{shippingAddress.notes}</p>}
                   </section>
@@ -338,7 +355,7 @@ export default function CheckoutPage() {
                           {item.sizeLabel && <p className="text-xs text-gray-500">{item.sizeLabel}</p>}
                           {item.finishLabel && <p className="text-xs text-gray-500">{item.finishLabel}</p>}
                         </div>
-                        <p className="text-sm"><PriceText amountCny={item.price} /> x {item.quantity}</p>
+                        <p className="text-sm"><PriceText amountCny={item.price} currency={paymentCurrency} /> x {item.quantity}</p>
                       </div>
                     ))}
                   </section>
@@ -376,14 +393,14 @@ export default function CheckoutPage() {
                         {item.finishLabel && <p className="truncate text-xs text-gray-500">{item.finishLabel}</p>}
                         <p className="text-xs text-gray-500">x {item.quantity}</p>
                       </div>
-                      <p className="text-sm"><PriceText amountCny={item.price * item.quantity} /></p>
+                      <p className="text-sm"><PriceText amountCny={item.price * item.quantity} currency={paymentCurrency} /></p>
                     </div>
                   ))}
                 </div>
                 <div className="space-y-2 border-t pt-4">
                   <div className="flex justify-between text-sm">
                     <span>Subtotal</span>
-                    <span><PriceText amountCny={subtotal} /></span>
+                    <span><PriceText amountCny={subtotal} currency={paymentCurrency} /></span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span>Shipping</span>
@@ -391,10 +408,10 @@ export default function CheckoutPage() {
                   </div>
                   <div className="flex justify-between border-t pt-2 text-lg font-medium">
                     <span>Total</span>
-                    <span><PriceText amountCny={subtotal} /></span>
+                    <span><PriceText amountCny={subtotal} currency={paymentCurrency} /></span>
                   </div>
                 </div>
-                <p className="mt-4 text-xs text-gray-500"><PriceDisclosure /></p>
+                <p className="mt-4 text-xs text-gray-500"><PriceDisclosure currency={paymentCurrency} checkoutCurrency={paymentCurrency} /></p>
               </div>
             </aside>
           </div>
@@ -535,6 +552,7 @@ function buildClientInvoiceMessage({
     `Email: ${shippingAddress.email}`,
     `Country: ${shippingAddress.country}`,
     `City: ${shippingAddress.city}`,
+    shippingAddress.state ? `State/region: ${shippingAddress.state}` : "",
     `Postal code: ${shippingAddress.postalCode}`,
     `Address: ${shippingAddress.address}`,
     shippingAddress.notes ? `Notes: ${shippingAddress.notes}` : "",
@@ -551,11 +569,13 @@ const defaultCheckoutConfig: CheckoutConfig = {
     configured: false,
     webhookConfigured: false,
     environment: "sandbox",
+    currency: "USD",
   },
   stripe: {
     enabled: false,
     configured: false,
     webhookConfigured: false,
+    currency: "USD",
   },
 }
 

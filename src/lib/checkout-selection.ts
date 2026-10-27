@@ -83,6 +83,9 @@ export function resolveCheckoutSelection(
   if (!finish) {
     throw new CheckoutValidationError("The selected artwork finish is no longer available.")
   }
+  if (finish.id !== "rolled") {
+    throw new CheckoutValidationError("Stretched or framed presentations require destination and carrier confirmation before payment. Please request an invoice.")
+  }
 
   return {
     productionModel,

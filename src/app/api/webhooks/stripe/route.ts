@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import type Stripe from "stripe"
 import { getStripe } from "@/lib/stripe"
+import { isStripeCheckoutPaymentPaid } from "@/lib/payment-confirmation"
 import { getOrderStorageProvider, isOrderStorageConfigured } from "@/lib/order-storage"
 import {
   findOrderByProviderPayment,
@@ -67,8 +68,9 @@ async function handleStripeEvent(event: Stripe.Event) {
 
   if (!recorded) return
 
-  if (event.type === "checkout.session.completed") {
+  if (event.type === "checkout.session.completed" || event.type === "checkout.session.async_payment_succeeded") {
     const session = event.data.object as Stripe.Checkout.Session
+    if (!isStripeCheckoutPaymentPaid(session)) return
     const sessionOrderId = session.metadata?.orderId || session.client_reference_id
     if (!sessionOrderId) throw new Error("Stripe session missing orderId metadata.")
 

@@ -152,7 +152,8 @@ test("optimized storefront restores the global shell and homepage composition", 
   assert.match(editorialHome, /Shop By Popular/)
   assert.match(editorialHome, /Custom painting/)
   assert.match(headerClient, /common.openMenu/)
-  assert.match(bestSellerTabs, /Best Seller/)
+  assert.match(bestSellerTabs, /Featured Artworks/)
+  assert.doesNotMatch(bestSellerTabs, /"bestseller"/i)
   assert.match(editorialHome, /room=Dining%20Room/)
   assert.match(editorialHome, /room=Office/)
   assert.match(editorialHome, /color=Black/)
@@ -315,6 +316,17 @@ test("consolidated product details retain framing notes once and remove repeated
     { id: "color-confidence", title: "Color confidence", text: "Request daylight photos.", translationIndex: 2 },
     { id: "care", title: "Care", text: "Keep away from direct moisture.", translationIndex: 3 },
   ])
+})
+
+test("rewords unconditional rolled-shipping notes using the saved shipping profile", () => {
+  const model = buildProductDetailContentModel({
+    framingNotes: "Ships rolled for direct checkout. Stretching can be discussed.",
+    shippingProfile: "Ships rolled",
+    adviceItems: [],
+  })
+
+  assert.match(model.presentationNote, /current direct-checkout format/i)
+  assert.doesNotMatch(model.presentationNote, /Ships rolled for direct checkout/i)
 })
 
 test("artwork story applies the text-only layout modifier when media is absent", async () => {

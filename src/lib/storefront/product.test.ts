@@ -113,6 +113,17 @@ test("uses safe made-to-order copy and normalized discovery facets", () => {
   assert.deepEqual(product.styleTags, ["Abstract"])
   assert.deepEqual(product.roomTags, ["Living room", "Office"])
   assert.deepEqual(product.colorTags, ["Blue", "Neutral"])
-  assert.match(product.creationWindow, /within 10 calendar days/)
+  assert.match(product.creationWindow, /confirmed before the order is finalized/)
   assert.doesNotMatch(product.creationWindow, /7-12 business days/)
+})
+
+test("physical dimensions override a contradictory saved orientation", () => {
+  const product = buildStorefrontProduct({
+    dimensions: "50 x 60 cm",
+    widthCm: 50,
+    heightCm: 60,
+    orientation: "Square",
+  }, [])
+
+  assert.equal(product.orientation, "portrait")
 })

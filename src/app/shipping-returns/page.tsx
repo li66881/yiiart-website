@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { customsIntro, customsMarketGuidance, returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
+import { customsIntro, customsMarketGuidance, productionTime, returnHighlights, shippingHighlights, trustPrinciples } from "@/lib/policy-content"
 import { buildBreadcrumbJsonLd, buildFaqJsonLd, buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -14,8 +14,8 @@ export const metadata: Metadata = buildSeoMetadata({
 
 const processingItems = [
   {
-    title: "Production and photos within 10 days",
-    text: "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional.",
+    title: "Production before carrier transit",
+    text: productionTime.combined,
   },
   {
     title: "Custom photo approval",

@@ -17,7 +17,7 @@ export type ReviewPhoto = {
 export type PublicReview = {
   _id: string
   verifiedBuyer?: boolean
-  reviewSource?: "purchase_invite" | "manual_verified" | "imported_verified"
+  reviewSource?: "unverified" | "purchase_invite" | "manual_verified" | "imported_verified"
   customerName?: string
   customerCity?: string
   customerCountry?: string
@@ -97,6 +97,7 @@ const publicReviewFilter = `
   _type == "review"
   && status == "approved"
   && displayPermission == true
+  && defined(orderIdInternal)
   && (
     verifiedBuyer == true
     || reviewSource in ["purchase_invite", "manual_verified", "imported_verified"]
@@ -105,7 +106,7 @@ const publicReviewFilter = `
 
 const reviewProjection = `{
   _id,
-  verifiedBuyer,
+  "verifiedBuyer": (defined(orderIdInternal) && (verifiedBuyer == true || reviewSource in ["purchase_invite", "manual_verified", "imported_verified"])),
   reviewSource,
   customerName,
   customerCity,
@@ -212,12 +213,7 @@ export function getReviewStats(reviews: PublicReview[]): ReviewStats {
 }
 
 export function isVerifiedCollector(review: PublicReview) {
-  return Boolean(
-    review.verifiedBuyer
-      || review.reviewSource === "purchase_invite"
-      || review.reviewSource === "manual_verified"
-      || review.reviewSource === "imported_verified"
-  )
+  return review.verifiedBuyer === true
 }
 
 export function hasPermittedPhotos(review: PublicReview) {

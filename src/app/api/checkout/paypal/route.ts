@@ -4,16 +4,14 @@ import {
   formatProviderAmount,
   getBaseUrl,
   getCheckoutLineItems,
-  normalizeCurrency,
 } from "@/lib/checkout"
 import { getPayPalAccessToken, getPayPalApiBase } from "@/lib/paypal"
-import { getStoreCurrency } from "@/lib/pricing"
 import {
   attachPayPalOrderToOrder,
   createPendingOrder,
   markOrderCancelled,
 } from "@/lib/orders"
-import { isPayPalCheckoutEnabled } from "@/lib/payment-config"
+import { getPayPalCurrency, isPayPalCheckoutEnabled } from "@/lib/payment-config"
 
 export async function POST(request: Request) {
   try {
@@ -25,10 +23,7 @@ export async function POST(request: Request) {
     }
 
     const { items, shippingAddress, displayCurrency } = await request.json()
-    const currency = normalizeCurrency(
-      process.env.PAYPAL_CURRENCY || process.env.STRIPE_CURRENCY,
-      getStoreCurrency()
-    ).toUpperCase()
+    const currency = getPayPalCurrency().toUpperCase()
     const checkoutItems = await getCheckoutLineItems(items, currency)
     const order = await createPendingOrder({
       provider: "paypal",
@@ -63,6 +58,7 @@ export async function POST(request: Request) {
               address: {
                 address_line_1: order.address.address.slice(0, 300),
                 admin_area_2: order.address.city.slice(0, 120),
+                ...(order.address.state ? { admin_area_1: order.address.state.slice(0, 120) } : {}),
                 postal_code: order.address.postalCode.slice(0, 60),
                 country_code: order.address.country,
               },

@@ -126,12 +126,6 @@ img {
   color: #fff;
 }
 
-.yii-badge-bestseller {
-  background: #fff;
-  color: var(--yiiart-ink);
-  border: 1px solid var(--yiiart-line);
-}
-
 @keyframes yii-pop {
   0% { transform: scale(1); }
   40% { transform: scale(1.16); }

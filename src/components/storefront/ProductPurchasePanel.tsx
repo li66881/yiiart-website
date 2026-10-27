@@ -54,6 +54,8 @@ export default function ProductPurchasePanel({
   const image = product.images[0]
   const saved = isInWishlist(product.id)
   const madeToOrder = product.productionModel === "hand_painted_to_order"
+  const selectedFinishDirectCheckoutAvailable = directCheckoutAvailable
+    && (!madeToOrder || selection?.finish.id === "rolled")
 
   const mainActionRef = useCallback((action: HTMLDivElement | null) => {
     mainActionCleanupRef.current()
@@ -84,7 +86,7 @@ export default function ProductPurchasePanel({
   }, [])
 
   const addSelection = () => {
-    if (!selection || !image || !directCheckoutAvailable) return
+    if (!selection || !image || !selectedFinishDirectCheckoutAvailable) return
 
     addItem({
       id: product.id,
@@ -204,7 +206,7 @@ export default function ProductPurchasePanel({
           </div>
         )}
 
-        {directCheckoutAvailable && selection ? (
+        {selectedFinishDirectCheckoutAvailable && selection ? (
           <button className={styles.primaryAction} type="button" onClick={purchaseAction.main}>
             Add to Cart — <PriceText amountCny={selection.priceCny * quantity} />
           </button>
@@ -281,7 +283,7 @@ export default function ProductPurchasePanel({
 
       <p className={styles.confirmation} role="status" aria-live="polite">{confirmation}</p>
 
-      {directCheckoutAvailable && (
+      {selectedFinishDirectCheckoutAvailable && (
         <ProductStickyPurchaseBar
           product={product}
           selection={selection}

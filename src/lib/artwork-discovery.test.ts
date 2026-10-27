@@ -34,6 +34,18 @@ test("keeps approved made-to-order collection metadata", () => {
   assert.equal(item.createdAt, "2026-08-10T00:00:00.000Z")
 })
 
+test("uses physical dimensions for filter orientation even when the saved tag is wrong", () => {
+  const item = buildArtworkDiscoveryItem({
+    _id: "scrubland-study",
+    widthCm: 50,
+    heightCm: 60,
+    dimensions: "50 x 60 cm",
+    orientation: "Square",
+  })
+
+  assert.equal(item.orientation, "Portrait")
+})
+
 test("matches All Art, New Collection, and Artist Collection tabs", () => {
   const newItem = { collectionType: "new_collection" } as never
   const artistItem = { collectionType: "artist_collection" } as never
