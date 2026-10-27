@@ -38,13 +38,17 @@ test("preserves current specific notes and normalizes artwork payloads immutably
 })
 
 test("normalizes Sanity artwork notes before public pages serialize full product documents", async () => {
-  const [homePage, artworksPage, collectionCatalog] = await Promise.all([
+  const [homePage, artworksPage, collectionCatalog, artworkPage, finishSelector] = await Promise.all([
     readFile("src/app/page.tsx", "utf8"),
     readFile("src/app/artworks/page.tsx", "utf8"),
     readFile("src/lib/storefront/collection-catalog.ts", "utf8"),
+    readFile("src/app/artwork/[slug]/page.tsx", "utf8"),
+    readFile("src/components/storefront/ProductFinishSelector.tsx", "utf8"),
   ])
 
   assert.match(homePage, /artworks\.map\(normalizePublicArtworkFramingNotes\)/)
   assert.match(artworksPage, /artworks\.map\(normalizePublicArtworkFramingNotes\)/)
   assert.match(collectionCatalog, /\.map\(normalizePublicArtworkFramingNotes\)/)
+  assert.doesNotMatch(artworkPage, /Ships rolled for direct checkout|Rolled canvas is currently available for direct checkout/i)
+  assert.doesNotMatch(finishSelector, /Direct checkout is currently limited to rolled canvas/i)
 })

@@ -72,7 +72,7 @@ export function ProductFinishSelector({
       <details className={styles.finishDetails}>
         <summary>Framing details</summary>
         <p>
-          Rolled canvas is shipped unmounted, without stretcher bars, in a protective tube. Stretched canvas is attached to stretcher bars without an outer frame. A float frame is fitted around the stretched canvas. Direct checkout is currently limited to rolled canvas; destination, size, packaging, and carrier suitability for stretched or framed work must be confirmed before payment.
+          The listed finish is rolled canvas: unmounted, without stretcher bars, and shipped in a protective tube. Stretched canvas is attached to stretcher bars without an outer frame. A float frame is fitted around the stretched canvas. Requests for stretched or framed delivery require confirmation of size, destination, packaging, and carrier suitability before ordering.
         </p>
       </details>
     </fieldset>

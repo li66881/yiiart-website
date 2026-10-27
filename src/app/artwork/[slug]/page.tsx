@@ -539,7 +539,7 @@ async function ArtworkContent({
                   <p className={storefrontStyles.productDetailEyebrow}>Presentation</p>
                   <h3>Choose the finish that suits your room</h3>
                   <p>
-                    Rolled canvas is currently available for direct checkout. Stretched or float-framed work requires destination and carrier confirmation before payment.
+                    This listing is configured for rolled canvas, shipped unmounted in a protective tube. If you prefer stretched or float-framed delivery, confirm the selected size, destination, and carrier before ordering.
                   </p>
                   {detailContent.presentationNote && <p>{detailContent.presentationNote}</p>}
                 </div>
