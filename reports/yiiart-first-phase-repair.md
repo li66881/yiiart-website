@@ -58,15 +58,17 @@
 
 ## 测试和发布状态
 
-- `npm test`：本次分支通过，330 个单元测试、10 个集成测试、公共文案检查通过。
+- `npm test`：通过，330 个单元测试、10 个集成测试、公共文案检查通过。
 - `npm run build`：通过；Next.js 15.5.23 完成构建、类型检查和静态页面生成。
 - 163 条方向审计脚本：通过，结果 `163 total / 8 candidates / 8 manual review`。
 - `git diff --check`：通过。
 - GitHub CI（测试、TypeScript、生产构建）通过；Vercel Preview 构建 Ready。
 - 上一阶段 Preview：`https://yiiart-website-ikzko98e0-yart.vercel.app`。经 Vercel CLI 受保护访问核查：首页 200，显示 Featured Artworks 且不含 Best Seller；`/artwork/scrubland-study` 和 `/artwork/pale-scale-rhythm` 均 200，显示 Portrait、不显示 Square；`/shipping`、`/shipping-returns`、`/faq`、`/checkout` 均 200，未发现旧 10 天承诺；`/robots.txt` 和 `/sitemap.xml` 均 200，sitemap 含 163 个商品 URL。
 - Preview 的 `/api/checkout/config` 显示 PayPal、Stripe 未配置/未启用；没有在 Preview 执行真实支付或创建订单。生产账号支付配置的核验结果见上文。
+- 装裱文案后续 Preview：`https://yiiart-website-qmxx0mj2y-yart.vercel.app`，部署 Ready。首页、`/artworks`、`/collections/textured-wall-art`、`/artwork/scrubland-study`、`/faq` 均返回 200；页面输出中未发现 “Ships rolled for direct checkout” 或其他 direct-checkout 格式承诺，商品详情显示卷装保护筒说明；Scrubland Study 显示 Portrait 且没有 Square。
 - 生产发布：PR [#76](https://github.com/li66881/yiiart-website/pull/76) 已合并；生产部署 `dpl_BjfmNh7KTSCKL86wxqW2MkWfwaF1` 已 Ready，合并提交 `eab7a108cedfc35b9a0bdea5a2a4bf8ed7a07d4a`。
 - 上线后通过 `https://www.yiiart.com` 和生产部署回归：`/`、两个抽查商品页、`/shipping`、`/shipping-returns`、`/faq`、`/checkout`、`/robots.txt`、`/sitemap.xml` 均返回 200；首页 Featured Artworks 已显示，Best Seller/Bestseller 未出现；Scrubland Study 与 Pale Scale Rhythm 显示 Portrait 且没有 Square 标签；政策、FAQ 和结账页未出现 10 calendar days；robots 保留 sitemap 声明，sitemap 含 163 个商品 URL。
 - 生产 `/api/checkout/config` 只读检查显示订单存储和 PayPal Live/webhook 已启用，Stripe 已配置但未启用且未配置 webhook。没有创建订单或进行支付。
-- Sanity 公开目录中的 100 条 `framingNotes` 仍含历史 “Ships rolled for direct checkout” 文案；这 100 件均为 `Ships rolled` 且仅有 `Rolled canvas` 选项。本分支已在首页、商品目录、集合页以及详情展示的数据边界统一规范这条备注，清除部署后页面可见文案和 Next.js 客户端数据负载里的旧表述；该代码尚待本分支 Preview 和生产部署复核。
+- 后续生产发布：PR [#77](https://github.com/li66881/yiiart-website/pull/77) 已合并；生产部署 `dpl_22w3zXBsGh17UbKs5UDtaUK9hk8t` Ready，合并提交 `55c8c98d026e5ccd49a9cadf08bc8276073de5e6`。在 `https://www.yiiart.com` 回归首页、`/artworks`、`/collections/textured-wall-art`、`/artwork/scrubland-study`、`/faq`、`/robots.txt` 和 `/sitemap.xml` 均返回 200；首页不再显示 Best Seller；抽查页面未检出旧装裱文案；sitemap 仍含 163 个商品 URL。
+- Sanity 公开目录中的 100 条 `framingNotes` 仍含历史 “Ships rolled for direct checkout” 文案；这 100 件均为 `Ships rolled` 且仅有 `Rolled canvas` 选项。生产页面层已在首页、商品目录、集合页及商品详情统一规范该字段，清除访客可见文案和 Next.js 客户端数据负载中的旧表述。
 - 尝试通过 Vercel 生产环境的 `SANITY_API_WRITE_TOKEN` 清理这 100 条源字段时，Sanity 返回 HTTP 401，事务未提交；`SANITY_WRITE_TOKEN` 未注入当前 Vercel CLI 环境进程。没有改动 Sanity 商品源数据。CMS 源记录仍需有效的 Sanity Editor 写入令牌才能同步清理；应用层文案修复不依赖该令牌。
