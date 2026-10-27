@@ -1,3 +1,5 @@
+import { normalizePublicFramingNotes } from "./framing-notes"
+
 export type ProductDetailStoryLayout = "with-media" | "text-only"
 
 type ProductDetailAdviceItem = {
@@ -21,13 +23,7 @@ export function buildProductDetailContentModel({
   shippingProfile?: string | null
   adviceItems: ProductDetailAdviceItem[]
 }) {
-  const safeFramingNotes = typeof framingNotes === "string" ? framingNotes.trim() : ""
-  const presentationNote = safeFramingNotes.replace(
-    /Ships rolled for direct checkout\.?/i,
-    shippingProfile === "Ships rolled"
-      ? "Rolled canvas is the current direct-checkout format."
-      : "Delivery format is confirmed for the destination and selected size.",
-  )
+  const presentationNote = normalizePublicFramingNotes(framingNotes, shippingProfile)
   return {
     presentationNote,
     supplementalAdvice: adviceItems.flatMap((item, translationIndex) =>

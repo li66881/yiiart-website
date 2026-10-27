@@ -6,6 +6,7 @@ import { client } from "@/lib/sanity"
 import { matchesMarketingCollection, visibleCollectionSlugs } from "./catalog-rules"
 import type { CatalogNavigationState } from "./catalog-navigation"
 import { getCatalogNavigationStateFromLoader } from "./catalog-navigation-loader"
+import { normalizePublicArtworkFramingNotes } from "./framing-notes"
 
 export { filterCatalogLinks } from "./catalog-navigation"
 export type { CatalogNavigationState } from "./catalog-navigation"
@@ -21,6 +22,8 @@ export type CollectionArtwork = {
   heightCm?: number | string | null
   orientation?: string | null
   seriesSlug?: string | null
+  framingNotes?: string | null
+  shippingProfile?: string | null
 }
 
 const publicCollectionInventoryQuery = `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{
@@ -57,7 +60,11 @@ export async function getCollectionArtworks(slug: string): Promise<CollectionArt
       }`,
     )
 
-    return Array.isArray(artworks) ? artworks.filter((artwork) => matchesMarketingCollection(artwork, collection)) : []
+    return Array.isArray(artworks)
+      ? artworks
+        .filter((artwork) => matchesMarketingCollection(artwork, collection))
+        .map(normalizePublicArtworkFramingNotes)
+      : []
   } catch {
     return []
   }

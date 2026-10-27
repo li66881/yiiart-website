@@ -9,6 +9,7 @@ import { buildArtworkDiscoveryInitialState, buildArtworkDiscoveryItem } from "@/
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
 import { normalizeCategory, pickEnglish } from "@/lib/artwork-display"
 import { buildArtworkCategorySeoMetadata, resolveArtworkCategoryFilter } from "@/lib/artwork-category-seo"
+import { normalizePublicArtworkFramingNotes } from "@/lib/storefront/framing-notes"
 
 export const revalidate = 600
 
@@ -17,10 +18,11 @@ interface Props {
 }
 
 async function getArtworks() {
-  return client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc){
+  const artworks = await client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}] | order(featured desc, _createdAt desc){
     ...,
     artist->{name}
   }`)
+  return Array.isArray(artworks) ? artworks.map(normalizePublicArtworkFramingNotes) : []
 }
 
 async function getCategoryArtworks(category?: string) {
@@ -34,13 +36,14 @@ async function getCategoryArtworks(category?: string) {
     Minimalist: ["Minimalist", "鏋佺畝", "极简"],
   }
 
-  return client.fetch(
+  const artworks = await client.fetch(
     `*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER} && category in $categories] | order(featured desc, _createdAt desc){
       ...,
       artist->{name}
     }`,
     { categories: legacyCategories[category] || [category] }
   )
+  return Array.isArray(artworks) ? artworks.map(normalizePublicArtworkFramingNotes) : []
 }
 
 async function getSeoImage(category?: string) {

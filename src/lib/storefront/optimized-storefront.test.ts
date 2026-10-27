@@ -325,7 +325,9 @@ test("rewords unconditional rolled-shipping notes using the saved shipping profi
     adviceItems: [],
   })
 
-  assert.match(model.presentationNote, /current direct-checkout format/i)
+  assert.match(model.presentationNote, /listed format and ships in a protective tube/i)
+  assert.match(model.presentationNote, /must be confirmed for the size, destination, and carrier/i)
+  assert.doesNotMatch(model.presentationNote, /direct-checkout/i)
   assert.doesNotMatch(model.presentationNote, /Ships rolled for direct checkout/i)
 })
 
