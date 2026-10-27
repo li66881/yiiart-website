@@ -69,7 +69,7 @@ export default function NewArtworkPage() {
   const [shortDescription, setShortDescription] = useState("")
   const [artworkStory, setArtworkStory] = useState("")
   const [materials, setMaterials] = useState("")
-  const [creationWindow, setCreationWindow] = useState("Painted in 7-12 business days.")
+  const [creationWindow, setCreationWindow] = useState("")
   const [standardSizes, setStandardSizes] = useState<SizeDraft[]>([
     { id: "80x100", label: "80 x 100 cm", widthCm: "80", heightCm: "100", priceCny: "" },
   ])

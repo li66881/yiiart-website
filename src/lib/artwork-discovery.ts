@@ -6,6 +6,7 @@ import {
   pickEnglish,
 } from "@/lib/artwork-display"
 import { ARTWORK_CATEGORIES } from "@/lib/artwork-categories"
+import { resolveArtworkOrientation } from "@/lib/artwork-orientation"
 
 export type ArtworkFilterKey = "styles" | "rooms" | "colors" | "sizes" | "orientations"
 export type ArtworkCollectionTab = "all" | "new_collection" | "artist_collection"
@@ -117,7 +118,7 @@ export function buildArtworkDiscoveryItem(artwork: any, imageUrl?: string): Artw
     ? artwork.standardSizes.find((size: any) => Number(size?.priceCny) > 0)
     : undefined
   const dimensions = formatArtworkDimensions(artwork) || String(standardSize?.label || "")
-  const orientation = normalizeOrientation(artwork.orientation) || inferArtworkOrientation(dimensions)
+  const orientation = resolveArtworkOrientation(artwork) || inferArtworkOrientation(dimensions)
   const size = inferArtworkSize(dimensions)
   const rooms = normalizeList(artwork.roomTypes).map(normalizeRoom)
   const colors = normalizeList(artwork.colorFamilies).map(normalizeColor)
@@ -273,13 +274,6 @@ function normalizeColor(value: string) {
     Multicolor: "Multicolor",
   }
   return map[value] || value
-}
-
-function normalizeOrientation(value?: string | null) {
-  if (!value) return ""
-  if (value === "Horizontal") return "Landscape"
-  if (value === "Vertical") return "Portrait"
-  return value
 }
 
 function inferRooms(category: string) {

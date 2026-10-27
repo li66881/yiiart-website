@@ -116,7 +116,7 @@ export default {
     { name: 'creationWindow', title: 'Creation window', type: 'object', fields: [
         { name: 'zh', title: 'Chinese', type: 'string' },
         { name: 'en', title: 'English', type: 'string' },
-      ], description: 'Example: Painted in 7-12 business days.'},
+      ], description: 'Only enter a production estimate that the studio has confirmed. Production time is separate from carrier transit.'},
     { name: 'surfaceFinish', title: 'Surface / texture notes', type: 'string',
       description: 'Short storefront note such as layered texture, visible brushwork, matte surface, or glossy finish.'},
     { name: 'framingNotes', title: 'Framing notes', type: 'text',

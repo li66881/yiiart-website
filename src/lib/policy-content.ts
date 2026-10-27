@@ -17,14 +17,20 @@ export const trustPrinciples = [
   },
 ]
 
+export const productionTime = {
+  madeToOrder: "Production timing is confirmed before the order is finalized.",
+  shippingTransit: "Carrier transit starts after dispatch and is additional. Delivery timing depends on destination, artwork size, finish, and carrier route.",
+  combined: "Production timing is confirmed before the order is finalized. Carrier transit starts after dispatch and is additional; delivery timing depends on destination, artwork size, finish, and carrier route.",
+}
+
 export const shippingHighlights = [
   {
     title: "Shipping included in the price",
     text: "Standard shipping is included in the listed artwork price, with no separate shipping charge at checkout. Destination import taxes and customs charges are not included.",
   },
   {
-    title: "Production and photos within 10 days",
-    text: "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional. Custom sizes or colors require photo approval before dispatch.",
+    title: "Production before carrier transit",
+    text: `${productionTime.combined} Custom sizes or colors require photo approval before dispatch.`,
   },
   {
     title: "Worldwide delivery options",

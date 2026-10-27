@@ -50,6 +50,7 @@ export async function capturePayPalOrder(orderId: string) {
   return response.json()
 }
 
+
 export async function verifyPayPalWebhookSignature(headers: Headers, webhookEvent: unknown) {
   const webhookId = process.env.PAYPAL_WEBHOOK_ID
   if (!webhookId) {

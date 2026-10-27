@@ -131,11 +131,11 @@ export const productProcessItems = [
 export const productPackagingItems = [
   {
     title: "Rolled canvas",
-    text: "Often safest for oversized canvas works. The painting ships in a protective tube and can be stretched or framed locally.",
+    text: "The canvas is shipped unmounted in a protective tube. Rolled canvas is the current direct-checkout format; transit suitability depends on destination, size, and carrier route.",
   },
   {
-    title: "Stretched or framed",
-    text: "Smaller or ready-to-hang works may ship flat with protective layers and reinforced outer packaging when appropriate.",
+    title: "Stretched canvas or float frame",
+    text: "Stretched canvas is attached to stretcher bars; a float frame adds an outer frame around the stretched canvas. These formats require destination, size, and carrier confirmation and an invoice before payment.",
   },
   {
     title: "Damage support",

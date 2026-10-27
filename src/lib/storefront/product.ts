@@ -4,6 +4,8 @@ import {
   normalizeMedium,
   pickEnglish,
 } from "../artwork-display"
+import { resolveArtworkOrientation } from "../artwork-orientation"
+import { productionTime } from "../policy-content"
 import {
   buildNormalizedFinishOptions,
   type NormalizedFinishOption,
@@ -124,11 +126,11 @@ export function buildStorefrontProduct(
     styleTags: uniqueStrings([...readStringList(artwork.styleTags), category]),
     roomTags: uniqueStrings(readStringList(artwork.roomTypes)),
     colorTags: uniqueStrings(readStringList(artwork.colorFamilies)),
-    orientation: normalizeOrientation(artwork.orientation, artwork.widthCm, artwork.heightCm, dimensions),
+    orientation: (resolveArtworkOrientation(artwork) || "Portrait").toLowerCase() as StorefrontProduct["orientation"],
     sizes: buildSizes(artwork, productionModel, dimensions),
     finishes: buildNormalizedFinishOptions(artwork.frameOptions, productionModel),
     creationWindow: productionModel === "hand_painted_to_order"
-      ? "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional."
+      ? productionTime.combined
       : pickEnglish(artwork.creationWindow, "Availability and dispatch timing are confirmed before checkout."),
     images: imageInputs
       .filter((image) => Boolean(cleanString(image.src)))
@@ -205,24 +207,6 @@ function normalizeMigrationStatus(value?: string | null): StorefrontMigrationSta
   return "needs_rights_review"
 }
 
-function normalizeOrientation(
-  value: string | null | undefined,
-  rawWidth: number | string | null | undefined,
-  rawHeight: number | string | null | undefined,
-  dimensions: string,
-): StorefrontProduct["orientation"] {
-  const normalized = cleanString(value).toLowerCase()
-  if (normalized === "landscape" || normalized === "horizontal") return "landscape"
-  if (normalized === "square") return "square"
-  if (normalized === "portrait" || normalized === "vertical") return "portrait"
-
-  const width = positiveNumber(rawWidth) || readDimension(dimensions, 0)
-  const height = positiveNumber(rawHeight) || readDimension(dimensions, 1)
-  if (!width || !height) return "portrait"
-  if (Math.abs(width - height) <= Math.max(width, height) * 0.08) return "square"
-  return width > height ? "landscape" : "portrait"
-}
-
 function normalizeImageKind(value: unknown, index: number): StorefrontImage["kind"] {
   if (value === "room" || value === "detail" || value === "edge" || value === "scale") return value
   return index === 0 ? "artwork" : "detail"
@@ -248,11 +232,6 @@ function positiveNumber(value: unknown) {
 function finiteNumber(value: unknown) {
   const number = typeof value === "number" ? value : Number(value)
   return Number.isFinite(number) ? number : null
-}
-
-function readDimension(value: string, index: number) {
-  const number = value.match(/\d+(?:\.\d+)?/g)?.map(Number)[index]
-  return typeof number === "number" && Number.isFinite(number) && number > 0 ? number : null
 }
 
 function slugify(value: string) {

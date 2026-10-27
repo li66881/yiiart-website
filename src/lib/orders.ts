@@ -21,6 +21,7 @@ export type CheckoutAddress = {
   phone: string
   address: string
   city: string
+  state: string
   postalCode: string
   country: string
   notes?: string
@@ -54,6 +55,7 @@ export type PublicOrder = {
   shippingAddress: {
     address: string
     city: string
+    state: string
     postalCode: string
     country: string
     notes?: string | null
@@ -99,6 +101,7 @@ type OrderRow = {
   shipping_postal_code: string
   shipping_country: string
   customer_notes: string | null
+  metadata: unknown
   created_at: string | Date
   paid_at: string | Date | null
 }
@@ -130,6 +133,7 @@ export async function createPendingOrder(input: CreatePendingOrderInput) {
   const now = new Date().toISOString()
   const metadata = JSON.stringify({
     address_hash: createHash("sha256").update(JSON.stringify(address)).digest("hex"),
+    shipping_state: address.state || null,
     created_by: "yiiart-checkout",
   })
 
@@ -434,6 +438,7 @@ export function normalizeCheckoutAddress(value: unknown): CheckoutAddress {
     phone: stringValue(source.phone),
     address: stringValue(source.address),
     city: stringValue(source.city),
+    state: stringValue(source.state),
     postalCode: stringValue(source.postalCode),
     country: normalizeCountry(stringValue(source.country)),
     notes: stringValue(source.notes),
@@ -444,6 +449,7 @@ export function normalizeCheckoutAddress(value: unknown): CheckoutAddress {
   if (!address.phone) throw new Error("Phone number is required.")
   if (!address.address) throw new Error("Shipping address is required.")
   if (!address.city) throw new Error("City is required.")
+  if (address.country === "US" && !address.state) throw new Error("State is required for United States addresses.")
   if (!address.postalCode) throw new Error("Postal code is required.")
   if (!address.country) throw new Error("Country is required.")
   if (!/^[A-Z]{2}$/.test(address.country)) throw new Error("Country must be a two-letter ISO code.")
@@ -475,6 +481,11 @@ async function getOrderItems(orderId: string) {
 }
 
 function serializeOrder(order: OrderRow, items: OrderItemRow[]): PublicOrder {
+  const orderMetadata = typeof order.metadata === "string"
+    ? parseJsonObject(order.metadata)
+    : order.metadata && typeof order.metadata === "object"
+      ? order.metadata as Record<string, unknown>
+      : {}
   return {
     id: order.id,
     orderNumber: order.order_number,
@@ -495,6 +506,7 @@ function serializeOrder(order: OrderRow, items: OrderItemRow[]): PublicOrder {
     shippingAddress: {
       address: order.shipping_address_line1,
       city: order.shipping_city,
+      state: typeof orderMetadata.shipping_state === "string" ? orderMetadata.shipping_state : "",
       postalCode: order.shipping_postal_code,
       country: order.shipping_country,
       notes: order.customer_notes,
@@ -516,6 +528,15 @@ function serializeOrder(order: OrderRow, items: OrderItemRow[]): PublicOrder {
     })),
     createdAt: dateValue(order.created_at),
     paidAt: order.paid_at ? dateValue(order.paid_at) : null,
+  }
+}
+
+function parseJsonObject(value: string): Record<string, unknown> {
+  try {
+    const parsed: unknown = JSON.parse(value)
+    return parsed && typeof parsed === "object" ? parsed as Record<string, unknown> : {}
+  } catch {
+    return {}
   }
 }
 

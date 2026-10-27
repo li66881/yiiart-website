@@ -2,8 +2,10 @@ export function buildProductDetailCopy(input: { creationWindow?: string; shippin
   return {
     processingTime: clean(input.creationWindow)
       || "Production timing is confirmed before the order is finalized.",
-    dispatch: clean(input.shippingProfile)
-      || "Packaging format is confirmed before dispatch.",
+    dispatch: input.shippingProfile === "Ships rolled"
+      ? "Rolled canvas ships unmounted in a protective tube. Stretched or float-framed delivery requires destination and carrier confirmation before payment."
+      : clean(input.shippingProfile)
+        || "Packaging format and carrier suitability are confirmed before dispatch.",
   }
 }
 

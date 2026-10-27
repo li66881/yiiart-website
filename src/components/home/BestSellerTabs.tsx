@@ -48,14 +48,14 @@ export default function BestSellerTabs({ artworks }: Props) {
     <div>
       <div className="mb-6 flex items-end justify-between gap-4">
         <h2 className="font-[family-name:var(--font-heading)] text-[28px] font-light tracking-[-0.03em] text-[#171717] md:text-[36px]">
-          Best Seller
+          Featured Artworks
         </h2>
         <Link href="/artworks?sort=featured" className="text-[14px] text-[#171717] underline-offset-4 hover:underline">
           View all
         </Link>
       </div>
 
-      <div className="mb-6 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Best seller styles">
+      <div className="mb-6 flex gap-2 overflow-x-auto pb-1" role="tablist" aria-label="Featured artwork styles">
         {tabs.map((tab) => (
           <button
             key={tab.id}
@@ -75,9 +75,9 @@ export default function BestSellerTabs({ artworks }: Props) {
       </div>
 
       <div className="-mx-4 flex gap-4 overflow-x-auto px-4 pb-2 snap-x snap-mandatory md:mx-0 md:grid md:grid-cols-4 md:gap-6 md:overflow-visible md:px-0 md:pb-0">
-        {visible.map((artwork, index) => (
+        {visible.map((artwork) => (
           <div key={artwork._id} className="w-[72vw] shrink-0 snap-start sm:w-[46vw] md:w-auto">
-            <HomeProductCard artwork={artwork} badge={index < 2 ? "bestseller" : null} />
+            <HomeProductCard artwork={artwork} />
           </div>
         ))}
       </div>

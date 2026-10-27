@@ -41,12 +41,12 @@ test("merchant feed exports priced made-to-order size and finish variants", () =
     cloudflareImages: [{ url: "https://assets.yiiart.com/blue-sky.webp" }],
   }])
 
-  assert.equal((xml.match(/<item>/g) || []).length, 4)
+  assert.equal((xml.match(/<item>/g) || []).length, 2)
   assert.match(xml, /<g:price>100\.00 USD<\/g:price>/)
-  assert.match(xml, /<g:price>110\.00 USD<\/g:price>/)
-  assert.match(xml, /size=small&amp;finish=framed/)
+  assert.match(xml, /<g:price>200\.00 USD<\/g:price>/)
+  assert.doesNotMatch(xml, /finish=framed/)
   assert.match(xml, /<g:item_group_id>yiiart-[a-f0-9]{24}<\/g:item_group_id>/)
-  assert.match(xml, /<g:variant_option><g:name>Presentation<\/g:name><g:value>Framed canvas<\/g:value><\/g:variant_option>/)
+  assert.doesNotMatch(xml, /<g:value>Framed canvas<\/g:value>/)
 })
 
 test("merchant feed matches checkout's as-listed original price", () => {

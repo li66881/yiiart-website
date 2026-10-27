@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { getBaseUrl } from "@/lib/checkout"
 import { capturePayPalOrder } from "@/lib/paypal"
+import { isPayPalCaptureCompleted } from "@/lib/payment-confirmation"
 import { findOrderByProviderCheckout, markOrderPaid } from "@/lib/orders"
 
 export async function GET(request: Request) {
@@ -14,19 +15,22 @@ export async function GET(request: Request) {
   }
 
   try {
-    const capture = await capturePayPalOrder(token)
-    const order = internalOrderId
-      ? { id: internalOrderId }
-      : await findOrderByProviderCheckout("paypal", token)
-
-    if (order?.id) {
-      await markOrderPaid({
-        orderId: order.id,
-        provider: "paypal",
-        providerCheckoutId: token,
-        providerPaymentId: getPayPalCaptureId(capture),
-      })
+    const order = await findOrderByProviderCheckout("paypal", token)
+    if (!order || (internalOrderId && order.id !== internalOrderId)) {
+      throw new Error("PayPal order does not match the pending YiiArt order.")
     }
+
+    const capture = await capturePayPalOrder(token)
+    if (!isPayPalCaptureCompleted(capture)) {
+      return NextResponse.redirect(`${baseUrl}/cart?paypal_error=capture_not_completed`)
+    }
+
+    await markOrderPaid({
+      orderId: order.id,
+      provider: "paypal",
+      providerCheckoutId: token,
+      providerPaymentId: getPayPalCaptureId(capture),
+    })
 
     return NextResponse.redirect(`${baseUrl}/checkout/success?provider=paypal&paypal_order_id=${token}`)
   } catch (error) {

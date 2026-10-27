@@ -26,11 +26,19 @@ export function PriceText({ amountCny, className, currency }: PriceTextProps) {
   )
 }
 
-export function PriceDisclosure({ className, currency }: { className?: string; currency?: StoreCurrency }) {
+export function PriceDisclosure({
+  className,
+  currency,
+  checkoutCurrency: checkoutCurrencyOverride,
+}: {
+  className?: string
+  currency?: StoreCurrency
+  checkoutCurrency?: StoreCurrency
+}) {
   const currencyContext = useCurrency()
   const { t } = useLanguage()
   const displayCurrency = currency || currencyContext.currency
-  const checkoutCurrency = getStoreCurrency()
+  const checkoutCurrency = checkoutCurrencyOverride || getStoreCurrency()
 
   return (
     <span className={className} suppressHydrationWarning>

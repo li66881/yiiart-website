@@ -10,7 +10,7 @@ import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
 
 type Props = {
   artwork: any
-  badge?: "bestseller" | "new" | null
+  badge?: "new" | null
   compact?: boolean
 }
 
@@ -75,11 +75,9 @@ export default function HomeProductCard({ artwork, badge = null, compact = false
 
           {badge && (
             <span
-              className={`yii-badge absolute left-3 top-3 ${
-                badge === "bestseller" ? "yii-badge-bestseller" : "yii-badge-sale"
-              }`}
+              className="yii-badge yii-badge-sale absolute left-3 top-3"
             >
-              {badge === "bestseller" ? "Bestseller" : "New"}
+              New
             </span>
           )}
 

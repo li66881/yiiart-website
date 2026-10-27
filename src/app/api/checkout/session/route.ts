@@ -4,11 +4,9 @@ import {
   CheckoutValidationError,
   getBaseUrl,
   getCheckoutLineItems,
-  normalizeCurrency,
 } from "@/lib/checkout"
-import { getStoreCurrency } from "@/lib/pricing"
 import { createPendingOrder, attachStripeCheckoutToOrder } from "@/lib/orders"
-import { isStripeCheckoutEnabled } from "@/lib/payment-config"
+import { getStripeCurrency, isStripeCheckoutEnabled } from "@/lib/payment-config"
 
 export async function POST(request: Request) {
   try {
@@ -21,7 +19,7 @@ export async function POST(request: Request) {
       )
     }
 
-    const currency = normalizeCurrency(process.env.STRIPE_CURRENCY, getStoreCurrency())
+    const currency = getStripeCurrency().toLowerCase()
     const checkoutItems = await getCheckoutLineItems(items, currency)
     const order = await createPendingOrder({
       provider: "stripe",

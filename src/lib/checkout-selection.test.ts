@@ -15,8 +15,8 @@ test("resolves a legacy original from its authoritative base price", () => {
   assert.equal(selection.finishLabel, "As listed")
 })
 
-test("resolves a made-to-order size and finish from Sanity values", () => {
-  const selection = resolveCheckoutSelection({
+test("refuses non-rolled finishes for direct checkout even when legacy records contain them", () => {
+  assert.throws(() => resolveCheckoutSelection({
     _id: "catalog-1",
     productionModel: "hand_painted_to_order",
     standardSizes: [
@@ -32,21 +32,18 @@ test("resolves a made-to-order size and finish from Sanity values", () => {
     quantity: 2,
     sizeId: "100x120",
     finishId: "black",
-  })
-
-  assert.equal(selection.priceCny, 4000)
-  assert.equal(selection.sizeLabel, "100 x 120 cm")
-  assert.equal(selection.finishLabel, "Black float frame")
+  }), /require destination and carrier confirmation/i)
 })
 
-test("server rebuilds the same fallback finish total", () => {
-  const selection = resolveCheckoutSelection({
-    _id: "catalog-1",
-    productionModel: "hand_painted_to_order",
-    standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 1730 }],
-  }, { id: "catalog-1", quantity: 1, sizeId: "80x100", finishId: "gold-frame" })
-
-  assert.equal(selection.priceCny, 3090)
+test("server rejects a non-rolled fallback finish from direct checkout", () => {
+  assert.throws(
+    () => resolveCheckoutSelection({
+      _id: "catalog-1",
+      productionModel: "hand_painted_to_order",
+      standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 1730 }],
+    }, { id: "catalog-1", quantity: 1, sizeId: "80x100", finishId: "gold-frame" }),
+    /require destination and carrier confirmation/i,
+  )
 })
 
 const malformedCheckoutPriceDeltas: Array<{
@@ -122,8 +119,8 @@ test("authoritative checkout preserves a numeric zero configured price delta", (
   assert.equal(selection.priceCny, 2600)
 })
 
-test("authoritative checkout prices stretched canvas from the catalog formula when only rolled is stored", () => {
-  const selection = resolveCheckoutSelection({
+test("authoritative checkout rejects stretched canvas from the generated fallback options", () => {
+  assert.throws(() => resolveCheckoutSelection({
     _id: "catalog-stretched",
     productionModel: "hand_painted_to_order",
     standardSizes: [{ _key: "80x100", label: "80 x 100 cm", priceCny: 2600 }],
@@ -133,10 +130,7 @@ test("authoritative checkout prices stretched canvas from the catalog formula wh
     quantity: 1,
     sizeId: "80x100",
     finishId: "stretched",
-  })
-
-  assert.equal(selection.finishId, "stretched")
-  assert.equal(selection.priceCny, 4420)
+  }), /require destination and carrier confirmation/i)
 })
 
 test("rejects an unknown made-to-order size", () => {

@@ -12,7 +12,8 @@ export default {
     },
     { name: 'artwork', title: 'Artwork', type: 'reference', to: [{ type: 'artwork' }], validation: (Rule: any) => Rule.required() },
     { name: 'artist', title: 'Artist', type: 'reference', to: [{ type: 'artist' }] },
-    { name: 'verifiedBuyer', title: 'Verified buyer', type: 'boolean', initialValue: true },
+    { name: 'verifiedBuyer', title: 'Verified buyer', type: 'boolean', initialValue: false,
+      description: 'Set true only when orderIdInternal points to a real completed YiiArt purchase.' },
     {
       name: 'orderIdInternal',
       title: 'Internal order ID',
@@ -29,15 +30,20 @@ export default {
       name: 'reviewSource',
       title: 'Review source',
       type: 'string',
-      initialValue: 'manual_verified',
       options: {
         list: [
+          { title: 'Unverified experience', value: 'unverified' },
           { title: 'Purchase invite', value: 'purchase_invite' },
           { title: 'Manual verified', value: 'manual_verified' },
           { title: 'Imported verified', value: 'imported_verified' },
         ],
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: any) => Rule.required().custom((value: string, context: any) => {
+        const requiresOrder = value === 'purchase_invite' || value === 'manual_verified' || value === 'imported_verified'
+        return !requiresOrder || context.document?.orderIdInternal
+          ? true
+          : 'A real internal order reference is required for a verified purchase review.'
+      }),
     },
     { name: 'customerName', title: 'Display name', type: 'string', validation: (Rule: any) => Rule.required() },
     { name: 'customerCity', title: 'City', type: 'string' },

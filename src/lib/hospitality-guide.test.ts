@@ -7,8 +7,8 @@ test("publishes a distinct hotel and restaurant artwork planning guide", async (
   const index = await readFile("src/app/guides/page.tsx", "utf8")
   const sitemap = await readFile("src/app/sitemap.ts", "utf8")
 
-  assert.match(page, /How to Plan Wall Art for Hotels and Restaurants/)
-  assert.match(page, /Map the guest experience/)
+  assert.match(page, /How to Choose Art for Hotels and Restaurants/)
+  assert.match(page, /Start with the guest experience/)
   assert.match(page, /abstract-art-for-living-room/)
   assert.match(page, /custom-painting\?intent=project/)
   assert.match(index, /hotel-restaurant-wall-art-planning/)

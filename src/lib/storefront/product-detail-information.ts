@@ -14,13 +14,22 @@ export function productDetailStoryLayout(hasEditorialMedia: boolean): ProductDet
 
 export function buildProductDetailContentModel({
   framingNotes,
+  shippingProfile,
   adviceItems,
 }: {
   framingNotes?: string | null
+  shippingProfile?: string | null
   adviceItems: ProductDetailAdviceItem[]
 }) {
+  const safeFramingNotes = typeof framingNotes === "string" ? framingNotes.trim() : ""
+  const presentationNote = safeFramingNotes.replace(
+    /Ships rolled for direct checkout\.?/i,
+    shippingProfile === "Ships rolled"
+      ? "Rolled canvas is the current direct-checkout format."
+      : "Delivery format is confirmed for the destination and selected size.",
+  )
   return {
-    presentationNote: typeof framingNotes === "string" ? framingNotes.trim() : "",
+    presentationNote,
     supplementalAdvice: adviceItems.flatMap((item, translationIndex) =>
       consolidatedAdviceIds.has(item.id) ? [] : [{ ...item, translationIndex }]
     ),

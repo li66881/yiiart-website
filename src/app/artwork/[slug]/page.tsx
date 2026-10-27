@@ -24,6 +24,8 @@ import {
   parseArtworkDimensionsCm,
   pickEnglish,
 } from "@/lib/artwork-display"
+import { resolveArtworkOrientation } from "@/lib/artwork-orientation"
+import { productionTime } from "@/lib/policy-content"
 import { getArtworkImageUrl, getArtworkImageUrls } from "@/lib/artwork-images"
 import { buildProductGalleryMedia } from "@/lib/artwork-media"
 import {
@@ -226,7 +228,7 @@ async function ArtworkContent({
   const originalArtworkStory = pickEnglish(artwork.artworkStory)
   const roomTypes = normalizeList(artwork.roomTypes)
   const colorFamilies = normalizeList(artwork.colorFamilies)
-  const orientation = artwork.orientation || inferOrientation(dimensions)
+  const orientation = resolveArtworkOrientation(artwork) || ""
   const surfaceFinish = artwork.surfaceFinish || ""
   const framingNotes = artwork.framingNotes || ""
   const shippingProfile = artwork.shippingProfile || ""
@@ -246,7 +248,7 @@ async function ArtworkContent({
       && ["detail", "living_room", "bedroom", "dining_room"].includes(media.role)
   )
   const storyLayout = productDetailStoryLayout(Boolean(editorialMedia))
-  const detailContent = buildProductDetailContentModel({ framingNotes, adviceItems: productAdviceItems })
+  const detailContent = buildProductDetailContentModel({ framingNotes, shippingProfile, adviceItems: productAdviceItems })
   const storefrontProduct = buildStorefrontProduct(
     artwork,
     galleryImages.map((src: string, index: number) => ({
@@ -537,7 +539,7 @@ async function ArtworkContent({
                   <p className={storefrontStyles.productDetailEyebrow}>Presentation</p>
                   <h3>Choose the finish that suits your room</h3>
                   <p>
-                    Available rolled, stretched, and framed choices appear in the purchase panel. Options vary by artwork and size; the selected presentation is confirmed with the order.
+                    Rolled canvas is currently available for direct checkout. Stretched or float-framed work requires destination and carrier confirmation before payment.
                   </p>
                   {detailContent.presentationNote && <p>{detailContent.presentationNote}</p>}
                 </div>
@@ -577,7 +579,7 @@ async function ArtworkContent({
               </div>
 
               <div className={storefrontStyles.productDetailCards}>
-                <InfoBlock title="Production guidance" text={storefrontProduct.productionModel === "hand_painted_to_order" ? "Painting, framing, and review photos are completed within 10 calendar days. Shipping transit time is additional. Custom sizes or colors require photo approval before dispatch." : detailCopy.processingTime} />
+                <InfoBlock title="Production guidance" text={storefrontProduct.productionModel === "hand_painted_to_order" ? `${productionTime.combined} Custom sizes or colors require photo approval before dispatch.` : detailCopy.processingTime} />
                 <InfoBlock title="Dispatch" text={detailCopy.dispatch} />
                 <InfoBlock title="Tracking" text="Tracking information is shared when the selected carrier service provides it." />
                 <InfoBlock title="Returns" text="Standard-size made-to-order paintings: request a change-of-mind return within 7 days of delivery; YiiArt covers return shipping. Custom sizes or colors: no change-of-mind returns after pre-dispatch photo approval. Contact YiiArt about damage or an item that does not match the agreed order." />
@@ -694,16 +696,6 @@ function buildArtworkMetaDescription({
 
 function normalizeList(value?: string[] | null) {
   return Array.isArray(value) ? value.filter(Boolean) : []
-}
-
-function inferOrientation(dimensions?: string | null) {
-  if (!dimensions) return ""
-  const numbers = dimensions.match(/\d+(?:\.\d+)?/g)?.map(Number)
-  if (!numbers || numbers.length < 2) return ""
-
-  const [width, height] = numbers
-  if (Math.abs(width - height) < 1) return "Square"
-  return width > height ? "Landscape" : "Portrait"
 }
 
 function buildArtworkImageAlt({
