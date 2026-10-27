@@ -58,8 +58,11 @@
 
 ## 测试和发布状态
 
-- `npm test`：通过，325 个单元测试、10 个集成测试、公共文案检查通过。
+- `npm test`：通过，326 个单元测试、10 个集成测试、公共文案检查通过。
 - `npm run build`：通过；Next.js 15.5.23 完成构建、类型检查和静态页面生成。
 - 163 条方向审计脚本：通过，结果 `163 total / 8 candidates / 8 manual review`。
 - `git diff --check`：通过。
-- 修改仍在独立本地分支，尚未部署到 Preview 或生产。生产页面真实回归检查需在 Preview 构建后执行，再按项目发布流程部署。
+- GitHub CI（测试、TypeScript、生产构建）通过；Vercel Preview 构建 Ready。
+- Preview：`https://yiiart-website-ikzko98e0-yart.vercel.app`。经 Vercel CLI 受保护访问核查：首页 200，显示 Featured Artworks 且不含 Best Seller；`/artwork/scrubland-study` 和 `/artwork/pale-scale-rhythm` 均 200，显示 Portrait、不显示 Square；`/shipping`、`/shipping-returns`、`/faq`、`/checkout` 均 200，未发现旧 10 天承诺；`/robots.txt` 和 `/sitemap.xml` 均 200，sitemap 含 163 个商品 URL。
+- Preview 的 `/api/checkout/config` 显示 PayPal、Stripe 未配置/未启用；没有在 Preview 执行真实支付或创建订单。生产账号支付配置的核验结果见上文。
+- Preview 核验完成，已准备通过项目既有 GitHub → Vercel 流程发布到生产；生产 URL 的回归检查将在部署 Ready 后完成。
