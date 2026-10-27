@@ -131,7 +131,7 @@ export const productProcessItems = [
 export const productPackagingItems = [
   {
     title: "Rolled canvas",
-    text: "The canvas is shipped unmounted in a protective tube. Rolled canvas is the current direct-checkout format; transit suitability depends on destination, size, and carrier route.",
+    text: "The listed format is rolled canvas, shipped unmounted in a protective tube. Delivery suitability depends on destination, size, and carrier route; stretched or framed delivery must be confirmed before ordering.",
   },
   {
     title: "Stretched canvas or float frame",

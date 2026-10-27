@@ -6,6 +6,7 @@ import { pickEnglish } from "@/lib/artwork-display"
 import { getArtworkImageUrl } from "@/lib/artwork-images"
 import { buildBreadcrumbJsonLd, buildSeoMetadata } from "@/lib/seo"
 import { PUBLIC_ARTWORK_GROQ_FILTER } from "@/lib/artwork-publication"
+import { normalizePublicArtworkFramingNotes } from "@/lib/storefront/framing-notes"
 
 export const revalidate = 600
 
@@ -20,7 +21,9 @@ async function getData() {
       artist->{name}
     }`)
 
-    return { artworks }
+    return {
+      artworks: Array.isArray(artworks) ? artworks.map(normalizePublicArtworkFramingNotes) : [],
+    }
   } catch {
     return { artworks: [] }
   }
