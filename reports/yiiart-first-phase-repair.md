@@ -36,14 +36,15 @@
 
 - 线上 `robots.txt` 返回 200，允许抓取公开页面并排除 `/admin/`、`/api/`；`sitemap.xml` 返回 200，包含 163 个商品 URL。
 - 两个抽查商品页均返回 200，并具有各自的 title、description 和 `https://www.yiiart.com/artwork/{slug}` canonical。商品页由统一 metadata builder 生成 canonical；新公开页面默认可索引。
-- 当前线上首页没有 `google-site-verification` meta tag；仓库 `public/` 里也没有静态 Google 验证文件。代码支持通过 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` 环境变量注入 meta，但没有可用验证码。当前执行环境无法完成域名 DNS TXT 查询，因此不能判断是否已经存在 DNS 验证记录。
+- 当前线上首页没有 `google-site-verification` meta tag；仓库 `public/` 里也没有静态 Google 验证文件。代码支持通过 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` 环境变量注入 meta。通过 Google Public DNS 只读查询到 `yiiart.com` 根域名有 2 条 TXT 记录，其中 1 条名称为 `google-site-verification`；没有读取或公开验证值。DNS 记录存在不等于已确认它对应当前登录的 Search Console 资源。
+- GSC Wizard 连接工具因账户没有活动订阅而拒绝列出 Search Console 资源，因此目前无法从该连接核验域名资源是否已验证、sitemap 是否已提交或索引状态；没有通过工具更改或提交任何内容。
 
 **Domain Property 验证步骤：**
 
 1. 在 Google Search Console 添加 Domain Property：`yiiart.com`。
-2. 从 Google 页面复制其实际提供的 TXT 验证值；不要沿用猜测或手工编造的值。
-3. 到当前 DNS 服务商增加一条 TXT 记录：主机名/名称填 `@`（如服务商要求完整域名则按其格式填写），值原样粘贴，TTL 使用默认值。
-4. 保留现有 SPF、DKIM、DMARC、MX 及其他 TXT 记录，不删除或覆盖；验证 DNS 生效后回到 Search Console 点击验证。
+2. 从 Google 页面复制其实际提供的 TXT 验证值；将它与 DNS 中现存的 Google 验证 TXT 记录对照，不要猜测或编造值。
+3. 如果值匹配，保留现有记录并直接在 Search Console 验证；如果不匹配，到当前 DNS 服务商新增一条 TXT 记录：主机名/名称填 `@`（如服务商要求完整域名则按其格式填写），值原样粘贴，TTL 使用默认值。
+4. 保留现有 SPF、DKIM、DMARC、MX 及其他 TXT 记录，不删除或覆盖；待 DNS 生效后回到 Search Console 点击验证。
 5. 在该资源的“站点地图”中提交 `https://www.yiiart.com/sitemap.xml`。
 6. 用“网址检查”检查首页、`/artworks`、`/artwork/scrubland-study` 和 `/artwork/pale-scale-rhythm`；确认 canonical 选择为对应的 www URL、允许索引，再对需要优先收录的页面请求编入索引。
 7. 后续在“网页索引”检查 sitemap 发现数、已编入索引数、未编入索引原因；新页面和内容更新需要等待 Google 重抓取，不保证即时收录。
@@ -54,7 +55,7 @@
 - 8 条 50×60 cm 方向问题只改了显示判定，未改 Sanity 文档；确认原作构图后再由数据负责人更新源字段。
 - 尚无经确认的制作周期，也没有可验证的绷框/浮框海外承运限制表；前台采用下单前确认措辞，非卷装不直接收款。
 - PayPal Sandbox 端到端支付、美国收件地址的测试订单、取消/失败路径以及订单库状态核对需在 Sandbox 环境完成；不得使用线上 Live 付款测试。
-- DNS TXT 现状尚未完成检查；Search Console 验证码只能由 Google 提供。
+- DNS 中已有 Google 验证 TXT，但它是否匹配目标 Google 账号的 Search Console 验证值仍未确认；验证码只能由 Google 提供。GSC Wizard 连接当前没有活动订阅，需通过 Search Console 网页本身确认属性、提交 sitemap 并检查收录。
 
 ## 测试和发布状态
 
