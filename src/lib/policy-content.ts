@@ -17,8 +17,8 @@ export const trustPrinciples = [
   },
 ]
 
-const madeToOrderTiming = "Made-to-order paintings are typically handed to the carrier about 8 calendar days after the order is placed. Specific timing is confirmed before the order is finalized."
-const carrierTransitTiming = "After carrier handoff, delivery to the United States and Australia typically takes about 4 calendar days. Delivery estimates may vary with destination, artwork size, finish, customs, and carrier route."
+const madeToOrderTiming = "Made-to-order paintings typically take 6–8 calendar days from order placement to carrier handoff. Specific timing is confirmed before the order is finalized."
+const carrierTransitTiming = "After carrier handoff, delivery typically takes 3–5 calendar days to the United States and 4–6 calendar days to Australia. Delivery estimates may vary with destination, artwork size, finish, customs, and carrier route."
 
 export const productionTime = {
   madeToOrder: madeToOrderTiming,

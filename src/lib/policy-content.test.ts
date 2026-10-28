@@ -3,8 +3,9 @@ import test from "node:test"
 import { customsMarketGuidance, faqItems, productionTime, shippingHighlights } from "./policy-content"
 
 test("uses confirmed estimates while keeping production and carrier transit separate", () => {
-  assert.match(productionTime.madeToOrder, /typically.*carrier.*8 calendar days/i)
-  assert.match(productionTime.shippingTransit, /United States and Australia.*typically.*4 calendar days/i)
+  assert.match(productionTime.madeToOrder, /typically.*6–8 calendar days.*carrier handoff/i)
+  assert.match(productionTime.shippingTransit, /3–5 calendar days to the United States/i)
+  assert.match(productionTime.shippingTransit, /4–6 calendar days to Australia/i)
   assert.match(productionTime.shippingTransit, /may vary.*customs/i)
   assert.equal(productionTime.combined, `${productionTime.madeToOrder} ${productionTime.shippingTransit}`)
   assert.ok(shippingHighlights.some((item) => item.text.includes(productionTime.combined)))
