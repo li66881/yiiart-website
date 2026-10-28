@@ -11,6 +11,7 @@ test("publishes confirmed standard-size US returns only when explicitly applicab
     applicableCountry: "US",
     returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
     merchantReturnDays: 7,
+    returnMethod: "https://schema.org/ReturnByMail",
     returnFees: "https://schema.org/FreeReturn",
     merchantReturnLink: "https://www.yiiart.com/returns",
   })

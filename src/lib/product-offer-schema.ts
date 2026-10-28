@@ -31,6 +31,7 @@ export function buildProductOfferJsonLd({
       applicableCountry: "US",
       returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
       merchantReturnDays: 7,
+      returnMethod: "https://schema.org/ReturnByMail",
       returnFees: "https://schema.org/FreeReturn",
       merchantReturnLink: new URL("/returns", url).toString(),
     }
