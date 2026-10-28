@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
-import { customsIntro, customsMarketGuidance, shippingHighlights } from "@/lib/policy-content"
+import { customsIntro, customsMarketGuidance, productionTime, shippingHighlights } from "@/lib/policy-content"
 import { buildSeoMetadata } from "@/lib/seo"
 
 export const metadata: Metadata = buildSeoMetadata({
@@ -54,8 +54,8 @@ export default function ShippingPage() {
               <h2 className="text-4xl font-light leading-tight">Preparation first, then carrier transit.</h2>
             </div>
             <div className="grid gap-4">
-              <Timeline title="Artwork preparation" text="Production timing is confirmed before the order is finalized." />
-              <Timeline title="Carrier transit" text="Delivery timing and format are confirmed by destination, size, finish, and carrier route." />
+              <Timeline title="Artwork preparation" text={productionTime.madeToOrder} />
+              <Timeline title="Carrier transit" text={productionTime.shippingTransit} />
               <Timeline title="Oversized or custom work" text="Preparation and delivery guidance is confirmed for the selected size, finish, and carrier route." />
             </div>
           </section>

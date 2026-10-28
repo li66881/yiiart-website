@@ -17,10 +17,13 @@ export const trustPrinciples = [
   },
 ]
 
+const madeToOrderTiming = "Made-to-order paintings are typically handed to the carrier about 8 calendar days after the order is placed. Specific timing is confirmed before the order is finalized."
+const carrierTransitTiming = "After carrier handoff, delivery to the United States and Australia typically takes about 4 calendar days. Delivery estimates may vary with destination, artwork size, finish, customs, and carrier route."
+
 export const productionTime = {
-  madeToOrder: "Production timing is confirmed before the order is finalized.",
-  shippingTransit: "Carrier transit starts after dispatch and is additional. Delivery timing depends on destination, artwork size, finish, and carrier route.",
-  combined: "Production timing is confirmed before the order is finalized. Carrier transit starts after dispatch and is additional; delivery timing depends on destination, artwork size, finish, and carrier route.",
+  madeToOrder: madeToOrderTiming,
+  shippingTransit: carrierTransitTiming,
+  combined: `${madeToOrderTiming} ${carrierTransitTiming}`,
 }
 
 export const shippingHighlights = [
@@ -129,7 +132,7 @@ export const faqItems = [
   },
   {
     question: "How does shipping work?",
-    answer: "Delivery timing and format are confirmed by destination, size, finish, and carrier route. Tracking information is shared when the selected carrier service provides it.",
+    answer: `${productionTime.combined} Tracking information is shared when the selected carrier service provides it.`,
   },
   {
     question: "Will I have to pay customs duties or taxes?",
