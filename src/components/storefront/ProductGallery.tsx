@@ -143,6 +143,7 @@ export default function ProductGallery({ media, alt }: Props) {
                 alt={selectedMedia.alt || alt}
                 fill
                 priority={selectedIndex === 0}
+                fetchPriority={selectedIndex === 0 ? "high" : "auto"}
                 sizes="(min-width: 1024px) 50vw, 100vw"
               />
               <span className={styles.zoomHint}>View larger</span>
