@@ -118,7 +118,7 @@ export default function HeaderClient({ navigationState }: HeaderClientProps) {
         </div>
 
         <Link href="/" className="justify-self-center" onClick={closeMenu} aria-label="YiiArt home">
-          <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-6 w-auto sm:h-8" />
+          <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" width={520} height={64} className="h-6 w-auto sm:h-8" />
         </Link>
 
         <div className="flex items-center justify-end">

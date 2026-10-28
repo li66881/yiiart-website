@@ -59,7 +59,7 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
 
         <div className="grid gap-12 border-b border-stone-300 pb-12 lg:grid-cols-[1.05fr_2fr_0.95fr]">
           <div>
-            <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" className="h-9 w-auto" />
+            <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" width={520} height={64} className="h-9 w-auto" />
             <p className="mt-5 max-w-xs font-serif text-lg leading-7 text-stone-600">{t("footer.tagline")}</p>
             <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Talk to the studio</p>
             <div className="mt-5 space-y-2">
