@@ -96,7 +96,7 @@ export default function HospitalityArtPlanningGuide() {
               How to Choose Art for Hotels and Restaurants
             </h1>
             <p className="mt-6 max-w-3xl text-lg leading-8 text-stone-600">
-              A practical starting point for selecting original abstract paintings across guest rooms, lobbies, dining spaces, and other hospitality interiors.
+              Choose hotel artwork by mapping the guest spaces, measuring usable walls, setting a shared palette, and comparing paintings at the intended viewing distance. Confirm sizes, finishes, quantities, approval photos, and delivery arrangements before placing the project order.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/custom-painting?intent=project" className="inline-flex bg-stone-950 px-6 py-4 text-sm font-medium text-white hover:bg-stone-800">
@@ -122,8 +122,16 @@ export default function HospitalityArtPlanningGuide() {
             <p className="mb-10 text-base leading-8 text-stone-600">
               The strongest hospitality art plans start with the space and the guest experience, not a product shortlist. Use this checklist to move from room measurements to a clear artwork brief.
             </p>
+            <nav aria-label="Hotel art planning sections" className="mb-10 border-y border-stone-200 py-5">
+              <h2 className="text-lg font-medium">Hotel art selection checklist</h2>
+              <ol className="mt-4 grid gap-3 text-sm leading-6">
+                {sections.map((section) => (
+                  <li key={section.number}><a href={`#planning-${section.number}`} className="underline underline-offset-4">{section.number}. {section.title}</a></li>
+                ))}
+              </ol>
+            </nav>
             {sections.map((section) => (
-              <section key={section.number} className="border-t border-stone-200 py-8">
+              <section id={`planning-${section.number}`} key={section.number} className="scroll-mt-28 border-t border-stone-200 py-8">
                 <p className="text-sm text-stone-500">{section.number}</p>
                 <h2 className="mt-3 text-2xl font-medium leading-snug">{section.title}</h2>
                 {section.paragraphs.map((paragraph) => (
@@ -139,6 +147,17 @@ export default function HospitalityArtPlanningGuide() {
               <p className="mt-4 text-base leading-8 text-stone-600">
                 Include the property type, room or wall locations, approximate quantities, wall dimensions, interior or brand references, preferred palette, delivery country, and target timing. Photos or a floor plan help clarify the request; an early brief can be approximate and refined together.
               </p>
+              <Link href="/guides/hotel-artwork-project-brief" className="mt-5 inline-block text-sm underline underline-offset-4">Prepare your hotel artwork project brief</Link>
+            </section>
+            <section className="border-b border-stone-200 py-8">
+              <h2 className="text-2xl font-medium">What to check before approving hotel artwork</h2>
+              <p className="mt-4 text-base leading-8 text-stone-600">
+                For a coordinated set, review one representative work before approving the wider visual direction. Compare a straight-on photo, a surface detail, and the finished dimensions against the room schedule. Ask which differences in brushwork and color are expected between individually hand-painted pieces.
+              </p>
+              <p className="mt-4 text-base leading-8 text-stone-600">
+                Record the approved reference, palette, size, presentation, and room or wall ID together. Confirm who signs off changes and how each package will be identified when it arrives. For custom sizes or colors, YiiArt supplies photos for approval before dispatch; review the returns policy before approving them.
+              </p>
+              <Link href="/returns" className="mt-5 inline-block text-sm underline underline-offset-4">Review standard-size and custom painting return conditions</Link>
             </section>
           </article>
 
