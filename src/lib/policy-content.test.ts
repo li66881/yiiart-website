@@ -1,6 +1,15 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { customsMarketGuidance, faqItems } from "./policy-content"
+import { customsMarketGuidance, faqItems, productionTime, shippingHighlights } from "./policy-content"
+
+test("uses confirmed estimates while keeping production and carrier transit separate", () => {
+  assert.match(productionTime.madeToOrder, /typically.*carrier.*8 calendar days/i)
+  assert.match(productionTime.shippingTransit, /United States and Australia.*typically.*4 calendar days/i)
+  assert.match(productionTime.shippingTransit, /may vary.*customs/i)
+  assert.equal(productionTime.combined, `${productionTime.madeToOrder} ${productionTime.shippingTransit}`)
+  assert.ok(shippingHighlights.some((item) => item.text.includes(productionTime.combined)))
+  assert.ok(faqItems.find((item) => item.question === "How does shipping work?")?.answer.includes(productionTime.combined))
+})
 
 test("states that import tax is not collected at checkout", () => {
   const duties = faqItems.find((item) => item.question.includes("customs duties"))
