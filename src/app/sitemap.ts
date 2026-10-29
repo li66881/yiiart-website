@@ -47,8 +47,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: route.priority,
     }))
 
-  const categoryRoutes = mapCategorySitemapRoutes(baseUrl)
-
   const nonRoomCollectionRoutes = mapCollectionSitemapRoutes(
     marketingCollections.filter((collection) => collection.group !== 'room'),
     null,
@@ -63,12 +61,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ])
 
     const artworkRoutes = mapArtworkSitemapRoutes(artworks, baseUrl)
+    const categoryRoutes = mapCategorySitemapRoutes(baseUrl, collectionInventory)
     const eligibleArtists = filterSitemapArtists(artists, artworks)
     const artistRoutes = mapArtistSitemapRoutes(eligibleArtists, baseUrl)
     const collectionRoutes = mapCollectionSitemapRoutes(marketingCollections, collectionInventory, baseUrl)
 
     return [...staticRoutes, ...categoryRoutes, ...collectionRoutes, ...artworkRoutes, ...artistRoutes]
   } catch {
-    return [...staticRoutes, ...categoryRoutes, ...nonRoomCollectionRoutes]
+    return [...staticRoutes, ...nonRoomCollectionRoutes]
   }
 }

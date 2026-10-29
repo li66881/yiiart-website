@@ -1,6 +1,7 @@
 import { matchesArtistIdentity } from "./artist-identity"
 import { getArtworkImageUrls } from "./artwork-images"
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
+import { getPopulatedArtworkCategories } from "./artwork-category-seo"
 import type { MarketingCollection } from "./collections"
 import { matchesMarketingCollection, shouldIndexMarketingCollection } from "./storefront/catalog-rules"
 
@@ -84,8 +85,9 @@ export function filterSitemapArtists(artists: SitemapArtistRecord[], artworks: S
   })
 }
 
-export function mapCategorySitemapRoutes(origin: string) {
-  return ARTWORK_CATEGORIES.map((category) => ({
+export function mapCategorySitemapRoutes(origin: string, inventory?: Array<{ category?: string | null }> | null) {
+  const categories = inventory === undefined ? ARTWORK_CATEGORIES : getPopulatedArtworkCategories(inventory || [])
+  return categories.map((category) => ({
     url: `${origin}/artworks?category=${encodeURIComponent(category)}`,
     changeFrequency: "weekly" as const,
     priority: 0.7,
