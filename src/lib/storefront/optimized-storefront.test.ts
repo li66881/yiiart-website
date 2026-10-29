@@ -21,7 +21,6 @@ test("invoice-only presentations do not publish purchase offers", async () => {
   const source = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
   assert.match(source, /const invoiceOnlyPresentation = storefrontProduct\.productionModel === "hand_painted_to_order"\s*&& selectedVariant\?\.finish\.id !== "rolled"/)
   assert.match(source, /offers: invoiceOnlyPresentation \? undefined : offer/)
-  assert.match(source, /finishes: storefrontProduct\.productionModel === "hand_painted_to_order"\s*\? storefrontProduct\.finishes\.filter\(\(finish\) => finish\.id === "rolled"\)/)
 })
 
 test("product reviews and related artwork reads start together", async () => {

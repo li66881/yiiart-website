@@ -365,9 +365,7 @@ async function ArtworkContent({
         baseUrl: baseProductUrl,
         images: galleryImages.slice(0, 10),
         sizes: storefrontProduct.sizes,
-        finishes: storefrontProduct.productionModel === "hand_painted_to_order"
-          ? storefrontProduct.finishes.filter((finish) => finish.id === "rolled")
-          : storefrontProduct.finishes,
+        finishes: storefrontProduct.finishes,
         sku: productSku,
         priceCurrency: schemaCurrency,
         availability,
