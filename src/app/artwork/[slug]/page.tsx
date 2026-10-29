@@ -291,9 +291,11 @@ async function ArtworkContent({
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
   const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkCheckoutAvailable(artwork)
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
-  const reviews = await getArtworkReviews(artwork._id)
+  const [reviews, relatedArtworks] = await Promise.all([
+    getArtworkReviews(artwork._id),
+    getRelatedArtworks(artwork._id, artwork.category, artwork.medium),
+  ])
   const reviewStats = getReviewStats(reviews)
-  const relatedArtworks = await getRelatedArtworks(artwork._id, artwork.category, artwork.medium)
   const whatsappUrl = getWhatsAppUrl(
     `Hello YiiArt, I am interested in ${title}. Can you advise on size, framing, and shipping?`
   )
