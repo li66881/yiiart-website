@@ -315,6 +315,7 @@ async function ArtworkContent({
     initialVariant.isValid,
   )
   const offer = buildProductOfferJsonLd({
+    includedUsShipping: storefrontProduct.productionModel === "hand_painted_to_order" && directCheckoutAvailable && initialVariant.isValid && !invoiceOnlyPresentation,
     url: offerIdentity.url,
     sku: offerIdentity.sku,
     priceCurrency: schemaCurrency,
