@@ -290,6 +290,8 @@ async function ArtworkContent({
   const schemaCurrency = currency
   const offerPrice = convertCnyToStoreAmount(priceCny, currency)
   const directCheckoutAvailable = storefrontProduct.sizes.length > 0 && isArtworkCheckoutAvailable(artwork)
+  const invoiceOnlyPresentation = storefrontProduct.productionModel === "hand_painted_to_order"
+    && selectedVariant?.finish.id !== "rolled"
   const baseUrl = (process.env.NEXT_PUBLIC_BASE_URL || "https://www.yiiart.com").replace(/\/$/, "")
   const [reviews, relatedArtworks] = await Promise.all([
     getArtworkReviews(artwork._id),
@@ -351,7 +353,7 @@ async function ArtworkContent({
       roomTypes.length > 0 ? { "@type": "PropertyValue", name: "Recommended rooms", value: roomTypes.join(", ") } : null,
       colorFamilies.length > 0 ? { "@type": "PropertyValue", name: "Color palette", value: colorFamilies.join(", ") } : null,
     ].filter(Boolean),
-    offers: offer,
+    offers: invoiceOnlyPresentation ? undefined : offer,
   }
 
   const productGroupJsonLd = directCheckoutAvailable
@@ -363,7 +365,9 @@ async function ArtworkContent({
         baseUrl: baseProductUrl,
         images: galleryImages.slice(0, 10),
         sizes: storefrontProduct.sizes,
-        finishes: storefrontProduct.finishes,
+        finishes: storefrontProduct.productionModel === "hand_painted_to_order"
+          ? storefrontProduct.finishes.filter((finish) => finish.id === "rolled")
+          : storefrontProduct.finishes,
         sku: productSku,
         priceCurrency: schemaCurrency,
         availability,
