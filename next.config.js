@@ -114,6 +114,15 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Retired public URLs found in Search Console. Keep unknown URLs as 404s.
+      { source: '/index.html', destination: '/', permanent: true },
+      { source: '/artworks.html', destination: '/artworks', permanent: true },
+      { source: '/artists.html', destination: '/artists', permanent: true },
+      {
+        source: '/collections/textured-wall-artEntryway',
+        destination: '/collections/textured-wall-art',
+        permanent: true,
+      },
       {
         source: '/:path*',
         has: [
