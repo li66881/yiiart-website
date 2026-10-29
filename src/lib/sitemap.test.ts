@@ -1,9 +1,15 @@
 import assert from "node:assert/strict"
 import test from "node:test"
-import { filterSitemapArtists, mapArtworkSitemapRoutes, mapArtistSitemapRoutes, mapCollectionSitemapRoutes } from "./sitemap"
+import { filterSitemapArtists, mapArtworkSitemapRoutes, mapArtistSitemapRoutes, mapCollectionSitemapRoutes, mapCategorySitemapRoutes } from "./sitemap"
 import { marketingCollections } from "./collections"
 
 const baseUrl = "https://www.yiiart.com"
+
+test("category sitemap lists only populated categories when inventory is known", () => {
+  assert.deepEqual(mapCategorySitemapRoutes(baseUrl, [{ category: "Landscape" }]).map(x => x.url), [`${baseUrl}/artworks?category=Landscape`])
+  assert.deepEqual(mapCategorySitemapRoutes(baseUrl, []), [])
+  assert.deepEqual(mapCategorySitemapRoutes(baseUrl, null), [])
+})
 
 test("artwork sitemap includes approved images without videos or duplicates", () => {
   const [route] = mapArtworkSitemapRoutes([{

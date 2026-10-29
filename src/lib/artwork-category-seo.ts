@@ -55,7 +55,12 @@ export function resolveArtworkCategoryFilter(category?: string) {
   return getArtworkCategorySeo(category)?.category
 }
 
-export function buildArtworkCategorySeoMetadata(category?: string) {
+export function getPopulatedArtworkCategories(inventory: Array<{ category?: string | null }>) {
+  const categories = new Set(inventory.map(({ category }) => normalizeCategory(category || undefined)))
+  return ARTWORK_CATEGORIES.filter((category) => categories.has(category))
+}
+
+export function buildArtworkCategorySeoMetadata(category?: string, artworkCount?: number) {
   const categorySeo = getArtworkCategorySeo(category)
   const hasCategoryQuery = Boolean(category?.trim())
 
@@ -64,6 +69,7 @@ export function buildArtworkCategorySeoMetadata(category?: string) {
     title: categorySeo?.title || "Hand-Painted Paintings",
     description: categorySeo?.description || allArtworkDescription,
     path: categorySeo ? `/artworks?category=${encodeURIComponent(categorySeo.category)}` : "/artworks",
-    robots: hasCategoryQuery && !categorySeo ? { index: false as const, follow: true as const } : undefined,
+    robots: (hasCategoryQuery && !categorySeo) || (Boolean(categorySeo) && artworkCount === 0)
+      ? { index: false as const, follow: true as const } : undefined,
   }
 }

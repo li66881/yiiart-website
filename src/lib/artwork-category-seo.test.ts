@@ -2,7 +2,21 @@ import assert from "node:assert/strict"
 import test from "node:test"
 import { readFile } from "node:fs/promises"
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
-import { buildArtworkCategorySeoMetadata, getArtworkCategorySeo } from "./artwork-category-seo"
+import { buildArtworkCategorySeoMetadata, getArtworkCategorySeo, getPopulatedArtworkCategories } from "./artwork-category-seo"
+
+test("category navigation uses populated recognized categories in stable order", () => {
+  assert.deepEqual(getPopulatedArtworkCategories([
+    { category: "Landscape" }, { category: "Abstract" }, { category: "Landscape" },
+    { category: "unrecognized" }, { category: null },
+  ]), ["Abstract", "Landscape"])
+  assert.deepEqual(getPopulatedArtworkCategories([]), [])
+})
+
+test("empty known categories are noindex without treating unknown inventory as empty", () => {
+  assert.deepEqual(buildArtworkCategorySeoMetadata("Wabi-sabi", 0).robots, { index: false, follow: true })
+  assert.equal(buildArtworkCategorySeoMetadata("Landscape", 2).robots, undefined)
+  assert.equal(buildArtworkCategorySeoMetadata("Landscape", undefined).robots, undefined)
+})
 
 test("every sitemap artwork category has distinct, natural English metadata", () => {
   const pages = ARTWORK_CATEGORIES.map((category) => getArtworkCategorySeo(category))
