@@ -57,7 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const [artworks, artists, collectionInventory] = await Promise.all([
-      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{slug, "artistRefId": artist._ref, "artist": artist->{name}}`),
+      client.fetch(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{slug, productMedia, cloudflareImages, images, "artistRefId": artist._ref, "artist": artist->{name}}`),
       client.fetch(`*[_type == "artist" && defined(slug.current)]{_id, slug, name}`),
       client.fetch<SitemapCollectionArtwork[]>(`*[_type == "artwork" && ${PUBLIC_ARTWORK_GROQ_FILTER}]{category, roomTypes, dimensions, widthCm, heightCm, seriesSlug}`).catch(() => null),
     ])

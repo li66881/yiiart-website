@@ -5,6 +5,36 @@ import { marketingCollections } from "./collections"
 
 const baseUrl = "https://www.yiiart.com"
 
+test("artwork sitemap includes approved images without videos or duplicates", () => {
+  const [route] = mapArtworkSitemapRoutes([{
+    slug: { current: "blue-study" },
+    productMedia: [
+      { mediaType: "image", role: "front", url: "https://assets.yiiart.com/blue.webp", approvedForStorefront: true },
+      { mediaType: "image", role: "detail", url: "https://assets.yiiart.com/blue.webp", approvedForStorefront: true },
+      { mediaType: "image", url: "https://assets.yiiart.com/private.webp", approvedForStorefront: false },
+      { mediaType: "video", url: "https://assets.yiiart.com/process.mp4", approvedForStorefront: true },
+    ],
+  }], baseUrl)
+  assert.deepEqual(route.images, ["https://assets.yiiart.com/blue.webp"])
+})
+
+test("artwork sitemap uses legacy images and rejects non-HTTPS URLs", () => {
+  const [route] = mapArtworkSitemapRoutes([{
+    slug: { current: "legacy" },
+    cloudflareImages: [{ url: "https://assets.yiiart.com/legacy.webp" }, { url: "http://example.com/image.jpg" }],
+  }], baseUrl)
+  assert.deepEqual(route.images, ["https://assets.yiiart.com/legacy.webp"])
+})
+
+test("invalid legacy image data does not remove the artwork URL", () => {
+  const [route] = mapArtworkSitemapRoutes([{
+    slug: { current: "bad-image" },
+    images: [{ asset: { _ref: "invalid-image-reference" } }],
+  }], baseUrl)
+  assert.equal(route.url, `${baseUrl}/artwork/bad-image`)
+  assert.equal("images" in route, false)
+})
+
 test("collection sitemap requires four matching public artworks for room routes", () => {
   const dining = marketingCollections.find(({ slug }) => slug === "dining-room-wall-art")!
   const office = marketingCollections.find(({ slug }) => slug === "office-wall-art")!
