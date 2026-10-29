@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import posterThumbnails from "@/lib/video-poster-thumbnails.json"
 import { useEffect, useRef, useState, type WheelEvent } from "react"
 import type { ProductMediaItem } from "@/lib/artwork-media"
 import { isRoomSceneMedia } from "@/lib/artwork-media"
@@ -102,7 +103,7 @@ export default function ProductGallery({ media, alt }: Props) {
               {item.type === "video" ? (
                 item.posterUrl ? (
                   <>
-                    <Image src={item.posterUrl} alt="" fill sizes="96px" />
+                    <Image src={(posterThumbnails as Record<string, string>)[item.posterUrl] || item.posterUrl} alt="" fill sizes="96px" />
                     <span className={styles.videoBadge}>Video</span>
                   </>
                 ) : (
