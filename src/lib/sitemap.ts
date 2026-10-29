@@ -1,4 +1,5 @@
 import { matchesArtistIdentity } from "./artist-identity"
+import { getArtworkImageUrls } from "./artwork-images"
 import { ARTWORK_CATEGORIES } from "./artwork-categories"
 import type { MarketingCollection } from "./collections"
 import { matchesMarketingCollection, shouldIndexMarketingCollection } from "./storefront/catalog-rules"
@@ -11,6 +12,9 @@ export type SitemapArtistRecord = {
   name?: { en?: string | null; zh?: string | null } | null
 }
 export type SitemapArtworkRecord = SitemapSlugRecord & {
+  productMedia?: unknown[]
+  cloudflareImages?: unknown[]
+  images?: unknown[]
   artistRefId?: string | null
   artist?: { name?: { en?: string | null; zh?: string | null } | null } | null
 }
@@ -47,8 +51,23 @@ export function mapArtworkSitemapRoutes(artworks: SitemapArtworkRecord[], origin
     const slug = artwork.slug?.current?.trim()
     if (!slug) return []
 
+    let imageUrls: string[] = []
+    try {
+      imageUrls = getArtworkImageUrls(artwork)
+    } catch {
+      // A malformed legacy asset must not remove product URLs from the sitemap.
+    }
+    const images = [...new Set(imageUrls.filter((url) => {
+      try {
+        return new URL(url).protocol === "https:"
+      } catch {
+        return false
+      }
+    }))].slice(0, 10)
+
     return [{
       url: `${origin}/artwork/${slug}`,
+      ...(images.length ? { images } : {}),
       changeFrequency: "weekly" as const,
       priority: 0.8,
     }]
