@@ -17,6 +17,11 @@ import { shouldShowStickyPurchase } from "./sticky-purchase"
 import { productDetailNavigationItems } from "./product-detail-navigation"
 import { buildProductGalleryLabelModel } from "./product-gallery-labels"
 
+test("product reviews and related artwork reads start together", async () => {
+  const source = await readFile("src/app/artwork/[slug]/page.tsx", "utf8")
+  assert.match(source, /const \[reviews, relatedArtworks\] = await Promise\.all\(\[\s*getArtworkReviews\(artwork\._id\),\s*getRelatedArtworks\(artwork\._id, artwork\.category, artwork\.medium\),?\s*\]\)/)
+})
+
 const selectorFinishes: NormalizedFinishOption[] = [
   {
     id: "rolled",
