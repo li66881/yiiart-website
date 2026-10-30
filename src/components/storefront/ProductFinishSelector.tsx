@@ -6,6 +6,7 @@ import type { NormalizedFinishOption } from "@/lib/storefront/finish-options"
 import {
   buildProductFinishSelectorViewModel,
   finishThumbnailImageProps,
+  getFinishThumbnailSrc,
 } from "@/lib/storefront/finish-selector"
 import styles from "./storefront.module.css"
 
@@ -45,7 +46,7 @@ export function ProductFinishSelector({
             <span className={styles.finishControl}>
               <span className={styles.finishThumbnail}>
                 <Image
-                  src={finish.assetSrc}
+                  src={getFinishThumbnailSrc(finish.assetSrc)}
                   alt=""
                   width={88}
                   height={88}
