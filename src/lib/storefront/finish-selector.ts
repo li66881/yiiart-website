@@ -2,6 +2,11 @@ import {
   resolveFinishDeltaCny,
   type NormalizedFinishOption,
 } from "./finish-options"
+import thumbnails from "./finish-thumbnails.json"
+
+export function getFinishThumbnailSrc(source: string) {
+  return (thumbnails as Record<string, string>)[source] || source
+}
 
 export const finishThumbnailImageProps = {
   loading: "eager",
