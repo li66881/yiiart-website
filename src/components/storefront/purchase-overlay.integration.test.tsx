@@ -253,7 +253,7 @@ describe("purchase overlay integration", () => {
       ],
     }, [{ src: "/variant-artwork.webp" }])
 
-    renderStorefront(1440, 1000, multiOptionProduct)
+    renderStorefront(1440, 1000, multiOptionProduct, "https://wa.me/123456789?text=Original")
     fireEvent.change(screen.getByLabelText("Select a size"), { target: { value: "100x120" } })
     fireEvent.click(screen.getByRole("radio", { name: /Black float frame/ }))
 
@@ -261,6 +261,15 @@ describe("purchase overlay integration", () => {
       "/artwork/ink-garden-01?size=100x120&finish=black-frame",
       { scroll: false },
     )
+    fireEvent.click(screen.getByRole("button", { name: "Increase quantity" }))
+    const invoice = new URL(screen.getByRole("link", { name: "Request invoice" }).getAttribute("href")!)
+    expect(invoice.pathname).toBe("/123456789")
+    const message = invoice.searchParams.get("text")!
+    expect(message).toContain("Variant artwork")
+    expect(message).toContain("100 x 120 cm")
+    expect(message).toContain("Black float frame")
+    expect(message).toContain("Quantity: 2")
+    expect(message).toContain("size=100x120&finish=black-frame")
   })
 })
 
@@ -268,6 +277,7 @@ function renderStorefront(
   width: number,
   height: number,
   storefrontProduct = product,
+  invoiceUrl = "/invoice",
 ) {
   Object.defineProperty(window, "innerWidth", {
     configurable: true,
@@ -285,7 +295,7 @@ function renderStorefront(
             <ProductPurchasePanel
               product={storefrontProduct}
               directCheckoutAvailable
-              invoiceUrl="/invoice"
+              invoiceUrl={invoiceUrl}
               whatsappUrl="https://wa.me/example"
             />
             <ChatWidget />
