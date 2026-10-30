@@ -12,7 +12,9 @@ import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount } from "@/lib/pricing"
 import type { StorefrontProduct } from "@/lib/storefront/product"
 import { bindPurchaseAction, purchaseTrustLabel } from "@/lib/storefront/purchase-action"
-import { getProductSelection } from "@/lib/storefront/selection"
+import { buildProductVariantUrl, getProductSelection } from "@/lib/storefront/selection"
+import { buildInvoiceEnquiryUrl } from "@/lib/storefront/invoice-enquiry"
+import { siteUrl } from "@/lib/seo"
 import ProductDescription from "./ProductDescription"
 import { ProductFinishSelector } from "./ProductFinishSelector"
 import { ProductVariantUrlSync } from "./ProductVariantUrlSync"
@@ -56,6 +58,16 @@ export default function ProductPurchasePanel({
   const madeToOrder = product.productionModel === "hand_painted_to_order"
   const selectedFinishDirectCheckoutAvailable = directCheckoutAvailable
     && (!madeToOrder || selection?.finish.id === "rolled")
+  const selectedInvoiceUrl = selection ? buildInvoiceEnquiryUrl(invoiceUrl, {
+    title: product.title,
+    size: selection.size.label,
+    finish: selection.finish.label,
+    quantity,
+    artworkUrl: buildProductVariantUrl(`${siteUrl}/artwork/${encodeURIComponent(product.slug)}`, {
+      sizeId: selection.size.id,
+      finishId: selection.finish.id,
+    }),
+  }) : invoiceUrl
 
   const mainActionRef = useCallback((action: HTMLDivElement | null) => {
     mainActionCleanupRef.current()
@@ -213,7 +225,7 @@ export default function ProductPurchasePanel({
         ) : (
           <a
             className={styles.primaryAction}
-            href={invoiceUrl}
+            href={selectedInvoiceUrl}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackMarketingEvent("WhatsAppClick", { location: "pdp_invoice", content_name: product.slug })}
