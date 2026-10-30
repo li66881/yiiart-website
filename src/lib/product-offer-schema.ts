@@ -1,3 +1,5 @@
+import { madeToOrderUsShippingDays } from "./shipping-timing"
+
 type ProductOfferInput = {
   url: string
   sku: string
@@ -5,6 +7,7 @@ type ProductOfferInput = {
   price?: string
   availability: string
   standardSizeReturns?: boolean
+  includedUsShipping?: boolean
 }
 
 export function buildProductOfferJsonLd({
@@ -14,6 +17,7 @@ export function buildProductOfferJsonLd({
   price,
   availability,
   standardSizeReturns = false,
+  includedUsShipping = false,
 }: ProductOfferInput) {
   const offer: Record<string, unknown> = {
     "@type": "Offer",
@@ -25,6 +29,18 @@ export function buildProductOfferJsonLd({
   }
 
   if (price) offer.price = price
+  if (includedUsShipping && price) {
+    offer.shippingDetails = {
+      "@type": "OfferShippingDetails",
+      shippingRate: { "@type": "MonetaryAmount", value: 0, currency: priceCurrency },
+      shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" },
+      deliveryTime: {
+        "@type": "ShippingDeliveryTime",
+        handlingTime: { "@type": "QuantitativeValue", minValue: madeToOrderUsShippingDays.handling.min, maxValue: madeToOrderUsShippingDays.handling.max, unitCode: "DAY" },
+        transitTime: { "@type": "QuantitativeValue", minValue: madeToOrderUsShippingDays.transit.min, maxValue: madeToOrderUsShippingDays.transit.max, unitCode: "DAY" },
+      },
+    }
+  }
   if (standardSizeReturns) {
     offer.hasMerchantReturnPolicy = {
       "@type": "MerchantReturnPolicy",

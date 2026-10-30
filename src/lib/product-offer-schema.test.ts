@@ -3,6 +3,21 @@ import test from "node:test"
 import { access, readFile } from "node:fs/promises"
 import { buildProductOfferJsonLd } from "./product-offer-schema"
 
+test("publishes confirmed US included shipping only with explicit eligibility", () => {
+  const input = { url: "https://www.yiiart.com/artwork/rolled", sku: "rolled", priceCurrency: "USD", price: "250", availability: "https://schema.org/InStock" }
+  assert.equal(buildProductOfferJsonLd(input).shippingDetails, undefined)
+  assert.deepEqual(buildProductOfferJsonLd({ ...input, includedUsShipping: true }).shippingDetails, {
+    "@type": "OfferShippingDetails",
+    shippingRate: { "@type": "MonetaryAmount", value: 0, currency: "USD" },
+    shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" },
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime",
+      handlingTime: { "@type": "QuantitativeValue", minValue: 6, maxValue: 8, unitCode: "DAY" },
+      transitTime: { "@type": "QuantitativeValue", minValue: 3, maxValue: 5, unitCode: "DAY" },
+    },
+  })
+})
+
 test("publishes confirmed standard-size US returns only when explicitly applicable", () => {
   const input = { url: "https://www.yiiart.com/artwork/standard", sku: "standard", priceCurrency: "USD", price: "250", availability: "https://schema.org/InStock" }
   assert.equal(buildProductOfferJsonLd(input).hasMerchantReturnPolicy, undefined)
