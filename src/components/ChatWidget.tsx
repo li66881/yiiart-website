@@ -29,7 +29,7 @@ export default function ChatWidget() {
         type="button"
         onClick={() => setIsOpen(true)}
         className={`yiiart-chat-widget fixed ${mobilePosition} ${mobileVisibility} z-50 inline-flex h-11 items-center rounded-full border border-[#e5e5e5] bg-white px-4 text-[13px] font-normal text-[#171717] md:bottom-6 md:right-6`}
-        aria-label={t("chat.openSupport")}
+        aria-label={`Chat: ${t("chat.openSupport")}`}
       >
         Chat
       </button>

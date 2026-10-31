@@ -61,7 +61,7 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
           <div>
             <img src={siteAssetUrl("/brand/yiiart-logo.svg")} alt="YiiArt" width={520} height={64} className="h-9 w-auto" />
             <p className="mt-5 max-w-xs font-serif text-lg leading-7 text-stone-600">{t("footer.tagline")}</p>
-            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-stone-500">Talk to the studio</p>
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-stone-600">Talk to the studio</p>
             <div className="mt-5 space-y-2">
               <TrackableEmailLink email={contactEmail} className="block text-sm text-stone-600 transition-colors hover:text-black" leadType="footer_email">
                 {contactEmail}
@@ -99,12 +99,12 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
           </div>
 
           <div>
-            <h4 className="text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{t("footer.newsletter")}</h4>
+            <h2 className="text-sm font-medium uppercase tracking-[0.12em] text-stone-600">{t("footer.newsletter")}</h2>
             <div className="mt-4">
               <NewsletterSignup />
             </div>
             <div className="mt-6">
-              <h4 className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{t("footer.follow")}</h4>
+              <h2 className="mb-3 text-sm font-medium uppercase tracking-[0.12em] text-stone-600">{t("footer.follow")}</h2>
               <SocialLinks />
             </div>
           </div>
@@ -112,9 +112,9 @@ export default function FooterClient({ navigationState }: FooterClientProps) {
 
         <div className="flex flex-col items-start justify-between gap-4 pt-6 md:flex-row md:items-center">
           <PaymentBadges />
-          <p className="text-xs text-stone-500">Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
+          <p className="text-xs text-stone-600">Hand-painted canvases, thoughtful room guidance, worldwide collector support.</p>
         </div>
-        <div className="pt-4 text-xs text-stone-500">
+        <div className="pt-4 text-xs text-stone-600">
           <p>{t("footer.copyright")}</p>
         </div>
       </div>
@@ -126,7 +126,7 @@ function GuaranteeItem({ title, text }: { title: string; text: string }) {
   return (
     <div className="border-l border-stone-300 pl-4">
       <p className="text-sm font-medium text-stone-800">{title}</p>
-      <p className="mt-1 text-xs leading-5 text-stone-500">{text}</p>
+      <p className="mt-1 text-xs leading-5 text-stone-600">{text}</p>
     </div>
   )
 }
@@ -134,7 +134,7 @@ function GuaranteeItem({ title, text }: { title: string; text: string }) {
 function FooterColumn({ title, children }: { title: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="mb-4 text-sm font-medium uppercase tracking-[0.12em] text-stone-500">{title}</h4>
+      <h2 className="mb-4 text-sm font-medium uppercase tracking-[0.12em] text-stone-600">{title}</h2>
       <ul className="space-y-2 text-sm text-stone-600">{children}</ul>
     </div>
   )
