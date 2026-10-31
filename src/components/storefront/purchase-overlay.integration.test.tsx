@@ -161,7 +161,7 @@ describe("purchase overlay integration", () => {
   it("hides both closed and open floating chat states on mobile artwork details", () => {
     const view = renderChatWidget()
 
-    const chatButton = screen.getByRole("button", { name: "Open WhatsApp support" })
+    const chatButton = screen.getByRole("button", { name: "Chat: Open WhatsApp support" })
     expect(chatButton.classList.contains("hidden")).toBe(true)
     expect(chatButton.classList.contains("md:flex")).toBe(true)
 
@@ -175,7 +175,7 @@ describe("purchase overlay integration", () => {
     navigationState.pathname = "/cart"
     const view = renderChatWidget()
 
-    const chatButton = screen.getByRole("button", { name: "Open WhatsApp support" })
+    const chatButton = screen.getByRole("button", { name: "Chat: Open WhatsApp support" })
     expect(chatButton.classList.contains("hidden")).toBe(false)
     expect(chatButton.classList.contains("flex")).toBe(true)
 
