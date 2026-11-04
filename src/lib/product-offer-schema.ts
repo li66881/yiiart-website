@@ -1,4 +1,4 @@
-import { madeToOrderUsShippingDays } from "./shipping-timing"
+import { madeToOrderShippingDestinations, shippingBusinessDays } from "./shipping-timing"
 
 type ProductOfferInput = {
   url: string
@@ -7,7 +7,7 @@ type ProductOfferInput = {
   price?: string
   availability: string
   standardSizeReturns?: boolean
-  includedUsShipping?: boolean
+  includedStandardShipping?: boolean
 }
 
 export function buildProductOfferJsonLd({
@@ -17,7 +17,7 @@ export function buildProductOfferJsonLd({
   price,
   availability,
   standardSizeReturns = false,
-  includedUsShipping = false,
+  includedStandardShipping = false,
 }: ProductOfferInput) {
   const offer: Record<string, unknown> = {
     "@type": "Offer",
@@ -29,17 +29,18 @@ export function buildProductOfferJsonLd({
   }
 
   if (price) offer.price = price
-  if (includedUsShipping && price) {
-    offer.shippingDetails = {
+  if (includedStandardShipping && price) {
+    offer.shippingDetails = madeToOrderShippingDestinations.map(({ country, handling, transit }) => ({
       "@type": "OfferShippingDetails",
       shippingRate: { "@type": "MonetaryAmount", value: 0, currency: priceCurrency },
-      shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" },
+      shippingDestination: { "@type": "DefinedRegion", addressCountry: country },
       deliveryTime: {
         "@type": "ShippingDeliveryTime",
-        handlingTime: { "@type": "QuantitativeValue", minValue: madeToOrderUsShippingDays.handling.min, maxValue: madeToOrderUsShippingDays.handling.max, unitCode: "DAY" },
-        transitTime: { "@type": "QuantitativeValue", minValue: madeToOrderUsShippingDays.transit.min, maxValue: madeToOrderUsShippingDays.transit.max, unitCode: "DAY" },
+        businessDays: shippingBusinessDays.map((day) => `https://schema.org/${day}`),
+        handlingTime: { "@type": "QuantitativeValue", minValue: handling.min, maxValue: handling.max, unitCode: "DAY" },
+        transitTime: { "@type": "QuantitativeValue", minValue: transit.min, maxValue: transit.max, unitCode: "DAY" },
       },
-    }
+    }))
   }
   if (standardSizeReturns) {
     offer.hasMerchantReturnPolicy = {
