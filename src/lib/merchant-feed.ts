@@ -7,6 +7,7 @@ import { convertCnyToStoreAmount } from "@/lib/pricing"
 import { siteUrl } from "@/lib/seo"
 import { buildStorefrontProduct } from "@/lib/storefront/product"
 import { buildProductVariantUrl } from "@/lib/storefront/selection"
+import { madeToOrderShippingDestinations } from "@/lib/shipping-timing"
 
 type FeedArtwork = {
   _id: string
@@ -74,7 +75,13 @@ export function buildMerchantFeed(artworks: FeedArtwork[]) {
         ? `<g:item_group_id>${xml(groupId)}</g:item_group_id><g:item_group_title>${xml(title)}</g:item_group_title><g:size>${xml(size.label)}</g:size><g:variant_option><g:name>Size</g:name><g:value>${xml(size.label)}</g:value></g:variant_option><g:variant_option><g:name>Presentation</g:name><g:value>${xml(finish.label)}</g:value></g:variant_option>`
         : ""
 
-      return [`<item><g:id>${xml(variantId)}</g:id><title>${xml(variantTitle)}</title><description>${xml(description)}</description><link>${xml(variantUrl)}</link><g:image_link>${xml(image)}</g:image_link><g:availability>${available ? "in_stock" : "out_of_stock"}</g:availability><g:price>${price.toFixed(2)} USD</g:price><g:condition>new</g:condition><g:brand>YiiArt</g:brand><g:identifier_exists>no</g:identifier_exists><g:product_type>Home &amp; Garden &gt; Decor &gt; Artwork</g:product_type>${variantFields}<g:shipping><g:country>US</g:country><g:price>0.00 USD</g:price></g:shipping></item>`]
+      const shipping = artwork.productionModel === "hand_painted_to_order" && artwork.shippingProfile === "Ships rolled"
+        ? madeToOrderShippingDestinations.map(({ country, handling, transit }) =>
+          `<g:shipping><g:country>${country}</g:country><g:price>0.00 USD</g:price><g:min_handling_time>${handling.min}</g:min_handling_time><g:max_handling_time>${handling.max}</g:max_handling_time><g:min_transit_time>${transit.min}</g:min_transit_time><g:max_transit_time>${transit.max}</g:max_transit_time></g:shipping>`
+        ).join("") + "<g:shipping_handling_business_days>Mon-Sun</g:shipping_handling_business_days><g:shipping_transit_business_days>Mon-Sun</g:shipping_transit_business_days>"
+        : "<g:shipping><g:country>US</g:country><g:price>0.00 USD</g:price></g:shipping>"
+
+      return [`<item><g:id>${xml(variantId)}</g:id><title>${xml(variantTitle)}</title><description>${xml(description)}</description><link>${xml(variantUrl)}</link><g:image_link>${xml(image)}</g:image_link><g:availability>${available ? "in_stock" : "out_of_stock"}</g:availability><g:price>${price.toFixed(2)} USD</g:price><g:condition>new</g:condition><g:brand>YiiArt</g:brand><g:identifier_exists>no</g:identifier_exists><g:product_type>Home &amp; Garden &gt; Decor &gt; Artwork</g:product_type>${variantFields}${shipping}</item>`]
     }))
   })
 

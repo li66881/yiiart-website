@@ -21,6 +21,7 @@ test("merchant feed exports priced original artwork with escaped text and includ
   assert.match(xml, /<g:price>100\.00 USD<\/g:price>/)
   assert.match(xml, /<g:country>US<\/g:country><g:price>0\.00 USD<\/g:price>/)
   assert.match(xml, /<g:brand>YiiArt<\/g:brand>/)
+  assert.doesNotMatch(xml, /<g:country>AU<\/g:country>|min_handling_time|shipping_handling_business_days/)
 })
 
 test("merchant feed exports priced made-to-order size and finish variants", () => {
@@ -47,6 +48,10 @@ test("merchant feed exports priced made-to-order size and finish variants", () =
   assert.doesNotMatch(xml, /finish=framed/)
   assert.match(xml, /<g:item_group_id>yiiart-[a-f0-9]{24}<\/g:item_group_id>/)
   assert.doesNotMatch(xml, /<g:value>Framed canvas<\/g:value>/)
+  assert.equal((xml.match(/<g:country>AU<\/g:country>/g) || []).length, 2)
+  assert.match(xml, /<g:country>AU<\/g:country><g:price>0\.00 USD<\/g:price><g:min_handling_time>6<\/g:min_handling_time><g:max_handling_time>8<\/g:max_handling_time><g:min_transit_time>4<\/g:min_transit_time><g:max_transit_time>6<\/g:max_transit_time>/)
+  assert.match(xml, /<g:shipping_handling_business_days>Mon-Sun<\/g:shipping_handling_business_days>/)
+  assert.match(xml, /<g:shipping_transit_business_days>Mon-Sun<\/g:shipping_transit_business_days>/)
 })
 
 test("merchant feed matches checkout's as-listed original price", () => {

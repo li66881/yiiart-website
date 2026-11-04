@@ -3,15 +3,27 @@ import test from "node:test"
 import { access, readFile } from "node:fs/promises"
 import { buildProductOfferJsonLd } from "./product-offer-schema"
 
-test("publishes confirmed US included shipping only with explicit eligibility", () => {
+test("publishes confirmed US and Australian shipping only with explicit eligibility", () => {
   const input = { url: "https://www.yiiart.com/artwork/rolled", sku: "rolled", priceCurrency: "USD", price: "250", availability: "https://schema.org/InStock" }
   assert.equal(buildProductOfferJsonLd(input).shippingDetails, undefined)
-  assert.deepEqual(buildProductOfferJsonLd({ ...input, includedUsShipping: true }).shippingDetails, {
+  const details = buildProductOfferJsonLd({ ...input, includedStandardShipping: true }).shippingDetails as Array<Record<string, any>>
+  assert.equal(details.length, 2)
+  assert.deepEqual(details.map((detail) => detail.shippingDestination.addressCountry), ["US", "AU"])
+  assert.deepEqual(details.map((detail) => detail.deliveryTime.transitTime).map(({ minValue, maxValue }) => [minValue, maxValue]), [[3, 5], [4, 6]])
+  assert.equal(details[1].shippingRate.value, 0)
+  assert.equal(details[1].shippingRate.currency, "USD")
+  assert.equal(details[1].deliveryTime.handlingTime.minValue, 6)
+  assert.equal(details[1].deliveryTime.handlingTime.maxValue, 8)
+  const businessDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"].map((day) => `https://schema.org/${day}`)
+  for (const detail of details) assert.deepEqual(detail.deliveryTime.businessDays, businessDays)
+  assert.equal(buildProductOfferJsonLd({ ...input, price: undefined, includedStandardShipping: true }).shippingDetails, undefined)
+  assert.deepEqual(details[0], {
     "@type": "OfferShippingDetails",
     shippingRate: { "@type": "MonetaryAmount", value: 0, currency: "USD" },
     shippingDestination: { "@type": "DefinedRegion", addressCountry: "US" },
     deliveryTime: {
       "@type": "ShippingDeliveryTime",
+      businessDays,
       handlingTime: { "@type": "QuantitativeValue", minValue: 6, maxValue: 8, unitCode: "DAY" },
       transitTime: { "@type": "QuantitativeValue", minValue: 3, maxValue: 5, unitCode: "DAY" },
     },
