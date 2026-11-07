@@ -97,7 +97,7 @@ export default async function TradePage() {
             </div>
             <div>
               <p className="max-w-xl text-lg leading-8 text-stone-600">
-                Find artwork for hotel rooms, lobbies, restaurants, and other guest spaces. Explore existing paintings or discuss coordinated selections, custom sizes, and palette directions for your project. We confirm scope, pricing, production timing, and delivery options before an order is finalized.
+                Choose hand-painted artwork for hotel rooms, lobbies, and restaurants. Compare existing paintings or request custom sizes and coordinated palettes. Send your space photos, approximate quantity, preferred dimensions, and destination so we can confirm suitable artwork, pricing, production timing, and delivery options before you order.
               </p>
               <p className="mt-4 max-w-xl text-sm leading-6 text-stone-600">
                 Preparing an enquiry? Use the <Link href="/guides/hotel-artwork-project-brief" className="underline underline-offset-4">hotel artwork project brief checklist</Link> to organize room schedules, measurements, artwork direction, and quote questions. For a commissioned series, see the <Link href="/guides/custom-abstract-painting-for-hotels" className="underline underline-offset-4">custom abstract painting planning guide</Link>.

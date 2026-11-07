@@ -30,7 +30,7 @@ export const marketingCollections: MarketingCollection[] = [
     description:
       "Browse hand-painted abstract paintings selected for calm living rooms, open-plan spaces, and modern interiors.",
     metaDescription:
-      "Shop hand-painted abstract art for living rooms and open-plan homes. Compare original paintings by size, palette, and room fit.",
+      "Shop hand-painted abstract art for living rooms and open-plan homes. Compare canvas paintings by size, palette, and placement above your sofa.",
     intro:
       "A focused edit of hand-painted abstract paintings with balanced color, strong surface presence, and sizes that hold a room without overwhelming it.",
     categories: ["Abstract"],
@@ -70,9 +70,9 @@ export const marketingCollections: MarketingCollection[] = [
     description:
       "Explore hand-painted textured paintings and mixed-media canvas works with tactile surfaces for modern homes.",
     metaDescription:
-      "Explore hand-painted textured wall art and mixed-media canvas for bedrooms and entryways. Compare original works by surface, size, and palette.",
+      "Explore hand-painted textured wall art for bedrooms and entryways. Compare surface details, canvas sizes, palettes, and presentation options.",
     intro:
-      "Textured works bring depth to simple rooms. This collection highlights pieces with visible brushwork, mineral surfaces, and layered paint.",
+      "Explore hand-painted textured wall art with visible surface detail. Compare each painting's close-up images, dimensions, and materials before choosing a canvas for your room.",
     categories: ["Texture", "Textured Art"],
     keywords: ["textured wall art", "mixed media painting", "neutral canvas art"],
     rooms: ["Entryways", "Bedrooms", "Minimal interiors"],
@@ -86,6 +86,10 @@ export const marketingCollections: MarketingCollection[] = [
     customPrompt:
       "For a specific neutral palette, mineral surface, or larger textured wall art size, start a custom painting request before checkout.",
     faqs: [
+      {
+        question: "Is this textured wall art a painting or a print?",
+        answer: "This collection features hand-painted works. Check the individual product's materials and close-up images; texture alone does not establish whether a painting uses oil, acrylic, mixed media, or an impasto technique.",
+      },
       {
         question: "Will the texture look exactly like the photos?",
         answer: "Photos show the surface as clearly as possible, but light angle and screen color can change how texture appears. Ask for extra detail photos if needed.",
@@ -111,7 +115,7 @@ export const marketingCollections: MarketingCollection[] = [
     metaDescription:
       "Shop large hand-painted canvas art for feature walls, offices, and hospitality spaces. Compare available sizes and shipping options.",
     intro:
-      "Large-format works are selected for rooms that need presence from a single piece: generous walls, above-sofa placements, and calm commercial spaces.",
+      "Compare large canvas art for feature walls, above-sofa placements, and hospitality spaces. Check the available dimensions on each product, then confirm orientation and shipping format for your chosen size.",
     keywords: ["large canvas art", "oversized hand-painted painting", "statement wall art"],
     rooms: ["Feature walls", "Offices", "Hotels and studios"],
     buyerGuide: [
