@@ -4,6 +4,21 @@ import test from "node:test"
 import { marketingCollections } from "./collections"
 import { buildCollectionHeroCopy } from "./collection-hero-copy"
 
+test("priority collections avoid blanket originality and material claims", () => {
+  for (const slug of ["abstract-art-for-living-room", "textured-wall-art"]) {
+    const collection = marketingCollections.find((item) => item.slug === slug)!
+    assert.doesNotMatch(collection.metaDescription, /original/i)
+    assert.doesNotMatch(collection.intro, /mineral surfaces/i)
+  }
+  const texture = marketingCollections.find((item) => item.slug === "textured-wall-art")!
+  assert.ok(texture.faqs.some(({ question, answer }) => /print/i.test(question) && /materials/i.test(answer)))
+})
+
+test("custom page includes finished-photo approval before dispatch", async () => {
+  const page = await readFile("src/app/custom-painting/page.tsx", "utf8")
+  assert.match(page, /finished artwork photos for approval before dispatch/)
+})
+
 test("marketing collections have concise, unique, page-specific search descriptions", () => {
   const descriptions = marketingCollections.map((collection) => collection.metaDescription)
 

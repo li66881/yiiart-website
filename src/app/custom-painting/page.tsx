@@ -32,8 +32,8 @@ const steps = [
     text: "YiiArt confirms the scope, price, and production guidance before the studio begins the handmade artwork. Production timing is confirmed before the order is finalized.",
   },
   {
-    title: "Carefully packed and shipped to you",
-    text: "The finished artwork is packed according to size, surface, destination, and safest shipping format.",
+    title: "Review photos before dispatch",
+    text: "Review finished artwork photos for approval before dispatch. The approved painting is packed according to size, surface, destination, and safest shipping format.",
   },
 ]
 
