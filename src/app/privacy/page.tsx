@@ -18,7 +18,7 @@ export default function PrivacyPage() {
         <div className="max-w-2xl mx-auto">
           <h1 className="text-3xl font-medium mb-8 text-center">Privacy Policy</h1>
           <div className="bg-white p-8 border space-y-6 text-sm text-gray-600">
-            <p>Last updated: April 10, 2026</p>
+            <p>Last updated: November 14, 2026</p>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Information We Collect</h2>
               <p>We collect information you provide directly, including name, email, shipping address, and payment information when you make a purchase.</p>
@@ -34,6 +34,10 @@ export default function PrivacyPage() {
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Cookies</h2>
               <p>We use cookies to maintain your shopping cart and language preferences. You can disable cookies in your browser settings.</p>
+            </div>
+            <div>
+              <h2 className="text-lg font-medium mb-2 text-black">Google Customer Reviews</h2>
+              <p>For eligible paid orders, we share your order number, email address, delivery country and estimated delivery date with Google to display the Google Customer Reviews opt-in. Google may use cookies or similar technologies for this service; you can manage cookies in your browser settings. You can choose whether to receive a survey. If you opt in, Google may email you after the estimated delivery date. Participation is optional. See <a href="https://policies.google.com/privacy" className="underline">Google&apos;s Privacy Policy</a> for how Google handles this information.</p>
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2 text-black">Contact</h2>

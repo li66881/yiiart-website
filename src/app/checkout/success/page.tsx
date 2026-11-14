@@ -4,6 +4,8 @@ import { Suspense, useEffect, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Header from "@/components/Header"
 import Footer from "@/components/Footer"
+import GoogleCustomerReviews from "@/components/GoogleCustomerReviews"
+import type { GoogleReviewOptIn } from "@/lib/google-customer-reviews"
 import { useCart } from "@/context/CartContext"
 import { trackMarketingEvent } from "@/lib/marketing-events"
 import { convertCnyToStoreAmount, getStoreCurrency } from "@/lib/pricing"
@@ -16,6 +18,7 @@ function CheckoutSuccessContent() {
   const sessionId = searchParams.get("session_id")
   const paypalOrderId = searchParams.get("paypal_order_id")
   const [order, setOrder] = useState<SuccessOrder | null>(null)
+  const [reviewInvitation, setReviewInvitation] = useState<GoogleReviewOptIn | null>(null)
   const [orderLoading, setOrderLoading] = useState(true)
 
   useEffect(() => {
@@ -54,25 +57,38 @@ function CheckoutSuccessContent() {
     }
 
     let cancelled = false
-    fetch(`/api/orders?${params}`)
+    let attempts = 0
+    let retryTimer: ReturnType<typeof setTimeout> | undefined
+    setReviewInvitation(null)
+    const loadOrder = () => {
+      attempts++
+      fetch(`/api/orders?${params}`, { cache: "no-store" })
       .then((response) => response.ok ? response.json() : null)
       .then((data) => {
         if (cancelled) return
         const loadedOrder = data?.order || null
         setOrder(loadedOrder)
+        setReviewInvitation(data?.googleReviewOptIn || null)
         if (loadedOrder?.customerEmail) {
           localStorage.setItem("yiiart-order-email", loadedOrder.customerEmail)
         }
+        // Provider redirects can arrive before the payment webhook commits.
+        if ((!loadedOrder || ["pending_payment", "payment_processing"].includes(loadedOrder.status)) && attempts < 20) {
+          retryTimer = setTimeout(loadOrder, 1500)
+        }
       })
       .catch(() => {
-        if (!cancelled) setOrder(null)
+        if (!cancelled && attempts < 20) retryTimer = setTimeout(loadOrder, 1500)
       })
       .finally(() => {
         if (!cancelled) setOrderLoading(false)
       })
+    }
+    loadOrder()
 
     return () => {
       cancelled = true
+      clearTimeout(retryTimer)
     }
   }, [paypalOrderId, sessionId])
 
@@ -138,6 +154,7 @@ function CheckoutSuccessContent() {
       </main>
 
       <Footer />
+      <GoogleCustomerReviews invitation={reviewInvitation} />
     </div>
   )
 }

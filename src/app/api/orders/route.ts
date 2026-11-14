@@ -5,6 +5,7 @@ import {
   listOrdersByEmail,
 } from "@/lib/orders"
 import { isOrderStorageConfigured } from "@/lib/order-storage"
+import { buildGoogleReviewOptIn } from "@/lib/google-customer-reviews"
 
 export const runtime = "nodejs"
 
@@ -22,12 +23,12 @@ export async function GET(request: Request) {
   try {
     if (sessionId) {
       const order = await findOrderByProviderCheckout("stripe", sessionId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order, googleReviewOptIn: buildGoogleReviewOptIn(order) }, { headers: { "Cache-Control": "private, no-store" } })
     }
 
     if (paypalOrderId) {
       const order = await findOrderByProviderCheckout("paypal", paypalOrderId)
-      return NextResponse.json({ order })
+      return NextResponse.json({ order, googleReviewOptIn: buildGoogleReviewOptIn(order) }, { headers: { "Cache-Control": "private, no-store" } })
     }
 
     if (orderNumber) {
