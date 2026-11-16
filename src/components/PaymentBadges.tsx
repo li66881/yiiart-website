@@ -12,7 +12,7 @@ export default function PaymentBadges({ variant = "light" }: { variant?: "light"
   return (
     <div className="flex flex-wrap items-center gap-2.5">
       <span
-        className={`inline-flex items-center gap-1.5 text-xs ${dark ? "text-white/60" : "text-stone-500"}`}
+        className={`inline-flex items-center gap-1.5 text-xs ${dark ? "text-white/60" : "text-stone-600"}`}
         aria-label="SSL secure checkout"
       >
         <LockIcon />
