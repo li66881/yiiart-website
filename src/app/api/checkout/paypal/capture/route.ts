@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getBaseUrl } from "@/lib/checkout"
 import { capturePayPalOrder } from "@/lib/paypal"
-import { isPayPalCaptureCompleted } from "@/lib/payment-confirmation"
+import { getMatchingPayPalCaptureId } from "@/lib/payment-confirmation"
 import { findOrderByProviderCheckout, markOrderPaid } from "@/lib/orders"
 
 export async function GET(request: Request) {
@@ -21,7 +21,8 @@ export async function GET(request: Request) {
     }
 
     const capture = await capturePayPalOrder(token)
-    if (!isPayPalCaptureCompleted(capture)) {
+    const captureId = getMatchingPayPalCaptureId(capture, { checkoutId: token, totalAmount: order.totalAmount, currency: order.currency })
+    if (!captureId) {
       return NextResponse.redirect(`${baseUrl}/cart?paypal_error=capture_not_completed`)
     }
 
@@ -29,7 +30,7 @@ export async function GET(request: Request) {
       orderId: order.id,
       provider: "paypal",
       providerCheckoutId: token,
-      providerPaymentId: getPayPalCaptureId(capture),
+      providerPaymentId: captureId,
     })
 
     return NextResponse.redirect(`${baseUrl}/checkout/success?provider=paypal&paypal_order_id=${token}`)
@@ -37,8 +38,4 @@ export async function GET(request: Request) {
     console.error("PayPal capture error:", error)
     return NextResponse.redirect(`${baseUrl}/cart?paypal_error=capture_failed`)
   }
-}
-
-function getPayPalCaptureId(capture: any) {
-  return capture?.purchase_units?.[0]?.payments?.captures?.[0]?.id || null
 }
